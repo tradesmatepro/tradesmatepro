@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Prevent 431 errors by using a data URL favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#339e63" />
+    <meta name="description" content="TradeMate Pro Customer Portal - Manage your service requests, quotes, and jobs" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <title>Customer Portal</title>
+    <script>
+      (function(){
+        try{
+          var stored = localStorage.getItem('theme');
+          var legacy = localStorage.getItem('darkMode');
+          var mode = stored || (legacy!==null ? (JSON.parse(legacy)?'dark':'light') : 'system');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark = mode === 'dark' ? true : (mode === 'light' ? false : prefersDark);
+          if(isDark){ document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
+          try { document.documentElement.style.colorScheme = isDark ? 'dark' : 'light'; } catch(e){}
+        }catch(e){}
+      })();
+    </script>
+
+
+    <!-- Console Error Capture - Load immediately to catch all errors -->
+    <script src="%PUBLIC_URL%/console-error-capture.js"></script>
+    <!-- Error Export Client - For manual error export -->
+    <script src="%PUBLIC_URL%/export-errors-client.js"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+{
+  "startTime": "2025-10-06T23:14:59.637Z",
+  "pages": [
+    {
+      "name": "Dashboard",
+      "path": "/dashboard",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3042,
+      "status": "passed"
+    },
+    {
+      "name": "Admin Dashboard",
+      "path": "/admin-dashboard",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3038,
+      "status": "passed"
+    },
+    {
+      "name": "Jobs",
+      "path": "/jobs",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3037,
+      "status": "passed"
+    },
+    {
+      "name": "Quotes",
+      "path": "/quotes",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3033,
+      "status": "passed"
+    },
+    {
+      "name": "Invoices",
+      "path": "/invoices",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3034,
+      "status": "passed"
+    },
+    {
+      "name": "Customers",
+      "path": "/customers",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3063,
+      "status": "passed"
+    },
+    {
+      "name": "Employees",
+      "path": "/employees",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3074,
+      "status": "passed"
+    },
+    {
+      "name": "Timesheets",
+      "path": "/timesheets",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3073,
+      "status": "passed"
+    },
+    {
+      "name": "Schedule",
+      "path": "/schedule",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3060,
+      "status": "passed"
+    },
+    {
+      "name": "Marketplace",
+      "path": "/marketplace",
+      "errors": [],
+      "warnings": [],
+      "loadTime": 3037,
+      "status": "passed"
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "text": "No session found - user needs to log in",
+      "location": {
+        "url": "http://localhost:3004/console-error-capture.js",
+        "lineNumber": 207,
+        "columnNumber": 25
+      },
+      "timestamp": "2025-10-06T23:15:00.711Z"
+    },
+    {
+      "text": "No session found - user needs to log in",
+      "location": {
+        "url": "http://localhost:3004/console-error-capture.js",
+        "lineNumber": 207,
+        "columnNumber": 25
+      },
+      "timestamp": "2025-10-06T23:15:00.713Z"
+    }
+  ],
+  "totalErrors": 0,
+  "totalWarnings": 2,
+  "endTime": "2025-10-06T23:15:47.331Z",
+  "duration": 47694
+}

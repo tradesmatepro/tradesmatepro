@@ -1,0 +1,61 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+/test-results
+/playwright-report
+
+# Production
+/build
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/logs
+/error_logs
+/sql_logs
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+
+# AI DevTools - Sensitive Files
+AIDevTools/credentials.json
+AIDevTools/auto_fix_results.json
+AIDevTools/visual_analysis_results.json
+
+# Screenshots
+devtools/screenshots/
+test-screenshots/
+
+# Database backups
+/db backups/*.sql
+/db backups/*.backup
+
+# Temporary files
+*.tmp
+*.temp
+
+# Deployment documentation (may contain secrets)
+DEPLOYMENT_*.md
+FULL_AUTO_*.md
+MAGIC_LINK_*.md
+CUSTOMER_QUOTE_*.md
+

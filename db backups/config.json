@@ -1,0 +1,5 @@
+{
+  "db_uri": "postgresql://postgres:Alphaecho19!@db.cxlqzejzraczumqmsrcx.supabase.co:5432/postgres",
+  "backup_dir": "C:/Users/CGREL/Desktop/SupabaseBackups",
+  "schedule": "daily"
+}

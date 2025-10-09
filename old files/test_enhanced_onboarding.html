@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enhanced Company Onboarding Test - TradeMate Pro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1000px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f59e0b;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .role-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .role-card.owner {
+            border-left: 4px solid #8b5cf6;
+        }
+        .role-card.admin {
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Enhanced Company Onboarding Test</h1>
+        
+        <p>Test the enhanced company onboarding system with flexible role assignment (Owner or Admin).</p>
+        
+        <div class="info">
+            <strong>🎯 Enhanced Features:</strong><br>
+            • App owner can assign either 'owner' or 'admin' role<br>
+            • Clear role descriptions and permissions<br>
+            • Updated database constraints to support 'owner' role<br>
+            • Flexible first user creation for each company
+        </div>
+        
+        <h3>🚀 Quick Actions:</h3>
+        <button onclick="checkRoleSupport()">🔍 Check Role Support</button>
+        <button onclick="testRoleConstraints()">⚙️ Test Role Constraints</button>
+        <button onclick="viewExistingUsers()">👥 View Existing Users</button>
+        <button onclick="openOnboarding()">🏢 Open Onboarding</button>
+        <button onclick="openApp()">🚀 Open TradeMate Pro</button>
+        
+        <div class="grid">
+            <div class="role-card owner">
+                <h3>👑 Owner Role</h3>
+                <p><strong>Full Access + Company Management</strong></p>
+                <ul style="text-align: left; font-size: 14px;">
+                    <li>All operational features</li>
+                    <li>Company settings management</li>
+                    <li>User role assignment</li>
+                    <li>Billing and subscription control</li>
+                    <li>Company deletion rights</li>
+                </ul>
+            </div>
+            
+            <div class="role-card admin">
+                <h3>🔑 Admin Role</h3>
+                <p><strong>Full Access, Limited Company Settings</strong></p>
+                <ul style="text-align: left; font-size: 14px;">
+                    <li>All operational features</li>
+                    <li>User management (except owners)</li>
+                    <li>Basic company settings</li>
+                    <li>No billing/subscription access</li>
+                    <li>No company deletion rights</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+        
+        <h3>📋 Use Cases:</h3>
+        <div style="background: #f0f9ff; padding: 15px; border-radius: 6px; border-left: 4px solid #0ea5e9;">
+            <strong>🎯 When to Use Each Role:</strong><br><br>
+            <strong>Owner:</strong> For the main business owner or primary decision maker<br>
+            <strong>Admin:</strong> For trusted managers who need operational control but not company ownership<br><br>
+            <strong>Example:</strong> Construction company owner creates an "Owner" account for themselves, 
+            then later adds an "Admin" account for their office manager.
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
+        const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+        
+        async function checkRoleSupport() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking role support...</div>';
+            
+            try {
+                // Test if we can create a user with 'owner' role
+                const testUserId = 'test-' + Date.now();
+                const testCompanyId = 'test-company-' + Date.now();
+                
+                // Try to insert a test user with owner role (will fail if constraint doesn't allow it)
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({
+                        id: testUserId,
+                        email: 'test@example.com',
+                        full_name: 'Test Owner',
+                        company_id: testCompanyId,
+                        role: 'owner',
+                        active: false // Mark as inactive so it doesn't interfere
+                    })
+                });
+                
+                if (response.ok) {
+                    // Clean up test user
+                    await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${testUserId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    });
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Role Support: COMPLETE</strong><br>
+                            The database supports 'owner' role creation.<br>
+                            Enhanced onboarding system is ready!
+                        </div>
+                    `;
+                } else {
+                    const error = await response.json();
+                    if (error.message && error.message.includes('role')) {
+                        resultDiv.innerHTML = `
+                            <div class="warning">
+                                <strong>⚠️ Role Support: NEEDS UPDATE</strong><br>
+                                The database role constraint needs to be updated.<br>
+                                Please run the update_user_roles.sql script in Supabase SQL Editor.
+                            </div>
+                        `;
+                    } else {
+                        throw new Error(error.message || 'Unknown error');
+                    }
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Role Support Check: ERROR</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Manual Steps:</strong><br>
+                        1. Go to Supabase Dashboard → SQL Editor<br>
+                        2. Run the update_user_roles.sql script<br>
+                        3. This will add 'owner' role support
+                    </div>
+                `;
+            }
+        }
+        
+        async function testRoleConstraints() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing role constraints...</div>';
+            
+            try {
+                // Get information about the users table constraints
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?select=role&limit=5`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    const roles = [...new Set(users.map(u => u.role))];
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Role Constraints: ACTIVE</strong><br>
+                            Current roles in database: ${roles.join(', ')}<br>
+                            ${roles.includes('owner') ? '✅ Owner role is supported' : '⚠️ Owner role not found in current data'}
+                        </div>
+                        <pre>${JSON.stringify(users, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error('Cannot access users table');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Role Constraints Test: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function viewExistingUsers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Loading existing users...</div>';
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?select=email,full_name,role,company_id,active&order=created_at.desc&limit=10`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    
+                    if (users.length > 0) {
+                        let userHtml = users.map(user => `
+                            <div style="background: #f3f4f6; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                                <strong>${user.full_name || 'N/A'}</strong> (${user.email})<br>
+                                <small>
+                                    Role: <span style="font-weight: 500; color: ${user.role === 'owner' ? '#8b5cf6' : '#3b82f6'};">${user.role}</span> | 
+                                    Company: ${user.company_id ? user.company_id.substring(0, 8) + '...' : 'N/A'} | 
+                                    Active: ${user.active ? '✅' : '❌'}
+                                </small>
+                            </div>
+                        `).join('');
+                        
+                        const roleStats = users.reduce((acc, user) => {
+                            acc[user.role] = (acc[user.role] || 0) + 1;
+                            return acc;
+                        }, {});
+                        
+                        resultDiv.innerHTML = `
+                            <div class="success">
+                                <strong>✅ Existing Users: ${users.length} found</strong><br>
+                                Role distribution: ${Object.entries(roleStats).map(([role, count]) => `${role}: ${count}`).join(', ')}
+                            </div>
+                            ${userHtml}
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="warning">
+                                <strong>⚠️ No Users Found</strong><br>
+                                No users exist in the system yet.<br>
+                                Perfect time to test the enhanced onboarding!
+                            </div>
+                        `;
+                    }
+                } else {
+                    throw new Error('Cannot access users data');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Users View: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function openOnboarding() {
+            window.open('http://localhost:3000/onboarding', '_blank');
+        }
+        
+        function openApp() {
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        // Run initial check on page load
+        checkRoleSupport();
+    </script>
+</body>
+</html>

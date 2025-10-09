@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Name Integration Test - TradeMate Pro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f59e0b;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .company-yes {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .company-no {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Company Name Integration Test</h1>
+        
+        <p>Test that company_name is properly included in all database tables for troubleshooting.</p>
+        
+        <div class="info">
+            <strong>🎯 What This Tests:</strong><br>
+            • All tables include company_name field<br>
+            • New records get company_name populated<br>
+            • Existing records can be queried by company_name<br>
+            • Multi-tenant data integrity is maintained
+        </div>
+        
+        <h3>🚀 Quick Actions:</h3>
+        <button onclick="checkCompanyFields()">🗄️ Check Company Fields</button>
+        <button onclick="testUserContext()">👤 Test User Context</button>
+        <button onclick="testCompanyData()">🏢 Test Company Data</button>
+        <button onclick="testTableIntegrity()">🔍 Test Table Integrity</button>
+        <button onclick="openApp()">🚀 Open TradeMate Pro</button>
+        
+        <div id="result"></div>
+        
+        <h3>📋 Expected Tables with company_name:</h3>
+        <div style="background: #f0f9ff; padding: 15px; border-radius: 6px; border-left: 4px solid #0ea5e9;">
+            <strong>🗄️ Tables that should have company_name:</strong><br><br>
+            • <strong>users</strong> - User accounts with company association<br>
+            • <strong>user_permissions</strong> - Permission records<br>
+            • <strong>customers</strong> - Customer records<br>
+            • <strong>quotes</strong> - Quote records<br>
+            • <strong>jobs</strong> - Job records<br>
+            • <strong>invoices</strong> - Invoice records<br>
+            • <strong>attachments</strong> - File attachments<br>
+            • <strong>schedule_events</strong> - Scheduling data<br>
+            • <strong>And more...</strong> - All multi-tenant tables
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
+        const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+        
+        const COMPANY_TABLES = [
+            'users', 'user_permissions', 'customers', 'quotes', 'quote_items', 
+            'jobs', 'invoices', 'payments', 'expenses', 'attachments', 
+            'job_photos', 'messages', 'schedule_events', 'pending_schedule_requests',
+            'service_contracts', 'technician_locations', 'customer_reviews',
+            'integration_tokens', 'settings'
+        ];
+        
+        async function checkCompanyFields() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking company_name fields...</div>';
+            
+            let results = [];
+            
+            for (const table of COMPANY_TABLES) {
+                try {
+                    const response = await fetch(
+                        `${SUPABASE_URL}/rest/v1/${table}?select=company_name&limit=1`,
+                        {
+                            headers: {
+                                'apikey': SUPABASE_SERVICE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                            }
+                        }
+                    );
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        results.push({
+                            table,
+                            hasCompanyName: true,
+                            recordCount: data.length,
+                            status: 'success'
+                        });
+                    } else if (response.status === 400) {
+                        // Column doesn't exist
+                        results.push({
+                            table,
+                            hasCompanyName: false,
+                            error: 'company_name column missing',
+                            status: 'error'
+                        });
+                    } else {
+                        results.push({
+                            table,
+                            hasCompanyName: false,
+                            error: `HTTP ${response.status}`,
+                            status: 'error'
+                        });
+                    }
+                } catch (error) {
+                    results.push({
+                        table,
+                        hasCompanyName: false,
+                        error: error.message,
+                        status: 'error'
+                    });
+                }
+            }
+            
+            const successCount = results.filter(r => r.hasCompanyName).length;
+            const totalCount = results.length;
+            
+            let tableHtml = `
+                <table>
+                    <tr>
+                        <th>Table</th>
+                        <th>Has company_name</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+            `;
+            
+            results.forEach(result => {
+                const statusClass = result.hasCompanyName ? 'company-yes' : 'company-no';
+                const statusText = result.hasCompanyName ? '✅ Yes' : '❌ No';
+                const notes = result.error || (result.recordCount !== undefined ? `${result.recordCount} records` : '');
+                
+                tableHtml += `
+                    <tr>
+                        <td>${result.table}</td>
+                        <td class="${statusClass}">${statusText}</td>
+                        <td>${result.status}</td>
+                        <td>${notes}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHtml += '</table>';
+            
+            const statusClass = successCount === totalCount ? 'success' : 'warning';
+            const statusText = successCount === totalCount ? 'COMPLETE' : 'NEEDS WORK';
+            
+            resultDiv.innerHTML = `
+                <div class="${statusClass}">
+                    <strong>📊 Company Fields Check: ${statusText}</strong><br>
+                    ${successCount}/${totalCount} tables have company_name field
+                </div>
+                ${tableHtml}
+            `;
+        }
+        
+        async function testUserContext() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing user context...</div>';
+            
+            try {
+                // Check if user context includes company_name
+                const userSession = localStorage.getItem('trademate_user');
+                
+                if (userSession) {
+                    const user = JSON.parse(userSession);
+                    
+                    const hasCompanyName = user.company_name !== undefined;
+                    const hasCompanyId = user.company_id !== undefined;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="${hasCompanyName && hasCompanyId ? 'success' : 'warning'}">
+                            <strong>👤 User Context: ${hasCompanyName && hasCompanyId ? 'COMPLETE' : 'NEEDS UPDATE'}</strong><br>
+                            Company ID: ${hasCompanyId ? '✅ Present' : '❌ Missing'}<br>
+                            Company Name: ${hasCompanyName ? '✅ Present' : '❌ Missing'}
+                        </div>
+                        <pre>${JSON.stringify(user, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="warning">
+                            <strong>⚠️ User Context: NOT LOGGED IN</strong><br>
+                            Please log in to test user context
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ User Context Test: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testCompanyData() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing company data integrity...</div>';
+            
+            try {
+                // Test users table for company_name data
+                const usersResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?select=id,email,company_id,company_name&limit=5`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (usersResponse.ok) {
+                    const users = await usersResponse.json();
+                    
+                    const usersWithCompanyName = users.filter(u => u.company_name);
+                    const usersWithCompanyId = users.filter(u => u.company_id);
+                    
+                    let userHtml = users.map(user => `
+                        <div style="background: #f3f4f6; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                            <strong>${user.email}</strong><br>
+                            <small>
+                                Company ID: ${user.company_id || 'N/A'} | 
+                                Company Name: ${user.company_name || 'N/A'}
+                            </small>
+                        </div>
+                    `).join('');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Company Data Test: COMPLETE</strong><br>
+                            Found ${users.length} users<br>
+                            ${usersWithCompanyId.length} have company_id<br>
+                            ${usersWithCompanyName.length} have company_name
+                        </div>
+                        ${userHtml}
+                    `;
+                } else {
+                    throw new Error(`HTTP ${usersResponse.status}: ${usersResponse.statusText}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Company Data Test: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testTableIntegrity() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing table integrity...</div>';
+            
+            try {
+                let integrityResults = [];
+                
+                // Test a few key tables for data integrity
+                const testTables = ['users', 'user_permissions', 'customers'];
+                
+                for (const table of testTables) {
+                    try {
+                        const response = await fetch(
+                            `${SUPABASE_URL}/rest/v1/${table}?select=company_id,company_name&limit=10`,
+                            {
+                                headers: {
+                                    'apikey': SUPABASE_SERVICE_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                                }
+                            }
+                        );
+                        
+                        if (response.ok) {
+                            const records = await response.json();
+                            const withCompanyId = records.filter(r => r.company_id).length;
+                            const withCompanyName = records.filter(r => r.company_name).length;
+                            
+                            integrityResults.push({
+                                table,
+                                totalRecords: records.length,
+                                withCompanyId,
+                                withCompanyName,
+                                integrity: withCompanyId === withCompanyName ? 'Good' : 'Needs Sync'
+                            });
+                        }
+                    } catch (error) {
+                        integrityResults.push({
+                            table,
+                            error: error.message,
+                            integrity: 'Error'
+                        });
+                    }
+                }
+                
+                let tableHtml = `
+                    <table>
+                        <tr>
+                            <th>Table</th>
+                            <th>Total Records</th>
+                            <th>With company_id</th>
+                            <th>With company_name</th>
+                            <th>Integrity</th>
+                        </tr>
+                `;
+                
+                integrityResults.forEach(result => {
+                    const integrityClass = result.integrity === 'Good' ? 'company-yes' : 'company-no';
+                    
+                    tableHtml += `
+                        <tr>
+                            <td>${result.table}</td>
+                            <td>${result.totalRecords || 'N/A'}</td>
+                            <td>${result.withCompanyId || 'N/A'}</td>
+                            <td>${result.withCompanyName || 'N/A'}</td>
+                            <td class="${integrityClass}">${result.integrity}</td>
+                        </tr>
+                    `;
+                });
+                
+                tableHtml += '</table>';
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <strong>🔍 Table Integrity Test: COMPLETE</strong><br>
+                        Checked ${integrityResults.length} tables for data consistency
+                    </div>
+                    ${tableHtml}
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Table Integrity Test: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function openApp() {
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        // Run initial check on page load
+        checkCompanyFields();
+    </script>
+</body>
+</html>

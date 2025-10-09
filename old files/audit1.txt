@@ -1,0 +1,155 @@
+Plan and scope
+You asked for a targeted audit (no random refactors) across three flows, plus feature flags and unit tests. Below is a concise, actionable checklist with exact files, functions, and line ranges to touch, followed by minimal diffs that focus on state loops, stale selectors, table-vs-view use, and null guards. I’ve also included small unit tests and feature-flag gates for Messaging and Integrations.
+
+If you want me to apply any subset of these changes, tell me which items and I’ll implement them.
+
+1) Work order lifecycle: Quote → Job → Work Order → Completed
+Files to touch and why
+src/pages/WorkOrders.js
+handleStatusChange: enforce allowed transitions (prevent invalid hops)
+loadWorkOrders: use consistent views (work_orders_v) for invoices, not the base table
+filteredWorkOrders: ensure robust status selection from stage fields with null guards
+src/utils/workOrderStatus.js
+(Reference) STATUS_TRANSITIONS and isStatusTransitionAllowed used to validate transitions
+Findings
+Potential misuse of views vs table for the invoice list: invoices branch currently queries work_orders (table) instead of work_orders_v (view) used elsewhere; this risks stale projections and column differences.
+Status transitions aren’t validated; a user could jump from QUOTE → COMPLETED directly.
+Minor null-guard risks when a record lacks stage-specific fields.
+Minimal diffs
+Enforce legal transitions in handleStatusChange using isStatusTransitionAllowed
+
+WorkOrders.js
+src/pages
+
+WorkOrders.js
+src/pages
+Use the view for invoices (consistent with other branches) and add a null-safe fallback
+
+WorkOrders.js
+src/pages
+
+WorkOrders.js
+src/pages
+Add null guards when deriving currentStatus for robustness
+
+WorkOrders.js
+src/pages
+
+WorkOrders.js
+src/pages
+2) Scheduling: multi-tech, PTO overlap prevention, reschedule rollback
+Files to touch and why
+src/utils/smartScheduling.js
+getEmployeeSchedule: merge PTO as blocking events
+src/pages/Calendar.js
+handleEventDrop/handleEventResize: persist changes to backend, detect conflicts (incl. PTO), and revert UI on failure
+src/services/PTOService.js
+(Reference) checkPTOConflict / getEmployeePTO available, but not yet used by scheduling
+Findings
+PTO is not currently blocking availability in suggestions; we should merge employee_time_off into the existing event list as blocking.
+Calendar drag/resize only mutates local state; no backend update, no overlap/PTO validation, no revert. This causes “silent” conflicts.
+Minimal diffs
+Merge PTO into conflict sources
+
+smartScheduling.js
+src/utils
+Add backend persist + rollback for reschedule
+
+Calendar.js
+src/pages
+
+Calendar.js
+src/pages
+Same pattern for handleEventResize: call persist, else revert.
+
+3) Invoicing MVP: create from completed work order, numbering, PDF, status changes
+Files to touch and why
+src/services/InvoicesService.js
+Use total_amount (consistent with work order schema) or compute from items; provide helper for totals
+Optional: stub PDF via HTML print-out (no paid deps), status updates
+Findings
+total_amount source is inconsistent: using job.total_cost which likely isn’t present on work_orders; use job.total_amount or compute.
+Add a pure helper to compute totals (subtotal, tax, total) from items; unit-testable.
+Minimal diffs
+Fix total source and expose a compute function
+
+InvoicesService.js
+src/services
+
+InvoicesService.js
+src/services
+Add a minimal pure helper (kept internal or exported) to compute totals from items
+
+InvoicesService.js
+src/services
+PDF: for MVP, render a print-ready HTML and instruct the user to print-to-PDF from the browser (no new deps). If you want, I can add a “Print Invoice” route rendering invoice HTML.
+4) Unit tests (vitest/jest) — minimal, pure and fast
+I propose adding three test files. If you prefer Jest vs Vitest, I’ll align to your config; these are plain ESM.
+
+tests for conflict detection
+
+smartScheduling.conflict.test.js
+src/__tests__
+tests for reschedule logic (pure helper in test to simulate persist + revert decision)
+
+calendar.reschedule.test.js
+src/__tests__
+tests for invoice totals
+
+invoices.totals.test.js
+src/__tests__
+Note: If tests live under a different root in your setup, I’ll adjust paths.
+
+5) Feature flags: gate Messaging + Integrations
+Files to add/touch and why
+src/utils/features.js: central flags from env
+src/pages/Messages.js, src/components/IntegrationsUI.js, src/components/IntegrationDrawer.js: early-return if disabled
+Minimal diffs
+Add feature flags helper
+
+features.js
+src/utils
+Gate Messaging
+
+Messages.js
+src/pages
+Gate Integrations UI
+
+IntegrationsUI.js
+src/components
+Gate Integration Drawer
+
+IntegrationDrawer.js
+src/components
+Set via env (no paid services):
+
+REACT_APP_FEATURE_MESSAGING=false
+REACT_APP_FEATURE_INTEGRATIONS=false
+Quick checklist summary
+Work order lifecycle
+Validate status transitions (WorkOrders.handleStatusChange)
+Use work_orders_v for invoices branch
+Add null guards for status selection
+Scheduling
+Merge PTO as blocking events in getEmployeeSchedule
+Calendar reschedule: persist to backend, detect conflicts, revert UI on failure
+Keep multi-tech filtering as implemented
+Invoicing
+Use job.total_amount (or compute from items) in createInvoiceFromJob
+Add computeInvoiceTotals helper
+Optional: print-to-PDF via browser for MVP
+Unit tests
+conflict detection
+reschedule decision
+invoice totals
+Feature flags
+Add src/utils/features.js
+Gate Messages and Integrations components
+Next steps
+Tell me which items you want applied first. I recommend:
+PTO blocking + reschedule rollback
+Lifecycle guards + views alignment
+Invoice totals helper + tests
+Feature flags gating
+I can implement them in small PR-sized chunks and run tests if your project has Jest/Vitest configured.
+

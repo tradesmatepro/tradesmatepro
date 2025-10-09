@@ -1,0 +1,154 @@
+﻿========================================
+  ENUM CONSISTENCY CHECK REPORT
+  Date: 2025-10-02 12:55:51
+========================================
+
+[1/7] Checking enum types...
+
+             typname             
+---------------------------------
+ aal_level
+ action
+ alert_severity_enum
+ audit_action_enum
+ bid_status_enum
+ certification_status_enum
+ code_challenge_method
+ customer_type_enum
+ document_type_enum
+ employee_status_enum
+ equality_op
+ escrow_status_enum
+ expense_type_enum
+ factor_status
+ factor_type
+ inventory_movement_type_enum
+ invoice_status_enum
+ job_template_type_enum
+ marketplace_request_status_enum
+ message_type_enum
+ notification_status_enum
+ notification_type_enum
+ oauth_registration_type
+ one_time_token_type
+ optimization_type_enum
+ payment_status_enum
+ payroll_run_status_enum
+ performance_rating_enum
+ pricing_model_enum
+ rate_card_type_enum
+ schedule_status_enum
+ sensor_status_enum
+ service_category_enum
+ sla_priority_enum
+ subscription_plan_enum
+ subscription_status_enum
+ tax_type_enum
+ timesheet_status_enum
+ tool_status_enum
+ unit_type_enum
+ user_role_enum
+ user_status_enum
+ vendor_type_enum
+ work_order_line_item_type_enum
+ work_order_priority_enum
+ work_order_status_enum
+(46 rows)
+
+
+
+[2/7] Checking work_order_status_enum for mixed case...
+
+     enumlabel     | case_type 
+-------------------+-----------
+ draft             | lowercase
+ sent              | lowercase
+ presented         | lowercase
+ changes_requested | lowercase
+ follow_up         | lowercase
+ approved          | lowercase
+ rejected          | lowercase
+ expired           | lowercase
+ scheduled         | lowercase
+ in_progress       | lowercase
+ completed         | lowercase
+ on_hold           | lowercase
+ invoiced          | lowercase
+ paid              | lowercase
+ closed            | lowercase
+ cancelled         | lowercase
+(16 rows)
+
+
+
+[3/7] Checking for duplicate enum values (case-insensitive)...
+
+ normalized_value | count | variants 
+------------------+-------+----------
+(0 rows)
+
+
+
+[4/7] Checking actual status values in work_orders table...
+
+  status   | count | case_type 
+-----------+-------+-----------
+ scheduled |     1 | lowercase
+(1 row)
+
+
+
+[5/7] Checking for UPPERCASE status values in data...
+
+ status | count 
+--------+-------
+(0 rows)
+
+
+
+[6/7] Scanning frontend code for uppercase status values...
+
+UPPERCASE status values found in code:
+
+Found 'SCHEDULED' in: D:\TradeMate Pro Webapp\src\components\CustomerDashboard\CustomerJobs.js, D:\TradeMate Pro Webapp\src\components\Marketplace\CustomerDashboard.js, D:\TradeMate Pro Webapp\src\components\JobsDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\JobsUI.js, D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\WorkOrderBuilder.js, D:\TradeMate Pro Webapp\src\pages\Invoices.js, D:\TradeMate Pro Webapp\src\pages\Jobs.js, D:\TradeMate Pro Webapp\src\pages\WorkOrders.js, D:\TradeMate Pro Webapp\src\pages\CustomerDashboard.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'IN_PROGRESS' in: D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalDashboard.js, D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalJobs.js, D:\TradeMate Pro Webapp\src\components\Subcontractors\SubcontractorWorkOrders.js, D:\TradeMate Pro Webapp\src\components\Subcontractors\SubcontractorDetail.js, D:\TradeMate Pro Webapp\src\components\CustomerDashboard\CustomerOverview.js, D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\WorkOrderBuilder.js, D:\TradeMate Pro Webapp\src\pages\Customers.js, D:\TradeMate Pro Webapp\src\pages\Dashboard.js, D:\TradeMate Pro Webapp\src\pages\Jobs.js, D:\TradeMate Pro Webapp\src\pages\WorkOrders.js, D:\TradeMate Pro Webapp\src\pages\AdminDashboard.js, D:\TradeMate Pro Webapp\src\pages\CustomerDashboard.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'COMPLETED' in: D:\TradeMate Pro Webapp\src\components\PTO\EnterprisePTODashboard.js, D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalDashboard.js, D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalServiceRequests.js, D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalJobs.js, D:\TradeMate Pro Webapp\src\components\Subcontractors\SubcontractorDashboard.js, D:\TradeMate Pro Webapp\src\components\Subcontractors\SubcontractorWorkOrders.js, D:\TradeMate Pro Webapp\src\components\Subcontractors\SubcontractorDetail.js, D:\TradeMate Pro Webapp\src\components\JobsForms.js, D:\TradeMate Pro Webapp\src\components\JobsUI.js, D:\TradeMate Pro Webapp\src\components\WorkOrderBuilder.js, D:\TradeMate Pro Webapp\src\pages\CustomerPortal\RequestHistory.js, D:\TradeMate Pro Webapp\src\pages\Customers.js, D:\TradeMate Pro Webapp\src\pages\Dashboard.js, D:\TradeMate Pro Webapp\src\pages\Invoices.js, D:\TradeMate Pro Webapp\src\pages\Jobs.js, D:\TradeMate Pro Webapp\src\pages\WorkOrders.js, D:\TradeMate Pro Webapp\src\pages\QuotesPro.js, D:\TradeMate Pro Webapp\src\pages\JobsHistory.js, D:\TradeMate Pro Webapp\src\pages\AdminDashboard.js, D:\TradeMate Pro Webapp\src\services\NotificationGenerator.js, D:\TradeMate Pro Webapp\src\api\serviceRequestRoutes.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'DRAFT' in: D:\TradeMate Pro Webapp\src\components\JobsDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\QuotesUI.js, D:\TradeMate Pro Webapp\src\components\WorkOrderBuilder.js, D:\TradeMate Pro Webapp\src\components\InvoiceDetailModal.js, D:\TradeMate Pro Webapp\src\components\InvoiceTemplate.js, D:\TradeMate Pro Webapp\src\pages\Timesheets.js, D:\TradeMate Pro Webapp\src\pages\QuotesPro.js, D:\TradeMate Pro Webapp\src\pages\CustomerDashboard.js, D:\TradeMate Pro Webapp\src\pages\Quotes_clean.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'SENT' in: D:\TradeMate Pro Webapp\src\components\quotes\QuoteDeliveryHistory.js, D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalInvoices.js, D:\TradeMate Pro Webapp\src\components\CustomerDashboard\CustomerOverview.js, D:\TradeMate Pro Webapp\src\components\CustomerDashboard\CustomerQuotes.js, D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\QuotesUI.js, D:\TradeMate Pro Webapp\src\pages\Dashboard.js, D:\TradeMate Pro Webapp\src\pages\Invoices.js, D:\TradeMate Pro Webapp\src\pages\QuotesPro.js, D:\TradeMate Pro Webapp\src\pages\AdminDashboard.js, D:\TradeMate Pro Webapp\src\pages\CustomerDashboard.js, D:\TradeMate Pro Webapp\src\pages\Quotes_clean.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'ACCEPTED' in: D:\TradeMate Pro Webapp\src\components\CustomerDashboard\CustomerLeads.js, D:\TradeMate Pro Webapp\src\components\Marketplace\RequestCard.js, D:\TradeMate Pro Webapp\src\components\Marketplace\ResponseManagementModal.js, D:\TradeMate Pro Webapp\src\components\QuotesContextDrawer.js, D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\QuotesUI.js, D:\TradeMate Pro Webapp\src\pages\Dashboard.js, D:\TradeMate Pro Webapp\src\pages\WorkOrders.js, D:\TradeMate Pro Webapp\src\pages\QuotesPro.js, D:\TradeMate Pro Webapp\src\pages\AdminDashboard.js, D:\TradeMate Pro Webapp\src\pages\IncomingRequests.js, D:\TradeMate Pro Webapp\src\pages\Marketplace.js, D:\TradeMate Pro Webapp\src\pages\Quotes_clean.js, D:\TradeMate Pro Webapp\src\services\AutoAcceptService.js, D:\TradeMate Pro Webapp\src\api\serviceRequestRoutes.js
+
+Found 'REJECTED' in: D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\pages\Reports.js, D:\TradeMate Pro Webapp\src\pages\Timesheets.js, D:\TradeMate Pro Webapp\src\pages\Marketplace.js, D:\TradeMate Pro Webapp\src\pages\Quotes_clean.js, D:\TradeMate Pro Webapp\src\services\NotificationGenerator.js, D:\TradeMate Pro Webapp\src\services\EmailService.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'INVOICED' in: D:\TradeMate Pro Webapp\src\components\JobsUI.js, D:\TradeMate Pro Webapp\src\pages\JobsHistory.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+Found 'CANCELLED' in: D:\TradeMate Pro Webapp\src\components\CustomerPortal\PortalServiceRequests.js, D:\TradeMate Pro Webapp\src\components\CustomerDashboard\CustomerInvoices.js, D:\TradeMate Pro Webapp\src\components\QuotesDatabasePanel.js, D:\TradeMate Pro Webapp\src\components\WorkOrderBuilder.js, D:\TradeMate Pro Webapp\src\pages\WorkOrders.js, D:\TradeMate Pro Webapp\src\services\NotificationGenerator.js, D:\TradeMate Pro Webapp\src\api\serviceRequestRoutes.js, D:\TradeMate Pro Webapp\src\types\supabase.types.ts
+
+
+
+========================================
+  SUMMARY
+========================================
+
+ENUM ANALYSIS:
+  Total enum values: 16 
+  Lowercase enum values: 16 
+  UPPERCASE enum values: 0 
+
+DATA ANALYSIS:
+  Total work_orders records: 1 
+  Records with UPPERCASE status: 0 
+
+CODE ANALYSIS:
+  Files with uppercase status: 9
+
+STATUS: 
+RECOMMENDATION: 
+
+========================================
+  END OF REPORT
+========================================

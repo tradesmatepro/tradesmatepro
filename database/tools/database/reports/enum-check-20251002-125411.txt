@@ -1,0 +1,23 @@
+======================================== 
+  ENUM CONSISTENCY CHECK REPORT 
+  Date: Thu 10/02/2025 12:54:11.26 
+======================================== 
+ 
+[1/6] Checking enum types... 
+ 
+psql: error: connection to server at "aws-1-us-west-1.pooler.supabase.com" (3.101.5.153), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+connection to server at "aws-1-us-west-1.pooler.supabase.com" (3.101.5.153), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+ 
+[2/6] Checking work_order_status_enum for mixed case... 
+ 
+psql: error: connection to server at "aws-1-us-west-1.pooler.supabase.com" (3.101.5.153), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+connection to server at "aws-1-us-west-1.pooler.supabase.com" (3.101.5.153), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+ 
+[3/6] Checking for duplicate enum values (case-insensitive)... 
+ 
+psql: error: connection to server at "aws-1-us-west-1.pooler.supabase.com" (3.101.5.153), port 5432 failed: FATAL:  password authentication failed for user "postgres"
+connection to server at "aws-1-us-west-1.pooler.supabase.com" (3.101.5.153), port 5432 failed: FATAL:  connection failure during authentication
+ 
+[4/6] Checking actual status values in work_orders table... 
+ 
+^C

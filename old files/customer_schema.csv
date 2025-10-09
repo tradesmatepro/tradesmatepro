@@ -1,0 +1,156 @@
+column_name,data_type,column_default,is_nullable
+id,uuid,gen_random_uuid(),NO
+work_order_id,uuid,null,NO
+customer_id,uuid,null,NO
+signed_by,text,null,YES
+signed_at,timestamp with time zone,now(),YES
+ip_address,text,null,YES
+signature_data,text,null,YES
+id,uuid,gen_random_uuid(),NO
+company_id,uuid,null,NO
+name,text,null,NO
+phone,text,null,YES
+email,text,null,YES
+address,text,null,YES
+preferred_contact_method,text,null,YES
+created_at,timestamp with time zone,now(),YES
+notes,text,null,YES
+preferred_technician,uuid,null,YES
+preferred_times,text,null,YES
+street_address,text,null,YES
+city,text,null,YES
+state,text,null,YES
+zip_code,text,null,YES
+country,text,'United States'::text,YES
+latitude,double precision,null,YES
+longitude,double precision,null,YES
+last_service_date,date,null,YES
+rating,integer,5,YES
+lifetime_revenue,numeric,0,YES
+total_jobs,integer,0,YES
+status,text,'ACTIVE'::text,YES
+preferred_service_time,text,null,YES
+special_instructions,text,null,YES
+company_name,text,null,YES
+status_reason,text,null,YES
+status_changed_at,timestamp with time zone,null,YES
+updated_by,uuid,null,YES
+customer_type,text,'RESIDENTIAL'::text,YES
+billing_address_line_1,text,null,YES
+billing_address_line_2,text,null,YES
+billing_city,text,null,YES
+billing_state,text,null,YES
+billing_zip_code,text,null,YES
+billing_country,text,'United States'::text,YES
+id,uuid,gen_random_uuid(),NO
+customer_id,uuid,null,NO
+service_type,text,null,NO
+description,text,null,YES
+location,text,null,YES
+preferred_time,timestamp with time zone,null,YES
+status,text,'PENDING'::text,YES
+assigned_company_id,uuid,null,YES
+created_at,timestamp with time zone,now(),YES
+updated_at,timestamp with time zone,now(),YES
+id,uuid,gen_random_uuid(),NO
+sender_id,uuid,null,YES
+work_order_id,uuid,null,YES
+body,text,null,NO
+sent_at,timestamp with time zone,now(),YES
+company_name,text,null,YES
+company_id,uuid,null,NO
+conversation_id,uuid,null,YES
+read_at,timestamp with time zone,null,YES
+status,text,'sent'::text,YES
+message_type,text,'internal'::text,YES
+metadata,jsonb,'{}'::jsonb,YES
+recipient_id,uuid,null,YES
+created_at,timestamp with time zone,now(),YES
+service_request_id,uuid,null,YES
+customer_id,uuid,null,YES
+id,uuid,gen_random_uuid(),NO
+company_id,uuid,null,NO
+company_name,text,null,YES
+title,text,null,NO
+description,text,null,YES
+customer_id,uuid,null,YES
+status,text,'QUOTE'::text,NO
+assigned_technician_id,uuid,null,YES
+start_time,timestamp with time zone,null,YES
+end_time,timestamp with time zone,null,YES
+estimated_duration,integer,null,YES
+work_location,text,null,YES
+subtotal,numeric,0,YES
+tax_rate,numeric,0,YES
+tax_amount,numeric,0,YES
+total_amount,numeric,0,YES
+quote_number,text,null,YES
+quote_sent_date,timestamp with time zone,null,YES
+quote_expires_date,timestamp with time zone,null,YES
+job_number,text,null,YES
+actual_start_time,timestamp with time zone,null,YES
+actual_end_time,timestamp with time zone,null,YES
+invoice_number,text,null,YES
+invoice_date,timestamp with time zone,null,YES
+due_date,timestamp with time zone,null,YES
+payment_status,text,'PENDING'::text,YES
+amount_paid,numeric,0,YES
+created_at,timestamp with time zone,now(),YES
+updated_at,timestamp with time zone,now(),YES
+created_by,uuid,null,YES
+notes,text,null,YES
+internal_notes,text,null,YES
+attachments,jsonb,'[]'::jsonb,YES
+stage,USER-DEFINED,'QUOTE'::stage_enum,NO
+quote_status,USER-DEFINED,null,YES
+job_status,USER-DEFINED,null,YES
+work_status,USER-DEFINED,null,YES
+labor_subtotal,numeric,0,YES
+labor_summary,jsonb,null,YES
+reason,text,null,YES
+invoice_id,uuid,null,YES
+pricing_model,text,'TIME_MATERIALS'::text,YES
+flat_rate_amount,numeric,null,YES
+unit_count,numeric,null,YES
+unit_price,numeric,null,YES
+percentage,numeric,null,YES
+recurring_interval,text,null,YES
+percentage_base_amount,numeric,null,YES
+recurring_start_date,date,null,YES
+recurring_end_date,date,null,YES
+recurring_custom_interval_days,integer,null,YES
+recurring_rate,numeric,null,YES
+milestone_base_amount,numeric,null,YES
+service_address_id,uuid,null,YES
+service_address_line_1,text,null,YES
+service_address_line_2,text,null,YES
+service_city,text,null,YES
+service_state,text,null,YES
+service_zip_code,text,null,YES
+service_country,text,'United States'::text,YES
+access_instructions,text,null,YES
+completed_at,timestamp with time zone,null,YES
+version,integer,1,YES
+accepted_at,timestamp with time zone,null,YES
+accepted_by,text,null,YES
+accepted_ip,text,null,YES
+sent_at,timestamp with time zone,null,YES
+sent_to,text,null,YES
+applied_tax_rate,numeric,null,YES
+progress_percent,numeric,0,YES
+priority,USER-DEFINED,'normal'::job_priority_enum,YES
+tags,ARRAY,null,YES
+parent_job_id,uuid,null,YES
+expected_completion,timestamp with time zone,null,YES
+is_visible_to_customer,boolean,true,YES
+is_recurring,boolean,false,YES
+recurrence_rule,text,null,YES
+customer_notified,boolean,false,YES
+last_notified_at,timestamp with time zone,null,YES
+reminder_sent_at,timestamp with time zone,null,YES
+reminder_method,character varying,null,YES
+confirmation_sent_at,timestamp with time zone,null,YES
+customer_confirmed_at,timestamp with time zone,null,YES
+reschedule_requested_at,timestamp with time zone,null,YES
+recurring_parent_id,uuid,null,YES
+recurring_sequence,integer,0,YES

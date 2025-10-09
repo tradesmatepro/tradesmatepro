@@ -1,0 +1,218 @@
+table_name,view_definition
+closed_jobs," SELECT w.work_order_id,
+    w.title,
+    w.description,
+    w.company_id,
+    w.customer_id,
+    w.start_time,
+    w.end_time,
+    w.completed_at,
+    w.total_amount,
+    w.status,
+    w.job_status,
+    w.created_at,
+    w.updated_at,
+    c.name AS customer_name,
+    c.email AS customer_email,
+    c.phone AS customer_phone
+   FROM (work_orders w
+     LEFT JOIN customers c ON ((c.id = w.customer_id)))
+  WHERE (w.job_status = 'COMPLETED'::job_status_enum);"
+inventory_item_summary," SELECT i.id AS item_id,
+    i.name AS item_name,
+    i.sku,
+    i.cost,
+    i.sell_price,
+    (COALESCE(sum(s.on_hand), (0)::numeric))::numeric(12,4) AS total_on_hand,
+    (COALESCE(sum(s.reserved), (0)::numeric))::numeric(12,4) AS total_reserved,
+    (COALESCE(sum(s.available), (0)::numeric))::numeric(12,4) AS total_available
+   FROM (inventory_items i
+     LEFT JOIN inventory_stock_status s ON ((i.id = s.item_id)))
+  GROUP BY i.id, i.name, i.sku, i.cost, i.sell_price;"
+inventory_stock_status," SELECT s.item_id,
+    i.name AS item_name,
+    s.location_id,
+    s.company_id,
+    s.quantity AS on_hand,
+    (0)::numeric(12,4) AS reserved,
+    s.quantity AS available,
+    s.updated_at
+   FROM (inventory_stock s
+     JOIN inventory_items i ON ((i.id = s.item_id)));"
+jobs_with_payment_status," SELECT w.work_order_id,
+    w.company_id,
+    w.customer_id,
+    w.job_status,
+    i.id AS invoice_id,
+    i.invoice_number,
+    i.status AS invoice_status,
+    c.name AS customer_name,
+    c.email AS customer_email,
+        CASE
+            WHEN (w.job_status = ANY (ARRAY['DRAFT'::job_status_enum, 'SCHEDULED'::job_status_enum, 'IN_PROGRESS'::job_status_enum])) THEN 'active_job'::text
+            WHEN ((w.job_status = 'COMPLETED'::job_status_enum) AND (i.id IS NULL)) THEN 'awaiting_invoice'::text
+            WHEN ((w.job_status = 'COMPLETED'::job_status_enum) AND (i.id IS NOT NULL) AND (i.status = ANY (ARRAY['UNPAID'::text, 'OVERDUE'::text, 'PARTIALLY_PAID'::text]))) THEN 'awaiting_payment'::text
+            WHEN ((w.job_status = 'COMPLETED'::job_status_enum) AND (i.id IS NOT NULL) AND (i.status = 'PAID'::text)) THEN 'closed_job'::text
+            ELSE 'active_job'::text
+        END AS unified_status
+   FROM ((work_orders w
+     LEFT JOIN invoices i ON ((i.job_id = w.work_order_id)))
+     LEFT JOIN customers c ON ((c.id = w.customer_id)));"
+pto_current_balances," SELECT employee_id,
+    company_id,
+    COALESCE(category_code, 'VAC'::text) AS category_code,
+    COALESCE(sum(hours), (0)::numeric) AS current_balance,
+    max(effective_date) AS last_transaction_date,
+    count(
+        CASE
+            WHEN (entry_type = 'ACCRUAL'::text) THEN 1
+            ELSE NULL::integer
+        END) AS accrual_count,
+    count(
+        CASE
+            WHEN (entry_type = 'USAGE'::text) THEN 1
+            ELSE NULL::integer
+        END) AS usage_count
+   FROM pto_ledger l
+  WHERE ((effective_date <= CURRENT_DATE) AND (company_id IS NOT NULL))
+  GROUP BY employee_id, company_id, category_code;"
+quotes_v," SELECT work_order_id AS id,
+    stage,
+    customer_id AS company_name,
+    start_time,
+    end_time,
+    created_at,
+    updated_at,
+    pricing_model,
+    (flat_rate_amount)::numeric(12,4) AS flat_rate_amount,
+    unit_count,
+    (unit_price)::numeric(12,4) AS unit_price,
+    (percentage)::numeric(12,4) AS percentage,
+    recurring_interval
+   FROM work_orders w
+  WHERE ((stage)::text = 'QUOTE'::text);"
+sales_performance," SELECT t.id AS target_id,
+    t.user_id,
+    u.email AS user_email,
+    t.target_amount,
+    t.achieved_amount,
+    t.start_date,
+    t.end_date,
+    ((t.achieved_amount / NULLIF(t.target_amount, (0)::numeric)) * (100)::numeric) AS achievement_percent
+   FROM (sales_targets t
+     LEFT JOIN users u ON ((u.id = t.user_id)));"
+sales_pipeline," SELECT o.id AS opportunity_id,
+    o.title,
+    o.stage,
+    o.expected_value,
+    o.close_date,
+    c.name AS customer_name,
+    c.email AS customer_email,
+    c.phone AS customer_phone,
+    l.name AS lead_name,
+    l.status AS lead_status,
+    o.created_at,
+    o.updated_at
+   FROM ((opportunities o
+     LEFT JOIN customers c ON ((c.id = o.customer_id)))
+     LEFT JOIN leads l ON ((l.id = o.lead_id)));"
+sales_rep_commission_summary," SELECT ic.company_id,
+    ic.sales_rep_id,
+    count(*) AS total_invoices,
+    sum(i.total_amount) AS total_sales,
+    sum(ic.commission_amount) AS total_commission_earned,
+    sum(
+        CASE
+            WHEN (ic.commission_status = 'paid'::text) THEN ic.commission_amount
+            ELSE (0)::numeric
+        END) AS commission_paid,
+    sum(
+        CASE
+            WHEN (ic.commission_status = 'pending'::text) THEN ic.commission_amount
+            ELSE (0)::numeric
+        END) AS commission_pending,
+    avg(ic.commission_rate) AS average_commission_rate
+   FROM ((invoice_commissions ic
+     JOIN invoices i ON ((ic.invoice_id = i.id)))
+     JOIN users u ON ((ic.sales_rep_id = u.id)))
+  GROUP BY ic.company_id, ic.sales_rep_id;"
+vendor_catalog_v," SELECT vi.id,
+    vi.company_id,
+    vi.vendor_id,
+    v.name AS vendor_name,
+    vi.supplier_part_number,
+    vi.supplier_description,
+    vi.unit_cost,
+    vi.minimum_order_qty,
+    vi.lead_time_days,
+    vi.is_active,
+    vi.last_ordered_at,
+    ii.id AS inventory_item_id,
+    ii.sku AS internal_sku,
+    ii.name AS item_name,
+    ii.description AS internal_description,
+    ii.cost AS internal_cost,
+    ii.sell_price,
+    ii.reorder_point,
+    COALESCE(stock_summary.total_on_hand, (0)::numeric) AS stock_on_hand,
+        CASE
+            WHEN (ii.id IS NULL) THEN 'NOT_STOCKED'::text
+            WHEN (COALESCE(stock_summary.total_on_hand, (0)::numeric) = (0)::numeric) THEN 'OUT_OF_STOCK'::text
+            WHEN (COALESCE(stock_summary.total_on_hand, (0)::numeric) <= (COALESCE(ii.reorder_point, 5))::numeric) THEN 'LOW_STOCK'::text
+            ELSE 'IN_STOCK'::text
+        END AS stock_status,
+    vi.created_at,
+    vi.updated_at
+   FROM (((vendor_items vi
+     LEFT JOIN vendors v ON ((vi.vendor_id = v.id)))
+     LEFT JOIN inventory_items ii ON ((vi.inventory_item_id = ii.id)))
+     LEFT JOIN ( SELECT inventory_stock.item_id,
+            sum(inventory_stock.quantity) AS total_on_hand
+           FROM inventory_stock
+          GROUP BY inventory_stock.item_id) stock_summary ON ((ii.id = stock_summary.item_id)))
+  WHERE (vi.is_active = true);"
+vw_employee_pto_ledger," SELECT l.id,
+    e.full_name,
+    e.company_id,
+    l.entry_type,
+    l.hours,
+    l.created_at,
+    l.policy_id
+   FROM (pto_ledger l
+     JOIN employees e ON ((l.employee_id = e.id)))
+  ORDER BY l.created_at DESC;"
+vw_timesheet_reports," SELECT et.id AS timesheet_id,
+    u.company_id,
+    u.id AS user_id,
+    u.full_name,
+    u.role,
+    et.work_date,
+    et.clock_in,
+    et.clock_out,
+    (((EXTRACT(epoch FROM (et.clock_out - et.clock_in)) / 3600.0) - ((COALESCE(et.break_minutes, 0))::numeric / 60.0)) + et.overtime_hours) AS total_hours,
+    et.status,
+    et.approved_by,
+    et.approved_at,
+    et.denial_reason
+   FROM (employee_timesheets et
+     JOIN users u ON ((et.user_id = u.id)));"
+work_order_crew_v," SELECT wol.work_order_id,
+    jsonb_agg(jsonb_build_object('employee_id', wol.employee_id, 'name', u.full_name, 'work_date', wol.work_date, 'hours', wol.hours, 'rate', wol.rate) ORDER BY u.full_name) AS crew
+   FROM (work_order_labor wol
+     LEFT JOIN users u ON ((u.id = wol.employee_id)))
+  GROUP BY wol.work_order_id;"
+work_orders_history," SELECT wo.work_order_id,
+    wo.company_id,
+    wo.customer_id,
+    wo.title,
+    wo.description,
+    wo.job_status,
+    wo.work_status,
+    wo.invoice_id,
+    wo.updated_at,
+    c.name AS customer_name,
+    c.email AS customer_email,
+    c.phone AS customer_phone
+   FROM (work_orders wo
+     LEFT JOIN customers c ON ((c.id = wo.customer_id)))
+  WHERE ((wo.job_status = 'COMPLETED'::job_status_enum) OR (wo.invoice_id IS NOT NULL));"

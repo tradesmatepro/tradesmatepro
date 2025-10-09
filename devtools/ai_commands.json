@@ -1,0 +1,12 @@
+{
+  "commands": [
+    {
+      "id": "cmd_navigate_employees_3005",
+      "command": "ui_navigate",
+      "params": {
+        "url": "http://localhost:3005/employees"
+      },
+      "timestamp": "2025-10-08T12:35:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+table_name,constraint_name,definition
+users,users_invited_by_user_id_fkey,FOREIGN KEY (invited_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+users,users_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+customers,customers_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+customers,customers_preferred_tech_id_fkey,FOREIGN KEY (preferred_technician) REFERENCES users(id)
+job_photos,job_photos_uploaded_by_fkey,FOREIGN KEY (uploaded_by) REFERENCES users(id)
+job_photos,fk_job_photos_company_id,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+job_photos,job_photos_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+invoices,invoices_coupon_id_fkey,FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE SET NULL
+invoices,invoices_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+invoices,invoices_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+invoices,invoices_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+payments,payments_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+payments,payments_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+technician_locations,technician_locations_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+technician_locations,technician_locations_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+schedule_events,schedule_events_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+schedule_events,schedule_events_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+schedule_events,schedule_events_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+schedule_events,schedule_events_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+schedule_events,schedule_events_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+schedule_events,schedule_events_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+messages,messages_service_request_id_fkey,FOREIGN KEY (service_request_id) REFERENCES service_requests(id) ON DELETE CASCADE
+messages,messages_sender_id_fkey,FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+messages,messages_receiver_id_fkey,FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+messages,messages_recipient_id_fkey,FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE SET NULL
+messages,messages_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+customer_reviews,customer_reviews_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+customer_reviews,customer_reviews_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+attachments,fk_attachments_company_id,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+attachments,attachments_uploaded_by_fkey,FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+service_contracts,service_contracts_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+service_contracts,service_contracts_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+settings,settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+integration_tokens,integration_tokens_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id)
+user_permissions,user_permissions_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+user_permissions,user_permissions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+pending_schedule_requests,pending_schedule_requests_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+pending_schedule_requests,fk_psr_company,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+pending_schedule_requests,fk_psr_reviewer,FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+work_orders,work_orders_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE SET NULL
+work_orders,work_orders_assigned_technician_id_fkey,FOREIGN KEY (assigned_technician_id) REFERENCES users(id)
+work_orders,work_orders_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+work_orders,work_orders_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_orders,work_orders_parent_job_id_fkey,FOREIGN KEY (parent_job_id) REFERENCES work_orders(work_order_id) ON DELETE SET NULL
+work_orders,work_orders_service_address_id_fkey,FOREIGN KEY (service_address_id) REFERENCES customer_addresses(id)
+work_orders,work_orders_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+work_order_items,work_order_items_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_items,work_order_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_order_items,work_order_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+work_order_audit,work_order_audit_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_labor,work_order_labor_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_order_labor,work_order_labor_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id)
+work_order_labor,work_order_labor_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+employee_time_off,employee_time_off_policy_id_fkey,FOREIGN KEY (policy_id) REFERENCES pto_policies(id)
+employee_time_off,employee_time_off_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES users(id)
+work_order_assignments,work_order_assignments_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_assignments,work_order_assignments_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+work_order_assignments,work_order_assignments_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+coupons,coupons_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+invoice_items,invoice_items_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+invoice_payments,invoice_payments_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+employee_compensation,employee_compensation_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+employee_timesheets,employee_timesheets_denied_by_fkey,FOREIGN KEY (denied_by) REFERENCES users(id)
+employee_timesheets,employee_timesheets_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_timesheets,employee_timesheets_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES users(id)
+employee_timesheets,employee_timesheets_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id)
+employee_timesheets,employee_timesheets_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_pay_rates,employee_pay_rates_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_pay_rates,employee_pay_rates_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+ui_preferences,ui_preferences_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+integration_settings,integration_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+business_settings,business_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+company_settings,company_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+rates_pricing_settings,rates_pricing_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+document_templates,document_templates_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+company_document_templates,company_document_templates_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+customers_status_history,customers_status_history_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+work_order_milestones,work_order_milestones_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+customer_addresses,customer_addresses_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+employee_skills,employee_skills_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_skills,employee_skills_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_skills,employee_skills_assessed_by_fkey,FOREIGN KEY (assessed_by) REFERENCES users(id)
+employee_certifications,employee_certifications_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_certifications,employee_certifications_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_performance_reviews,employee_performance_reviews_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_performance_reviews,employee_performance_reviews_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_performance_reviews,employee_performance_reviews_reviewer_id_fkey,FOREIGN KEY (reviewer_id) REFERENCES users(id)
+employee_development_goals,employee_development_goals_assigned_by_fkey,FOREIGN KEY (assigned_by) REFERENCES users(id)
+employee_development_goals,employee_development_goals_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_development_goals,employee_development_goals_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_recognition,employee_recognition_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_recognition,employee_recognition_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_recognition,employee_recognition_given_by_fkey,FOREIGN KEY (given_by) REFERENCES users(id)
+employee_time_summary,employee_time_summary_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_time_summary,employee_time_summary_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+expenses,expenses_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+expenses,expenses_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+expense_categories,expense_categories_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+tool_usage,tool_usage_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+tool_usage,tool_usage_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+documents,documents_uploaded_by_fkey,FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+documents,documents_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+documents,documents_parent_document_id_fkey,FOREIGN KEY (parent_document_id) REFERENCES documents(id)
+quotes,quotes_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE SET NULL
+quotes,quotes_created_by_fkey,FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL
+quotes,quotes_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+quotes,quotes_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+work_order_audit_log,work_order_audit_log_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_audit_log,work_order_audit_log_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_order_audit_log,work_order_audit_log_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+work_order_versions,work_order_versions_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+work_order_versions,work_order_versions_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_versions,work_order_versions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+pto_policies,pto_policies_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id)
+employee_pto_balances,employee_pto_balances_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id)
+employee_pto_balances,employee_pto_balances_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id)
+pto_ledger,pto_ledger_policy_id_fkey,FOREIGN KEY (policy_id) REFERENCES pto_policies(id)
+pto_ledger,pto_ledger_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id)
+employee_pto_policies,employee_pto_policies_policy_id_fkey,FOREIGN KEY (policy_id) REFERENCES pto_policies(id)
+employee_pto_policies,employee_pto_policies_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id)
+quote_tools,quote_tools_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+quote_tool_tiers,quote_tool_tiers_tool_id_fkey,FOREIGN KEY (tool_id) REFERENCES quote_tools(id) ON DELETE CASCADE
+quote_tool_access,quote_tool_access_tool_id_fkey,FOREIGN KEY (tool_id) REFERENCES quote_tools(id) ON DELETE CASCADE
+quote_tool_usage,quote_tool_usage_quote_id_fkey,FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE
+quote_tool_usage,quote_tool_usage_tier_id_fkey,FOREIGN KEY (tier_id) REFERENCES quote_tool_tiers(id) ON DELETE SET NULL
+quote_tool_usage,quote_tool_usage_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+quote_tool_usage,quote_tool_usage_tool_id_fkey,FOREIGN KEY (tool_id) REFERENCES quote_tools(id) ON DELETE SET NULL
+tool_preferences,tool_preferences_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+inventory_items,inventory_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_locations,inventory_locations_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_stock,inventory_stock_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_stock,inventory_stock_item_id_fkey,FOREIGN KEY (item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_stock,inventory_stock_location_id_fkey,FOREIGN KEY (location_id) REFERENCES inventory_locations(id) ON DELETE CASCADE
+inventory_movements,inventory_movements_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_movements,inventory_movements_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+inventory_movements,inventory_movements_related_work_order_id_fkey,FOREIGN KEY (related_work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+inventory_movements,inventory_movements_location_id_fkey,FOREIGN KEY (location_id) REFERENCES inventory_locations(id)
+inventory_movements,inventory_movements_item_id_fkey,FOREIGN KEY (item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+notifications,notifications_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+notifications,notifications_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+user_dashboard_settings,user_dashboard_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+user_dashboard_settings,user_dashboard_settings_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+purchase_orders,purchase_orders_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES users(id)
+purchase_orders,purchase_orders_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+purchase_orders,purchase_orders_related_work_order_id_fkey,FOREIGN KEY (related_work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+purchase_orders,purchase_orders_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+purchase_orders,purchase_orders_rejected_by_fkey,FOREIGN KEY (rejected_by) REFERENCES users(id)
+purchase_orders,fk_po_vendor,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE SET NULL
+purchase_orders,purchase_orders_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE SET NULL
+po_items,po_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+po_items,po_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_items,po_items_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_items,fk_po_items_po,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_status_history,po_status_history_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_status_history,po_status_history_changed_by_fkey,FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE SET NULL
+po_status_history,po_status_history_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+vendors,vendors_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+vendors,vendors_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendors_status_history,vendors_status_history_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendors_status_history,vendors_status_history_changed_by_fkey,FOREIGN KEY (changed_by) REFERENCES users(id)
+vendor_contacts,vendor_contacts_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_contacts,vendor_contacts_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendor_categories,vendor_categories_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_category_assignments,vendor_category_assignments_category_id_fkey,FOREIGN KEY (category_id) REFERENCES vendor_categories(id) ON DELETE CASCADE
+vendor_category_assignments,vendor_category_assignments_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+po_approval_rules,po_approval_rules_vendor_category_id_fkey,FOREIGN KEY (vendor_category_id) REFERENCES vendor_categories(id)
+po_approval_rules,po_approval_rules_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_approval_rules,po_approval_rules_approver_user_id_fkey,FOREIGN KEY (approver_user_id) REFERENCES users(id)
+po_approvals,po_approvals_approver_user_id_fkey,FOREIGN KEY (approver_user_id) REFERENCES users(id)
+po_approvals,po_approvals_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_approvals,po_approvals_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_approvals,po_approvals_rule_id_fkey,FOREIGN KEY (rule_id) REFERENCES po_approval_rules(id)
+vendor_items,vendor_items_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendor_items,vendor_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_items,vendor_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+po_approval_workflows,po_approval_workflows_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_approval_workflows,po_approval_workflows_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+po_approval_workflows,po_approval_workflows_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_approval_actions,po_approval_actions_workflow_id_fkey,FOREIGN KEY (workflow_id) REFERENCES po_approval_workflows(id) ON DELETE CASCADE
+po_approval_actions,po_approval_actions_approver_id_fkey,FOREIGN KEY (approver_id) REFERENCES users(id)
+vendor_pricing_history,vendor_pricing_history_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+vendor_pricing_history,vendor_pricing_history_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id)
+vendor_pricing_history,vendor_pricing_history_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_pricing_history,vendor_pricing_history_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+company_approval_settings,company_approval_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+customer_portal_accounts,customer_portal_accounts_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+esignatures,esignatures_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+esignatures,esignatures_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+esignatures,esignatures_quote_id_fkey,FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE
+esignatures,esignatures_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+service_requests,service_requests_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+service_requests,service_requests_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE SET NULL
+service_request_responses,service_request_responses_service_request_id_fkey,FOREIGN KEY (service_request_id) REFERENCES service_requests(id) ON DELETE CASCADE
+service_request_responses,service_request_responses_contractor_company_id_fkey,FOREIGN KEY (contractor_company_id) REFERENCES companies(id) ON DELETE CASCADE
+service_request_responses,service_request_responses_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+subcontractors,subcontractors_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+subcontractor_work_orders,subcontractor_work_orders_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+subcontractor_work_orders,subcontractor_work_orders_subcontractor_id_fkey,FOREIGN KEY (subcontractor_id) REFERENCES subcontractors(id) ON DELETE CASCADE
+subcontractor_documents,subcontractor_documents_subcontractor_id_fkey,FOREIGN KEY (subcontractor_id) REFERENCES subcontractors(id) ON DELETE CASCADE
+subcontractor_timesheets,subcontractor_timesheets_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+subcontractor_timesheets,subcontractor_timesheets_subcontractor_id_fkey,FOREIGN KEY (subcontractor_id) REFERENCES subcontractors(id) ON DELETE CASCADE
+company_service_tags,company_service_tags_service_tag_id_fkey,FOREIGN KEY (service_tag_id) REFERENCES service_tags(id) ON DELETE CASCADE
+company_service_tags,company_service_tags_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_serial_numbers,inventory_serial_numbers_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_batches,inventory_batches_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_scan_log,inventory_scan_log_scanned_by_fkey,FOREIGN KEY (scanned_by) REFERENCES users(id) ON DELETE SET NULL
+inventory_scan_log,inventory_scan_log_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+inventory_cycle_counts,inventory_cycle_counts_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_cycle_count_items,inventory_cycle_count_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_cycle_count_items,inventory_cycle_count_items_cycle_count_id_fkey,FOREIGN KEY (cycle_count_id) REFERENCES inventory_cycle_counts(id) ON DELETE CASCADE
+expense_reimbursements,expense_reimbursements_expense_id_fkey,FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE
+expense_reimbursements,expense_reimbursements_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+reimbursement_requests,reimbursement_requests_reviewer_id_fkey,FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE SET NULL
+reimbursement_requests,reimbursement_requests_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+reimbursement_requests,reimbursement_requests_approver_id_fkey,FOREIGN KEY (approver_id) REFERENCES users(id) ON DELETE SET NULL
+reimbursement_requests,reimbursement_requests_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+job_assignments,job_assignments_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+job_assignments,job_assignments_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+job_triggers,job_triggers_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+recurring_jobs,recurring_jobs_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id)
+recurring_jobs,recurring_jobs_created_by_fkey,FOREIGN KEY (created_by) REFERENCES auth.users(id)
+recurring_jobs,recurring_jobs_assigned_to_fkey,FOREIGN KEY (assigned_to) REFERENCES auth.users(id)
+recurring_jobs,recurring_jobs_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id)
+route_optimizations,route_optimizations_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id)
+route_optimizations,route_optimizations_technician_id_fkey,FOREIGN KEY (technician_id) REFERENCES auth.users(id)
+route_optimizations,route_optimizations_created_by_fkey,FOREIGN KEY (created_by) REFERENCES auth.users(id)
+notification_settings,notification_settings_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id)
+document_versions,document_versions_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_versions,document_versions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+document_versions,document_versions_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+document_versions,document_versions_previous_version_id_fkey,FOREIGN KEY (previous_version_id) REFERENCES document_versions(id)
+signature_requests,signature_requests_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+signature_requests,signature_requests_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+signature_requests,signature_requests_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+document_workflows,document_workflows_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+document_workflows,document_workflows_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_workflows,document_workflows_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+workflow_approvals,workflow_approvals_approver_user_id_fkey,FOREIGN KEY (approver_user_id) REFERENCES users(id) ON DELETE SET NULL
+workflow_approvals,workflow_approvals_workflow_id_fkey,FOREIGN KEY (workflow_id) REFERENCES document_workflows(id) ON DELETE CASCADE
+workflow_approvals,workflow_approvals_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+document_access_log,document_access_log_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+document_access_log,document_access_log_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_access_log,document_access_log_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+lead_sources,lead_sources_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+leads,leads_assigned_to_fkey,FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL
+leads,leads_lead_source_id_fkey,FOREIGN KEY (lead_source_id) REFERENCES lead_sources(id) ON DELETE SET NULL
+leads,leads_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL
+leads,leads_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+opportunities,opportunities_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+opportunities,opportunities_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE SET NULL
+opportunities,opportunities_lead_id_fkey,FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE SET NULL
+opportunities,opportunities_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL
+sales_activities,sales_activities_lead_id_fkey,FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE
+sales_activities,sales_activities_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+sales_activities,sales_activities_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+sales_activities,sales_activities_opportunity_id_fkey,FOREIGN KEY (opportunity_id) REFERENCES opportunities(id) ON DELETE CASCADE
+sales_targets,sales_targets_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+sales_targets,sales_targets_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+invoice_commissions,invoice_commissions_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+invoice_commissions,invoice_commissions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+invoice_commissions,invoice_commissions_sales_rep_id_fkey,FOREIGN KEY (sales_rep_id) REFERENCES users(id) ON DELETE CASCADE

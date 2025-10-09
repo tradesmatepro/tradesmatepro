@@ -1,0 +1,274 @@
+{
+  "startTime": "2025-10-05T01:10:05.163Z",
+  "testSuites": [
+    {
+      "name": "Employee Management",
+      "tests": [
+        {
+          "name": "Navigate to Employees page",
+          "status": "passed",
+          "details": "Page loads with employee list"
+        },
+        {
+          "name": "Add Employee button exists",
+          "status": "passed",
+          "details": "Add button found"
+        },
+        {
+          "name": "Open Add Employee form",
+          "status": "passed",
+          "details": "Form opened successfully"
+        },
+        {
+          "name": "Employee list displays",
+          "status": "passed",
+          "details": "Employees are displayed"
+        }
+      ],
+      "painPoints": [
+        "Complex UI",
+        "Hard to add employees",
+        "Limited fields"
+      ],
+      "ourSolution": "Simple, fast employee management"
+    },
+    {
+      "name": "Timesheet Management",
+      "tests": [
+        {
+          "name": "Navigate to Timesheets page",
+          "status": "passed",
+          "details": "Page loaded"
+        },
+        {
+          "name": "Timesheet interface exists",
+          "status": "passed",
+          "details": "Table found"
+        },
+        {
+          "name": "Approval functionality",
+          "status": "partial",
+          "details": "No approval buttons found"
+        }
+      ],
+      "painPoints": [
+        "Clunky approval",
+        "No bulk operations",
+        "Too many clicks"
+      ],
+      "ourSolution": "One-click approval, bulk operations"
+    },
+    {
+      "name": "Customer Management",
+      "tests": [
+        {
+          "name": "Navigate to Customers page",
+          "status": "passed"
+        },
+        {
+          "name": "Add Customer button",
+          "status": "passed"
+        },
+        {
+          "name": "Customer list",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [
+        "Hard to add customers",
+        "Limited contact management",
+        "No communication history"
+      ],
+      "ourSolution": "Easy customer management with full communication log"
+    },
+    {
+      "name": "Job Scheduling",
+      "tests": [
+        {
+          "name": "Navigate to Scheduling",
+          "status": "passed"
+        },
+        {
+          "name": "Calendar view",
+          "status": "failed"
+        }
+      ],
+      "painPoints": [
+        "No drag-and-drop",
+        "No conflict detection",
+        "Cant see availability"
+      ],
+      "ourSolution": "Visual calendar with drag-drop and conflict detection"
+    },
+    {
+      "name": "Vendor Management",
+      "tests": [
+        {
+          "name": "Navigate to Vendors",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Purchase Orders",
+      "tests": [
+        {
+          "name": "Navigate to POs",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Expenses",
+      "tests": [
+        {
+          "name": "Navigate to Expenses",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Inventory",
+      "tests": [
+        {
+          "name": "Navigate to Inventory",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Payroll",
+      "tests": [
+        {
+          "name": "Navigate to Payroll",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Marketplace",
+      "tests": [
+        {
+          "name": "Navigate to Marketplace",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Customer Portal",
+      "tests": [
+        {
+          "name": "Navigate to Customer Portal",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "Reports",
+      "tests": [
+        {
+          "name": "Navigate to Reports",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    },
+    {
+      "name": "PTO Management",
+      "tests": [
+        {
+          "name": "Navigate to PTO",
+          "status": "passed"
+        }
+      ],
+      "painPoints": [],
+      "ourSolution": ""
+    }
+  ],
+  "summary": {
+    "total": 21,
+    "passed": 19,
+    "failed": 1,
+    "partial": 1
+  },
+  "competitorComparison": {},
+  "endTime": "2025-10-05T01:10:42.136Z",
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Error fetching inventory alerts: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at InventoryAlertsService.getInventoryAlerts (http://localhost:3004/static/js/bundle.js:154756:30)\n    at InventoryAlertsService.getAlertsSummary (http://localhost:3004/static/js/bundle.js:154809:33)\n    at loadAlertsSummary (http://localhost:3004/static/js/bundle.js:113391:102)\n    at http://localhost:3004/static/js/bundle.js:113383:7\n    at commitHookEffectListMount (http://localhost:3004/static/js/bundle.js:51804:30)\n    at invokePassiveEffectMountInDEV (http://localhost:3004/static/js/bundle.js:53493:17)\n    at invokeEffectsInDev (http://localhost:3004/static/js/bundle.js:55390:15)",
+    "Error loading dashboard data: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:161085:10)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:133345:33)",
+    "Error loading dashboard data: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:161085:10)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:133338:33)",
+    "Error loading dashboard data: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:161085:10)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:133345:33)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

@@ -1,0 +1,85 @@
+# Marketplace Build – Progress & To‑Do Summary
+
+## ✅ Completed Backend Work
+
+* **Marketplace Core Tables**
+
+  * `marketplace_requests` – holds service requests.
+  * `marketplace_responses` – contractor responses to requests.
+  * `marketplace_reviews` – ratings/reviews.
+  * `request_tags` – links requests to tags.
+  * `company_tags` – links companies to tags.
+  * `tags` – normalized master list of tags.
+
+* **Enums & Constraints**
+
+  * `request_type` standardized (`standard`, `emergency`).
+  * `pricing_preference_enum` (`FLAT`, `HOURLY`, `NEGOTIABLE`).
+  * Constraints enforce lowercase/normalized tag names.
+
+* **Company Enhancements**
+
+  * Companies can set emergency availability, fees, and nights/weekends.
+  * Rating fields (`avg_rating`, `rating_count`).
+
+* **Functions/Logic**
+
+  * Enforce response caps (`trg_enforce_response_cap`).
+  * Tag-based company/request search (standardized SQL function).
+  * Case-insensitive search + deduplication.
+
+* **Customer Portal**
+
+  * Request Service form wired (multi-select tags, pricing, emergency, schedule, response caps).
+  * Quotes wiring partially aligned with `work_orders` pipeline.
+
+* **Contractor App**
+
+  * Marketplace page created with sections: Post Request, Browse Requests, My Requests, My Responses.
+  * Request form aligned to same backend as Customer Portal (no duplication).
+
+---
+
+## 🔄 In Progress
+
+* **Tag System**
+
+  * Backend ready (tables + constraints).
+  * Need frontend wiring:
+
+    * Multi-select input with autocomplete.
+    * Free-text tag creation (insert into `tags`).
+    * Save to `request_tags` / `company_tags`.
+
+* **Customer Portal**
+
+  * View & Accept Contractor Responses (prompt ready).
+  * Quotes still tied to both `work_orders` and `marketplace` → needs unification.
+
+* **Contractor App**
+
+  * Handle both incoming and outgoing requests (currently only one direction shown).
+  * Deduplicate dashboard metrics with Customer Portal/Admin dashboards.
+
+---
+
+## ⏭️ Next Steps (No Fluff)
+
+1. **Frontend Tag Wiring** (Claude): implement tag inputs in Customer Portal + Contractor App.
+2. **Response Viewing** (Claude): build customer-side “View & Accept Responses” page.
+3. **Contractor Incoming vs Outgoing Requests**: adjust Marketplace tab logic.
+4. **Fair Results Logic**: define default ordering (e.g., distance + fairness weighting).
+5. **Quotes Unification**: decide whether Customer Portal uses `work_orders` exclusively or unified with marketplace.
+6. **Dashboard Cleanup**: remove duplication between Admin/Customer/Sales dashboards.
+
+---
+
+## 📌 Outstanding Design Decisions
+
+* **Search Fairness:** how to balance new contractors vs highly rated ones.
+* **Tags Hybrid Model:** curated set + free-text expansion.
+* **Simple/Advanced Mode:** decide later (after wiring baseline).
+
+---
+
+This file can serve as the **baseline reference** for continuing work in a fresh chat.

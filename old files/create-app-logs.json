@@ -1,0 +1,1 @@
+{"sql": "CREATE TABLE IF NOT EXISTS app_logs (id SERIAL PRIMARY KEY, timestamp TIMESTAMPTZ DEFAULT NOW(), level VARCHAR(10) NOT NULL, message TEXT NOT NULL, category VARCHAR(50), user_id UUID REFERENCES users(id), company_id UUID REFERENCES companies(id), metadata JSONB, stack_trace TEXT, url TEXT, user_agent TEXT, session_id TEXT, created_at TIMESTAMPTZ DEFAULT NOW())"}

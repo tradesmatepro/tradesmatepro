@@ -1,0 +1,77 @@
+table_name,column_name,data_type,is_nullable,column_default
+customer_portal_accounts,id,uuid,NO,gen_random_uuid()
+customer_portal_accounts,customer_id,uuid,NO,null
+customer_portal_accounts,is_active,boolean,YES,true
+customer_portal_accounts,created_at,timestamp with time zone,YES,now()
+customer_portal_accounts,updated_at,timestamp with time zone,YES,now()
+customer_portal_accounts,auth_user_id,uuid,YES,null
+customer_portal_accounts,invited_by,uuid,YES,null
+customer_portal_accounts,invited_at,timestamp with time zone,YES,now()
+customer_portal_accounts,created_via,text,YES,'invite'::text
+customer_portal_accounts,needs_password_setup,boolean,YES,true
+customer_portal_accounts,street_address,text,YES,null
+customer_portal_accounts,city,text,YES,null
+customer_portal_accounts,state,text,YES,null
+customer_portal_accounts,zip_code,text,YES,null
+customer_portal_accounts,country,text,YES,'United States'::text
+customer_portal_accounts,latitude,double precision,YES,null
+customer_portal_accounts,longitude,double precision,YES,null
+customers,id,uuid,NO,gen_random_uuid()
+customers,company_id,uuid,NO,null
+customers,name,text,NO,null
+customers,phone,text,YES,null
+customers,email,text,YES,null
+customers,address,text,YES,null
+customers,preferred_contact_method,text,YES,null
+customers,created_at,timestamp with time zone,YES,now()
+customers,notes,text,YES,null
+customers,preferred_technician,uuid,YES,null
+customers,preferred_times,text,YES,null
+customers,street_address,text,YES,null
+customers,city,text,YES,null
+customers,state,text,YES,null
+customers,zip_code,text,YES,null
+customers,country,text,YES,'United States'::text
+customers,latitude,double precision,YES,null
+customers,longitude,double precision,YES,null
+customers,last_service_date,date,YES,null
+customers,rating,integer,YES,5
+customers,lifetime_revenue,numeric,YES,0
+customers,total_jobs,integer,YES,0
+customers,status,text,YES,'ACTIVE'::text
+customers,preferred_service_time,text,YES,null
+customers,special_instructions,text,YES,null
+customers,company_name,text,YES,null
+customers,status_reason,text,YES,null
+customers,status_changed_at,timestamp with time zone,YES,null
+customers,updated_by,uuid,YES,null
+customers,customer_type,text,YES,'RESIDENTIAL'::text
+customers,billing_address_line_1,text,YES,null
+customers,billing_address_line_2,text,YES,null
+customers,billing_city,text,YES,null
+customers,billing_state,text,YES,null
+customers,billing_zip_code,text,YES,null
+customers,billing_country,text,YES,'United States'::text
+customers,portal_account_id,uuid,YES,null
+service_requests,id,uuid,NO,gen_random_uuid()
+service_requests,customer_id,uuid,YES,null
+service_requests,company_id,uuid,YES,null
+service_requests,category,text,NO,null
+service_requests,title,text,NO,null
+service_requests,description,text,YES,null
+service_requests,urgency,text,YES,'normal'::text
+service_requests,address_line_1,text,YES,null
+service_requests,address_line_2,text,YES,null
+service_requests,city,text,YES,null
+service_requests,state,text,YES,null
+service_requests,zip_code,text,NO,null
+service_requests,latitude,double precision,YES,null
+service_requests,longitude,double precision,YES,null
+service_requests,requested_at,timestamp with time zone,YES,now()
+service_requests,status,text,YES,'open'::text
+service_requests,service_address_line_1,text,YES,null
+service_requests,service_address_line_2,text,YES,null
+service_requests,service_city,text,YES,null
+service_requests,service_state,text,YES,null
+service_requests,service_zip_code,text,YES,null
+service_requests,service_country,text,YES,'United States'::text

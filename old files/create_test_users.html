@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Test Users - TradeMate Pro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .user-card {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #3b82f6;
+        }
+        .admin { border-left-color: #8b5cf6; }
+        .tech { border-left-color: #10b981; }
+        .dispatcher { border-left-color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👥 Create Test Users for Role Testing</h1>
+        
+        <p>This will create test users with different roles so you can test the role-based access control in the Employees page.</p>
+        
+        <h3>🎯 Test Users to Create:</h3>
+        
+        <div class="user-card admin">
+            <strong>👑 Owner User</strong><br>
+            Email: owner@test.com<br>
+            Role: Owner<br>
+            <em>Full access including billing, integrations, and all admin features</em>
+        </div>
+
+        <div class="user-card tech">
+            <strong>🔑 Admin User</strong><br>
+            Email: admin@test.com<br>
+            Role: Administrator<br>
+            <em>Full team/job access except billing and integrations</em>
+        </div>
+
+        <div class="user-card dispatcher">
+            <strong>👤 Employee User</strong><br>
+            Email: employee@test.com<br>
+            Role: Employee<br>
+            <em>Limited to jobs, scheduling, and documents only</em>
+        </div>
+        
+        <h3>🚀 Actions:</h3>
+        <button onclick="createTestUsers()">Create All Test Users</button>
+        <button onclick="clearTestUsers()">Clear Test Users</button>
+        <button onclick="openApp()">Open TradeMate Pro</button>
+        
+        <div id="result"></div>
+        
+        <h3>🧪 How to Test Dynamic Permissions:</h3>
+        <ol>
+            <li><strong>Create Test Users:</strong> Click "Create All Test Users"</li>
+            <li><strong>Login as Owner:</strong> Use owner@test.com / password123</li>
+            <li><strong>Check Navigation:</strong> Should see all features including Settings</li>
+            <li><strong>Manage Permissions:</strong> Go to Employees → "Manage Permissions"</li>
+            <li><strong>Test Employee Access:</strong> Give employee access to Customers</li>
+            <li><strong>Login as Employee:</strong> Use employee@test.com / password123</li>
+            <li><strong>Verify Changes:</strong> Should now see Customers in navigation</li>
+            <li><strong>Test Admin:</strong> Login as admin@test.com / password123</li>
+            <li><strong>Check Permissions:</strong> Admin can't manage permissions by default</li>
+        </ol>
+        
+        <h3>🔑 Login Credentials:</h3>
+        <div style="background: #f3f4f6; padding: 15px; border-radius: 6px;">
+            <strong>Owner:</strong> owner@test.com / password123<br>
+            <strong>Admin:</strong> admin@test.com / password123<br>
+            <strong>Employee:</strong> employee@test.com / password123
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
+        const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+        
+        async function createTestUsers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Creating test users...</div>';
+            
+            const testUsers = [
+                {
+                    email: 'owner@test.com',
+                    full_name: 'Owner User',
+                    role: 'owner',
+                    phone_number: '555-0001'
+                },
+                {
+                    email: 'admin@test.com',
+                    full_name: 'Admin User',
+                    role: 'admin',
+                    phone_number: '555-0002'
+                },
+                {
+                    email: 'employee@test.com',
+                    full_name: 'Employee User',
+                    role: 'employee',
+                    phone_number: '555-0003'
+                }
+            ];
+            
+            let results = [];
+            
+            for (const user of testUsers) {
+                try {
+                    // Create in Supabase Auth
+                    const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: user.email,
+                            password: 'password123',
+                            email_confirm: true,
+                            user_metadata: {
+                                full_name: user.full_name,
+                                role: user.role
+                            }
+                        })
+                    });
+                    
+                    if (!authResponse.ok) {
+                        const error = await authResponse.json();
+                        if (error.msg && error.msg.includes('already registered')) {
+                            results.push(`${user.email}: Already exists`);
+                            continue;
+                        }
+                        throw new Error(`Auth creation failed: ${error.msg}`);
+                    }
+                    
+                    const authUser = await authResponse.json();
+                    
+                    // Create in users table
+                    const userData = {
+                        id: authUser.id,
+                        email: user.email,
+                        full_name: user.full_name,
+                        phone_number: user.phone_number,
+                        role: user.role,
+                        company_id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479', // Demo company ID
+                        tier: 'free',
+                        active: true,
+                        notes: `Test user created on ${new Date().toISOString()}`
+                    };
+                    
+                    const dbResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=representation'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+                    
+                    if (!dbResponse.ok) {
+                        const error = await dbResponse.json();
+                        throw new Error(`Database creation failed: ${error.message}`);
+                    }
+                    
+                    results.push(`✅ ${user.email}: Created successfully`);
+                    
+                } catch (error) {
+                    results.push(`❌ ${user.email}: ${error.message}`);
+                }
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <strong>Test User Creation Results:</strong><br>
+                    ${results.join('<br>')}
+                </div>
+            `;
+        }
+        
+        async function clearTestUsers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #ef4444;">Clearing test users...</div>';
+            
+            const testEmails = ['owner@test.com', 'admin@test.com', 'employee@test.com'];
+            let results = [];
+            
+            for (const email of testEmails) {
+                try {
+                    // Delete from users table
+                    const dbResponse = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${email}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    });
+                    
+                    results.push(`✅ ${email}: Cleared from database`);
+                    
+                } catch (error) {
+                    results.push(`❌ ${email}: ${error.message}`);
+                }
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="success">
+                    <strong>Test User Cleanup Results:</strong><br>
+                    ${results.join('<br>')}<br><br>
+                    <em>Note: Auth users may still exist but won't affect testing</em>
+                </div>
+            `;
+        }
+        
+        function openApp() {
+            window.open('http://localhost:3000', '_blank');
+        }
+    </script>
+</body>
+</html>

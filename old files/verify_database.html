@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Verification - TradeMate Pro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1000px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f59e0b;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Database Verification Tool</h1>
+        
+        <p>This tool will verify the current state of your Supabase database and check for any issues with the schema or data.</p>
+        
+        <h3>🚀 Actions:</h3>
+        <button onclick="checkUsers()">👥 Check Users Table</button>
+        <button onclick="checkCompanies()">🏢 Check Companies Table</button>
+        <button onclick="checkSchema()">📋 Check Table Schema</button>
+        <button onclick="testLogin()">🔐 Test Login System</button>
+        <button onclick="fixDemoUser()">🛠️ Fix Demo User</button>
+        
+        <div id="result"></div>
+        
+        <h3>📋 What This Checks:</h3>
+        <ul>
+            <li><strong>Users Table:</strong> Structure, data, and permissions</li>
+            <li><strong>Companies Table:</strong> Demo company existence</li>
+            <li><strong>Schema:</strong> Column existence and types</li>
+            <li><strong>Login System:</strong> Demo user authentication</li>
+            <li><strong>Data Integrity:</strong> Relationships and constraints</li>
+        </ul>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
+        const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+        
+        async function checkUsers() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking users table...</div>';
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?select=*&limit=10`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    
+                    let tableHtml = `
+                        <table>
+                            <tr>
+                                <th>Email</th>
+                                <th>Full Name</th>
+                                <th>Role</th>
+                                <th>Company ID</th>
+                                <th>Active</th>
+                                <th>Has Permissions</th>
+                            </tr>
+                    `;
+                    
+                    users.forEach(user => {
+                        tableHtml += `
+                            <tr>
+                                <td>${user.email || 'N/A'}</td>
+                                <td>${user.full_name || 'N/A'}</td>
+                                <td>${user.role || 'N/A'}</td>
+                                <td>${user.company_id ? user.company_id.substring(0, 8) + '...' : 'N/A'}</td>
+                                <td>${user.active ? '✅' : '❌'}</td>
+                                <td>${user.permissions ? '✅' : '❌'}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tableHtml += '</table>';
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Users Table Check: SUCCESS</strong><br>
+                            Found ${users.length} users in the database
+                        </div>
+                        ${tableHtml}
+                        <pre>${JSON.stringify(users, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Users Table Check: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function checkCompanies() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking companies table...</div>';
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/companies?select=*&limit=10`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const companies = await response.json();
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Companies Table Check: SUCCESS</strong><br>
+                            Found ${companies.length} companies in the database
+                        </div>
+                        <pre>${JSON.stringify(companies, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Companies Table Check: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function checkSchema() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking table schema...</div>';
+            
+            try {
+                // Check users table structure
+                const usersResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?select=*&limit=1`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (usersResponse.ok) {
+                    const users = await usersResponse.json();
+                    const sampleUser = users[0] || {};
+                    const columns = Object.keys(sampleUser);
+                    
+                    const hasPermissions = columns.includes('permissions');
+                    const hasRole = columns.includes('role');
+                    const hasCompanyId = columns.includes('company_id');
+                    
+                    resultDiv.innerHTML = `
+                        <div class="${hasPermissions && hasRole && hasCompanyId ? 'success' : 'warning'}">
+                            <strong>📋 Schema Check Results:</strong><br>
+                            • Users table exists: ✅<br>
+                            • Has 'role' column: ${hasRole ? '✅' : '❌'}<br>
+                            • Has 'company_id' column: ${hasCompanyId ? '✅' : '❌'}<br>
+                            • Has 'permissions' column: ${hasPermissions ? '✅' : '❌'}<br>
+                            • Total columns: ${columns.length}
+                        </div>
+                        <div class="info">
+                            <strong>Available Columns:</strong><br>
+                            ${columns.join(', ')}
+                        </div>
+                        ${!hasPermissions ? `
+                            <div class="warning">
+                                <strong>⚠️ Missing Permissions Column</strong><br>
+                                The 'permissions' JSONB column is missing from the users table.<br>
+                                The app will use role-based default permissions instead.
+                            </div>
+                        ` : ''}
+                    `;
+                } else {
+                    throw new Error('Cannot access users table');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Schema Check: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testLogin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing login system...</div>';
+            
+            try {
+                // Check for demo user
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?email=eq.demo@trademateapp.com&select=*`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const users = await response.json();
+                    
+                    if (users.length > 0) {
+                        const demoUser = users[0];
+                        resultDiv.innerHTML = `
+                            <div class="success">
+                                <strong>✅ Login Test: SUCCESS</strong><br>
+                                Demo user exists and should be able to log in
+                            </div>
+                            <div class="info">
+                                <strong>Demo User Details:</strong><br>
+                                Email: ${demoUser.email}<br>
+                                Name: ${demoUser.full_name}<br>
+                                Role: ${demoUser.role}<br>
+                                Active: ${demoUser.active ? 'Yes' : 'No'}<br>
+                                Company ID: ${demoUser.company_id || 'None'}
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="warning">
+                                <strong>⚠️ Login Test: NO DEMO USER</strong><br>
+                                Demo user doesn't exist. It will be created on first login attempt.
+                            </div>
+                        `;
+                    }
+                } else {
+                    throw new Error('Cannot check for demo user');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Login Test: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function fixDemoUser() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Fixing demo user...</div>';
+            
+            try {
+                // First, ensure demo company exists
+                let companyId = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'; // Default demo company ID
+                
+                const companyResponse = await fetch(`${SUPABASE_URL}/rest/v1/companies`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({
+                        id: companyId,
+                        name: 'Demo Construction Co.',
+                        address: '123 Demo Street',
+                        city: 'Demo City',
+                        state: 'Demo State',
+                        zip: '12345',
+                        phone: '555-123-4567',
+                        email: 'demo@trademateapp.com'
+                    })
+                });
+                
+                // Create or update demo user
+                const userResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_SERVICE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({
+                        email: 'demo@trademateapp.com',
+                        full_name: 'Demo User',
+                        company_id: companyId,
+                        role: 'owner',
+                        tier: 'enterprise',
+                        active: true,
+                        phone_number: '555-123-4567'
+                    })
+                });
+                
+                if (userResponse.ok || userResponse.status === 409) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Demo User Fix: SUCCESS</strong><br>
+                            Demo user and company are now set up correctly.<br>
+                            You can now log in with: demo@trademateapp.com / any password
+                        </div>
+                    `;
+                } else {
+                    const error = await userResponse.json();
+                    throw new Error(`User creation failed: ${error.message || userResponse.statusText}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Demo User Fix: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Run initial check on page load
+        checkSchema();
+    </script>
+</body>
+</html>

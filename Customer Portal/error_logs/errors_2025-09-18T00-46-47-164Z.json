@@ -1,0 +1,38 @@
+[
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T00:46:32.647Z"
+  },
+  {
+    "timestamp": "2025-09-18T00:46:32.647Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:146:17)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T00:46:32.847Z"
+  },
+  {
+    "timestamp": "2025-09-18T00:46:32.847Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:146:17)",
+    "type": "ERROR"
+  }
+]

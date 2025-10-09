@@ -1,0 +1,3737 @@
+[
+  {
+    "table_name": "audit_logs",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "table_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "record_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "action",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "old_values",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "new_values",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "ip_address",
+    "data_type": "inet"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "user_agent",
+    "data_type": "text"
+  },
+  {
+    "table_name": "audit_logs",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "price_monthly",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "price_yearly",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "features",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "max_users",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "max_work_orders",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "billing_plans",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "company_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "legal_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "tax_id",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "website",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "address_line1",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "address_line2",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "city",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "state_province",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "postal_code",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "country",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "time_zone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "currency",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "default_tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "tagline",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "logo_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "industry",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "industry_tags",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "business_hours",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "default_tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "invoice_terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "auto_invoice",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "require_signatures",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "allow_online_payments",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "emergency_rate_multiplier",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "travel_charge_per_mile",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "minimum_travel_charge",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "cancellation_fee",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "transparency_mode",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "onboarding_progress",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "timezone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "display_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "address_line1",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "address_line2",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "city",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "state_province",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "postal_code",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "country",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "is_primary",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "latitude",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "longitude",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "access_notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_addresses",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "is_primary",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "customer_contacts",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "note_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "subject",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "content",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "is_important",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "customer_notes",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customer_tag_assignments",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_tag_assignments",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_tag_assignments",
+    "column_name": "tag_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_tag_assignments",
+    "column_name": "assigned_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_tag_assignments",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customer_tags",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customer_tags",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_tags",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_tags",
+    "column_name": "color",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customer_tags",
+    "column_name": "priority",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "customer_tags",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "customer_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "first_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "last_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "company_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "mobile_phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "preferred_contact",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "source",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "credit_limit",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "payment_terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "tax_exempt",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers",
+    "column_name": "customer_since",
+    "data_type": "date"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "customer_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "display_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "credit_limit",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "payment_terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "primary_address",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "total_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "completed_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "active_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "total_work_value",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "completed_work_value",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "total_invoices",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "total_invoiced",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "total_paid",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "outstanding_balance",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "last_service_date",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "first_service_date",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "customer_tier",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_financial_summary",
+    "column_name": "payment_status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "customer_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "display_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "primary_address",
+    "data_type": "text"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "total_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "total_revenue",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "last_service_date",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "customers_summary",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "header_text",
+    "data_type": "text"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "footer_text",
+    "data_type": "text"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "logo_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "is_default",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "document_templates",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "document_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "file_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "file_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "file_size",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "mime_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "documents",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "employee_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "employee_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "job_title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "department",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "total_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "avg_job_hours",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "total_revenue",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "completed_jobs",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "completion_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "hire_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employee_performance",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "employee_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "employee_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "job_title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "department",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "hire_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "total_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "completed_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "cancelled_work_orders",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "completion_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "total_revenue",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "avg_job_value",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "avg_job_duration_hours",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "late_starts",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "overruns",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "last_job_date",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employee_performance_metrics",
+    "column_name": "jobs_last_30_days",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "employee_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "clock_in",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "clock_out",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "break_duration",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "regular_hours",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "overtime_hours",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "approved_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "approved_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employee_timesheets",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "employee_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "hire_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "termination_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "job_title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "department",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "hourly_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "overtime_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "emergency_contact_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "emergency_contact_phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "certifications",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "skills",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "employee_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "expense_type",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "expense_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "receipt_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "is_billable",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "is_reimbursable",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "approved_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "approved_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "expenses",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "sku",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "category",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "unit_of_measure",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "cost_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "sell_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "reorder_point",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "reorder_quantity",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "barcode",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "manufacturer",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "model_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_items",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "address_line1",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "address_line2",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "city",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "state_province",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "postal_code",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "is_mobile",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "inventory_locations",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "item_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "location_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "movement_type",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "quantity",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "unit_cost",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "reference_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_movements",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "sku",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "category",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "unit_of_measure",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "cost_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "sell_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "reorder_point",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "reorder_quantity",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "total_on_hand",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "total_allocated",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "total_available",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "stock_status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "total_cost_value",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "total_sell_value",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "locations_count",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_status_summary",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "item_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "location_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "quantity_on_hand",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "quantity_allocated",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "quantity_available",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "last_counted_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "last_counted_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_stock",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "sku",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "category",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "cost_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "sell_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "reorder_point",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "total_on_hand",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "total_allocated",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "total_available",
+    "data_type": "bigint"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "stock_status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "inventory_summary",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "invoice_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "quantity",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "unit_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "total_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "sort_order",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "invoice_line_items",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "invoice_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "issue_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "due_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "subtotal",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "tax_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "total_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "amount_paid",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "balance_due",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "discount_percentage",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "late_fee_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices",
+    "column_name": "pdf_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "invoice_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "issue_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "due_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "total_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "amount_paid",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "balance_due",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "customer_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "company_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "work_order_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "payment_status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "invoices_summary",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "emergency_rate_multiplier",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "transparency_mode",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "auto_accept_jobs",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "marketplace_settings",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "sender_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "recipient_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "recipient_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "subject",
+    "data_type": "text"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "content",
+    "data_type": "text"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "message_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "read_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "messages",
+    "column_name": "delivered_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "type",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "message",
+    "data_type": "text"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "data",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "scheduled_for",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "read_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "expires_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "notifications",
+    "column_name": "action_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "current_step",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "steps",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "skipped",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "started_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "onboarding_progress",
+    "column_name": "completed_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payment_settings",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payment_settings",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payment_settings",
+    "column_name": "default_payment_method",
+    "data_type": "text"
+  },
+  {
+    "table_name": "payment_settings",
+    "column_name": "invoice_template_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payment_settings",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payment_settings",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "invoice_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "payment_method",
+    "data_type": "text"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "reference_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "transaction_id",
+    "data_type": "text"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "payment_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "received_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "gateway_response",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "refund_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payments",
+    "column_name": "refund_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "payroll_run_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "employee_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "regular_hours",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "overtime_hours",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "regular_pay",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "overtime_pay",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "gross_pay",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "deductions",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "net_pay",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_line_items",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "pay_period_start",
+    "data_type": "date"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "pay_period_end",
+    "data_type": "date"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "pay_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "total_gross",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "total_deductions",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "total_net",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "processed_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "payroll_runs",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "permissions",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "permissions",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "permissions",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "permissions",
+    "column_name": "level",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "permissions",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "first_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "last_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "avatar_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "preferences",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "emergency_contact_phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "hire_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "purchase_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "inventory_item_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "quantity",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "unit_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "total_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "quantity_received",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "sort_order",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "purchase_order_line_items",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "vendor_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "po_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "order_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "expected_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "subtotal",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "tax_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "shipping_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "total_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "purchase_orders",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "service_category_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "service_type_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "base_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "unit_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "unit_label",
+    "data_type": "text"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "rate_cards",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "start_time",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "end_time",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "all_day",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "location",
+    "data_type": "text"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "schedule_events",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "icon_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "color",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "sort_order",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "category_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "base_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "estimated_duration",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "requires_permit",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "billing_plan_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "current_period_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "current_period_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "trial_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "tax_type",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "taxes",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "tool_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "category",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "manufacturer",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "model",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "serial_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "purchase_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "purchase_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "current_value",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "assigned_to",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "location",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "maintenance_schedule",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "last_maintenance",
+    "data_type": "date"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "next_maintenance",
+    "data_type": "date"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "warranty_expiry",
+    "data_type": "date"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "tools",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "dashboard_config",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "widget_preferences",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "layout_settings",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "theme_settings",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "notification_preferences",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "user_dashboard_settings",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "auth_user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "users",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "users",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "login_count",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "vendor_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "vendor_type",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "contact_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "website",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "address_line1",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "address_line2",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "city",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "state_province",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "postal_code",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "country",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "tax_id",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "payment_terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "credit_limit",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "vendors",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "file_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "file_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "file_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "file_size",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "uploaded_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_attachments",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "line_type",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "quantity",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "unit_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "total_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "sort_order",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "work_order_line_items",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "work_order_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "note_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "content",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "is_internal",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "work_order_notes",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "work_order_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "customer_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "customer_address_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "service_category_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "service_type_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "priority",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "scheduled_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "scheduled_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "actual_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "actual_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "assigned_to",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "subtotal",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "tax_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "total_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "internal_notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "requires_signature",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "customer_signature_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "technician_signature_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "completion_photos",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders",
+    "column_name": "customer_feedback",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "work_order_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "priority",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "scheduled_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "scheduled_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "actual_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "actual_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "total_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "customer_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "customer_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "customer_phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "customer_email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "service_address",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "service_category",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "service_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "assigned_technician",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "technician_role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "is_overdue",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "is_due_soon",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "work_orders_dashboard",
+    "column_name": "financial_status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "work_order_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "priority",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "scheduled_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "scheduled_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "total_amount",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "customer_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "company_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "service_address",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "service_category",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "service_type",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "assigned_technician",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_orders_summary",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "business_hours",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "default_tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "invoice_terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "auto_invoice",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "require_signatures",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "cancellation_fee",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "travel_charge_per_mile",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "minimum_travel_charge",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "work_settings",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  }
+]

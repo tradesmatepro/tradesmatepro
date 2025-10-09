@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Error Capture Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .error { background-color: #fee; border-color: #fcc; }
+        .success { background-color: #efe; border-color: #cfc; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+        .results { max-height: 300px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <h1>Console Error Capture Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Console Capture</h2>
+        <button onclick="testConsoleCapture()">Test Console Capture</button>
+        <button onclick="generateTestErrors()">Generate Test Errors</button>
+        <button onclick="showCapturedData()">Show Captured Data</button>
+        <button onclick="clearData()">Clear Data</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>Captured Errors</h2>
+        <div id="errorResults" class="results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Captured Warnings</h2>
+        <div id="warningResults" class="results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Debug Info</h2>
+        <div id="debugInfo" class="results"></div>
+    </div>
+
+    <!-- Load the console capture script -->
+    <script src="console-error-capture.js"></script>
+    
+    <script>
+        function testConsoleCapture() {
+            if (window.testConsoleCapture) {
+                window.testConsoleCapture();
+                setTimeout(showCapturedData, 100);
+            } else {
+                document.getElementById('debugInfo').innerHTML = '<div class="error">❌ testConsoleCapture function not found!</div>';
+            }
+        }
+        
+        function generateTestErrors() {
+            console.error('Test Error 1: This is a test error');
+            console.warn('Test Warning 1: This is a test warning');
+            console.error('Test Error 2: Another test error with object', { test: 'data' });
+            console.warn('Test Warning 2: Another test warning');
+            
+            // Try to trigger a real error
+            try {
+                nonExistentFunction();
+            } catch (e) {
+                console.error('Real Error:', e.message);
+            }
+            
+            setTimeout(showCapturedData, 100);
+        }
+        
+        function showCapturedData() {
+            const errorDiv = document.getElementById('errorResults');
+            const warningDiv = document.getElementById('warningResults');
+            const debugDiv = document.getElementById('debugInfo');
+            
+            // Show captured errors
+            if (window.capturedErrors && window.capturedErrors.length > 0) {
+                errorDiv.innerHTML = '<h3>✅ Found ' + window.capturedErrors.length + ' errors:</h3>' +
+                    window.capturedErrors.map((error, i) => 
+                        `<div><strong>Error ${i+1}:</strong> ${error.message} <br><small>${error.timestamp}</small></div>`
+                    ).join('<hr>');
+            } else {
+                errorDiv.innerHTML = '<div class="error">❌ No errors captured</div>';
+            }
+            
+            // Show captured warnings
+            if (window.capturedWarnings && window.capturedWarnings.length > 0) {
+                warningDiv.innerHTML = '<h3>✅ Found ' + window.capturedWarnings.length + ' warnings:</h3>' +
+                    window.capturedWarnings.map((warning, i) => 
+                        `<div><strong>Warning ${i+1}:</strong> ${warning.message} <br><small>${warning.timestamp}</small></div>`
+                    ).join('<hr>');
+            } else {
+                warningDiv.innerHTML = '<div class="error">❌ No warnings captured</div>';
+            }
+            
+            // Debug info
+            debugDiv.innerHTML = `
+                <h3>Debug Information:</h3>
+                <pre>
+window.capturedErrors exists: ${!!window.capturedErrors}
+window.capturedWarnings exists: ${!!window.capturedWarnings}
+window.capturedLogs exists: ${!!window.capturedLogs}
+window.testConsoleCapture exists: ${!!window.testConsoleCapture}
+
+Errors count: ${window.capturedErrors ? window.capturedErrors.length : 'N/A'}
+Warnings count: ${window.capturedWarnings ? window.capturedWarnings.length : 'N/A'}
+Logs count: ${window.capturedLogs ? window.capturedLogs.length : 'N/A'}
+                </pre>
+            `;
+        }
+        
+        function clearData() {
+            if (window.capturedErrors) window.capturedErrors.length = 0;
+            if (window.capturedWarnings) window.capturedWarnings.length = 0;
+            if (window.capturedLogs) window.capturedLogs.length = 0;
+            showCapturedData();
+        }
+        
+        // Auto-show data on load
+        setTimeout(showCapturedData, 500);
+    </script>
+</body>
+</html>

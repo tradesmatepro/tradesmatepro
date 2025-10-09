@@ -1,0 +1,160 @@
+-- ========================================
+-- DROP ALL STATUS CONSTRAINTS AND CREATE ONE CORRECT ONE
+-- Root cause: Multiple constraints with different definitions
+-- ========================================
+
+-- STEP 1: Drop ALL status-related constraints
+ALTER TABLE customers DROP CONSTRAINT IF EXISTS chk_customers_status;
+ALTER TABLE customers DROP CONSTRAINT IF EXISTS customers_status_check;
+ALTER TABLE customers DROP CONSTRAINT IF EXISTS customer_status_check;
+ALTER TABLE customers DROP CONSTRAINT IF EXISTS chk_status;
+
+-- STEP 2: Decide on status values
+-- Industry Standard (ServiceTitan, Jobber, Housecall Pro):
+-- - active: Normal customer, can book jobs
+-- - inactive: Archived customer, cannot book jobs
+-- - suspended: Temporarily blocked (optional)
+-- - credit_hold: Payment issues (optional)
+-- - do_not_service: Blacklisted (optional)
+
+-- For now, let's use the EXTENDED set since it was already defined
+-- This gives you more flexibility for customer management
+
+ALTER TABLE customers ADD CONSTRAINT customers_status_check
+    CHECK (status IN ('active', 'inactive', 'suspended', 'credit_hold', 'do_not_service'));
+
+-- STEP 3: Normalize existing data
+UPDATE customers 
+SET status = LOWER(COALESCE(status, 'active'))
+WHERE status IS NULL OR status = '';
+
+-- Set default to active if somehow null
+UPDATE customers 
+SET status = 'active'
+WHERE status IS NULL;
+
+-- STEP 4: Update the trigger to handle all status values
+CREATE OR REPLACE FUNCTION handle_customer_changes_final()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Auto-generate customer number if missing
+    IF NEW.customer_number IS NULL OR NEW.customer_number = '' THEN
+        NEW.customer_number := generate_customer_number(NEW.company_id);
+    END IF;
+    
+    -- CRITICAL: Normalize status to lowercase FIRST
+    IF NEW.status IS NOT NULL THEN
+        NEW.status := LOWER(NEW.status);
+    END IF;
+    
+    -- Sync is_active from status (lowercase comparison)
+    -- Only 'active' status means is_active = true
+    IF NEW.status IS NOT NULL THEN
+        NEW.is_active := (NEW.status = 'active');
+    ELSIF NEW.is_active IS NOT NULL THEN
+        -- If only is_active is set, derive status from it
+        NEW.status := CASE WHEN NEW.is_active THEN 'active' ELSE 'inactive' END;
+    ELSE
+        -- Default to active if neither is set
+        NEW.status := 'active';
+        NEW.is_active := true;
+    END IF;
+    
+    -- Update display_name
+    NEW.display_name := CASE 
+        WHEN NEW.company_name IS NOT NULL AND trim(NEW.company_name) != '' THEN NEW.company_name
+        WHEN NEW.first_name IS NOT NULL AND NEW.last_name IS NOT NULL THEN 
+            trim(NEW.first_name || ' ' || NEW.last_name)
+        WHEN NEW.first_name IS NOT NULL AND trim(NEW.first_name) != '' THEN NEW.first_name
+        WHEN NEW.last_name IS NOT NULL AND trim(NEW.last_name) != '' THEN NEW.last_name
+        ELSE 'Unnamed Customer'
+    END;
+    
+    -- Ensure customer_since is set
+    IF NEW.customer_since IS NULL THEN
+        NEW.customer_since := CURRENT_DATE;
+    END IF;
+    
+    -- Format phone numbers using the E.164 function (if it exists)
+    IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'format_phone_e164') THEN
+        NEW.phone := format_phone_e164(NEW.phone);
+        NEW.mobile_phone := format_phone_e164(NEW.mobile_phone);
+    END IF;
+    
+    -- Ensure customer_type and type are in sync (lowercase)
+    IF NEW.customer_type IS NOT NULL THEN
+        NEW.type := LOWER(NEW.customer_type::text);
+    ELSIF NEW.type IS NOT NULL THEN
+        NEW.customer_type := LOWER(NEW.type)::customer_type_enum;
+    ELSE
+        -- Default to residential
+        NEW.customer_type := 'residential'::customer_type_enum;
+        NEW.type := 'residential';
+    END IF;
+    
+    -- Update updated_at timestamp
+    NEW.updated_at := NOW();
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Recreate trigger
+DROP TRIGGER IF EXISTS trg_handle_customer_changes_final ON customers;
+CREATE TRIGGER trg_handle_customer_changes_final
+    BEFORE INSERT OR UPDATE ON customers
+    FOR EACH ROW EXECUTE FUNCTION handle_customer_changes_final();
+
+-- STEP 5: Verify the fix
+SELECT 'All status constraints fixed!' as result;
+
+-- Show current constraints
+SELECT 
+    conname as constraint_name,
+    pg_get_constraintdef(oid) as definition
+FROM pg_constraint
+WHERE conrelid = 'public.customers'::regclass
+AND conname LIKE '%status%';
+
+-- Test insert with 'active' status
+DO $$
+DECLARE
+    test_id uuid := gen_random_uuid();
+    test_company_id uuid := 'cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e'::uuid;
+    result_status text;
+    result_is_active boolean;
+BEGIN
+    INSERT INTO customers (
+        id,
+        company_id,
+        customer_number,
+        type,
+        first_name,
+        last_name,
+        email,
+        phone,
+        status
+    ) VALUES (
+        test_id,
+        test_company_id,
+        'CUST-TEST-FINAL',
+        'residential',
+        'Test',
+        'Customer',
+        'test@test.com',
+        '+15551234567',
+        'active'
+    )
+    RETURNING status, is_active INTO result_status, result_is_active;
+    
+    RAISE NOTICE '✅ Test insert SUCCEEDED!';
+    RAISE NOTICE 'Status: %, is_active: %', result_status, result_is_active;
+    
+    -- Clean up
+    DELETE FROM customers WHERE id = test_id;
+    RAISE NOTICE '✅ Test customer deleted';
+    
+EXCEPTION WHEN OTHERS THEN
+    RAISE NOTICE '❌ Test insert FAILED: %', SQLERRM;
+    RAISE NOTICE 'Error code: %', SQLSTATE;
+END $$;

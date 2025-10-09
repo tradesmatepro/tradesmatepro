@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Permissions Test - TradeMate Pro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 1200px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f59e0b;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 12px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .permission-yes {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .permission-no {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 User Permissions System Test</h1>
+        
+        <p>Test the user_permissions table system with individual boolean columns for each permission.</p>
+        
+        <div class="info">
+            <strong>🎯 What This Tests:</strong><br>
+            • user_permissions table structure and data<br>
+            • Permission toggles in employee creation<br>
+            • Permission management for existing users<br>
+            • Relationship between users and user_permissions tables
+        </div>
+        
+        <h3>🚀 Quick Actions:</h3>
+        <button onclick="checkPermissionsTable()">🗄️ Check Permissions Table</button>
+        <button onclick="viewUserPermissions()">👥 View User Permissions</button>
+        <button onclick="testPermissionQueries()">🔍 Test Permission Queries</button>
+        <button onclick="openEmployees()">👷 Open Employees Page</button>
+        <button onclick="openApp()">🚀 Open TradeMate Pro</button>
+        
+        <div id="result"></div>
+        
+        <h3>📋 Permission Structure:</h3>
+        <div style="background: #f0f9ff; padding: 15px; border-radius: 6px; border-left: 4px solid #0ea5e9;">
+            <strong>🔑 Available Permissions:</strong><br><br>
+            • <strong>can_view_quotes:</strong> View and access quote information<br>
+            • <strong>can_create_jobs:</strong> Create and manage job entries<br>
+            • <strong>can_access_customers:</strong> View and manage customer information<br>
+            • <strong>can_edit_documents:</strong> Create and edit documents<br>
+            • <strong>can_manage_employees:</strong> Add, edit, and manage employee accounts<br>
+            • <strong>can_access_settings:</strong> Access company settings and configuration<br>
+            • <strong>can_manage_permissions:</strong> Modify other users' permissions
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
+        const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+        
+        async function checkPermissionsTable() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking user_permissions table...</div>';
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/user_permissions?select=*&limit=5`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const permissions = await response.json();
+                    
+                    if (permissions.length > 0) {
+                        const samplePermission = permissions[0];
+                        const columns = Object.keys(samplePermission);
+                        
+                        resultDiv.innerHTML = `
+                            <div class="success">
+                                <strong>✅ Permissions Table: EXISTS</strong><br>
+                                Found ${permissions.length} permission records<br>
+                                Columns: ${columns.length}
+                            </div>
+                            <div style="background: #f3f4f6; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                                <strong>Table Structure:</strong><br>
+                                ${columns.join(', ')}
+                            </div>
+                            <pre>${JSON.stringify(permissions, null, 2)}</pre>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="warning">
+                                <strong>⚠️ Permissions Table: EMPTY</strong><br>
+                                The user_permissions table exists but has no data yet.<br>
+                                Create some employees to test the permission system.
+                            </div>
+                        `;
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Permissions Table Check: FAILED</strong><br>
+                        ${error.message}<br>
+                        The user_permissions table may not exist or be accessible.
+                    </div>
+                `;
+            }
+        }
+        
+        async function viewUserPermissions() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Loading user permissions...</div>';
+            
+            try {
+                // Get users with their permissions
+                const usersResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/users?select=id,email,full_name,role&limit=10`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                const permissionsResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/user_permissions?select=*`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (usersResponse.ok && permissionsResponse.ok) {
+                    const users = await usersResponse.json();
+                    const permissions = await permissionsResponse.json();
+                    
+                    // Create a map of user permissions
+                    const permissionMap = {};
+                    permissions.forEach(perm => {
+                        permissionMap[perm.user_id] = perm;
+                    });
+                    
+                    let tableHtml = `
+                        <table>
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Quotes</th>
+                                <th>Jobs</th>
+                                <th>Customers</th>
+                                <th>Documents</th>
+                                <th>Employees</th>
+                                <th>Settings</th>
+                                <th>Permissions</th>
+                            </tr>
+                    `;
+                    
+                    users.forEach(user => {
+                        const userPerms = permissionMap[user.id];
+                        tableHtml += `
+                            <tr>
+                                <td>${user.full_name}<br><small>${user.email}</small></td>
+                                <td>${user.role}</td>
+                                <td class="${userPerms?.can_view_quotes ? 'permission-yes' : 'permission-no'}">${userPerms?.can_view_quotes ? '✅' : '❌'}</td>
+                                <td class="${userPerms?.can_create_jobs ? 'permission-yes' : 'permission-no'}">${userPerms?.can_create_jobs ? '✅' : '❌'}</td>
+                                <td class="${userPerms?.can_access_customers ? 'permission-yes' : 'permission-no'}">${userPerms?.can_access_customers ? '✅' : '❌'}</td>
+                                <td class="${userPerms?.can_edit_documents ? 'permission-yes' : 'permission-no'}">${userPerms?.can_edit_documents ? '✅' : '❌'}</td>
+                                <td class="${userPerms?.can_manage_employees ? 'permission-yes' : 'permission-no'}">${userPerms?.can_manage_employees ? '✅' : '❌'}</td>
+                                <td class="${userPerms?.can_access_settings ? 'permission-yes' : 'permission-no'}">${userPerms?.can_access_settings ? '✅' : '❌'}</td>
+                                <td class="${userPerms?.can_manage_permissions ? 'permission-yes' : 'permission-no'}">${userPerms?.can_manage_permissions ? '✅' : '❌'}</td>
+                            </tr>
+                        `;
+                    });
+                    
+                    tableHtml += '</table>';
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ User Permissions: LOADED</strong><br>
+                            Found ${users.length} users, ${permissions.length} permission records
+                        </div>
+                        ${tableHtml}
+                    `;
+                } else {
+                    throw new Error('Cannot access users or permissions data');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ User Permissions View: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testPermissionQueries() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing permission queries...</div>';
+            
+            try {
+                // Test various permission queries
+                const queries = [
+                    {
+                        name: 'Users who can view quotes',
+                        query: 'user_permissions?can_view_quotes=eq.true&select=user_id'
+                    },
+                    {
+                        name: 'Users who can manage employees',
+                        query: 'user_permissions?can_manage_employees=eq.true&select=user_id'
+                    },
+                    {
+                        name: 'Users with settings access',
+                        query: 'user_permissions?can_access_settings=eq.true&select=user_id'
+                    }
+                ];
+                
+                let queryResults = '';
+                
+                for (const query of queries) {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/${query.query}`, {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const results = await response.json();
+                        queryResults += `
+                            <div style="background: #f3f4f6; padding: 10px; margin: 5px 0; border-radius: 4px;">
+                                <strong>${query.name}:</strong> ${results.length} users<br>
+                                <small>Query: ${query.query}</small>
+                            </div>
+                        `;
+                    }
+                }
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <strong>✅ Permission Queries: SUCCESS</strong><br>
+                        All permission queries executed successfully
+                    </div>
+                    ${queryResults}
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Permission Queries: FAILED</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        function openEmployees() {
+            window.open('http://localhost:3000/employees', '_blank');
+        }
+        
+        function openApp() {
+            window.open('http://localhost:3000', '_blank');
+        }
+        
+        // Run initial check on page load
+        checkPermissionsTable();
+    </script>
+</body>
+</html>

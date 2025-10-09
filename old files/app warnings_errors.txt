@@ -1,0 +1,605 @@
+react-dom.development.js:29895 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+GoTrueClient.ts:235  Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+GoTrueClient @ GoTrueClient.ts:235
+GoTrueClient.ts:235  Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+GoTrueClient @ GoTrueClient.ts:235
+deprecations.ts:9  ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+warnOnce @ deprecations.ts:9
+deprecations.ts:9  ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+warnOnce @ deprecations.ts:9
+react-dom.development.js:86  Warning: <HomeIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at HomeIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <HomeIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at HomeIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <BriefcaseIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at BriefcaseIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <BriefcaseIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at BriefcaseIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <DocumentTextIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at DocumentTextIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <DocumentTextIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at DocumentTextIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <CalendarDaysIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at CalendarDaysIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <CalendarDaysIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at CalendarDaysIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <FolderIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at FolderIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <FolderIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at FolderIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <UserGroupIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at UserGroupIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <UserGroupIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at UserGroupIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <DocumentTextIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at DocumentTextIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <CurrencyDollarIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at CurrencyDollarIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <CurrencyDollarIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at CurrencyDollarIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <UsersIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at UsersIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <UsersIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at UsersIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <ChartBarIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at ChartBarIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: The tag <ChartBarIcon> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+    at ChartBarIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at aside
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <HomeIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at HomeIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <BriefcaseIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at BriefcaseIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <DocumentTextIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at DocumentTextIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <CalendarDaysIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at CalendarDaysIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <FolderIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at FolderIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <UserGroupIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at UserGroupIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <DocumentTextIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at DocumentTextIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <CurrencyDollarIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at CurrencyDollarIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <UsersIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at UsersIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+react-dom.development.js:86  Warning: <ChartBarIcon /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+    at ChartBarIcon
+    at a
+    at LinkWithRef (http://localhost:3000/static/js/bundle.js:67336:7)
+    at li
+    at ul
+    at nav
+    at div
+    at div
+    at Sidebar (http://localhost:3000/static/js/bundle.js:88320:3)
+    at div
+    at Layout (http://localhost:3000/static/js/bundle.js:88152:3)
+    at ProtectedRoute (http://localhost:3000/static/js/bundle.js:89423:3)
+    at RenderedRoute (http://localhost:3000/static/js/bundle.js:68649:5)
+    at Routes (http://localhost:3000/static/js/bundle.js:69383:5)
+    at Router (http://localhost:3000/static/js/bundle.js:69317:15)
+    at BrowserRouter (http://localhost:3000/static/js/bundle.js:67218:5)
+    at IntegrationsProvider (http://localhost:3000/static/js/bundle.js:97828:3)
+    at UserProvider (http://localhost:3000/static/js/bundle.js:98047:3)
+    at App
+printWarning @ react-dom.development.js:86
+amgtktrwpdsigcomavlg.supabase.co/rest/v1/companies?id=eq.ba643da1-c16f-468e-8fcb-f347e7929597:1   Failed to load resource: the server responded with a status of 400 ()
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again

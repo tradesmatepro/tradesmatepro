@@ -1,0 +1,520 @@
+table_name,conname,pg_get_constraintdef
+companies,companies_email_unique,UNIQUE (email)
+companies,companies_pkey,PRIMARY KEY (id)
+users,users_invited_by_user_id_fkey,FOREIGN KEY (invited_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+users,users_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+users,users_email_key,UNIQUE (email)
+users,users_role_check,"CHECK ((role = ANY (ARRAY['owner'::text, 'admin'::text, 'employee'::text])))"
+users,users_pkey,PRIMARY KEY (id)
+users,users_tier_check,"CHECK ((tier = ANY (ARRAY['free'::text, 'pro'::text, 'enterprise'::text])))"
+users,users_status_check,"CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text, 'pending_invite'::text])))"
+customers,customers_status_check,"CHECK ((status = ANY (ARRAY['active'::text, 'inactive'::text, 'suspended'::text, 'credit_hold'::text, 'do_not_service'::text])))"
+customers,customers_preferred_tech_id_fkey,FOREIGN KEY (preferred_technician) REFERENCES users(id)
+customers,customers_pkey,PRIMARY KEY (id)
+customers,customers_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+customers,customers_customer_type_check,"CHECK ((customer_type = ANY (ARRAY['RESIDENTIAL'::text, 'COMMERCIAL'::text, 'PROPERTY_MANAGEMENT'::text])))"
+job_photos,job_photos_pkey,PRIMARY KEY (id)
+job_photos,job_photos_type_check,"CHECK ((type = ANY (ARRAY['BEFORE'::text, 'AFTER'::text, 'OTHER'::text])))"
+job_photos,fk_job_photos_company_id,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+job_photos,job_photos_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+job_photos,job_photos_uploaded_by_fkey,FOREIGN KEY (uploaded_by) REFERENCES users(id)
+invoices,invoices_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+invoices,invoices_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+invoices,invoices_pkey,PRIMARY KEY (id)
+invoices,invoices_coupon_id_fkey,FOREIGN KEY (coupon_id) REFERENCES coupons(id) ON DELETE SET NULL
+invoices,invoices_status_check,"CHECK ((status = ANY (ARRAY['UNPAID'::text, 'PAID'::text, 'OVERDUE'::text, 'PARTIALLY_PAID'::text, 'CANCELLED'::text])))"
+invoices,invoices_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+payments,payments_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+payments,payments_pkey,PRIMARY KEY (id)
+payments,payments_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+technician_locations,technician_locations_pkey,PRIMARY KEY (id)
+technician_locations,technician_locations_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+technician_locations,technician_locations_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+schedule_events,schedule_events_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+schedule_events,schedule_events_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+schedule_events,schedule_events_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+schedule_events,schedule_events_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+schedule_events,schedule_events_pkey,PRIMARY KEY (id)
+schedule_events,schedule_events_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+schedule_events,schedule_events_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+messages,messages_pkey,PRIMARY KEY (id)
+messages,messages_recipient_id_fkey,FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE SET NULL
+messages,messages_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+messages,messages_type_check,"CHECK ((type = ANY (ARRAY['direct'::text, 'system'::text, 'job_request'::text])))"
+messages,messages_status_check,"CHECK ((status = ANY (ARRAY['sent'::text, 'delivered'::text, 'read'::text, 'archived'::text])))"
+messages,messages_sender_id_fkey,FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE
+messages,messages_receiver_id_fkey,FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+messages,messages_message_type_check,"CHECK ((message_type = ANY (ARRAY['internal'::text, 'client'::text, 'system'::text])))"
+messages,messages_service_request_id_fkey,FOREIGN KEY (service_request_id) REFERENCES service_requests(id) ON DELETE CASCADE
+customer_reviews,customer_reviews_rating_check,CHECK (((rating >= 1) AND (rating <= 5)))
+customer_reviews,customer_reviews_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT
+customer_reviews,customer_reviews_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+customer_reviews,customer_reviews_pkey,PRIMARY KEY (id)
+attachments,fk_attachments_company_id,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+attachments,attachments_pkey,PRIMARY KEY (id)
+attachments,attachments_uploaded_by_fkey,FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+service_contracts,service_contracts_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+service_contracts,service_contracts_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+service_contracts,service_contracts_pkey,PRIMARY KEY (id)
+settings,ck_settings_default_invoice_terms_allowed,"CHECK ((default_invoice_terms = ANY (ARRAY['DUE_ON_RECEIPT'::text, 'NET_7'::text, 'NET_15'::text, 'NET_30'::text, 'NET_45'::text, 'NET_60'::text, 'CUSTOM'::text])))"
+settings,ck_settings_default_invoice_due_days_nonneg,CHECK (((default_invoice_due_days IS NULL) OR (default_invoice_due_days >= 0)))
+settings,settings_pkey,PRIMARY KEY (id)
+settings,settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+settings,settings_default_invoice_due_days_check,CHECK (((default_invoice_due_days IS NULL) OR (default_invoice_due_days >= 0)))
+settings,settings_scheduling_buffer_minutes_check,CHECK ((scheduling_buffer_minutes >= 0))
+integration_tokens,integration_tokens_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id)
+integration_tokens,integration_tokens_pkey,PRIMARY KEY (id)
+user_permissions,user_permissions_pkey,PRIMARY KEY (id)
+user_permissions,user_permissions_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+user_permissions,user_permissions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+pending_schedule_requests,pending_schedule_requests_pkey,PRIMARY KEY (id)
+pending_schedule_requests,fk_psr_reviewer,FOREIGN KEY (reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+pending_schedule_requests,pending_schedule_requests_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+pending_schedule_requests,fk_psr_company,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_orders,work_orders_quote_number_key,UNIQUE (quote_number)
+work_orders,work_orders_reminder_method_check,"CHECK (((reminder_method)::text = ANY ((ARRAY['email'::character varying, 'sms'::character varying])::text[])))"
+work_orders,chk_work_orders_stage_status,CHECK ((((stage = 'QUOTE'::stage_enum) AND (quote_status IS NOT NULL)) OR ((stage = 'JOB'::stage_enum) AND (job_status IS NOT NULL)) OR ((stage = 'WORK_ORDER'::stage_enum) AND (work_status IS NOT NULL))))
+work_orders,work_orders_recurring_interval_check,"CHECK (((recurring_interval IS NULL) OR (recurring_interval = ANY (ARRAY['MONTHLY'::text, 'QUARTERLY'::text, 'YEARLY'::text, 'CUSTOM'::text]))))"
+work_orders,work_orders_pkey,PRIMARY KEY (work_order_id)
+work_orders,work_orders_progress_percent_check,CHECK (((progress_percent >= (0)::numeric) AND (progress_percent <= (100)::numeric)))
+work_orders,work_orders_pricing_model_check,"CHECK ((pricing_model = ANY (ARRAY['TIME_MATERIALS'::text, 'FLAT_RATE'::text, 'UNIT'::text, 'MILESTONE'::text, 'RECURRING'::text, 'PERCENTAGE'::text])))"
+work_orders,work_orders_service_address_id_fkey,FOREIGN KEY (service_address_id) REFERENCES customer_addresses(id)
+work_orders,chk_stage_status_guard,CHECK ((((stage = 'QUOTE'::stage_enum) AND (quote_status IS NOT NULL)) OR ((stage = 'JOB'::stage_enum) AND (job_status IS NOT NULL)) OR ((stage = 'WORK_ORDER'::stage_enum) AND (work_status IS NOT NULL))))
+work_orders,work_orders_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+work_orders,work_orders_parent_job_id_fkey,FOREIGN KEY (parent_job_id) REFERENCES work_orders(work_order_id) ON DELETE SET NULL
+work_orders,work_orders_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE SET NULL
+work_orders,work_orders_status_check,"CHECK ((status = ANY (ARRAY['QUOTE'::text, 'ACCEPTED'::text, 'SCHEDULED'::text, 'IN_PROGRESS'::text, 'COMPLETED'::text, 'INVOICED'::text, 'CANCELLED'::text])))"
+work_orders,work_orders_payment_status_check,"CHECK ((payment_status = ANY (ARRAY['PENDING'::text, 'PARTIAL'::text, 'PAID'::text, 'OVERDUE'::text])))"
+work_orders,work_orders_job_number_key,UNIQUE (job_number)
+work_orders,work_orders_invoice_number_key,UNIQUE (invoice_number)
+work_orders,work_orders_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_orders,work_orders_assigned_technician_id_fkey,FOREIGN KEY (assigned_technician_id) REFERENCES users(id)
+work_orders,work_orders_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+work_order_items,work_order_items_pkey,PRIMARY KEY (id)
+work_order_items,work_order_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_order_items,work_order_items_type_check,"CHECK ((item_type = ANY (ARRAY['labor'::text, 'material'::text, 'part'::text, 'fee'::text, 'discount'::text])))"
+work_order_items,work_order_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+work_order_items,work_order_items_item_type_check,"CHECK ((item_type = ANY (ARRAY['labor'::text, 'material'::text, 'part'::text, 'service'::text])))"
+work_order_items,work_order_items_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_audit,work_order_audit_pkey,PRIMARY KEY (id)
+work_order_audit,work_order_audit_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+wo_audit,wo_audit_pkey,PRIMARY KEY (id)
+employees,employees_pkey,PRIMARY KEY (id)
+work_order_labor,unique_work_order_employee_date,"UNIQUE (work_order_id, employee_id, work_date)"
+work_order_labor,work_order_labor_hours_check,CHECK ((hours >= (0)::numeric))
+work_order_labor,work_order_labor_overtime_hours_check,CHECK ((overtime_hours >= (0)::numeric))
+work_order_labor,work_order_labor_pkey,PRIMARY KEY (id)
+work_order_labor,work_order_labor_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id)
+work_order_labor,work_order_labor_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_labor,work_order_labor_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_time_off,employee_time_off_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES users(id)
+employee_time_off,employee_time_off_accrual_type_check,"CHECK ((accrual_type = ANY (ARRAY['vacation'::text, 'sick'::text, 'personal'::text, 'bereavement'::text, 'unpaid'::text, 'other'::text])))"
+employee_time_off,employee_time_off_pkey,PRIMARY KEY (id)
+employee_time_off,employee_time_off_status_check,"CHECK ((status = ANY (ARRAY['REQUESTED'::text, 'APPROVED'::text, 'DENIED'::text, 'CANCELLED'::text, 'EXPIRED'::text])))"
+employee_time_off,employee_time_off_policy_id_fkey,FOREIGN KEY (policy_id) REFERENCES pto_policies(id)
+employee_time_off,employee_time_off_hours_requested_check,CHECK ((hours_requested >= (0)::numeric))
+employee_time_off,employee_time_off_kind_check,"CHECK ((kind = ANY (ARRAY['PTO'::text, 'SICK'::text, 'UNPAID'::text, 'OTHER'::text])))"
+work_order_assignments,work_order_assignments_pkey,PRIMARY KEY (id)
+work_order_assignments,work_order_assignments_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+work_order_assignments,work_order_assignments_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_assignments,work_order_assignments_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+coupons,coupons_code_key,UNIQUE (code)
+coupons,coupons_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+coupons,coupons_discount_type_check,"CHECK ((discount_type = ANY (ARRAY['PERCENT'::text, 'FLAT'::text])))"
+coupons,coupons_pkey,PRIMARY KEY (id)
+invoice_items,invoice_items_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+invoice_items,invoice_items_pkey,PRIMARY KEY (id)
+invoice_items,invoice_items_discount_type_check,"CHECK ((discount_type = ANY (ARRAY['NONE'::text, 'FLAT'::text, 'PERCENT'::text])))"
+invoice_payments,invoice_payments_pkey,PRIMARY KEY (id)
+invoice_payments,invoice_payments_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+invoice_payments,invoice_payments_amount_check,CHECK ((amount >= (0)::numeric))
+invoice_payments,invoice_payments_method_check,"CHECK ((method = ANY (ARRAY['CASH'::text, 'CARD'::text, 'CHECK'::text, 'ACH'::text, 'OTHER'::text])))"
+employee_compensation,employee_compensation_pkey,PRIMARY KEY (id)
+employee_compensation,employee_compensation_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+employee_compensation,employee_compensation_pay_frequency_check,"CHECK ((pay_frequency = ANY (ARRAY['weekly'::text, 'biweekly'::text, 'monthly'::text, 'annual'::text])))"
+employee_timesheets,employee_timesheets_status_check,"CHECK ((status = ANY (ARRAY['draft'::text, 'submitted'::text, 'approved'::text, 'rejected'::text])))"
+employee_timesheets,employee_timesheets_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_timesheets,employee_timesheets_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_timesheets,employee_timesheets_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES users(id)
+employee_timesheets,employee_timesheets_denied_by_fkey,FOREIGN KEY (denied_by) REFERENCES users(id)
+employee_timesheets,employee_timesheets_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id)
+employee_timesheets,employee_timesheets_overtime_hours_check,CHECK ((overtime_hours >= (0)::numeric))
+employee_timesheets,employee_timesheets_break_minutes_check,CHECK ((break_minutes >= 0))
+employee_timesheets,employee_timesheets_pkey,PRIMARY KEY (id)
+employee_pay_rates,employee_pay_rates_pkey,PRIMARY KEY (id)
+employee_pay_rates,employee_pay_rates_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_pay_rates,employee_pay_rates_overtime_multiplier_check,CHECK ((overtime_multiplier >= 1.0))
+employee_pay_rates,employee_pay_rates_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+ui_preferences,ui_preferences_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+ui_preferences,ui_preferences_pkey,PRIMARY KEY (id)
+integration_settings,integration_settings_pkey,PRIMARY KEY (id)
+integration_settings,integration_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+business_settings,valid_currency,CHECK ((currency ~ '^[A-Z]{3}$'::text))
+business_settings,valid_time_format,"CHECK ((time_format = ANY (ARRAY['12'::text, '24'::text])))"
+business_settings,valid_contact_method,"CHECK ((preferred_contact_method = ANY (ARRAY['email'::text, 'phone'::text, 'sms'::text, 'app'::text])))"
+business_settings,business_settings_pkey,PRIMARY KEY (id)
+business_settings,business_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+business_settings,business_settings_company_id_key,UNIQUE (company_id)
+business_settings,valid_timezone,CHECK ((timezone ~ '^[A-Za-z_]+/[A-Za-z_]+$'::text))
+company_settings,company_settings_default_invoice_terms_check,"CHECK ((default_invoice_terms = ANY (ARRAY['DUE_ON_RECEIPT'::text, 'NET_7'::text, 'NET_15'::text, 'NET_30'::text, 'NET_45'::text, 'NET_60'::text])))"
+company_settings,company_settings_default_invoice_due_days_check,CHECK ((default_invoice_due_days >= 0))
+company_settings,company_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+company_settings,company_settings_pkey,PRIMARY KEY (id)
+rates_pricing_settings,rates_pricing_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+rates_pricing_settings,rates_pricing_settings_pkey,PRIMARY KEY (id)
+rates_pricing_settings,rates_pricing_settings_conflict_resolution_policy_check,"CHECK ((conflict_resolution_policy = ANY (ARRAY['HIGHEST'::text, 'STACK'::text, 'PRIORITY'::text])))"
+document_templates,document_templates_pkey,PRIMARY KEY (id)
+document_templates,document_templates_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+shared_document_templates,shared_document_templates_pkey,PRIMARY KEY (id)
+company_document_templates,company_document_templates_pkey,PRIMARY KEY (id)
+company_document_templates,company_document_templates_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+quote_templates,quote_templates_pkey,PRIMARY KEY (id)
+items_catalog,items_catalog_pkey,PRIMARY KEY (id)
+items_catalog,items_catalog_item_type_check,"CHECK ((item_type = ANY (ARRAY['material'::text, 'part'::text, 'labor'::text, 'service'::text])))"
+customers_status_history,customers_status_history_pkey,PRIMARY KEY (id)
+customers_status_history,customers_status_history_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+work_order_milestones,work_order_milestones_pkey,PRIMARY KEY (id)
+work_order_milestones,work_order_milestones_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_milestones,work_order_milestones_amount_or_percentage_chk,CHECK ((((amount IS NOT NULL) AND (percentage IS NULL)) OR ((amount IS NULL) AND (percentage IS NOT NULL))))
+customer_addresses,customer_addresses_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+customer_addresses,customer_addresses_pkey,PRIMARY KEY (id)
+customer_addresses,customer_addresses_address_type_check,"CHECK ((address_type = ANY (ARRAY['BILLING'::text, 'SERVICE'::text, 'MAILING'::text])))"
+employee_skills,employee_skills_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_skills,employee_skills_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_skills,employee_skills_company_id_employee_id_skill_name_key,"UNIQUE (company_id, employee_id, skill_name)"
+employee_skills,employee_skills_proficiency_level_check,CHECK (((proficiency_level >= 1) AND (proficiency_level <= 100)))
+employee_skills,employee_skills_assessed_by_fkey,FOREIGN KEY (assessed_by) REFERENCES users(id)
+employee_skills,employee_skills_pkey,PRIMARY KEY (id)
+employee_certifications,employee_certifications_status_check,"CHECK ((status = ANY (ARRAY['active'::text, 'expired'::text, 'expiring'::text, 'revoked'::text])))"
+employee_certifications,employee_certifications_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_certifications,employee_certifications_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_certifications,employee_certifications_pkey,PRIMARY KEY (id)
+employee_performance_reviews,employee_performance_reviews_overall_rating_check,CHECK (((overall_rating >= (0)::numeric) AND (overall_rating <= (5)::numeric)))
+employee_performance_reviews,employee_performance_reviews_reviewer_id_fkey,FOREIGN KEY (reviewer_id) REFERENCES users(id)
+employee_performance_reviews,employee_performance_reviews_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_performance_reviews,employee_performance_reviews_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_performance_reviews,employee_performance_reviews_pkey,PRIMARY KEY (id)
+employee_performance_reviews,employee_performance_reviews_status_check,"CHECK ((status = ANY (ARRAY['draft'::text, 'submitted'::text, 'reviewed'::text, 'finalized'::text])))"
+employee_performance_reviews,employee_performance_reviews_technical_skills_rating_check,CHECK (((technical_skills_rating >= (0)::numeric) AND (technical_skills_rating <= (5)::numeric)))
+employee_performance_reviews,employee_performance_reviews_communication_rating_check,CHECK (((communication_rating >= (0)::numeric) AND (communication_rating <= (5)::numeric)))
+employee_performance_reviews,employee_performance_reviews_teamwork_rating_check,CHECK (((teamwork_rating >= (0)::numeric) AND (teamwork_rating <= (5)::numeric)))
+employee_performance_reviews,employee_performance_reviews_performance_goals_rating_check,CHECK (((performance_goals_rating >= (0)::numeric) AND (performance_goals_rating <= (5)::numeric)))
+employee_development_goals,employee_development_goals_pkey,PRIMARY KEY (id)
+employee_development_goals,employee_development_goals_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_development_goals,employee_development_goals_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_development_goals,employee_development_goals_goal_category_check,"CHECK ((goal_category = ANY (ARRAY['professional'::text, 'technical'::text, 'leadership'::text, 'certification'::text, 'training'::text])))"
+employee_development_goals,employee_development_goals_progress_percentage_check,CHECK (((progress_percentage >= 0) AND (progress_percentage <= 100)))
+employee_development_goals,employee_development_goals_status_check,"CHECK ((status = ANY (ARRAY['active'::text, 'completed'::text, 'paused'::text, 'cancelled'::text])))"
+employee_development_goals,employee_development_goals_priority_check,"CHECK ((priority = ANY (ARRAY['low'::text, 'medium'::text, 'high'::text])))"
+employee_development_goals,employee_development_goals_assigned_by_fkey,FOREIGN KEY (assigned_by) REFERENCES users(id)
+employee_recognition,employee_recognition_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_recognition,employee_recognition_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_recognition,employee_recognition_pkey,PRIMARY KEY (id)
+employee_recognition,employee_recognition_recognition_type_check,"CHECK ((recognition_type = ANY (ARRAY['achievement'::text, 'award'::text, 'praise'::text, 'thanks'::text, 'milestone'::text])))"
+employee_recognition,employee_recognition_given_by_fkey,FOREIGN KEY (given_by) REFERENCES users(id)
+employee_time_summary,employee_time_summary_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+employee_time_summary,employee_time_summary_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+employee_time_summary,employee_time_summary_pkey,PRIMARY KEY (id)
+employee_time_summary,employee_time_summary_company_id_employee_id_summary_month_key,"UNIQUE (company_id, employee_id, summary_month)"
+expenses,expenses_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text, 'reimbursed'::text])))"
+expenses,expenses_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+expenses,expenses_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+expenses,expenses_pkey,PRIMARY KEY (id)
+expenses,expenses_reimbursement_status_check,"CHECK ((reimbursement_status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'PAID'::text])))"
+expense_categories,expense_categories_company_id_name_key,"UNIQUE (company_id, name)"
+expense_categories,expense_categories_pkey,PRIMARY KEY (id)
+expense_categories,expense_categories_reimbursement_type_check,"CHECK ((reimbursement_type = ANY (ARRAY['NONE'::text, 'DIRECT_PURCHASE'::text, 'MILEAGE'::text, 'PER_DIEM'::text])))"
+expense_categories,expense_categories_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+tool_usage,tool_usage_company_id_user_id_tool_name_key,"UNIQUE (company_id, user_id, tool_name)"
+tool_usage,tool_usage_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+tool_usage,tool_usage_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+tool_usage,tool_usage_pkey,PRIMARY KEY (id)
+documents,documents_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+documents,documents_parent_document_id_fkey,FOREIGN KEY (parent_document_id) REFERENCES documents(id)
+documents,documents_pkey,PRIMARY KEY (id)
+documents,documents_uploaded_by_fkey,FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+quotes,quotes_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+quotes,quotes_pkey,PRIMARY KEY (id)
+quotes,quotes_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+quotes,quotes_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE SET NULL
+quotes,quotes_created_by_fkey,FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL
+work_order_audit_log,work_order_audit_log_pkey,PRIMARY KEY (id)
+work_order_audit_log,work_order_audit_log_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_audit_log,work_order_audit_log_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+work_order_audit_log,work_order_audit_log_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_order_versions,work_order_versions_pkey,PRIMARY KEY (id)
+work_order_versions,work_order_versions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+work_order_versions,work_order_versions_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+work_order_versions,work_order_versions_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+pto_policies,pto_policies_pkey,PRIMARY KEY (id)
+pto_policies,pto_policies_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id)
+employee_pto_balances,employee_pto_balances_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id)
+employee_pto_balances,employee_pto_balances_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id)
+employee_pto_balances,employee_pto_balances_pkey,PRIMARY KEY (id)
+pto_ledger,pto_ledger_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id)
+pto_ledger,pto_ledger_policy_id_fkey,FOREIGN KEY (policy_id) REFERENCES pto_policies(id)
+pto_ledger,pto_ledger_entry_type_check,"CHECK ((entry_type = ANY (ARRAY['ACCRUAL'::text, 'USAGE'::text, 'ADJUSTMENT'::text])))"
+pto_ledger,pto_ledger_pkey,PRIMARY KEY (id)
+employee_pto_policies,employee_pto_policies_policy_id_fkey,FOREIGN KEY (policy_id) REFERENCES pto_policies(id)
+employee_pto_policies,employee_pto_policies_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id)
+employee_pto_policies,employee_pto_policies_pkey,PRIMARY KEY (id)
+quote_tools,quote_tools_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+quote_tools,quote_tools_pkey,PRIMARY KEY (id)
+quote_tool_tiers,quote_tool_tiers_pkey,PRIMARY KEY (id)
+quote_tool_tiers,quote_tool_tiers_tool_id_fkey,FOREIGN KEY (tool_id) REFERENCES quote_tools(id) ON DELETE CASCADE
+quote_tool_access,quote_tool_access_tool_id_fkey,FOREIGN KEY (tool_id) REFERENCES quote_tools(id) ON DELETE CASCADE
+quote_tool_access,quote_tool_access_pkey,PRIMARY KEY (id)
+quote_tool_usage,quote_tool_usage_quote_id_fkey,FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE
+quote_tool_usage,quote_tool_usage_tier_id_fkey,FOREIGN KEY (tier_id) REFERENCES quote_tool_tiers(id) ON DELETE SET NULL
+quote_tool_usage,quote_tool_usage_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+quote_tool_usage,quote_tool_usage_pkey,PRIMARY KEY (id)
+quote_tool_usage,quote_tool_usage_tool_id_fkey,FOREIGN KEY (tool_id) REFERENCES quote_tools(id) ON DELETE SET NULL
+tool_preferences,tool_preferences_pkey,PRIMARY KEY (id)
+tool_preferences,tool_preferences_user_id_tool_key_key,"UNIQUE (user_id, tool_key)"
+tool_preferences,tool_preferences_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+inventory_items,inventory_items_abc_classification_check,"CHECK ((abc_classification = ANY (ARRAY['A'::text, 'B'::text, 'C'::text])))"
+inventory_items,inventory_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_items,inventory_items_pkey,PRIMARY KEY (id)
+inventory_locations,inventory_locations_pkey,PRIMARY KEY (id)
+inventory_locations,inventory_locations_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_stock,inventory_stock_item_id_fkey,FOREIGN KEY (item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_stock,inventory_stock_pkey,PRIMARY KEY (id)
+inventory_stock,inventory_stock_location_id_fkey,FOREIGN KEY (location_id) REFERENCES inventory_locations(id) ON DELETE CASCADE
+inventory_stock,inventory_stock_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_stock,unique_item_location_company,"UNIQUE (item_id, location_id, company_id)"
+inventory_stock,inventory_stock_item_id_location_id_key,"UNIQUE (item_id, location_id)"
+inventory_movements,inventory_movements_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+inventory_movements,inventory_movements_location_id_fkey,FOREIGN KEY (location_id) REFERENCES inventory_locations(id)
+inventory_movements,inventory_movements_item_id_fkey,FOREIGN KEY (item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_movements,inventory_movements_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_movements,inventory_movements_movement_type_check,"CHECK ((movement_type = ANY (ARRAY['PURCHASE'::text, 'USAGE'::text, 'TRANSFER'::text, 'ADJUSTMENT'::text, 'RETURN'::text])))"
+inventory_movements,inventory_movements_related_work_order_id_fkey,FOREIGN KEY (related_work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+inventory_movements,inventory_movements_pkey,PRIMARY KEY (id)
+notifications,notifications_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+notifications,notifications_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL
+notifications,notifications_pkey,PRIMARY KEY (id)
+notifications,notifications_severity_check,"CHECK ((severity = ANY (ARRAY['INFO'::text, 'WARNING'::text, 'CRITICAL'::text])))"
+user_dashboard_settings,user_dashboard_settings_pkey,PRIMARY KEY (id)
+user_dashboard_settings,user_dashboard_settings_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE
+user_dashboard_settings,user_dashboard_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+purchase_orders,purchase_orders_approved_by_fkey,FOREIGN KEY (approved_by) REFERENCES users(id)
+purchase_orders,purchase_orders_rejected_by_fkey,FOREIGN KEY (rejected_by) REFERENCES users(id)
+purchase_orders,purchase_orders_related_work_order_id_fkey,FOREIGN KEY (related_work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+purchase_orders,purchase_orders_status_check,"CHECK ((status = ANY (ARRAY['DRAFT'::text, 'SENT'::text, 'APPROVED'::text, 'PARTIAL'::text, 'RECEIVED'::text, 'CLOSED'::text, 'CANCELLED'::text])))"
+purchase_orders,purchase_orders_pkey,PRIMARY KEY (id)
+purchase_orders,purchase_orders_company_id_po_number_key,"UNIQUE (company_id, po_number)"
+purchase_orders,purchase_orders_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+purchase_orders,fk_po_vendor,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE SET NULL
+purchase_orders,purchase_orders_location_type_check,"CHECK ((location_type = ANY (ARRAY['warehouse'::text, 'office'::text, 'jobsite'::text, 'custom'::text])))"
+purchase_orders,purchase_orders_approval_status_check,"CHECK ((approval_status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text])))"
+purchase_orders,purchase_orders_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+purchase_orders,purchase_orders_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE SET NULL
+po_items,po_items_pkey,PRIMARY KEY (id)
+po_items,po_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_items,po_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+po_items,fk_po_items_po,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_items,po_items_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_status_history,po_status_history_pkey,PRIMARY KEY (id)
+po_status_history,po_status_history_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_status_history,po_status_history_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_status_history,po_status_history_changed_by_fkey,FOREIGN KEY (changed_by) REFERENCES users(id) ON DELETE SET NULL
+vendors,vendors_pkey,PRIMARY KEY (id)
+vendors,vendors_type_check,"CHECK ((vendor_type = ANY (ARRAY['SUPPLIER'::text, 'CONTRACTOR'::text, 'SERVICE_PROVIDER'::text, 'MANUFACTURER'::text, 'DISTRIBUTOR'::text])))"
+vendors,vendors_payment_terms_check,"CHECK ((payment_terms = ANY (ARRAY['NET_15'::text, 'NET_30'::text, 'NET_45'::text, 'NET_60'::text, 'COD'::text, 'PREPAID'::text, '2_10_NET_30'::text])))"
+vendors,vendors_status_check,"CHECK ((status = ANY (ARRAY['ACTIVE'::text, 'INACTIVE'::text, 'SUSPENDED'::text, 'CREDIT_HOLD'::text, 'DO_NOT_ORDER'::text])))"
+vendors,vendors_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+vendors,vendors_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendors_status_history,vendors_status_history_pkey,PRIMARY KEY (id)
+vendors_status_history,vendors_status_history_changed_by_fkey,FOREIGN KEY (changed_by) REFERENCES users(id)
+vendors_status_history,vendors_status_history_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendor_contacts,vendor_contacts_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_contacts,vendor_contacts_pkey,PRIMARY KEY (id)
+vendor_contacts,vendor_contacts_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendor_categories,vendor_categories_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_categories,vendor_categories_pkey,PRIMARY KEY (id)
+vendor_categories,vendor_categories_company_id_name_key,"UNIQUE (company_id, name)"
+vendor_category_assignments,vendor_category_assignments_pkey,PRIMARY KEY (id)
+vendor_category_assignments,vendor_category_assignments_category_id_fkey,FOREIGN KEY (category_id) REFERENCES vendor_categories(id) ON DELETE CASCADE
+vendor_category_assignments,vendor_category_assignments_vendor_id_category_id_key,"UNIQUE (vendor_id, category_id)"
+vendor_category_assignments,vendor_category_assignments_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+po_approval_rules,po_approval_rules_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_approval_rules,po_approval_rules_vendor_category_id_fkey,FOREIGN KEY (vendor_category_id) REFERENCES vendor_categories(id)
+po_approval_rules,po_approval_rules_pkey,PRIMARY KEY (id)
+po_approval_rules,po_approval_rules_approver_user_id_fkey,FOREIGN KEY (approver_user_id) REFERENCES users(id)
+po_approvals,po_approvals_pkey,PRIMARY KEY (id)
+po_approvals,po_approvals_approver_user_id_fkey,FOREIGN KEY (approver_user_id) REFERENCES users(id)
+po_approvals,po_approvals_status_check,"CHECK ((status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'REJECTED'::text])))"
+po_approvals,po_approvals_rule_id_fkey,FOREIGN KEY (rule_id) REFERENCES po_approval_rules(id)
+po_approvals,po_approvals_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_approvals,po_approvals_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_items,vendor_items_vendor_id_supplier_part_number_key,"UNIQUE (vendor_id, supplier_part_number)"
+vendor_items,vendor_items_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendor_items,vendor_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+vendor_items,vendor_items_pkey,PRIMARY KEY (id)
+vendor_items,vendor_items_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_approval_workflows,po_approval_workflows_pkey,PRIMARY KEY (id)
+po_approval_workflows,po_approval_workflows_approval_level_check,"CHECK ((approval_level = ANY (ARRAY['auto'::text, 'manager'::text, 'owner'::text])))"
+po_approval_workflows,po_approval_workflows_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'completed'::text, 'rejected'::text])))"
+po_approval_workflows,po_approval_workflows_purchase_order_id_key,UNIQUE (purchase_order_id)
+po_approval_workflows,po_approval_workflows_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+po_approval_workflows,po_approval_workflows_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id) ON DELETE CASCADE
+po_approval_workflows,po_approval_workflows_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id)
+po_approval_actions,po_approval_actions_pkey,PRIMARY KEY (id)
+po_approval_actions,po_approval_actions_action_check,"CHECK ((action = ANY (ARRAY['approved'::text, 'rejected'::text])))"
+po_approval_actions,po_approval_actions_approver_id_fkey,FOREIGN KEY (approver_id) REFERENCES users(id)
+po_approval_actions,po_approval_actions_workflow_id_fkey,FOREIGN KEY (workflow_id) REFERENCES po_approval_workflows(id) ON DELETE CASCADE
+vendor_pricing_history,vendor_pricing_history_pkey,PRIMARY KEY (id)
+vendor_pricing_history,vendor_pricing_history_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+vendor_pricing_history,vendor_pricing_history_vendor_id_fkey,FOREIGN KEY (vendor_id) REFERENCES vendors(id) ON DELETE CASCADE
+vendor_pricing_history,vendor_pricing_history_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+vendor_pricing_history,vendor_pricing_history_purchase_order_id_fkey,FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders(id)
+company_approval_settings,company_approval_settings_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+company_approval_settings,company_approval_settings_pkey,PRIMARY KEY (id)
+company_approval_settings,company_approval_settings_company_id_key,UNIQUE (company_id)
+customer_portal_accounts,customer_portal_accounts_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+customer_portal_accounts,customer_portal_accounts_customer_id_email_key,"UNIQUE (customer_id, email)"
+customer_portal_accounts,customer_portal_accounts_pkey,PRIMARY KEY (id)
+esignatures,esignatures_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+esignatures,esignatures_quote_id_fkey,FOREIGN KEY (quote_id) REFERENCES quotes(id) ON DELETE CASCADE
+esignatures,esignatures_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+esignatures,esignatures_pkey,PRIMARY KEY (id)
+esignatures,esignatures_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+service_requests,service_requests_status_check,"CHECK ((status = ANY (ARRAY['open'::text, 'claimed'::text, 'scheduled'::text, 'closed'::text, 'cancelled'::text])))"
+service_requests,service_requests_pkey,PRIMARY KEY (id)
+service_requests,service_requests_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE SET NULL
+service_requests,service_requests_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
+service_requests,service_requests_urgency_check,"CHECK ((urgency = ANY (ARRAY['low'::text, 'normal'::text, 'high'::text, 'emergency'::text])))"
+service_request_responses,service_request_responses_pkey,PRIMARY KEY (id)
+service_request_responses,service_request_responses_service_request_id_fkey,FOREIGN KEY (service_request_id) REFERENCES service_requests(id) ON DELETE CASCADE
+service_request_responses,service_request_responses_contractor_company_id_fkey,FOREIGN KEY (contractor_company_id) REFERENCES companies(id) ON DELETE CASCADE
+service_request_responses,service_request_responses_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+service_request_responses,service_request_responses_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'accepted'::text, 'declined'::text])))"
+subcontractors,subcontractors_email_key,UNIQUE (email)
+subcontractors,subcontractors_status_check,"CHECK ((status = ANY (ARRAY['ACTIVE'::text, 'INACTIVE'::text])))"
+subcontractors,subcontractors_pkey,PRIMARY KEY (id)
+subcontractors,subcontractors_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+subcontractor_work_orders,subcontractor_work_orders_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+subcontractor_work_orders,subcontractor_work_orders_pkey,PRIMARY KEY (id)
+subcontractor_work_orders,subcontractor_work_orders_status_check,"CHECK ((status = ANY (ARRAY['ASSIGNED'::text, 'IN_PROGRESS'::text, 'COMPLETED'::text])))"
+subcontractor_work_orders,subcontractor_work_orders_subcontractor_id_fkey,FOREIGN KEY (subcontractor_id) REFERENCES subcontractors(id) ON DELETE CASCADE
+subcontractor_documents,subcontractor_documents_pkey,PRIMARY KEY (id)
+subcontractor_documents,subcontractor_documents_subcontractor_id_fkey,FOREIGN KEY (subcontractor_id) REFERENCES subcontractors(id) ON DELETE CASCADE
+subcontractor_timesheets,subcontractor_timesheets_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+subcontractor_timesheets,subcontractor_timesheets_pkey,PRIMARY KEY (id)
+subcontractor_timesheets,subcontractor_timesheets_subcontractor_id_fkey,FOREIGN KEY (subcontractor_id) REFERENCES subcontractors(id) ON DELETE CASCADE
+service_tags,service_tags_name_key,UNIQUE (name)
+service_tags,service_tags_pkey,PRIMARY KEY (id)
+company_service_tags,company_service_tags_company_id_service_tag_id_key,"UNIQUE (company_id, service_tag_id)"
+company_service_tags,company_service_tags_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+company_service_tags,company_service_tags_service_tag_id_fkey,FOREIGN KEY (service_tag_id) REFERENCES service_tags(id) ON DELETE CASCADE
+company_service_tags,company_service_tags_pkey,PRIMARY KEY (id)
+inventory_serial_numbers,inventory_serial_numbers_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_serial_numbers,inventory_serial_numbers_pkey,PRIMARY KEY (id)
+inventory_serial_numbers,inventory_serial_numbers_status_check,"CHECK ((status = ANY (ARRAY['available'::text, 'reserved'::text, 'sold'::text, 'returned'::text, 'scrapped'::text])))"
+inventory_batches,inventory_batches_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+inventory_batches,inventory_batches_pkey,PRIMARY KEY (id)
+inventory_scan_log,inventory_scan_log_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE SET NULL
+inventory_scan_log,inventory_scan_log_scan_type_check,"CHECK ((scan_type = ANY (ARRAY['inbound'::text, 'outbound'::text, 'move'::text, 'adjustment'::text, 'count'::text])))"
+inventory_scan_log,inventory_scan_log_scanned_by_fkey,FOREIGN KEY (scanned_by) REFERENCES users(id) ON DELETE SET NULL
+inventory_scan_log,inventory_scan_log_pkey,PRIMARY KEY (id)
+inventory_cycle_counts,inventory_cycle_counts_status_check,"CHECK ((status = ANY (ARRAY['scheduled'::text, 'in_progress'::text, 'completed'::text, 'cancelled'::text])))"
+inventory_cycle_counts,inventory_cycle_counts_pkey,PRIMARY KEY (id)
+inventory_cycle_counts,inventory_cycle_counts_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+inventory_cycle_count_items,inventory_cycle_count_items_cycle_count_id_fkey,FOREIGN KEY (cycle_count_id) REFERENCES inventory_cycle_counts(id) ON DELETE CASCADE
+inventory_cycle_count_items,inventory_cycle_count_items_pkey,PRIMARY KEY (id)
+inventory_cycle_count_items,inventory_cycle_count_items_inventory_item_id_fkey,FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id) ON DELETE CASCADE
+default_expense_categories,default_expense_categories_pkey,PRIMARY KEY (id)
+expense_reimbursements,expense_reimbursements_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+expense_reimbursements,expense_reimbursements_status_check,"CHECK ((status = ANY (ARRAY['PENDING'::text, 'APPROVED'::text, 'PAID'::text])))"
+expense_reimbursements,expense_reimbursements_pkey,PRIMARY KEY (id)
+expense_reimbursements,expense_reimbursements_expense_id_fkey,FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE
+expense_reimbursements,expense_reimbursements_method_check,"CHECK ((method = ANY (ARRAY['PAYROLL'::text, 'CHECK'::text, 'BANK_TRANSFER'::text])))"
+reimbursement_requests,reimbursement_requests_pkey,PRIMARY KEY (id)
+reimbursement_requests,reimbursement_requests_payment_method_check,"CHECK ((payment_method = ANY (ARRAY['PAYROLL'::text, 'CHECK'::text, 'BANK_TRANSFER'::text, 'PETTY_CASH'::text])))"
+reimbursement_requests,reimbursement_requests_status_check,"CHECK ((status = ANY (ARRAY['DRAFT'::text, 'SUBMITTED'::text, 'UNDER_REVIEW'::text, 'APPROVED'::text, 'REJECTED'::text, 'PAID'::text])))"
+reimbursement_requests,reimbursement_requests_approver_id_fkey,FOREIGN KEY (approver_id) REFERENCES users(id) ON DELETE SET NULL
+reimbursement_requests,reimbursement_requests_reviewer_id_fkey,FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE SET NULL
+reimbursement_requests,reimbursement_requests_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES users(id) ON DELETE CASCADE
+reimbursement_requests,reimbursement_requests_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+reimbursement_requests,reimbursement_requests_request_number_key,UNIQUE (request_number)
+job_assignments,job_assignments_role_check,"CHECK ((role = ANY (ARRAY['LEAD'::text, 'ASSISTANT'::text, 'APPRENTICE'::text])))"
+job_assignments,job_assignments_employee_id_fkey,FOREIGN KEY (employee_id) REFERENCES employees(id) ON DELETE CASCADE
+job_assignments,job_assignments_pkey,PRIMARY KEY (id)
+job_assignments,job_assignments_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE CASCADE
+job_triggers,job_triggers_event_check,"CHECK ((event = ANY (ARRAY['ON_CREATE'::text, 'ON_ASSIGN'::text, 'ON_COMPLETE'::text, 'ON_INVOICE'::text])))"
+job_triggers,job_triggers_action_check,"CHECK ((action = ANY (ARRAY['SEND_NOTIFICATION'::text, 'CHANGE_STATUS'::text, 'CREATE_INVOICE'::text])))"
+job_triggers,job_triggers_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+job_triggers,job_triggers_pkey,PRIMARY KEY (id)
+recurring_jobs,recurring_jobs_assigned_to_fkey,FOREIGN KEY (assigned_to) REFERENCES auth.users(id)
+recurring_jobs,recurring_jobs_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id)
+recurring_jobs,recurring_jobs_created_by_fkey,FOREIGN KEY (created_by) REFERENCES auth.users(id)
+recurring_jobs,recurring_jobs_frequency_check,"CHECK (((frequency)::text = ANY ((ARRAY['daily'::character varying, 'weekly'::character varying, 'monthly'::character varying, 'yearly'::character varying])::text[])))"
+recurring_jobs,valid_frequency,"CHECK (((frequency)::text = ANY ((ARRAY['daily'::character varying, 'weekly'::character varying, 'monthly'::character varying, 'yearly'::character varying])::text[])))"
+recurring_jobs,valid_interval,CHECK ((interval_value > 0))
+recurring_jobs,valid_duration,CHECK ((duration_minutes > 0))
+recurring_jobs,recurring_jobs_pkey,PRIMARY KEY (id)
+recurring_jobs,recurring_jobs_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id)
+route_optimizations,route_optimizations_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id)
+route_optimizations,route_optimizations_created_by_fkey,FOREIGN KEY (created_by) REFERENCES auth.users(id)
+route_optimizations,route_optimizations_technician_id_fkey,FOREIGN KEY (technician_id) REFERENCES auth.users(id)
+route_optimizations,route_optimizations_pkey,PRIMARY KEY (id)
+notification_settings,one_setting_per_company,UNIQUE (company_id)
+notification_settings,notification_settings_pkey,PRIMARY KEY (id)
+notification_settings,notification_settings_company_fk,FOREIGN KEY (company_id) REFERENCES companies(id)
+document_versions,document_versions_pkey,PRIMARY KEY (id)
+document_versions,document_versions_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_versions,document_versions_previous_version_id_fkey,FOREIGN KEY (previous_version_id) REFERENCES document_versions(id)
+document_versions,document_versions_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+document_versions,document_versions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+document_versions,document_versions_document_id_version_key,"UNIQUE (document_id, version)"
+signature_requests,signature_requests_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+signature_requests,signature_requests_status_check,"CHECK ((status = ANY (ARRAY['sent'::text, 'viewed'::text, 'signed'::text, 'declined'::text, 'expired'::text])))"
+signature_requests,signature_requests_pkey,PRIMARY KEY (id)
+signature_requests,signature_requests_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+signature_requests,signature_requests_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_workflows,document_workflows_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_workflows,document_workflows_workflow_type_check,"CHECK ((workflow_type = ANY (ARRAY['approval'::text, 'review'::text, 'signature'::text, 'custom'::text])))"
+document_workflows,document_workflows_approval_order_check,"CHECK ((approval_order = ANY (ARRAY['any'::text, 'sequential'::text, 'parallel'::text])))"
+document_workflows,document_workflows_created_by_fkey,FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+document_workflows,document_workflows_reminder_frequency_check,"CHECK ((reminder_frequency = ANY (ARRAY['none'::text, 'daily'::text, 'weekly'::text])))"
+document_workflows,document_workflows_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'in_progress'::text, 'approved'::text, 'rejected'::text, 'expired'::text])))"
+document_workflows,document_workflows_pkey,PRIMARY KEY (id)
+document_workflows,document_workflows_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+workflow_approvals,workflow_approvals_workflow_id_fkey,FOREIGN KEY (workflow_id) REFERENCES document_workflows(id) ON DELETE CASCADE
+workflow_approvals,workflow_approvals_approver_user_id_fkey,FOREIGN KEY (approver_user_id) REFERENCES users(id) ON DELETE SET NULL
+workflow_approvals,workflow_approvals_pkey,PRIMARY KEY (id)
+workflow_approvals,workflow_approvals_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+workflow_approvals,workflow_approvals_status_check,"CHECK ((status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text, 'delegated'::text])))"
+document_access_log,document_access_log_action_check,"CHECK ((action = ANY (ARRAY['view'::text, 'download'::text, 'edit'::text, 'delete'::text, 'share'::text, 'sign'::text])))"
+document_access_log,document_access_log_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+document_access_log,document_access_log_document_id_fkey,FOREIGN KEY (document_id) REFERENCES documents(id) ON DELETE CASCADE
+document_access_log,document_access_log_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+document_access_log,document_access_log_pkey,PRIMARY KEY (id)
+lead_sources,lead_sources_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+lead_sources,lead_sources_pkey,PRIMARY KEY (id)
+leads,leads_assigned_to_fkey,FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL
+leads,leads_status_check,"CHECK ((status = ANY (ARRAY['NEW'::text, 'CONTACTED'::text, 'QUALIFIED'::text, 'LOST'::text])))"
+leads,leads_pkey,PRIMARY KEY (id)
+leads,leads_lead_source_id_fkey,FOREIGN KEY (lead_source_id) REFERENCES lead_sources(id) ON DELETE SET NULL
+leads,leads_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL
+leads,leads_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+opportunities,opportunities_pkey,PRIMARY KEY (id)
+opportunities,opportunities_work_order_id_fkey,FOREIGN KEY (work_order_id) REFERENCES work_orders(work_order_id) ON DELETE SET NULL
+opportunities,opportunities_customer_id_fkey,FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL
+opportunities,opportunities_probability_check,CHECK (((probability >= (0)::numeric) AND (probability <= (100)::numeric)))
+opportunities,opportunities_lead_id_fkey,FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE SET NULL
+opportunities,opportunities_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+opportunities,opportunities_stage_check,"CHECK ((stage = ANY (ARRAY['QUALIFICATION'::text, 'PROPOSAL'::text, 'NEGOTIATION'::text, 'CLOSED_WON'::text, 'CLOSED_LOST'::text])))"
+sales_activities,sales_activities_lead_id_fkey,FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE
+sales_activities,sales_activities_opportunity_id_fkey,FOREIGN KEY (opportunity_id) REFERENCES opportunities(id) ON DELETE CASCADE
+sales_activities,sales_activities_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+sales_activities,sales_activities_pkey,PRIMARY KEY (id)
+sales_activities,sales_activities_activity_type_check,"CHECK ((activity_type = ANY (ARRAY['CALL'::text, 'EMAIL'::text, 'MEETING'::text, 'NOTE'::text])))"
+sales_activities,sales_activities_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+sales_targets,sales_targets_pkey,PRIMARY KEY (id)
+sales_targets,sales_targets_user_id_fkey,FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+sales_targets,sales_targets_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+invoice_commissions,invoice_commissions_company_id_fkey,FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+invoice_commissions,invoice_commissions_pkey,PRIMARY KEY (id)
+invoice_commissions,invoice_commissions_sales_rep_id_fkey,FOREIGN KEY (sales_rep_id) REFERENCES users(id) ON DELETE CASCADE
+invoice_commissions,invoice_commissions_invoice_id_fkey,FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE

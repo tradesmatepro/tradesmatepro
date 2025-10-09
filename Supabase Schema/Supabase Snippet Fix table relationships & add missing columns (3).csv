@@ -1,0 +1,1864 @@
+schema,function_name,definition
+public,auto_format_contact_phones,"CREATE OR REPLACE FUNCTION public.auto_format_contact_phones()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    NEW.phone := format_phone_e164(NEW.phone);
+    RETURN NEW;
+END;
+$function$
+"
+public,auto_format_customer_phones,"CREATE OR REPLACE FUNCTION public.auto_format_customer_phones()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Format phone numbers on insert/update
+    NEW.phone := format_phone_e164(NEW.phone);
+    NEW.mobile_phone := format_phone_e164(NEW.mobile_phone);
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,auto_generate_customer_number,"CREATE OR REPLACE FUNCTION public.auto_generate_customer_number()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    IF NEW.customer_number IS NULL OR NEW.customer_number = '' THEN
+        NEW.customer_number := generate_customer_number(NEW.company_id);
+    END IF;
+    RETURN NEW;
+END;
+$function$
+"
+public,auto_generate_invoice_number,"CREATE OR REPLACE FUNCTION public.auto_generate_invoice_number()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    IF NEW.invoice_number IS NULL OR NEW.invoice_number = '' THEN
+        NEW.invoice_number := generate_invoice_number(NEW.company_id);
+    END IF;
+    RETURN NEW;
+END;
+$function$
+"
+public,calculate_deposit_amount,"CREATE OR REPLACE FUNCTION public.calculate_deposit_amount()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- If deposit_percentage is set, calculate deposit_amount
+    IF NEW.deposit_percentage IS NOT NULL AND NEW.total_amount IS NOT NULL THEN
+        NEW.deposit_amount := ROUND((NEW.total_amount * NEW.deposit_percentage / 100), 2);
+    END IF;
+    
+    -- If deposit_amount is set, calculate deposit_percentage
+    IF NEW.deposit_amount IS NOT NULL AND NEW.deposit_amount > 0 AND NEW.total_amount IS NOT NULL AND NEW.total_amount > 0 THEN
+        NEW.deposit_percentage := ROUND((NEW.deposit_amount / NEW.total_amount * 100), 2);
+    END IF;
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,calculate_discount_amount,"CREATE OR REPLACE FUNCTION public.calculate_discount_amount()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- If discount_percentage is set, calculate discount_amount from subtotal
+    IF NEW.discount_percentage IS NOT NULL AND NEW.subtotal IS NOT NULL THEN
+        NEW.discount_amount := ROUND((NEW.subtotal * NEW.discount_percentage / 100), 2);
+    END IF;
+    
+    -- If discount_amount is set, calculate discount_percentage
+    IF NEW.discount_amount IS NOT NULL AND NEW.discount_amount > 0 AND NEW.subtotal IS NOT NULL AND NEW.subtotal > 0 THEN
+        NEW.discount_percentage := ROUND((NEW.discount_amount / NEW.subtotal * 100), 2);
+    END IF;
+    
+    -- Recalculate total_amount with discount
+    IF NEW.discount_amount IS NOT NULL AND NEW.discount_amount > 0 THEN
+        NEW.total_amount := (NEW.subtotal - NEW.discount_amount) + COALESCE(NEW.tax_amount, 0);
+    END IF;
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,calculate_invoice_balance,"CREATE OR REPLACE FUNCTION public.calculate_invoice_balance(p_invoice_id uuid)
+ RETURNS numeric
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_total_amount DECIMAL(10,2);
+    v_amount_paid DECIMAL(10,2);
+    v_balance DECIMAL(10,2);
+BEGIN
+    -- Get invoice total
+    SELECT total_amount INTO v_total_amount
+    FROM invoices 
+    WHERE id = p_invoice_id;
+    
+    IF v_total_amount IS NULL THEN
+        RETURN 0;
+    END IF;
+    
+    -- Calculate total payments
+    SELECT COALESCE(SUM(amount), 0) INTO v_amount_paid
+    FROM payments 
+    WHERE invoice_id = p_invoice_id 
+      AND status = 'completed';
+    
+    -- Calculate balance
+    v_balance := v_total_amount - v_amount_paid;
+    
+    -- Update invoice record
+    UPDATE invoices 
+    SET 
+        amount_paid = v_amount_paid,
+        balance_due = v_balance,
+        status = CASE 
+            WHEN v_balance <= 0 THEN 'paid'::invoice_status_enum
+            WHEN v_amount_paid > 0 THEN 'partial_payment'::invoice_status_enum
+            ELSE status
+        END,
+        updated_at = NOW()
+    WHERE id = p_invoice_id;
+    
+    RETURN v_balance;
+END;
+$function$
+"
+public,calculate_invoice_balance_advanced,"CREATE OR REPLACE FUNCTION public.calculate_invoice_balance_advanced(p_invoice_id uuid, p_update_customer_balance boolean DEFAULT true)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    invoice_rec RECORD;
+    payment_total NUMERIC := 0;
+    balance_due NUMERIC;
+    new_status invoice_status_enum;
+    result JSONB;
+BEGIN
+    SELECT * INTO invoice_rec FROM invoices WHERE id = p_invoice_id;
+
+    SELECT COALESCE(SUM(amount), 0) INTO payment_total
+    FROM payments 
+    WHERE invoice_id = p_invoice_id AND status = 'completed';
+
+    balance_due := GREATEST(invoice_rec.total_amount - payment_total, 0);
+
+    new_status := CASE
+        WHEN payment_total >= invoice_rec.total_amount THEN 'paid'
+        WHEN payment_total > 0 THEN 'partially_paid'
+        WHEN invoice_rec.due_date < CURRENT_DATE AND balance_due > 0 THEN 'overdue'
+        ELSE invoice_rec.status
+    END;
+
+    UPDATE invoices
+    SET amount_paid = payment_total,
+        status = new_status,
+        updated_at = NOW()
+    WHERE id = p_invoice_id;
+
+    result := jsonb_build_object(
+        'invoice_id', p_invoice_id,
+        'total_amount', invoice_rec.total_amount,
+        'amount_paid', payment_total,
+        'balance_due', balance_due,
+        'status', new_status,
+        'is_overdue', (invoice_rec.due_date < CURRENT_DATE AND balance_due > 0)
+    );
+
+    RETURN result;
+END;
+$function$
+"
+public,calculate_invoice_totals,"CREATE OR REPLACE FUNCTION public.calculate_invoice_totals()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    UPDATE invoices
+    SET
+        subtotal = (
+            SELECT COALESCE(SUM(total_price), 0)
+            FROM invoice_line_items
+            WHERE invoice_id = COALESCE(NEW.invoice_id, OLD.invoice_id)
+        ),
+        tax_amount = (
+            SELECT COALESCE(SUM(total_price * tax_rate), 0)
+            FROM invoice_line_items
+            WHERE invoice_id = COALESCE(NEW.invoice_id, OLD.invoice_id)
+        )
+    WHERE id = COALESCE(NEW.invoice_id, OLD.invoice_id);
+
+    -- Update total_amount
+    UPDATE invoices
+    SET total_amount = subtotal + tax_amount
+    WHERE id = COALESCE(NEW.invoice_id, OLD.invoice_id);
+
+    RETURN COALESCE(NEW, OLD);
+END;
+$function$
+"
+public,calculate_work_order_totals,"CREATE OR REPLACE FUNCTION public.calculate_work_order_totals()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    UPDATE work_orders
+    SET
+        subtotal = (
+            SELECT COALESCE(SUM(total_price), 0)
+            FROM work_order_line_items
+            WHERE work_order_id = COALESCE(NEW.work_order_id, OLD.work_order_id)
+        ),
+        tax_amount = (
+            SELECT COALESCE(SUM(total_price * tax_rate), 0)
+            FROM work_order_line_items
+            WHERE work_order_id = COALESCE(NEW.work_order_id, OLD.work_order_id)
+        )
+    WHERE id = COALESCE(NEW.work_order_id, OLD.work_order_id);
+
+    -- Update total_amount
+    UPDATE work_orders
+    SET total_amount = subtotal + tax_amount
+    WHERE id = COALESCE(NEW.work_order_id, OLD.work_order_id);
+
+    RETURN COALESCE(NEW, OLD);
+END;
+$function$
+"
+public,calculate_work_order_totals_with_tax,"CREATE OR REPLACE FUNCTION public.calculate_work_order_totals_with_tax(p_work_order_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    subtotal NUMERIC := 0;
+    tax_amount NUMERIC := 0;
+    total_amount NUMERIC := 0;
+    company_tax_rate NUMERIC := 0;
+    result JSONB;
+BEGIN
+    -- Get company default tax rate
+    SELECT cs.default_tax_rate INTO company_tax_rate
+    FROM work_orders wo
+    JOIN companies c ON wo.company_id = c.id
+    JOIN company_settings cs ON c.id = cs.company_id
+    WHERE wo.id = p_work_order_id;
+
+    -- Calculate subtotal from line items
+    SELECT COALESCE(SUM(total_price), 0) INTO subtotal
+    FROM work_order_line_items
+    WHERE work_order_id = p_work_order_id;
+
+    -- Calculate tax (using line item tax rates or company default)
+    SELECT COALESCE(SUM(total_price * COALESCE(tax_rate, company_tax_rate)), 0) INTO tax_amount
+    FROM work_order_line_items
+    WHERE work_order_id = p_work_order_id;
+
+    total_amount := subtotal + tax_amount;
+
+    -- Update work order
+    UPDATE work_orders
+    SET subtotal = subtotal,
+        tax_amount = tax_amount,
+        total_amount = total_amount,
+        updated_at = NOW()
+    WHERE id = p_work_order_id;
+
+    result := jsonb_build_object(
+        'work_order_id', p_work_order_id,
+        'subtotal', subtotal,
+        'tax_amount', tax_amount,
+        'total_amount', total_amount
+    );
+
+    RETURN result;
+END;
+$function$
+"
+public,create_audit_log,"CREATE OR REPLACE FUNCTION public.create_audit_log(p_company_id uuid, p_user_id uuid, p_action audit_action_enum, p_table_name text, p_record_id uuid, p_old_values jsonb DEFAULT NULL::jsonb, p_new_values jsonb DEFAULT NULL::jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_audit_id UUID;
+BEGIN
+    INSERT INTO audit_logs (
+        company_id,
+        user_id,
+        action,
+        table_name,
+        record_id,
+        old_values,
+        new_values,
+        created_at
+    ) VALUES (
+        p_company_id,
+        p_user_id,
+        p_action,
+        p_table_name,
+        p_record_id,
+        p_old_values,
+        p_new_values,
+        NOW()
+    ) RETURNING id INTO v_audit_id;
+    
+    RETURN v_audit_id;
+END;
+$function$
+"
+public,create_complete_user,"CREATE OR REPLACE FUNCTION public.create_complete_user(p_auth_user_id uuid, p_company_id uuid, p_role user_role_enum DEFAULT 'technician'::user_role_enum, p_first_name text DEFAULT NULL::text, p_last_name text DEFAULT NULL::text, p_phone text DEFAULT NULL::text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    new_user_id uuid;
+BEGIN
+    -- Insert into users table
+    INSERT INTO users (auth_user_id, company_id, role, status)
+    VALUES (p_auth_user_id, p_company_id, p_role, 'active')
+    RETURNING id INTO new_user_id;
+    
+    -- Insert into profiles table
+    INSERT INTO profiles (user_id, first_name, last_name, phone)
+    VALUES (new_user_id, p_first_name, p_last_name, p_phone);
+    
+    RETURN new_user_id;
+END;
+$function$
+"
+public,create_default_rate_cards,"CREATE OR REPLACE FUNCTION public.create_default_rate_cards(p_company_id uuid)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_industry TEXT;
+BEGIN
+    -- Look up the company's industry
+    SELECT industry INTO v_industry
+    FROM companies
+    WHERE id = p_company_id;
+
+    -- Only seed if company has no rate cards
+    IF NOT EXISTS (SELECT 1 FROM rate_cards WHERE company_id = p_company_id) THEN
+
+        -- Universal defaults (always added, 0.00 placeholder)
+        INSERT INTO rate_cards (company_id, service_name, description, category, unit_type, rate, is_default, sort_order)
+        VALUES
+        (p_company_id, 'General Labor', 'Standard labor rate', 'OTHER', 'HOUR', 0.00, true, 1),
+        (p_company_id, 'Service Call', 'Basic service call / dispatch', 'OTHER', 'FLAT_FEE', 0.00, false, 2),
+        (p_company_id, 'Emergency Service', 'After-hours / urgent response', 'OTHER', 'HOUR', 0.00, false, 3),
+        (p_company_id, 'Parts & Materials', 'Parts and consumables', 'OTHER', 'UNIT', 0.00, false, 4);
+
+        -- Optional trade-specific placeholders
+        IF v_industry = 'HVAC' THEN
+            INSERT INTO rate_cards (company_id, service_name, description, category, unit_type, rate, is_default, sort_order)
+            VALUES
+            (p_company_id, 'HVAC Repair', 'General HVAC repair work', 'HVAC', 'HOUR', 0.00, false, 10),
+            (p_company_id, 'System Tune-up', 'Annual maintenance and tune-up', 'HVAC', 'FLAT_FEE', 0.00, false, 11);
+
+        ELSIF v_industry = 'PLUMBING' THEN
+            INSERT INTO rate_cards (company_id, service_name, description, category, unit_type, rate, is_default, sort_order)
+            VALUES
+            (p_company_id, 'Plumbing Repair', 'General plumbing repair work', 'PLUMBING', 'HOUR', 0.00, false, 10),
+            (p_company_id, 'Drain Cleaning', 'Standard drain cleaning service', 'PLUMBING', 'FLAT_FEE', 0.00, false, 11);
+
+        ELSIF v_industry = 'ELECTRICAL' THEN
+            INSERT INTO rate_cards (company_id, service_name, description, category, unit_type, rate, is_default, sort_order)
+            VALUES
+            (p_company_id, 'Electrical Repair', 'General electrical repair work', 'ELECTRICAL', 'HOUR', 0.00, false, 10),
+            (p_company_id, 'Outlet Installation', 'Install new electrical outlet', 'ELECTRICAL', 'UNIT', 0.00, false, 11);
+
+        END IF;
+    END IF;
+END;
+$function$
+"
+public,create_default_rate_cards,"CREATE OR REPLACE FUNCTION public.create_default_rate_cards(p_company_id uuid, p_hourly_rate numeric DEFAULT 75.00)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_base_rate NUMERIC := COALESCE(p_hourly_rate, 75.00);
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM rate_cards WHERE company_id = p_company_id) THEN
+        INSERT INTO rate_cards (company_id, service_name, description, category, unit_type, rate, is_default, sort_order)
+        VALUES
+        (p_company_id, 'Service Call', 'Basic service call and diagnostic', 'HVAC', 'FLAT_FEE', v_base_rate * 2, true, 1),
+        (p_company_id, 'HVAC Repair', 'General HVAC repair work', 'HVAC', 'HOUR', v_base_rate, false, 2),
+        (p_company_id, 'System Tune-up', 'Annual maintenance and tune-up', 'HVAC', 'FLAT_FEE', v_base_rate * 1.5, false, 3),
+
+        (p_company_id, 'Plumbing Service Call', 'Basic plumbing service call', 'PLUMBING', 'FLAT_FEE', v_base_rate * 2, true, 1),
+        (p_company_id, 'Plumbing Repair', 'General plumbing repair work', 'PLUMBING', 'HOUR', v_base_rate, false, 2),
+        (p_company_id, 'Drain Cleaning', 'Standard drain cleaning service', 'PLUMBING', 'FLAT_FEE', v_base_rate * 1.8, false, 3),
+
+        (p_company_id, 'Electrical Service Call', 'Basic electrical service call', 'ELECTRICAL', 'FLAT_FEE', v_base_rate * 2, true, 1),
+        (p_company_id, 'Electrical Repair', 'General electrical repair work', 'ELECTRICAL', 'HOUR', v_base_rate, false, 2),
+        (p_company_id, 'Outlet Installation', 'Install new electrical outlet', 'ELECTRICAL', 'UNIT', v_base_rate * 0.8, false, 3),
+
+        (p_company_id, 'General Labor', 'General handyman labor', 'GENERAL_REPAIR', 'HOUR', v_base_rate, true, 1),
+        (p_company_id, 'Emergency Service', 'After-hours emergency service', 'GENERAL_REPAIR', 'HOUR', v_base_rate * 2, false, 2);
+    END IF;
+END;
+$function$
+"
+public,create_sample_customer,"CREATE OR REPLACE FUNCTION public.create_sample_customer(p_company_id uuid)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_customer_id UUID;
+  v_customer_number TEXT;
+BEGIN
+  -- Generate customer number
+  v_customer_number := generate_customer_number(p_company_id);
+  
+  -- Create sample customer
+  INSERT INTO customers (
+    id,
+    company_id,
+    customer_number,
+    first_name,
+    last_name,
+    email,
+    phone,
+    customer_type,
+    created_at,
+    updated_at
+  ) VALUES (
+    gen_random_uuid(),
+    p_company_id,
+    v_customer_number,
+    'John',
+    'Sample Customer',
+    'john.sample@example.com',
+    '(555) 123-4567',
+    'residential',
+    NOW(),
+    NOW()
+  ) RETURNING id INTO v_customer_id;
+  
+  -- Create sample address
+  INSERT INTO customer_addresses (
+    id,
+    customer_id,
+    company_id,
+    address_type,
+    address_line1,
+    city,
+    state,
+    postal_code,
+    country,
+    is_primary,
+    created_at,
+    updated_at
+  ) VALUES (
+    gen_random_uuid(),
+    v_customer_id,
+    p_company_id,
+    'service',
+    '123 Main Street',
+    'Anytown',
+    'CA',
+    '90210',
+    'United States',
+    true,
+    NOW(),
+    NOW()
+  );
+  
+  RETURN v_customer_id;
+END;
+$function$
+"
+public,create_sample_work_order,"CREATE OR REPLACE FUNCTION public.create_sample_work_order(p_company_id uuid, p_customer_id uuid)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_work_order_id UUID;
+  v_work_order_number TEXT;
+  v_service_type_id UUID;
+BEGIN
+  -- Get work order number
+  v_work_order_number := generate_work_order_number(p_company_id);
+  
+  -- Get first available service type
+  SELECT st.id INTO v_service_type_id
+  FROM service_types st
+  JOIN service_categories sc ON st.category_id = sc.id
+  WHERE st.company_id = p_company_id
+  LIMIT 1;
+  
+  -- Create sample work order
+  INSERT INTO work_orders (
+    id,
+    company_id,
+    customer_id,
+    work_order_number,
+    title,
+    description,
+    status,
+    priority,
+    service_type_id,
+    subtotal,
+    tax_amount,
+    total_amount,
+    created_at,
+    updated_at
+  ) VALUES (
+    gen_random_uuid(),
+    p_company_id,
+    p_customer_id,
+    v_work_order_number,
+    'Sample Service Quote',
+    'This is a sample quote created during onboarding to demonstrate the system.',
+    'quote',
+    'normal',
+    v_service_type_id,
+    500.00,
+    45.00,
+    545.00,
+    NOW(),
+    NOW()
+  ) RETURNING id INTO v_work_order_id;
+  
+  -- Add sample line items
+  INSERT INTO work_order_line_items (
+    id,
+    work_order_id,
+    company_id,
+    item_type,
+    description,
+    quantity,
+    unit_price,
+    total_price,
+    created_at,
+    updated_at
+  ) VALUES 
+  (
+    gen_random_uuid(),
+    v_work_order_id,
+    p_company_id,
+    'labor',
+    'Sample Labor - 2 hours',
+    2.00,
+    75.00,
+    150.00,
+    NOW(),
+    NOW()
+  ),
+  (
+    gen_random_uuid(),
+    v_work_order_id,
+    p_company_id,
+    'material',
+    'Sample Materials',
+    1.00,
+    350.00,
+    350.00,
+    NOW(),
+    NOW()
+  );
+  
+  RETURN v_work_order_id;
+END;
+$function$
+"
+public,enforce_work_order_status,"CREATE OR REPLACE FUNCTION public.enforce_work_order_status()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- ✅ If NEW.status is NULL, keep OLD.status
+    IF NEW.status IS NULL AND OLD.status IS NOT NULL THEN
+        NEW.status := OLD.status;
+    END IF;
+
+    -- ✅ REMOVED: Status validation - frontend controls workflow
+    -- No validation, just allow all status changes
+
+    RETURN NEW;
+END;
+$function$
+"
+public,format_phone_e164,"CREATE OR REPLACE FUNCTION public.format_phone_e164(input_phone text)
+ RETURNS text
+ LANGUAGE plpgsql
+ IMMUTABLE
+AS $function$
+BEGIN
+    -- Return null for empty input
+    IF input_phone IS NULL OR trim(input_phone) = '' THEN
+        RETURN NULL;
+    END IF;
+    
+    -- If already in E.164 format, return as-is
+    IF input_phone ~ '^\+[1-9]\d{1,14}$' THEN
+        RETURN input_phone;
+    END IF;
+    
+    -- Remove all non-digits except leading +
+    DECLARE
+        cleaned TEXT := regexp_replace(input_phone, '[^\d+]', '', 'g');
+        digits TEXT;
+    BEGIN
+        -- Extract digits only
+        digits := regexp_replace(cleaned, '[^\d]', '', 'g');
+        
+        -- If no digits, return null
+        IF length(digits) = 0 THEN
+            RETURN NULL;
+        END IF;
+        
+        -- Handle common cases
+        CASE
+            -- 10 digits: assume US/Canada
+            WHEN length(digits) = 10 THEN
+                RETURN '+1' || digits;
+            
+            -- 11 digits starting with 1: US/Canada with country code
+            WHEN length(digits) = 11 AND left(digits, 1) = '1' THEN
+                RETURN '+' || digits;
+            
+            -- Other valid lengths (7-15 digits)
+            WHEN length(digits) BETWEEN 7 AND 15 AND left(digits, 1) != '0' THEN
+                -- If input had +, preserve it; otherwise add +
+                IF left(ltrim(input_phone), 1) = '+' THEN
+                    RETURN '+' || digits;
+                ELSE
+                    -- For international numbers without +, user should specify country code
+                    -- Default to +1 for backwards compatibility if it looks like NANP
+                    IF length(digits) = 10 OR (length(digits) = 11 AND left(digits, 1) = '1') THEN
+                        RETURN '+1' || right(digits, 10);
+                    ELSE
+                        RETURN '+' || digits;
+                    END IF;
+                END IF;
+            
+            ELSE
+                -- Invalid format
+                RETURN NULL;
+        END CASE;
+    END;
+END;
+$function$
+"
+public,generate_change_order_number,"CREATE OR REPLACE FUNCTION public.generate_change_order_number(p_company_id uuid)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+  v_count INTEGER;
+  v_number TEXT;
+BEGIN
+  SELECT COUNT(*) INTO v_count
+  FROM change_orders
+  WHERE company_id = p_company_id
+    AND EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM NOW());
+  
+  v_number := 'CO-' || TO_CHAR(NOW(), 'YYYY') || '-' || LPAD((v_count + 1)::TEXT, 4, '0');
+  RETURN v_number;
+END;
+$function$
+"
+public,generate_company_number,"CREATE OR REPLACE FUNCTION public.generate_company_number()
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    new_number TEXT;
+    counter INTEGER := 0;
+    max_attempts INTEGER := 100;
+BEGIN
+    LOOP
+        -- Generate a 6-digit number
+        new_number := 'C-' || LPAD((FLOOR(RANDOM() * 900000) + 100000)::TEXT, 6, '0');
+        
+        -- Check if it already exists
+        IF NOT EXISTS (SELECT 1 FROM companies WHERE company_number = new_number) THEN
+            RETURN new_number;
+        END IF;
+        
+        counter := counter + 1;
+        IF counter >= max_attempts THEN
+            RAISE EXCEPTION 'Unable to generate unique company number after % attempts', max_attempts;
+        END IF;
+    END LOOP;
+END;
+$function$
+"
+public,generate_customer_number,"CREATE OR REPLACE FUNCTION public.generate_customer_number(p_company_id uuid)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    seq_val BIGINT;
+BEGIN
+    seq_val := nextval('customer_number_seq');
+    RETURN 'CUST-' || LPAD(seq_val::TEXT, 6, '0');
+END;
+$function$
+"
+public,generate_invoice_number,"CREATE OR REPLACE FUNCTION public.generate_invoice_number(p_company_id uuid)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN generate_smart_reference_number(p_company_id, 'invoice');
+END;
+$function$
+"
+public,generate_quote_number,"CREATE OR REPLACE FUNCTION public.generate_quote_number(company_uuid uuid)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    next_num INTEGER;
+    year_month TEXT;
+    prefix TEXT;
+BEGIN
+    year_month := TO_CHAR(NOW(), 'YYYYMM');
+    prefix := 'QT-' || year_month || '-';
+    
+    -- Find the highest number for this month
+    SELECT COALESCE(
+        MAX(
+            CAST(
+                SUBSTRING(work_order_number FROM LENGTH(prefix) + 1) 
+                AS INTEGER
+            )
+        ), 
+        0
+    ) + 1
+    INTO next_num
+    FROM work_orders
+    WHERE company_id = company_uuid
+    AND work_order_number LIKE prefix || '%'
+    AND status IN ('draft', 'quote', 'approved');
+    
+    RETURN prefix || LPAD(next_num::TEXT, 4, '0');
+END;
+$function$
+"
+public,generate_service_agreement_number,"CREATE OR REPLACE FUNCTION public.generate_service_agreement_number(p_company_id uuid)
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+    RETURN generate_smart_reference_number(p_company_id, 'service_agreement');
+END;
+$function$
+"
+public,generate_smart_reference_number,"CREATE OR REPLACE FUNCTION public.generate_smart_reference_number(p_company_id uuid, p_type text, p_prefix text DEFAULT NULL::text)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_prefix TEXT;
+    v_sequence INTEGER;
+    v_reference_number TEXT;
+    v_max_attempts INTEGER := 10;
+    v_attempt INTEGER := 0;
+BEGIN
+    -- Set default prefix based on type
+    v_prefix := COALESCE(p_prefix, 
+        CASE p_type
+            WHEN 'work_order' THEN 'WO'
+            WHEN 'invoice' THEN 'INV'
+            WHEN 'customer' THEN 'CUST'
+            WHEN 'payment' THEN 'PAY'
+            ELSE 'REF'
+        END
+    );
+    
+    -- Generate reference number with collision avoidance
+    LOOP
+        v_attempt := v_attempt + 1;
+        
+        -- Get next sequence number
+        SELECT COALESCE(MAX(
+            CASE 
+                WHEN p_type = 'work_order' THEN 
+                    CAST(SUBSTRING(work_order_number FROM '[0-9]+$') AS INTEGER)
+                WHEN p_type = 'invoice' THEN 
+                    CAST(SUBSTRING(invoice_number FROM '[0-9]+$') AS INTEGER)
+                WHEN p_type = 'customer' THEN 
+                    CAST(SUBSTRING(customer_number FROM '[0-9]+$') AS INTEGER)
+                ELSE 0
+            END
+        ), 0) + 1 INTO v_sequence
+        FROM (
+            SELECT work_order_number FROM work_orders WHERE company_id = p_company_id
+            UNION ALL
+            SELECT invoice_number FROM invoices WHERE company_id = p_company_id
+            UNION ALL
+            SELECT customer_number FROM customers WHERE company_id = p_company_id
+        ) AS all_numbers;
+        
+        -- Format reference number
+        v_reference_number := v_prefix || '-' || TO_CHAR(v_sequence, 'FM00000');
+        
+        -- Check for collision
+        IF NOT EXISTS (
+            SELECT 1 FROM work_orders 
+            WHERE company_id = p_company_id AND work_order_number = v_reference_number
+            UNION ALL
+            SELECT 1 FROM invoices 
+            WHERE company_id = p_company_id AND invoice_number = v_reference_number
+            UNION ALL
+            SELECT 1 FROM customers 
+            WHERE company_id = p_company_id AND customer_number = v_reference_number
+        ) THEN
+            EXIT; -- No collision, we're good
+        END IF;
+        
+        -- Prevent infinite loop
+        IF v_attempt >= v_max_attempts THEN
+            v_reference_number := v_prefix || '-' || TO_CHAR(EXTRACT(EPOCH FROM NOW())::INTEGER, 'FM99999999');
+            EXIT;
+        END IF;
+    END LOOP;
+    
+    RETURN v_reference_number;
+END;
+$function$
+"
+public,generate_work_order_number,"CREATE OR REPLACE FUNCTION public.generate_work_order_number(p_company_id uuid)
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN generate_smart_reference_number(p_company_id, 'work_order');
+END;
+$function$
+"
+public,get_browse_requests,"CREATE OR REPLACE FUNCTION public.get_browse_requests(p_company_id uuid, p_limit integer DEFAULT 50, p_offset integer DEFAULT 0)
+ RETURNS TABLE(id uuid, title text, description text, created_at timestamp with time zone)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+    -- Return empty result for now - this is just to fix the missing function error
+    RETURN QUERY
+    SELECT 
+        gen_random_uuid() as id,
+        'Sample Request' as title,
+        'This is a placeholder function' as description,
+        NOW() as created_at
+    WHERE FALSE; -- Return no rows
+END;
+$function$
+"
+public,get_enum_values,"CREATE OR REPLACE FUNCTION public.get_enum_values(enum_name text)
+ RETURNS TABLE(value text)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN QUERY EXECUTE format(
+    'SELECT unnest(enum_range(NULL::%I))::text',
+    enum_name
+  );
+END;
+$function$
+"
+public,get_marketplace_stats,"CREATE OR REPLACE FUNCTION public.get_marketplace_stats(p_company_id uuid)
+ RETURNS json
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+    -- Return basic stats structure
+    RETURN json_build_object(
+        'total_requests', 0,
+        'open_requests', 0,
+        'my_responses', 0,
+        'accepted_responses', 0,
+        'acceptance_rate', 0,
+        'avg_response_time_hours', NULL
+    );
+END;
+$function$
+"
+public,get_quote_defaults,"CREATE OR REPLACE FUNCTION public.get_quote_defaults(p_company_id uuid)
+ RETURNS TABLE(tax_rate numeric, payment_terms text, deposit_percentage numeric, terms_and_conditions text, warranty_info text, cancellation_policy text, quote_expiration_days integer)
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        qd.default_tax_rate,
+        qd.default_payment_terms,
+        qd.default_deposit_percentage,
+        qd.default_terms_and_conditions,
+        qd.default_warranty_info,
+        qd.default_cancellation_policy,
+        qd.default_quote_expiration_days
+    FROM quote_defaults qd
+    WHERE qd.company_id = p_company_id;
+    
+    -- If no defaults exist, return sensible defaults
+    IF NOT FOUND THEN
+        RETURN QUERY
+        SELECT 
+            0.00::NUMERIC as tax_rate,
+            'Net 30'::TEXT as payment_terms,
+            NULL::NUMERIC as deposit_percentage,
+            NULL::TEXT as terms_and_conditions,
+            NULL::TEXT as warranty_info,
+            NULL::TEXT as cancellation_policy,
+            30::INTEGER as quote_expiration_days;
+    END IF;
+END;
+$function$
+"
+public,get_user_by_auth_id,"CREATE OR REPLACE FUNCTION public.get_user_by_auth_id(auth_id uuid)
+ RETURNS TABLE(user_id uuid, company_id uuid, role user_role_enum, status user_status_enum, first_name text, last_name text, phone text, avatar_url text, company_name text)
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        u.id as user_id,
+        u.company_id,
+        u.role,
+        u.status,
+        p.first_name,
+        p.last_name,
+        p.phone,
+        p.avatar_url,
+        c.name as company_name
+    FROM users u
+    LEFT JOIN profiles p ON u.id = p.user_id
+    LEFT JOIN companies c ON u.company_id = c.id
+    WHERE u.auth_user_id = auth_id
+    AND u.status = 'active';
+END;
+$function$
+"
+public,get_user_dashboard_data,"CREATE OR REPLACE FUNCTION public.get_user_dashboard_data(p_user_id uuid)
+ RETURNS json
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_result JSON;
+    v_company_id UUID;
+BEGIN
+    -- Get user's company
+    SELECT company_id INTO v_company_id
+    FROM users 
+    WHERE id = p_user_id;
+    
+    IF v_company_id IS NULL THEN
+        RETURN '{""error"": ""User not found""}'::JSON;
+    END IF;
+    
+    -- Build dashboard data
+    SELECT json_build_object(
+        'user_id', p_user_id,
+        'company_id', v_company_id,
+        
+        -- Work order metrics
+        'active_work_orders', (
+            SELECT COUNT(*) 
+            FROM work_orders 
+            WHERE assigned_to = p_user_id 
+              AND status IN ('scheduled', 'dispatched', 'in_progress')
+        ),
+        'completed_today', (
+            SELECT COUNT(*) 
+            FROM work_orders 
+            WHERE assigned_to = p_user_id 
+              AND status = 'completed'
+              AND DATE(actual_end) = CURRENT_DATE
+        ),
+        'total_revenue_today', (
+            SELECT COALESCE(SUM(total_amount), 0)
+            FROM work_orders 
+            WHERE assigned_to = p_user_id 
+              AND status = 'completed'
+              AND DATE(actual_end) = CURRENT_DATE
+        ),
+        
+        -- Company-wide metrics (for managers/admins)
+        'company_active_work_orders', (
+            SELECT COUNT(*) 
+            FROM work_orders 
+            WHERE company_id = v_company_id 
+              AND status IN ('scheduled', 'dispatched', 'in_progress')
+        ),
+        'company_revenue_today', (
+            SELECT COALESCE(SUM(total_amount), 0)
+            FROM work_orders 
+            WHERE company_id = v_company_id 
+              AND status = 'completed'
+              AND DATE(actual_end) = CURRENT_DATE
+        ),
+        
+        -- Invoice metrics
+        'pending_invoices', (
+            SELECT COUNT(*)
+            FROM invoices i
+            JOIN work_orders wo ON i.work_order_id = wo.id
+            WHERE wo.assigned_to = p_user_id
+              AND i.status IN ('draft', 'sent')
+        ),
+        'overdue_invoices', (
+            SELECT COUNT(*)
+            FROM invoices i
+            JOIN work_orders wo ON i.work_order_id = wo.id
+            WHERE wo.company_id = v_company_id
+              AND i.status NOT IN ('paid', 'cancelled')
+              AND i.due_date < CURRENT_DATE
+        ),
+        
+        -- Notification count
+        'unread_notifications', (
+            SELECT COUNT(*)
+            FROM notifications
+            WHERE user_id = p_user_id
+              AND status = 'sent'
+              AND read_at IS NULL
+        )
+    ) INTO v_result;
+    
+    RETURN v_result;
+END;
+$function$
+"
+public,handle_customer_changes,"CREATE OR REPLACE FUNCTION public.handle_customer_changes()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Auto-generate customer number if missing
+    IF NEW.customer_number IS NULL OR NEW.customer_number = '' THEN
+        NEW.customer_number := generate_customer_number(NEW.company_id);
+    END IF;
+    
+    -- Normalize status to lowercase (industry standard)
+    IF NEW.status IS NOT NULL THEN
+        NEW.status := LOWER(NEW.status);
+    ELSE
+        NEW.status := 'active';
+    END IF;
+    
+    -- Sync is_active from status (for backward compatibility)
+    NEW.is_active := (NEW.status = 'active');
+    
+    -- Normalize type to lowercase (industry standard)
+    IF NEW.type IS NOT NULL THEN
+        NEW.type := LOWER(NEW.type);
+    ELSE
+        NEW.type := 'residential';
+    END IF;
+    
+    -- Format phone numbers (if function exists)
+    IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'format_phone_e164') THEN
+        NEW.phone := format_phone_e164(NEW.phone);
+        NEW.mobile_phone := format_phone_e164(NEW.mobile_phone);
+    END IF;
+    
+    -- Ensure customer_since is set
+    IF NEW.customer_since IS NULL THEN
+        NEW.customer_since := CURRENT_DATE;
+    END IF;
+    
+    -- Update updated_at timestamp
+    NEW.updated_at := NOW();
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,handle_customer_changes_final,"CREATE OR REPLACE FUNCTION public.handle_customer_changes_final()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Auto-generate customer number if missing
+    IF NEW.customer_number IS NULL OR NEW.customer_number = '' THEN
+        NEW.customer_number := generate_customer_number(NEW.company_id);
+    END IF;
+    
+    -- CRITICAL: Normalize status to lowercase FIRST
+    IF NEW.status IS NOT NULL THEN
+        NEW.status := LOWER(NEW.status);
+    END IF;
+    
+    -- Sync is_active from status (lowercase comparison)
+    IF NEW.status IS NOT NULL THEN
+        NEW.is_active := (NEW.status = 'active');
+    ELSIF NEW.is_active IS NOT NULL THEN
+        -- If only is_active is set, derive status from it
+        NEW.status := CASE WHEN NEW.is_active THEN 'active' ELSE 'inactive' END;
+    ELSE
+        -- Default to active if neither is set
+        NEW.status := 'active';
+        NEW.is_active := true;
+    END IF;
+    
+    -- Update display_name
+    NEW.display_name := CASE 
+        WHEN NEW.company_name IS NOT NULL AND trim(NEW.company_name) != '' THEN NEW.company_name
+        WHEN NEW.first_name IS NOT NULL AND NEW.last_name IS NOT NULL THEN 
+            trim(NEW.first_name || ' ' || NEW.last_name)
+        WHEN NEW.first_name IS NOT NULL AND trim(NEW.first_name) != '' THEN NEW.first_name
+        WHEN NEW.last_name IS NOT NULL AND trim(NEW.last_name) != '' THEN NEW.last_name
+        ELSE 'Unnamed Customer'
+    END;
+    
+    -- Ensure customer_since is set
+    IF NEW.customer_since IS NULL THEN
+        NEW.customer_since := CURRENT_DATE;
+    END IF;
+    
+    -- Format phone numbers using the E.164 function (if it exists)
+    IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'format_phone_e164') THEN
+        NEW.phone := format_phone_e164(NEW.phone);
+        NEW.mobile_phone := format_phone_e164(NEW.mobile_phone);
+    END IF;
+    
+    -- Ensure customer_type and type are in sync (lowercase)
+    IF NEW.customer_type IS NOT NULL THEN
+        NEW.type := LOWER(NEW.customer_type::text);
+    ELSIF NEW.type IS NOT NULL THEN
+        NEW.customer_type := LOWER(NEW.type)::customer_type_enum;
+    ELSE
+        -- Default to residential
+        NEW.customer_type := 'residential'::customer_type_enum;
+        NEW.type := 'residential';
+    END IF;
+    
+    -- Update updated_at timestamp
+    NEW.updated_at := NOW();
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,is_onboarding_complete,"CREATE OR REPLACE FUNCTION public.is_onboarding_complete(p_company_id uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_progress JSONB;
+BEGIN
+  SELECT onboarding_progress INTO v_progress
+  FROM company_settings
+  WHERE company_id = p_company_id;
+  
+  RETURN (v_progress->>'completed_at') IS NOT NULL;
+END;
+$function$
+"
+public,log_audit_event,"CREATE OR REPLACE FUNCTION public.log_audit_event()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Map TG_OP to audit_action_enum values
+    DECLARE
+        audit_action audit_action_enum;
+    BEGIN
+        audit_action := CASE TG_OP
+            WHEN 'INSERT' THEN 'insert'::audit_action_enum
+            WHEN 'UPDATE' THEN 'update'::audit_action_enum
+            WHEN 'DELETE' THEN 'delete'::audit_action_enum
+            ELSE 'update'::audit_action_enum  -- fallback
+        END;
+        
+        INSERT INTO audit_logs (
+            company_id, 
+            user_id, 
+            table_name, 
+            record_id,
+            action, 
+            old_values, 
+            new_values,
+            ip_address, 
+            user_agent, 
+            created_at
+        )
+        VALUES (
+            COALESCE(NEW.company_id, OLD.company_id),
+            -- Try multiple ways to get user ID, with fallbacks
+            COALESCE(
+                -- Try app setting first
+                NULLIF(current_setting('app.current_user_id', true), '')::uuid,
+                -- Try auth.uid() mapped to profiles
+                (SELECT id FROM profiles WHERE auth_user_id = auth.uid() LIMIT 1),
+                -- Try direct auth.uid() if it's a UUID
+                CASE 
+                    WHEN auth.uid() IS NOT NULL THEN auth.uid()
+                    ELSE NULL
+                END
+            ),
+            TG_TABLE_NAME,
+            COALESCE(NEW.id, OLD.id),
+            audit_action,  -- Use the mapped enum value
+            CASE WHEN TG_OP = 'DELETE' THEN row_to_json(OLD) ELSE NULL END,
+            CASE WHEN TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN row_to_json(NEW) ELSE NULL END,
+            -- Handle missing app settings gracefully
+            CASE 
+                WHEN current_setting('app.current_user_ip', true) != '' 
+                THEN current_setting('app.current_user_ip', true)::inet
+                ELSE NULL
+            END,
+            NULLIF(current_setting('app.current_user_agent', true), ''),
+            NOW()
+        );
+        
+        RETURN COALESCE(NEW, OLD);
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- If audit logging fails, don't block the main operation
+            -- Log the error but continue
+            RAISE WARNING 'Audit logging failed for table %: %', TG_TABLE_NAME, SQLERRM;
+            RETURN COALESCE(NEW, OLD);
+    END;
+END;
+$function$
+"
+public,log_customer_creation,"CREATE OR REPLACE FUNCTION public.log_customer_creation()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    INSERT INTO customer_history (customer_id, event_type, event_description, created_by)
+    VALUES (NEW.id, 'created', 'Customer record created', NULL);
+    RETURN NEW;
+END;
+$function$
+"
+public,log_customer_event,"CREATE OR REPLACE FUNCTION public.log_customer_event(p_customer_id uuid, p_event_type text, p_event_description text, p_event_data jsonb DEFAULT NULL::jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+    v_history_id UUID;
+BEGIN
+    INSERT INTO customer_history (
+        customer_id, 
+        event_type, 
+        event_description, 
+        event_data, 
+        created_by
+    ) VALUES (
+        p_customer_id,
+        p_event_type,
+        p_event_description,
+        p_event_data,
+        auth.uid()
+    ) RETURNING id INTO v_history_id;
+    
+    RETURN v_history_id;
+END;
+$function$
+"
+public,log_customer_update,"CREATE OR REPLACE FUNCTION public.log_customer_update()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Log is_active changes
+    IF OLD.is_active IS DISTINCT FROM NEW.is_active THEN
+        INSERT INTO customer_history (customer_id, event_type, event_description, event_data)
+        VALUES (NEW.id, 'status_changed',
+                'Status changed from ' || CASE WHEN OLD.is_active THEN 'active' ELSE 'inactive' END || ' to ' || CASE WHEN NEW.is_active THEN 'active' ELSE 'inactive' END,
+                jsonb_build_object('old_is_active', OLD.is_active, 'new_is_active', NEW.is_active));
+    END IF;
+
+    -- Log other significant changes
+    IF OLD.email IS DISTINCT FROM NEW.email OR
+       OLD.phone IS DISTINCT FROM NEW.phone OR
+       OLD.company_name IS DISTINCT FROM NEW.company_name OR
+       OLD.first_name IS DISTINCT FROM NEW.first_name OR
+       OLD.last_name IS DISTINCT FROM NEW.last_name THEN
+        INSERT INTO customer_history (customer_id, event_type, event_description)
+        VALUES (NEW.id, 'updated', 'Customer information updated');
+    END IF;
+
+    RETURN NEW;
+END;
+$function$
+"
+public,log_user_activity,"CREATE OR REPLACE FUNCTION public.log_user_activity(p_user_id uuid, p_action_type text, p_description text DEFAULT NULL::text, p_ip_address inet DEFAULT NULL::inet, p_user_agent text DEFAULT NULL::text, p_metadata jsonb DEFAULT NULL::jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_company_id UUID;
+  v_log_id UUID;
+BEGIN
+  -- Get company_id from user
+  SELECT company_id INTO v_company_id
+  FROM users
+  WHERE id = p_user_id;
+
+  -- Insert activity log
+  INSERT INTO user_activity_log (
+    user_id,
+    company_id,
+    action_type,
+    description,
+    ip_address,
+    user_agent,
+    metadata
+  ) VALUES (
+    p_user_id,
+    v_company_id,
+    p_action_type,
+    p_description,
+    p_ip_address,
+    p_user_agent,
+    p_metadata
+  )
+  RETURNING id INTO v_log_id;
+
+  RETURN v_log_id;
+END;
+$function$
+"
+public,safe_upsert_company_settings,"CREATE OR REPLACE FUNCTION public.safe_upsert_company_settings(p_company_id uuid, p_settings jsonb)
+ RETURNS uuid
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    result_id UUID;
+BEGIN
+    -- Try to update first
+    UPDATE company_settings 
+    SET 
+        business_hours = COALESCE((p_settings->>'business_hours')::JSONB, business_hours),
+        default_tax_rate = COALESCE((p_settings->>'default_tax_rate')::NUMERIC, default_tax_rate),
+        invoice_terms = COALESCE(p_settings->>'invoice_terms', invoice_terms),
+        auto_invoice = COALESCE((p_settings->>'auto_invoice')::BOOLEAN, auto_invoice),
+        require_signatures = COALESCE((p_settings->>'require_signatures')::BOOLEAN, require_signatures),
+        allow_online_payments = COALESCE((p_settings->>'allow_online_payments')::BOOLEAN, allow_online_payments),
+        emergency_rate_multiplier = COALESCE((p_settings->>'emergency_rate_multiplier')::NUMERIC, emergency_rate_multiplier),
+        travel_charge_per_mile = COALESCE((p_settings->>'travel_charge_per_mile')::NUMERIC, travel_charge_per_mile),
+        minimum_travel_charge = COALESCE((p_settings->>'minimum_travel_charge')::NUMERIC, minimum_travel_charge),
+        cancellation_fee = COALESCE((p_settings->>'cancellation_fee')::NUMERIC, cancellation_fee),
+        transparency_mode = COALESCE((p_settings->>'transparency_mode')::BOOLEAN, transparency_mode),
+        onboarding_progress = COALESCE((p_settings->>'onboarding_progress')::JSONB, onboarding_progress),
+        updated_at = NOW()
+    WHERE company_id = p_company_id
+    RETURNING id INTO result_id;
+    
+    -- If no rows were updated, insert a new record
+    IF result_id IS NULL THEN
+        INSERT INTO company_settings (
+            company_id,
+            business_hours,
+            default_tax_rate,
+            invoice_terms,
+            auto_invoice,
+            require_signatures,
+            allow_online_payments,
+            emergency_rate_multiplier,
+            travel_charge_per_mile,
+            minimum_travel_charge,
+            cancellation_fee,
+            transparency_mode,
+            onboarding_progress,
+            created_at,
+            updated_at
+        ) VALUES (
+            p_company_id,
+            COALESCE((p_settings->>'business_hours')::JSONB, '{""monday"": {""open"": ""08:00"", ""close"": ""17:00""}}'::JSONB),
+            COALESCE((p_settings->>'default_tax_rate')::NUMERIC, 0.0000),
+            COALESCE(p_settings->>'invoice_terms', 'NET30'),
+            COALESCE((p_settings->>'auto_invoice')::BOOLEAN, FALSE),
+            COALESCE((p_settings->>'require_signatures')::BOOLEAN, TRUE),
+            COALESCE((p_settings->>'allow_online_payments')::BOOLEAN, TRUE),
+            COALESCE((p_settings->>'emergency_rate_multiplier')::NUMERIC, 1.50),
+            COALESCE((p_settings->>'travel_charge_per_mile')::NUMERIC, 0.65),
+            COALESCE((p_settings->>'minimum_travel_charge')::NUMERIC, 25.00),
+            COALESCE((p_settings->>'cancellation_fee')::NUMERIC, 50.00),
+            COALESCE((p_settings->>'transparency_mode')::BOOLEAN, TRUE),
+            COALESCE((p_settings->>'onboarding_progress')::JSONB, '{}'::JSONB),
+            NOW(),
+            NOW()
+        )
+        RETURNING id INTO result_id;
+    END IF;
+    
+    RETURN result_id;
+END;
+$function$
+"
+public,seed_onboarding_sample_data,"CREATE OR REPLACE FUNCTION public.seed_onboarding_sample_data(p_company_id uuid)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_customer_id UUID;
+  v_work_order_id UUID;
+  v_result JSONB;
+BEGIN
+  -- Create sample customer
+  v_customer_id := create_sample_customer(p_company_id);
+  
+  -- Create sample work order
+  v_work_order_id := create_sample_work_order(p_company_id, v_customer_id);
+  
+  -- Return created IDs
+  v_result := jsonb_build_object(
+    'success', true,
+    'customer_id', v_customer_id,
+    'work_order_id', v_work_order_id,
+    'message', 'Sample data created successfully'
+  );
+  
+  RETURN v_result;
+END;
+$function$
+"
+public,set_company_number,"CREATE OR REPLACE FUNCTION public.set_company_number()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Only generate if company_number is NULL or empty
+    IF NEW.company_number IS NULL OR NEW.company_number = '' THEN
+        NEW.company_number := generate_company_number();
+        RAISE NOTICE 'Auto-generated company_number: %', NEW.company_number;
+    END IF;
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,set_quote_expiration,"CREATE OR REPLACE FUNCTION public.set_quote_expiration()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- When quote_sent_at is set and quote_expires_at is not set
+    IF NEW.quote_sent_at IS NOT NULL AND OLD.quote_sent_at IS NULL AND NEW.quote_expires_at IS NULL THEN
+        -- Set expiration to 30 days from sent date (industry standard)
+        NEW.quote_expires_at := NEW.quote_sent_at + INTERVAL '30 days';
+    END IF;
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,sync_customer_fields,"CREATE OR REPLACE FUNCTION public.sync_customer_fields()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    -- Sync status with is_active
+    IF TG_OP = 'INSERT' OR NEW.status IS DISTINCT FROM OLD.status THEN
+        NEW.is_active := (NEW.status = 'ACTIVE');
+    END IF;
+    
+    IF TG_OP = 'INSERT' OR NEW.is_active IS DISTINCT FROM OLD.is_active THEN
+        NEW.status := CASE WHEN NEW.is_active THEN 'ACTIVE' ELSE 'INACTIVE' END;
+    END IF;
+    
+    -- Update display_name when name fields change
+    NEW.display_name := CASE 
+        WHEN NEW.company_name IS NOT NULL AND NEW.company_name != '' THEN NEW.company_name
+        WHEN NEW.first_name IS NOT NULL AND NEW.last_name IS NOT NULL THEN 
+            CONCAT(NEW.first_name, ' ', NEW.last_name)
+        WHEN NEW.first_name IS NOT NULL THEN NEW.first_name
+        WHEN NEW.last_name IS NOT NULL THEN NEW.last_name
+        ELSE 'Unnamed Customer'
+    END;
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,update_invoice_amount_paid,"CREATE OR REPLACE FUNCTION public.update_invoice_amount_paid()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    UPDATE invoices
+    SET amount_paid = (
+        SELECT COALESCE(SUM(amount), 0)
+        FROM payments
+        WHERE invoice_id = COALESCE(NEW.invoice_id, OLD.invoice_id)
+        AND status = 'completed'
+    )
+    WHERE id = COALESCE(NEW.invoice_id, OLD.invoice_id);
+
+    RETURN COALESCE(NEW, OLD);
+END;
+$function$
+"
+public,update_onboarding_progress,"CREATE OR REPLACE FUNCTION public.update_onboarding_progress(p_company_id uuid, p_step integer, p_completed boolean DEFAULT true)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_current_progress JSONB;
+  v_new_progress JSONB;
+  v_step_key TEXT := p_step::text;
+BEGIN
+  -- Get current progress
+  SELECT onboarding_progress INTO v_current_progress
+  FROM company_settings
+  WHERE company_id = p_company_id;
+  
+  -- Initialize if null
+  IF v_current_progress IS NULL THEN
+    v_current_progress := '{
+      ""current_step"": 1,
+      ""completed_steps"": [],
+      ""started_at"": null,
+      ""completed_at"": null,
+      ""skipped"": false,
+      ""steps"": {
+        ""1"": {""name"": ""Company Basics"", ""completed"": false, ""completed_at"": null},
+        ""2"": {""name"": ""Services & Pricing"", ""completed"": false, ""completed_at"": null},
+        ""3"": {""name"": ""Team Setup"", ""completed"": false, ""completed_at"": null},
+        ""4"": {""name"": ""Business Preferences"", ""completed"": false, ""completed_at"": null},
+        ""5"": {""name"": ""Financial Setup"", ""completed"": false, ""completed_at"": null},
+        ""6"": {""name"": ""Go Live"", ""completed"": false, ""completed_at"": null}
+      }
+    }'::jsonb;
+  END IF;
+  
+  -- Set started_at if first step
+  IF (v_current_progress->>'started_at') IS NULL THEN
+    v_current_progress := jsonb_set(v_current_progress, '{started_at}', to_jsonb(NOW()));
+  END IF;
+  
+  -- Update step completion
+  v_new_progress := jsonb_set(
+    v_current_progress,
+    array['steps', v_step_key, 'completed'],
+    to_jsonb(p_completed)
+  );
+  
+  IF p_completed THEN
+    v_new_progress := jsonb_set(
+      v_new_progress,
+      array['steps', v_step_key, 'completed_at'],
+      to_jsonb(NOW())
+    );
+    
+    -- Update current step to next step
+    IF p_step < 6 THEN
+      v_new_progress := jsonb_set(v_new_progress, '{current_step}', to_jsonb(p_step + 1));
+    ELSE
+      -- All steps completed
+      v_new_progress := jsonb_set(v_new_progress, '{completed_at}', to_jsonb(NOW()));
+      v_new_progress := jsonb_set(v_new_progress, '{current_step}', to_jsonb(6));
+    END IF;
+  END IF;
+  
+  -- Update database
+  UPDATE company_settings 
+  SET onboarding_progress = v_new_progress,
+      updated_at = NOW()
+  WHERE company_id = p_company_id;
+  
+  RETURN v_new_progress;
+END;
+$function$
+"
+public,update_profiles_updated_at,"CREATE OR REPLACE FUNCTION public.update_profiles_updated_at()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$function$
+"
+public,update_quote_analytics,"CREATE OR REPLACE FUNCTION public.update_quote_analytics()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    analytics_record quote_analytics%ROWTYPE;
+BEGIN
+    -- Only process for quote-stage work orders
+    IF NEW.status NOT IN ('draft', 'quote', 'approved') THEN
+        RETURN NEW;
+    END IF;
+    
+    -- Get or create analytics record
+    SELECT * INTO analytics_record
+    FROM quote_analytics
+    WHERE work_order_id = NEW.id;
+    
+    IF NOT FOUND THEN
+        -- Create new analytics record
+        INSERT INTO quote_analytics (
+            work_order_id,
+            company_id,
+            quote_created_at,
+            quote_value,
+            quote_version
+        ) VALUES (
+            NEW.id,
+            NEW.company_id,
+            NEW.created_at,
+            NEW.total_amount,
+            COALESCE(NEW.quote_version, 1)
+        );
+    ELSE
+        -- Update existing analytics
+        UPDATE quote_analytics SET
+            quote_sent_at = NEW.quote_sent_at,
+            quote_viewed_at = NEW.quote_viewed_at,
+            quote_accepted_at = NEW.quote_accepted_at,
+            quote_rejected_at = NEW.quote_rejected_at,
+            quote_value = NEW.total_amount,
+            quote_version = COALESCE(NEW.quote_version, 1),
+            
+            -- Calculate time metrics
+            time_to_send_hours = CASE 
+                WHEN NEW.quote_sent_at IS NOT NULL 
+                THEN EXTRACT(EPOCH FROM (NEW.quote_sent_at - NEW.created_at)) / 3600
+                ELSE NULL
+            END,
+            time_to_view_hours = CASE 
+                WHEN NEW.quote_viewed_at IS NOT NULL AND NEW.quote_sent_at IS NOT NULL
+                THEN EXTRACT(EPOCH FROM (NEW.quote_viewed_at - NEW.quote_sent_at)) / 3600
+                ELSE NULL
+            END,
+            time_to_decision_hours = CASE 
+                WHEN NEW.quote_accepted_at IS NOT NULL AND NEW.quote_sent_at IS NOT NULL
+                THEN EXTRACT(EPOCH FROM (NEW.quote_accepted_at - NEW.quote_sent_at)) / 3600
+                WHEN NEW.quote_rejected_at IS NOT NULL AND NEW.quote_sent_at IS NOT NULL
+                THEN EXTRACT(EPOCH FROM (NEW.quote_rejected_at - NEW.quote_sent_at)) / 3600
+                ELSE NULL
+            END,
+            conversion_rate = CASE 
+                WHEN NEW.quote_accepted_at IS NOT NULL THEN 1.0
+                WHEN NEW.quote_rejected_at IS NOT NULL THEN 0.0
+                ELSE NULL
+            END,
+            updated_at = NOW()
+        WHERE work_order_id = NEW.id;
+    END IF;
+    
+    RETURN NEW;
+END;
+$function$
+"
+public,update_updated_at_column,"CREATE OR REPLACE FUNCTION public.update_updated_at_column()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$function$
+"
+public,update_user_dashboard_settings_updated_at,"CREATE OR REPLACE FUNCTION public.update_user_dashboard_settings_updated_at()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$function$
+"
+public,update_work_order_on_change_order_approval,"CREATE OR REPLACE FUNCTION public.update_work_order_on_change_order_approval()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+  IF NEW.status = 'approved' AND OLD.status != 'approved' THEN
+    UPDATE work_orders
+    SET 
+      has_change_orders = true,
+      change_orders_total = COALESCE(change_orders_total, 0) + NEW.total_amount,
+      total_amount = COALESCE(total_amount, 0) + NEW.total_amount,
+      updated_at = NOW()
+    WHERE id = NEW.work_order_id;
+  END IF;
+  RETURN NEW;
+END;
+$function$
+"
+public,update_work_order_totals,"CREATE OR REPLACE FUNCTION public.update_work_order_totals(p_work_order_id uuid)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+    v_subtotal DECIMAL(10,2);
+    v_tax_rate DECIMAL(5,4) := 0.0875; -- Default 8.75% tax rate
+    v_tax_amount DECIMAL(10,2);
+    v_total_amount DECIMAL(10,2);
+BEGIN
+    -- Calculate subtotal from line items
+    SELECT COALESCE(SUM(total_price), 0) INTO v_subtotal
+    FROM work_order_line_items 
+    WHERE work_order_id = p_work_order_id;
+    
+    -- Calculate tax (you might want to get this from company settings)
+    v_tax_amount := v_subtotal * v_tax_rate;
+    v_total_amount := v_subtotal + v_tax_amount;
+    
+    -- Update work order
+    UPDATE work_orders 
+    SET 
+        subtotal = v_subtotal,
+        tax_amount = v_tax_amount,
+        total_amount = v_total_amount,
+        updated_at = NOW()
+    WHERE id = p_work_order_id;
+END;
+$function$
+"
+public,validate_company_rates,"CREATE OR REPLACE FUNCTION public.validate_company_rates(p_company_id uuid)
+ RETURNS boolean
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM rate_cards
+        WHERE company_id = p_company_id
+          AND active = true
+          AND rate > 0
+    ) THEN
+        RETURN true;
+    ELSE
+        RAISE EXCEPTION 'Company % must configure at least one rate before proceeding', p_company_id;
+    END IF;
+END;
+$function$
+"
+public,validate_onboarding_step,"CREATE OR REPLACE FUNCTION public.validate_onboarding_step(p_company_id uuid, p_step integer)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+DECLARE
+  v_result JSONB := '{""valid"": false, ""errors"": [], ""warnings"": []}'::jsonb;
+  v_company_record RECORD;
+  v_service_count INTEGER;
+  v_employee_count INTEGER;
+  v_errors TEXT[] := '{}';
+  v_warnings TEXT[] := '{}';
+BEGIN
+  -- Get company data
+  SELECT * INTO v_company_record
+  FROM companies
+  WHERE id = p_company_id;
+
+  IF NOT FOUND THEN
+    v_errors := array_append(v_errors, 'Company not found');
+    RETURN jsonb_build_object(
+      'valid', false,
+      'errors', v_errors,
+      'warnings', v_warnings
+    );
+  END IF;
+
+  -- Step 1: Company Basics validation
+  IF p_step = 1 THEN
+    IF v_company_record.name IS NULL OR trim(v_company_record.name) = '' THEN
+      v_errors := array_append(v_errors, 'Company name is required');
+    END IF;
+
+    IF v_company_record.phone IS NULL OR trim(v_company_record.phone) = '' THEN
+      v_warnings := array_append(v_warnings, 'Phone number recommended for customer contact');
+    END IF;
+
+    IF v_company_record.address_line1 IS NULL OR trim(v_company_record.address_line1) = '' THEN
+      v_warnings := array_append(v_warnings, 'Business address recommended for professional appearance');
+    END IF;
+  END IF;
+
+  -- Step 2: Services/Pricing validation (mode-dependent)
+  IF p_step = 2 THEN
+    DECLARE
+      v_mode TEXT;
+    BEGIN
+      -- Get onboarding mode from company_settings
+      SELECT (onboarding_progress->>'mode') INTO v_mode
+      FROM company_settings
+      WHERE company_id = p_company_id;
+
+      -- QUICK START: Skip service validation (pricing setup instead)
+      IF v_mode = 'quick' THEN
+        -- Quick start uses pricing setup - always valid
+        v_warnings := array_append(v_warnings, 'Quick Start mode - services can be added later');
+      ELSE
+        -- ADVANCED: Check for services in company-specific OR global categories
+        SELECT COUNT(*) INTO v_service_count
+        FROM service_types st
+        INNER JOIN service_categories sc ON st.category_id = sc.id
+        WHERE (sc.company_id = p_company_id OR sc.company_id IS NULL);
+
+        IF v_service_count = 0 THEN
+          v_errors := array_append(v_errors, 'At least one service must be defined before creating quotes');
+        END IF;
+      END IF;
+    END;
+  END IF;
+
+  -- Step 3: Team validation
+  IF p_step = 3 THEN
+    SELECT COUNT(*) INTO v_employee_count
+    FROM users
+    WHERE company_id = p_company_id
+    AND role IN ('owner', 'admin', 'manager', 'technician');
+
+    IF v_employee_count = 0 THEN
+      v_warnings := array_append(v_warnings, 'Consider adding team members to assign work orders');
+    END IF;
+  END IF;
+
+  -- Return validation result
+  RETURN jsonb_build_object(
+    'valid', array_length(v_errors, 1) IS NULL,
+    'errors', v_errors,
+    'warnings', v_warnings
+  );
+END;
+$function$
+"
+public,validate_work_order_status_transition,"CREATE OR REPLACE FUNCTION public.validate_work_order_status_transition(p_current_status work_order_status_enum, p_new_status work_order_status_enum)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ IMMUTABLE
+AS $function$
+BEGIN
+    -- ✅ Allow same status (no transition)
+    IF p_current_status = p_new_status THEN
+        RETURN TRUE;
+    END IF;
+
+    -- ✅ Allow NULL transitions
+    IF p_current_status IS NULL OR p_new_status IS NULL THEN
+        RETURN TRUE;
+    END IF;
+
+    -- ✅ Allow all transitions for now (frontend controls workflow)
+    -- Industry standard: Frontend = source of truth, Backend = validation only
+    RETURN TRUE;
+END;
+$function$
+"

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-09-16T03:45:19.521Z",
+  "loginCredentials": "jeraldjsmith@gmail.com",
+  "summary": {
+    "loginSuccess": false,
+    "totalNetworkErrors": 0,
+    "totalConsoleErrors": 0,
+    "totalPageErrors": 0,
+    "totalFailedRequests": 0
+  },
+  "networkErrors": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [],
+  "pageResults": {},
+  "loginSuccess": false
+}

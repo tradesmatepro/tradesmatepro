@@ -1,0 +1,54 @@
+[
+  {
+    "timestamp": "2025-09-18T00:23:54.935Z",
+    "message": "Error loading quotes: {}",
+    "args": [
+      "Error loading quotes:",
+      {}
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:147:15)",
+    "type": "ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T00:23:54.939Z",
+    "message": "Error loading quotes: {}",
+    "args": [
+      "Error loading quotes:",
+      {}
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:147:15)",
+    "type": "ERROR"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:24:01.700Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:24:31.710Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:25:01.722Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:25:31.704Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  }
+]

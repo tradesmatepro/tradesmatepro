@@ -1,0 +1,531 @@
+{
+  "timestamp": "2025-09-16T03:48:03.524Z",
+  "loginCredentials": "jeraldjsmith@gmail.com",
+  "summary": {
+    "loginSuccess": true,
+    "totalNetworkErrors": 44,
+    "totalConsoleErrors": 44,
+    "pagesChecked": 5
+  },
+  "networkErrors": [
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*,users(first_name,last_name)&created_at=gte.2025-09-09T03:47:14.161Z&order=created_at.desc&limit=10",
+      "timestamp": "2025-09-16T03:47:14.340Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:14.487Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:14.488Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=source",
+      "timestamp": "2025-09-16T03:47:14.502Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*&next_action_date=lte.2025-09-16&completed_at=is.null",
+      "timestamp": "2025-09-16T03:47:14.528Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:14.612Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=source",
+      "timestamp": "2025-09-16T03:47:14.620Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*,users(first_name,last_name)&created_at=gte.2025-09-09T03:47:14.161Z&order=created_at.desc&limit=10",
+      "timestamp": "2025-09-16T03:47:14.621Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*&next_action_date=lte.2025-09-16&completed_at=is.null",
+      "timestamp": "2025-09-16T03:47:14.654Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:14.762Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:14.783Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:14.908Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:14.909Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:15.034Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=source",
+      "timestamp": "2025-09-16T03:47:18.740Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:18.752Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:18.754Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*,users(first_name,last_name)&created_at=gte.2025-09-09T03:47:18.610Z&order=created_at.desc&limit=10",
+      "timestamp": "2025-09-16T03:47:18.781Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=source",
+      "timestamp": "2025-09-16T03:47:18.866Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*&next_action_date=lte.2025-09-16&completed_at=is.null",
+      "timestamp": "2025-09-16T03:47:18.887Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*,users(first_name,last_name)&created_at=gte.2025-09-09T03:47:18.610Z&order=created_at.desc&limit=10",
+      "timestamp": "2025-09-16T03:47:18.899Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:18.901Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/sales_activities?select=*&next_action_date=lte.2025-09-16&completed_at=is.null",
+      "timestamp": "2025-09-16T03:47:19.013Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:19.031Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:19.034Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:19.166Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/opportunities?select=*",
+      "timestamp": "2025-09-16T03:47:19.168Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/leads?select=*",
+      "timestamp": "2025-09-16T03:47:19.288Z"
+    },
+    {
+      "status": 400,
+      "method": "POST",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/rpc/get_company_customers?company_uuid=ba643da1-c16f-468e-8fcb-f347e7929597",
+      "timestamp": "2025-09-16T03:47:21.646Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customer_service_agreements?select=*&order=created_at.desc",
+      "timestamp": "2025-09-16T03:47:21.655Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customer_tags?select=*&is_active=eq.true&order=name.asc",
+      "timestamp": "2025-09-16T03:47:21.659Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customer_communications?select=*,users(first_name,last_name)&order=created_at.desc",
+      "timestamp": "2025-09-16T03:47:21.671Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customer_tags?select=*&is_active=eq.true&order=name.asc",
+      "timestamp": "2025-09-16T03:47:21.778Z"
+    },
+    {
+      "status": 400,
+      "method": "POST",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/rpc/get_company_customers?company_uuid=ba643da1-c16f-468e-8fcb-f347e7929597",
+      "timestamp": "2025-09-16T03:47:21.779Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customer_service_agreements?select=*&order=created_at.desc",
+      "timestamp": "2025-09-16T03:47:21.786Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customer_communications?select=*,users(first_name,last_name)&order=created_at.desc",
+      "timestamp": "2025-09-16T03:47:21.795Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/company_customers_view?company_id=eq.ba643da1-c16f-468e-8fcb-f347e7929597&order=created_at.desc&select=*",
+      "timestamp": "2025-09-16T03:47:21.969Z"
+    },
+    {
+      "status": 404,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/company_customers_view?company_id=eq.ba643da1-c16f-468e-8fcb-f347e7929597&order=created_at.desc&select=*",
+      "timestamp": "2025-09-16T03:47:22.091Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quote_follow_ups?select=*,work_orders(id,title),users(first_name,last_name)&order=scheduled_date.asc",
+      "timestamp": "2025-09-16T03:47:30.722Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quote_analytics?select=*,work_orders(id,title,customer_id)",
+      "timestamp": "2025-09-16T03:47:30.723Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quote_follow_ups?select=*,work_orders(id,title),users(first_name,last_name)&order=scheduled_date.asc",
+      "timestamp": "2025-09-16T03:47:30.839Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quote_analytics?select=*,work_orders(id,title,customer_id)",
+      "timestamp": "2025-09-16T03:47:30.848Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quote_approval_workflows?select=*,work_orders(id,title),users(first_name,last_name)&order=created_at.desc",
+      "timestamp": "2025-09-16T03:47:30.886Z"
+    },
+    {
+      "status": 400,
+      "method": "GET",
+      "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quote_approval_workflows?select=*,work_orders(id,title),users(first_name,last_name)&order=created_at.desc",
+      "timestamp": "2025-09-16T03:47:31.015Z"
+    }
+  ],
+  "consoleErrors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:14.341Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.487Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.488Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.502Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:14.528Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.613Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.621Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:14.621Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:14.654Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.763Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.784Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.909Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:14.909Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:15.034Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:18.740Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:18.752Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:18.754Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:18.781Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:18.866Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:18.888Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:18.899Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:18.902Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:19.014Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:19.031Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:19.034Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:19.167Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:19.168Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:19.288Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:21.647Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:21.656Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:21.660Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:21.672Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:21.778Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:21.779Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:21.787Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:21.795Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:21.969Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 ()",
+      "timestamp": "2025-09-16T03:47:22.092Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:30.723Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:30.723Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:30.840Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:30.849Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:30.886Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-09-16T03:47:31.015Z"
+    }
+  ],
+  "loginSuccess": true,
+  "pagesChecked": [
+    {
+      "name": "Dashboard",
+      "path": "/",
+      "newErrors": 14,
+      "status": "HAS_ERRORS"
+    },
+    {
+      "name": "Customers",
+      "path": "/customers",
+      "newErrors": 10,
+      "status": "HAS_ERRORS"
+    },
+    {
+      "name": "Work Orders",
+      "path": "/work",
+      "newErrors": 0,
+      "status": "OK"
+    },
+    {
+      "name": "Inventory",
+      "path": "/inventory",
+      "newErrors": 0,
+      "status": "OK"
+    },
+    {
+      "name": "Quotes",
+      "path": "/quotes",
+      "newErrors": 6,
+      "status": "HAS_ERRORS"
+    }
+  ]
+}

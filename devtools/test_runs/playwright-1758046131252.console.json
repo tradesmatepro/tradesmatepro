@@ -1,0 +1,307 @@
+{
+  "runId": 1758046131252,
+  "errors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:56.681Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:56.927Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:56.927Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:57.144Z"
+    },
+    {
+      "type": "error",
+      "text": "Access to resource at 'http://localhost:4321/ingest' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.",
+      "ts": "2025-09-16T18:08:58.201Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "ts": "2025-09-16T18:08:58.201Z"
+    }
+  ],
+  "messages": [
+    {
+      "type": "log",
+      "text": "🔍 Console Error Capture initialized",
+      "ts": "2025-09-16T18:08:54.519Z"
+    },
+    {
+      "type": "log",
+      "text": "📊 Use getAllCapturedErrors() to see captured errors",
+      "ts": "2025-09-16T18:08:54.521Z"
+    },
+    {
+      "type": "log",
+      "text": "📁 Use exportCapturedErrors() to download error report",
+      "ts": "2025-09-16T18:08:54.521Z"
+    },
+    {
+      "type": "log",
+      "text": "🔬 Use analyzeErrors() to get error analysis and fixes",
+      "ts": "2025-09-16T18:08:54.521Z"
+    },
+    {
+      "type": "log",
+      "text": "🧪 Run window.testConsoleCapture() to test capture functionality",
+      "ts": "2025-09-16T18:08:54.521Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold",
+      "ts": "2025-09-16T18:08:54.680Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Real-Time Error Fixer activated",
+      "ts": "2025-09-16T18:08:54.714Z"
+    },
+    {
+      "type": "log",
+      "text": "🧪 Developer Tools Test Functions Available:",
+      "ts": "2025-09-16T18:08:54.716Z"
+    },
+    {
+      "type": "log",
+      "text": "- runDeveloperToolsTests() - Run all tests",
+      "ts": "2025-09-16T18:08:54.716Z"
+    },
+    {
+      "type": "log",
+      "text": "- testConsoleErrorDetector() - Test error detection",
+      "ts": "2025-09-16T18:08:54.717Z"
+    },
+    {
+      "type": "log",
+      "text": "- testDeveloperToolsService() - Test dev tools service",
+      "ts": "2025-09-16T18:08:54.717Z"
+    },
+    {
+      "type": "log",
+      "text": "- testRemoteDebugService() - Test remote debug service",
+      "ts": "2025-09-16T18:08:54.717Z"
+    },
+    {
+      "type": "log",
+      "text": "- testDeveloperToolsPage() - Test page functionality",
+      "ts": "2025-09-16T18:08:54.717Z"
+    },
+    {
+      "type": "log",
+      "text": "🔌 WebSocket debugging ready (simulated)",
+      "ts": "2025-09-16T18:08:54.845Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ DevTools Service initialized {id: debug_1758046134845, startTime: 2025-09-16T18:08:54.845Z, userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36, url: http://localhost:3000/, viewport: Object}",
+      "ts": "2025-09-16T18:08:54.846Z"
+    },
+    {
+      "type": "log",
+      "text": "🔌 WebSocket debugging ready (simulated)",
+      "ts": "2025-09-16T18:08:54.846Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ DevTools Service initialized {id: debug_1758046134847, startTime: 2025-09-16T18:08:54.847Z, userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36, url: http://localhost:3000/, viewport: Object}",
+      "ts": "2025-09-16T18:08:54.846Z"
+    },
+    {
+      "type": "log",
+      "text": "🟡 Remote Debug Service disabled (set REACT_APP_DEBUG_WS_URL to enable)",
+      "ts": "2025-09-16T18:08:54.849Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ Developer tools initialized successfully",
+      "ts": "2025-09-16T18:08:54.849Z"
+    },
+    {
+      "type": "log",
+      "text": "🟡 Remote Debug Service disabled (set REACT_APP_DEBUG_WS_URL to enable)",
+      "ts": "2025-09-16T18:08:54.849Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ Developer tools initialized successfully",
+      "ts": "2025-09-16T18:08:54.849Z"
+    },
+    {
+      "type": "log",
+      "text": "📤 Auto-export of console logs enabled → http://localhost:4321/ingest",
+      "ts": "2025-09-16T18:08:56.534Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:56.681Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:56.927Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:56.927Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "ts": "2025-09-16T18:08:57.144Z"
+    },
+    {
+      "type": "error",
+      "text": "Access to resource at 'http://localhost:4321/ingest' from origin 'http://localhost:3000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.",
+      "ts": "2025-09-16T18:08:58.201Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "ts": "2025-09-16T18:08:58.201Z"
+    },
+    {
+      "type": "log",
+      "text": "🔍 Console Error Capture initialized",
+      "ts": "2025-09-16T18:08:58.212Z"
+    },
+    {
+      "type": "log",
+      "text": "📊 Use getAllCapturedErrors() to see captured errors",
+      "ts": "2025-09-16T18:08:58.212Z"
+    },
+    {
+      "type": "log",
+      "text": "📁 Use exportCapturedErrors() to download error report",
+      "ts": "2025-09-16T18:08:58.213Z"
+    },
+    {
+      "type": "log",
+      "text": "🔬 Use analyzeErrors() to get error analysis and fixes",
+      "ts": "2025-09-16T18:08:58.213Z"
+    },
+    {
+      "type": "log",
+      "text": "🧪 Run window.testConsoleCapture() to test capture functionality",
+      "ts": "2025-09-16T18:08:58.213Z"
+    },
+    {
+      "type": "info",
+      "text": "%cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold",
+      "ts": "2025-09-16T18:08:58.217Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Real-Time Error Fixer activated",
+      "ts": "2025-09-16T18:08:58.233Z"
+    },
+    {
+      "type": "log",
+      "text": "🧪 Developer Tools Test Functions Available:",
+      "ts": "2025-09-16T18:08:58.234Z"
+    },
+    {
+      "type": "log",
+      "text": "- runDeveloperToolsTests() - Run all tests",
+      "ts": "2025-09-16T18:08:58.234Z"
+    },
+    {
+      "type": "log",
+      "text": "- testConsoleErrorDetector() - Test error detection",
+      "ts": "2025-09-16T18:08:58.234Z"
+    },
+    {
+      "type": "log",
+      "text": "- testDeveloperToolsService() - Test dev tools service",
+      "ts": "2025-09-16T18:08:58.234Z"
+    },
+    {
+      "type": "log",
+      "text": "- testRemoteDebugService() - Test remote debug service",
+      "ts": "2025-09-16T18:08:58.234Z"
+    },
+    {
+      "type": "log",
+      "text": "- testDeveloperToolsPage() - Test page functionality",
+      "ts": "2025-09-16T18:08:58.234Z"
+    },
+    {
+      "type": "log",
+      "text": "🔌 WebSocket debugging ready (simulated)",
+      "ts": "2025-09-16T18:08:58.262Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ DevTools Service initialized {id: debug_1758046138259, startTime: 2025-09-16T18:08:58.259Z, userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36, url: http://localhost:3000/developer-tools, viewport: Object}",
+      "ts": "2025-09-16T18:08:58.263Z"
+    },
+    {
+      "type": "log",
+      "text": "🔌 WebSocket debugging ready (simulated)",
+      "ts": "2025-09-16T18:08:58.264Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ DevTools Service initialized {id: debug_1758046138263, startTime: 2025-09-16T18:08:58.263Z, userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…Gecko) HeadlessChrome/140.0.7339.16 Safari/537.36, url: http://localhost:3000/developer-tools, viewport: Object}",
+      "ts": "2025-09-16T18:08:58.264Z"
+    },
+    {
+      "type": "log",
+      "text": "🟡 Remote Debug Service disabled (set REACT_APP_DEBUG_WS_URL to enable)",
+      "ts": "2025-09-16T18:08:58.264Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ Developer tools initialized successfully",
+      "ts": "2025-09-16T18:08:58.264Z"
+    },
+    {
+      "type": "log",
+      "text": "🟡 Remote Debug Service disabled (set REACT_APP_DEBUG_WS_URL to enable)",
+      "ts": "2025-09-16T18:08:58.264Z"
+    },
+    {
+      "type": "log",
+      "text": "🛠️ Developer tools initialized successfully",
+      "ts": "2025-09-16T18:08:58.264Z"
+    },
+    {
+      "type": "log",
+      "text": "🔍 Console Error Detector started",
+      "ts": "2025-09-16T18:08:58.323Z"
+    },
+    {
+      "type": "log",
+      "text": "🔍 Console Error Detector stopped",
+      "ts": "2025-09-16T18:08:58.323Z"
+    },
+    {
+      "type": "log",
+      "text": "🛑 Real-Time Error Fixer deactivated",
+      "ts": "2025-09-16T18:08:58.323Z"
+    },
+    {
+      "type": "log",
+      "text": "🔍 Console Error Detector started",
+      "ts": "2025-09-16T18:08:58.323Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Real-Time Error Fixer activated",
+      "ts": "2025-09-16T18:08:58.323Z"
+    }
+  ]
+}

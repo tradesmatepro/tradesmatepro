@@ -1,0 +1,152 @@
+[
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T00:47:51.083Z"
+  },
+  {
+    "timestamp": "2025-09-18T00:47:51.083Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:146:17)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T00:47:51.357Z"
+  },
+  {
+    "timestamp": "2025-09-18T00:47:51.357Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:146:17)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.(SENT,ACCEPTED,REJECTED,EXPIRED,DECLINED)&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.(SENT,ACCEPTED,REJECTED,EXPIRED,DECLINED)&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T01:28:44.478Z"
+  },
+  {
+    "timestamp": "2025-09-18T01:28:44.478Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.5462dd4177a0bf376924.hot-update.js:66:17)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.(SENT,ACCEPTED,REJECTED,EXPIRED,DECLINED)&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.(SENT,ACCEPTED,REJECTED,EXPIRED,DECLINED)&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T01:34:50.561Z"
+  },
+  {
+    "timestamp": "2025-09-18T01:34:50.561Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.e1f192efad2bf8630f96.hot-update.js:71:17)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?select=work_order_id%2Cquote_number%2Ccreated_at%2Ctotal_amount%2Cquote_status%2Ctitle%2Cdescription%2Cattachments&customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.%28SENT%2CACCEPTED%2CREJECTED%2CEXPIRED%2CDECLINED%29&order=created_at.desc 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?select=work_order_id%2Cquote_number%2Ccreated_at%2Ctotal_amount%2Cquote_status%2Ctitle%2Cdescription%2Cattachments&customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.%28SENT%2CACCEPTED%2CREJECTED%2CEXPIRED%2CDECLINED%29&order=created_at.desc",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T01:35:05.436Z"
+  },
+  {
+    "timestamp": "2025-09-18T01:35:05.436Z",
+    "message": "Error loading quotes: {\n  \"code\": \"42703\",\n  \"details\": null,\n  \"hint\": null,\n  \"message\": \"column work_orders.work_order_id does not exist\"\n}",
+    "args": [
+      "Error loading quotes:",
+      {
+        "code": "42703",
+        "details": null,
+        "hint": null,
+        "message": "column work_orders.work_order_id does not exist"
+      }
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.e57b79afa19636935d7d.hot-update.js:67:17)",
+    "type": "ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T01:35:05.436Z",
+    "message": "Error loading quotes: {\n  \"code\": \"42703\",\n  \"details\": null,\n  \"hint\": null,\n  \"message\": \"column work_orders.work_order_id does not exist\"\n}",
+    "args": [
+      "Error loading quotes:",
+      {
+        "code": "42703",
+        "details": null,
+        "hint": null,
+        "message": "column work_orders.work_order_id does not exist"
+      }
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.e57b79afa19636935d7d.hot-update.js:72:15)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?select=work_order_id%2Cquote_number%2Ccreated_at%2Ctotal_amount%2Cquote_status%2Ctitle%2Cdescription%2Cattachments&customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.%28SENT%2CACCEPTED%2CREJECTED%2CEXPIRED%2CDECLINED%29&order=created_at.desc 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?select=work_order_id%2Cquote_number%2Ccreated_at%2Ctotal_amount%2Cquote_status%2Ctitle%2Cdescription%2Cattachments&customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&quote_status=in.%28SENT%2CACCEPTED%2CREJECTED%2CEXPIRED%2CDECLINED%29&order=created_at.desc",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T01:35:31.296Z"
+  },
+  {
+    "timestamp": "2025-09-18T01:35:31.297Z",
+    "message": "Error loading quotes: {\n  \"code\": \"42703\",\n  \"details\": null,\n  \"hint\": null,\n  \"message\": \"column work_orders.work_order_id does not exist\"\n}",
+    "args": [
+      "Error loading quotes:",
+      {
+        "code": "42703",
+        "details": null,
+        "hint": null,
+        "message": "column work_orders.work_order_id does not exist"
+      }
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.1fd64694b5209b2fff91.hot-update.js:67:17)",
+    "type": "ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T01:35:31.297Z",
+    "message": "Error loading quotes: {\n  \"code\": \"42703\",\n  \"details\": null,\n  \"hint\": null,\n  \"message\": \"column work_orders.work_order_id does not exist\"\n}",
+    "args": [
+      "Error loading quotes:",
+      {
+        "code": "42703",
+        "details": null,
+        "hint": null,
+        "message": "column work_orders.work_order_id does not exist"
+      }
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at __webpack_modules__../src/utils/realTimeErrorFixer.js.interceptConsoleErrors.console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at __webpack_modules__../src/pages/DeveloperTools.js.setupConsoleInterception.console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.1fd64694b5209b2fff91.hot-update.js:72:15)",
+    "type": "ERROR"
+  }
+]

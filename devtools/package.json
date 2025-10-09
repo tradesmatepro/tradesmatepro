@@ -1,0 +1,14 @@
+{
+  "name": "trademate-devtools",
+  "version": "1.0.0",
+  "description": "TradeMate Pro Development Tools Server",
+  "main": "local_logger_server.js",
+  "scripts": {
+    "start": "node local_logger_server.js",
+    "kill-devtools": "npx kill-port 3002",
+    "dev-devtools": "npm run kill-devtools && set PORT=3002 && node local_logger_server.js"
+  },
+  "devDependencies": {
+    "kill-port": "^2.0.1"
+  }
+}

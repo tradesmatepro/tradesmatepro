@@ -1,0 +1,42 @@
+{
+  "startTime": "2025-10-05T05:01:34.545Z",
+  "customers": {
+    "attempted": 3,
+    "verified": 0,
+    "failed": [
+      {
+        "name": "Test Customer 1",
+        "reason": "Not found in database after creation"
+      },
+      {
+        "name": "Test Customer 2",
+        "reason": "Not found in database after creation"
+      },
+      {
+        "name": "Test Customer 3",
+        "reason": "Not found in database after creation"
+      }
+    ]
+  },
+  "employees": {
+    "attempted": 2,
+    "verified": 0,
+    "failed": [
+      {
+        "name": "Test Employee1",
+        "reason": "column \"first_name\" does not exist"
+      },
+      {
+        "name": "Test Employee2",
+        "reason": "column \"first_name\" does not exist"
+      }
+    ]
+  },
+  "quotes": {
+    "attempted": 0,
+    "verified": 0,
+    "failed": []
+  },
+  "errors": [],
+  "endTime": "2025-10-05T05:02:17.120Z"
+}

@@ -1,0 +1,1849 @@
+export { default } from './QuotesPro';
+
+import { useLocation as useRouterLocation, useNavigate } from 'react-router-dom';
+import { useUser } from '../contexts/UserContext';
+import { supaFetch } from '../utils/supaFetch';
+import { createCurrencyInputProps, createPercentageInputProps } from '../utils/inputUtils';
+import PageHeader from '../components/Common/PageHeader';
+import ModernPageHeader, { ModernStatCard, ModernActionButton } from '../components/Common/ModernPageHeader';
+import ModernCard from '../components/Common/ModernCard';
+import '../styles/modern-enhancements.css';
+
+import {
+  PlusIcon,
+  DocumentTextIcon,
+  CurrencyDollarIcon,
+  ClockIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  ExclamationTriangleIcon,
+  MagnifyingGlassIcon,
+  FunnelIcon,
+  EyeIcon,
+  PencilIcon,
+  TrashIcon,
+  PaperAirplaneIcon,
+  ArrowPathIcon,
+  DocumentArrowDownIcon,
+  PhoneIcon,
+  EnvelopeIcon,
+  MapPinIcon,
+  CalendarIcon,
+  UserIcon,
+  BriefcaseIcon,
+  XMarkIcon,
+  ChevronRightIcon,
+  ChatBubbleLeftRightIcon,
+  ClipboardDocumentListIcon
+} from '@heroicons/react/24/outline';
+import {
+  CheckCircleIcon as CheckCircleIconSolid,
+  ClockIcon as ClockIconSolid,
+  ExclamationTriangleIcon as ExclamationTriangleIconSolid
+} from '@heroicons/react/24/solid';
+
+import QuotesDatabasePanel from '../components/QuotesDatabasePanel';
+import { QuotesStats, QuotesSearchFilter, QuotesTable, Alert } from '../components/QuotesUI';
+import { QuoteBuilder } from '../components/QuoteBuilder';
+import QuotesContextDrawer from '../components/QuotesContextDrawer';
+
+// Progress Stepper Component
+const ProgressStepper = ({ currentStep }) => {
+  const steps = [
+    { id: 'draft', label: 'Draft', icon: DocumentTextIcon },
+    { id: 'sent', label: 'Sent', icon: PaperAirplaneIcon },
+    { id: 'accepted', label: 'Accepted', icon: CheckCircleIcon },
+    { id: 'job', label: 'Job', icon: BriefcaseIcon },
+    { id: 'work_order', label: 'Work Order', icon: ClipboardDocumentListIcon },
+    { id: 'invoice', label: 'Invoice', icon: CurrencyDollarIcon }
+  ];
+
+  const getStepIndex = (step) => {
+    const stepMap = {
+      'DRAFT': 0,
+      'SENT': 1,
+      'ACCEPTED': 2,
+      'REJECTED': 1, // Show as sent but failed
+      'JOB': 3,
+      'WORK_ORDER': 4,
+      'INVOICE': 5
+    };
+    return stepMap[step] || 0;
+  };
+
+  const currentIndex = getStepIndex(currentStep);
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+      <div className="flex items-center justify-between">
+        {steps.map((step, index) => {
+          const Icon = step.icon;
+          const isActive = index === currentIndex;
+          const isCompleted = index < currentIndex;
+          const isFailed = currentStep === 'REJECTED' && index === 1;
+
+          return (
+            <div key={step.id} className="flex items-center">
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                isFailed ? 'border-red-500 bg-red-50' :
+                isActive ? 'border-primary-500 bg-primary-50' :
+                isCompleted ? 'border-green-500 bg-green-50' :
+                'border-gray-300 bg-gray-50'
+              }`}>
+                <Icon className={`w-5 h-5 ${
+                  isFailed ? 'text-red-500' :
+                  isActive ? 'text-primary-500' :
+                  isCompleted ? 'text-green-500' :
+                  'text-gray-400'
+                }`} />
+              </div>
+              <div className="ml-3">
+                <div className={`text-sm font-medium ${
+                  isFailed ? 'text-red-700' :
+                  isActive ? 'text-primary-700' :
+                  isCompleted ? 'text-green-700' :
+                  'text-gray-500'
+                }`}>
+                  {step.label}
+                </div>
+              </div>
+              {index < steps.length - 1 && (
+                <ChevronRightIcon className="w-5 h-5 text-gray-400 mx-4" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const Quotes = () => {
+  // Use the professional database panel which already uses unified work_orders + work_order_items
+  const {
+    quotes,
+    customers,
+    loading,
+    showCreateForm,
+    showEditForm,
+    searchTerm,
+    statusFilter,
+    alert,
+    formData,
+    setSearchTerm,
+    setStatusFilter,
+    setShowCreateForm,
+    setShowEditForm,
+    setFormData,
+    createQuote,
+    updateQuote,
+    deleteQuote,
+    convertToJob,
+    openEditForm: dbOpenEditForm,
+    resetForm,
+    customersLoading
+  } = QuotesDatabasePanel();
+
+  const routerLocation = useRouterLocation();
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeQuote, setActiveQuote] = useState(null);
+  const openDrawerFor = (quote) => { setActiveQuote(quote); setDrawerOpen(true); };
+
+  // Send quote to customer
+  const handleSendToCustomer = async (quote) => {
+    try {
+      console.log('🚀 handleSendToCustomer called with quote:', quote);
+
+      if (!quote.customer_id) {
+        showAlert('error', 'Cannot send quote: No customer assigned');
+        return;
+      }
+
+      // Get customer email
+      const customer = customers.find(c => c.id === quote.customer_id);
+      if (!customer?.email) {
+        showAlert('error', 'Cannot send quote: Customer has no email address');
+        return;
+      }
+
+      // Update work_orders - set status to 'sent' and timestamp
+      await supaFetch(`work_orders?id=eq.${quote.id}`, {
+        method: 'PATCH',
+        body: {
+          status: 'sent',
+          quote_sent_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      }, user.company_id);
+
+      // Insert message into messages table
+      await supaFetch('messages', {
+        method: 'POST',
+        body: {
+          company_id: user.company_id,
+          customer_id: quote.customer_id,
+          work_order_id: quote.id,
+          body: `Quote ${quote.quote_number} sent for review`,
+          message_type: 'customer',
+          status: 'sent',
+          sent_at: new Date().toISOString()
+        }
+      }, user.company_id);
+
+      showAlert('success', `Quote sent to ${customer.email}! Email integration coming soon.`);
+
+      // Refresh quotes list
+      loadQuotes();
+    } catch (error) {
+      console.error('Failed to send quote to customer:', error);
+      showAlert('error', 'Failed to send quote to customer');
+    }
+  };
+
+  const handleExportPDF = async (quote) => {
+    try {
+      // Load complete work order data (unified pipeline)
+      const [woRes, itemsRes] = await Promise.all([
+        supaFetch(`work_orders?work_order_id=eq.${quote.work_order_id || quote.id}&select=*`, { method: 'GET' }, user.company_id),
+        supaFetch(`work_order_items?work_order_id=eq.${quote.work_order_id || quote.id}&order=created_at.asc`, { method: 'GET' }, user.company_id)
+      ]);
+
+      // Use complete work order data
+      const [fullQuote] = woRes.ok ? await woRes.json() : [quote];
+      const items = itemsRes.ok ? await itemsRes.json() : [];
+
+      // Use fullQuote instead of quote for the rest of the function
+      let quoteData = fullQuote || quote;
+
+      // Auto-flip DRAFT → SENT when exporting (sending to customer)
+      if (quoteData?.quote_status === 'DRAFT') {
+        try {
+          await supaFetch(`work_orders?work_order_id=eq.${quote.work_order_id || quote.id}`, {
+            method: 'PATCH',
+            body: {
+              quote_status: 'SENT',
+              stage: 'QUOTE',
+              updated_at: new Date().toISOString()
+            }
+          }, user.company_id);
+          quoteData = { ...quoteData, quote_status: 'SENT', stage: 'QUOTE' };
+          console.log('📧 Auto-flipped quote from DRAFT → SENT on export');
+        } catch (e) {
+          console.warn('Failed to auto-flip quote status on export:', e);
+        }
+      }
+
+      // Mirror InvoiceTemplate formatting
+      const company = companyProfile || {};
+      const currency = businessSettings?.currency || company.currency || 'USD';
+      const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(Number(n || 0));
+
+      // Format company address similar to InvoiceTemplate
+      const formatCompanyAddress = (c = {}) => {
+        const s = (c.street_address || '').trim();
+        const city = (c.city || '').trim();
+        const state = (c.state || '').trim();
+        const zip = (c.postal_code || c.zip_code || '').trim();
+        const lower = s.toLowerCase();
+        const parts = [];
+        if (s) parts.push(s);
+        if (city && !lower.includes(city.toLowerCase())) parts.push(city);
+        if (state && !lower.includes(state.toLowerCase())) parts.push(state);
+        if (zip && !s.includes(zip)) parts.push(zip);
+        return parts.filter(Boolean).join(', ');
+      };
+
+      const companyAddr = formatCompanyAddress(company);
+      const customer = quote.customers || {};
+      const customerAddrParts = [];
+      if (customer.billing_address_line_1 || customer.street_address) customerAddrParts.push(customer.billing_address_line_1 || customer.street_address);
+      if (customer.billing_address_line_2) customerAddrParts.push(customer.billing_address_line_2);
+      const cityStateZip = [customer.billing_city || customer.city, customer.billing_state || customer.state, customer.billing_zip_code || customer.zip_code].filter(Boolean).join(', ');
+      if (cityStateZip) customerAddrParts.push(cityStateZip);
+      const customerAddr = customerAddrParts.join('\n');
+
+      // Quote validity text
+      const validityText = quoteData.valid_until ? `Valid until ${new Date(quoteData.valid_until).toLocaleDateString()}` : 'Quote validity: 30 days';
+
+      // Compute totals: mirror template logic with fallback if line_total absent
+      const itemsPresent = items.length > 0;
+      const subtotal = items.reduce((s, it) => s + (it.line_total ? Number(it.line_total) - Number(it.tax_amount||0) : (Number(it.quantity||0) * Number(it.unit_price||0))), 0);
+      const tax_amount = items.reduce((s, it) => s + Number(it.tax_amount || 0), 0);
+      const total_amount = itemsPresent ? (subtotal + tax_amount) : Number(quote.total_amount || 0);
+
+      const rows = items.length ? items.map(it => `
+        <tr>
+          <td>${it.description || it.item_name || ''}</td>
+          <td style="text-align:right">${Number(it.quantity || it.qty || 0)}</td>
+          <td style="text-align:right">${fmt(it.unit_price || it.rate)}</td>
+          <td style="text-align:right">${fmt(it.tax_amount || 0)}</td>
+          <td style="text-align:right">${fmt(it.line_total || (Number(it.quantity||0)*Number(it.unit_price||0)))}</td>
+        </tr>`).join('') : `<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:16px">No items</td></tr>`;
+
+      const logoHtml = company.company_logo_url
+        ? `<img src="${company.company_logo_url}" alt="Logo" style="height:120px;object-fit:contain;max-width:560px" />`
+        : `<div style="font-size:20px;font-weight:700">${company.name || company.company_name || 'Your Company'}</div>`;
+
+      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Quote #${quote.quote_number || quote.id}</title>
+      <style>
+      body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:#111827;padding:24px;line-height:1.6;background:#fff}
+      .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid #e5e7eb}
+      .brand{display:flex;gap:16px;align-items:flex-start}
+      .meta{font-size:14px;color:#6b7280;line-height:1.4}
+      .section{margin:24px 0;padding:20px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px}
+      .section h4{margin:0 0 16px 0;font-weight:600;color:#111827;font-size:18px;border-bottom:1px solid #d1d5db;padding-bottom:8px}
+      .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px}
+      .section-item{margin-bottom:12px}
+      .section-label{color:#6b7280;font-size:13px;font-weight:500;margin-bottom:4px}
+      .section-value{color:#111827;font-size:14px}
+      .job-description{background:#f0f9ff;padding:16px;border-radius:6px;border:1px solid #e0f2fe;margin-top:12px;color:#1e40af;font-size:14px}
+      table{width:100%;border-collapse:collapse;margin:24px 0;background:white;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden}
+      th,td{padding:16px 12px;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px}
+      th{background:#f3f4f6;font-weight:600;color:#374151}
+      .totals{margin-top:32px;padding:20px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;max-width:400px;margin-left:auto}
+      .totals div{margin:8px 0;display:flex;justify-content:space-between;font-size:16px}
+      .totals div:last-child{border-top:2px solid #374151;font-weight:700;font-size:20px;padding-top:12px;margin-top:12px;color:#111827}
+      @media print{body{padding:12px} .section{break-inside:avoid}}
+      </style></head><body>
+        <div class="header">
+          <div class="brand">
+            ${logoHtml}
+            <div>
+              <div style="font-size:18px;font-weight:600">${company.name || company.company_name || ''}</div>
+              <div class="meta">${companyAddr}</div>
+              <div class="meta">${company.phone || ''}${company.email ? ` • ${company.email}` : ''}</div>
+            </div>
+          </div>
+          <div class="meta">Quote #${quoteData.quote_number || quoteData.id}<br/>Date: ${quoteData.created_at ? new Date(quoteData.created_at).toLocaleDateString() : ''}<br/>${validityText}</div>
+        </div>
+        <div class="section">
+          <h4>Quote For</h4>
+          <div>${customer.name || ''}</div>
+          <div class="meta">${customer.email || ''}${customer.phone ? ` • ${customer.phone}` : ''}</div>
+          <div class="meta">${customerAddr || '<span style="color:#9ca3af">No billing address on file</span>'}</div>
+        </div>
+        ${job ? `<div class="section">
+          <h4>Service Details</h4>
+          <div class="section-item" style="margin-bottom: 16px;">
+            <div class="section-label">Service Requested</div>
+            <div class="section-value">${job.title || job.job_title || 'Service Call'}</div>
+          </div>
+          <div class="section-item" style="margin-bottom: 16px;">
+            <div class="section-label">Service Location</div>
+            <div class="section-value">${
+              job.service_address_line_1 ?
+                `${job.service_address_line_1}${job.service_address_line_2 ? ', ' + job.service_address_line_2 : ''}, ${job.service_city || ''} ${job.service_state || ''} ${job.service_zip_code || ''}`.trim() :
+              [job.street_address, job.city, job.state, job.zip_code].filter(Boolean).join(', ') ||
+              job.work_location || job.job_location || 'No Service Address'
+            }</div>
+          </div>
+          ${job.description ? `<div class="section-item">
+            <div class="section-label">Description of Work</div>
+            <div class="job-description">${job.description}</div>
+          </div>` : ''}
+        </div>` : ''}
+        ${quoteData.description ? `<div class="section"><h4>Quote Description</h4><div style="background:#f0f9ff;padding:12px;border-radius:6px;border:1px solid #e0f2fe">${quoteData.description}</div></div>` : ''}
+        <table><thead><tr><th>Description</th><th style="text-align:right">Qty</th><th style="text-align:right">Rate</th><th style="text-align:right">Tax</th><th style="text-align:right">Line Total</th></tr></thead>
+        <tbody>${rows}</tbody></table>
+        <div class="totals">
+          <div><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
+          <div><span>Tax</span><span>${fmt(tax_amount)}</span></div>
+          <div style="font-weight:700"><span>Total Quote</span><span>${fmt(total_amount)}</span></div>
+        </div>
+        ${ (company.quote_terms || company.default_quote_terms) ? `<div class="section"><h4>Terms & Conditions</h4><div>${company.quote_terms || company.default_quote_terms}</div></div>` : ''}
+        ${ (company.quote_footer) ? `<div class="section"><div>${company.quote_footer}</div></div>` : ''}
+      </body></html>`;
+
+      const w = window.open('', '_blank');
+      if (w) {
+        w.document.write(html);
+        w.document.close();
+        w.onload = () => {
+          try { w.focus(); w.print(); } catch (e) {}
+          setTimeout(() => { try { w.close(); } catch (e) {} }, 800);
+        };
+      }
+    } catch (e) {
+      console.error('Error exporting quote PDF:', e);
+      showAlert('error', 'Failed to export PDF');
+    }
+  };
+
+  // Render professional Quotes UI using unified data layer
+  return (
+    <div>
+      <PageHeader
+        title="Quotes"
+        subtitle="Manage quotes and convert them to jobs"
+        breadcrumbs={[{ label: 'Dashboard', to: '/dashboard' }, { label: 'Quotes' }]}
+      >
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowCreateForm(true)} className="btn-primary flex items-center gap-2">
+            <PlusIcon className="w-4 h-4" />
+            Create Quote
+          </button>
+          <button onClick={() => setShowTemplates(true)} className="btn-secondary flex items-center gap-2">
+            <DocumentTextIcon className="w-4 h-4" />
+            Templates
+          </button>
+        </div>
+      </PageHeader>
+
+      <Alert alert={alert} />
+
+      <QuotesStats quotes={quotes} />
+
+      <QuotesSearchFilter
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+      />
+
+      <QuotesTable
+        quotes={quotes}
+        customers={customers}
+        loading={loading}
+        openEditForm={dbOpenEditForm}
+        deleteQuote={deleteQuote}
+        convertToJob={convertToJob}
+        openContext={openDrawerFor}
+        handleExportPDF={handleExportPDF}
+      />
+
+      {showCreateForm && (
+        <QuoteBuilder
+          formData={formData}
+          setFormData={setFormData}
+          customers={customers}
+          customersLoading={customersLoading}
+          onSubmit={createQuote}
+          onCancel={() => { setShowCreateForm(false); resetForm(); }}
+          handleExportPDF={handleExportPDF}
+          handleSendToCustomer={handleSendToCustomer}
+          showAlert={showAlert}
+        />
+      )}
+
+      {showEditForm && (
+        <QuoteBuilder
+          isEdit={true}
+          formData={formData}
+          setFormData={setFormData}
+          customers={customers}
+          customersLoading={customersLoading}
+          onSubmit={updateQuote}
+          onCancel={() => { setShowEditForm(false); resetForm(); }}
+          handleExportPDF={handleExportPDF}
+          handleSendToCustomer={handleSendToCustomer}
+          showAlert={showAlert}
+        />
+      )}
+
+      <QuotesContextDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        quote={activeQuote}
+        customers={customers}
+        onConvertToJob={() => activeQuote && convertToJob(activeQuote)}
+        onSend={() => activeQuote && handleSendToCustomer(activeQuote)}
+        onPrint={() => activeQuote && handleExportPDF(activeQuote)}
+      />
+    </div>
+  );
+
+/*
+    // Handle URL parameters
+    const params = new URLSearchParams(routerLocation.search);
+    const q = params.get('q');
+    const isNew = params.get('new') === 'quote';
+    const customerId = params.get('customer');
+
+    if (q && q !== searchTerm) setSearchTerm(q);
+    if (isNew && !showCreateForm) setShowCreateForm(true);
+    if (customerId && !formData.customer_id) {
+      setFormData(prev => ({ ...prev, customer_id: customerId }));
+    }
+  }, [routerLocation.search]);
+*/
+
+
+
+
+/* LEGACY QUOTES IMPLEMENTATION BELOW — commented out after refactor
+
+
+  // Calculate quote analytics
+  const getQuoteAnalytics = () => {
+    const totalQuotes = quotes.length;
+    const draftQuotes = quotes.filter(q => q.quote_status === 'DRAFT').length;
+    const sentQuotes = quotes.filter(q => q.quote_status === 'SENT').length;
+    const acceptedQuotes = quotes.filter(q => q.quote_status === 'ACCEPTED').length;
+    const rejectedQuotes = quotes.filter(q => q.quote_status === 'REJECTED').length;
+
+    const totalValue = quotes.reduce((sum, q) => sum + (parseFloat(q.total_amount) || 0), 0);
+    const outstandingValue = quotes
+      .filter(q => q.quote_status === 'SENT')
+      .reduce((sum, q) => sum + (parseFloat(q.total_amount) || 0), 0);
+
+    const conversionRate = sentQuotes > 0 ? (acceptedQuotes / sentQuotes) * 100 : 0;
+
+    // Check for expiring quotes
+    const today = new Date();
+    const expiringQuotes = quotes.filter(q => {
+      if (q.quote_status !== 'SENT' || !q.expiration_date) return false;
+      const expirationDate = new Date(q.expiration_date);
+      const daysUntilExpiration = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
+      return daysUntilExpiration <= 7 && daysUntilExpiration >= 0;
+    });
+
+    const expiredQuotes = quotes.filter(q => {
+      if (q.quote_status !== 'SENT' || !q.expiration_date) return false;
+      const expirationDate = new Date(q.expiration_date);
+      return expirationDate < today;
+    });
+
+    return {
+      totalQuotes,
+      draftQuotes,
+      sentQuotes,
+      acceptedQuotes,
+      rejectedQuotes,
+      totalValue,
+      outstandingValue,
+      conversionRate,
+      expiringQuotes,
+      expiredQuotes
+    };
+  };
+
+  const analytics = getQuoteAnalytics();
+
+  // Filter quotes
+  const filteredQuotes = quotes.filter(quote => {
+    const matchesSearch = !searchTerm ||
+      quote.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      quote.customers?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      quote.id?.toString().includes(searchTerm);
+
+    const matchesStatus = statusFilter === 'all' ||
+      (statusFilter === 'draft' && quote.quote_status === 'DRAFT') ||
+      (statusFilter === 'sent' && quote.quote_status === 'SENT') ||
+      (statusFilter === 'accepted' && quote.quote_status === 'ACCEPTED') ||
+      (statusFilter === 'rejected' && quote.quote_status === 'REJECTED');
+
+    return matchesSearch && matchesStatus;
+  });
+
+/* BEGIN LEGACY IMPLEMENTATION: commented out after refactor to QuotesDatabasePanel */
+
+  // Utility functions
+
+
+  const getStatusBadge = (status) => {
+    const statusMap = {
+      'DRAFT': { bg: 'bg-gray-100', text: 'text-gray-800', label: 'Draft' },
+      'SENT': { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Sent' },
+      'ACCEPTED': { bg: 'bg-green-100', text: 'text-green-800', label: 'Accepted' },
+      'REJECTED': { bg: 'bg-red-100', text: 'text-red-800', label: 'Rejected' }
+    };
+    return statusMap[status] || statusMap['DRAFT'];
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount || 0);
+  };
+
+  const isExpiring = (quote) => {
+    if (quote.quote_status !== 'SENT' || !quote.expiration_date) return false;
+    const today = new Date();
+    const expirationDate = new Date(quote.expiration_date);
+    const daysUntilExpiration = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
+    return daysUntilExpiration <= 7 && daysUntilExpiration >= 0;
+  };
+
+  const isExpired = (quote) => {
+    if (quote.quote_status !== 'SENT' || !quote.expiration_date) return false;
+    const today = new Date();
+    const expirationDate = new Date(quote.expiration_date);
+    return expirationDate < today;
+  };
+
+  // Form handlers
+  const handleCreateQuote = async (e, submissionData = null) => {
+    e.preventDefault();
+    try {
+      // Use submissionData from QuoteBuilder if provided, otherwise use formData
+      const dataToSubmit = submissionData || formData;
+
+      const response = await supaFetch('work_orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...dataToSubmit,
+          // NO stage column - only status (work_order_status_enum)
+          status: (dataToSubmit.status || 'quote').toLowerCase(),
+          company_id: user.company_id,
+          created_by: user.id,
+          // Ensure new financial fields are included
+          currency: dataToSubmit.currency || 'USD',
+          visible_in_portal: dataToSubmit.visible_in_portal !== false // Default to true
+        })
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote created successfully!');
+        setShowCreateForm(false);
+        resetForm();
+        await loadQuotes();
+      } else {
+        showAlert('error', 'Failed to create quote');
+      }
+    } catch (error) {
+      console.error('Error creating quote:', error);
+      showAlert('error', 'Failed to create quote');
+    }
+  };
+
+  const handleUpdateQuote = async (e, submissionData = null) => {
+    e.preventDefault();
+    try {
+      // Use submissionData from QuoteBuilder if provided, otherwise use formData
+      const dataToSubmit = submissionData || formData;
+
+      const response = await supaFetch(`work_orders?id=eq.${selectedQuote.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...dataToSubmit,
+          // Ensure new financial fields are included
+          currency: dataToSubmit.currency || 'USD',
+          visible_in_portal: dataToSubmit.visible_in_portal !== false // Default to true
+        })
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote updated successfully!');
+        setShowEditForm(false);
+        resetForm();
+        await loadQuotes();
+      } else {
+        showAlert('error', 'Failed to update quote');
+      }
+    } catch (error) {
+      console.error('Error updating quote:', error);
+      showAlert('error', 'Failed to update quote');
+    }
+  };
+
+  const handleDeleteQuote = async (quoteId) => {
+    if (!window.confirm('Are you sure you want to delete this quote?')) return;
+
+    try {
+      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, {
+        method: 'DELETE'
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote deleted successfully!');
+        await loadQuotes();
+      } else {
+        showAlert('error', 'Failed to delete quote');
+      }
+    } catch (error) {
+      console.error('Error deleting quote:', error);
+      showAlert('error', 'Failed to delete quote');
+    }
+  };
+
+  const handleSendQuote = async (quoteId) => {
+    try {
+      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quote_status: 'SENT' })
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote sent successfully!');
+        await loadQuotes();
+        // If expiration date exists and already past, notify
+        try {
+          const { default: NotificationGenerator } = await import('../services/NotificationGenerator');
+          const q = quotes.find(q => q.id === quoteId);
+          const exp = q?.expiration_date || q?.quote_expires_date;
+          if (exp && new Date(exp) < new Date()) {
+            await NotificationGenerator.quoteExpired(user.company_id, { id: quoteId, quote_number: q?.quote_number, quote_expires_date: exp });
+          }
+        } catch (e) { /* non-blocking */ }
+      } else {
+        showAlert('error', 'Failed to send quote');
+      }
+    } catch (error) {
+      console.error('Error sending quote:', error);
+      showAlert('error', 'Failed to send quote');
+    }
+  };
+
+  const handleAcceptQuote = async (quoteId) => {
+    try {
+      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quote_status: 'ACCEPTED' })
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote accepted successfully!');
+        await loadQuotes();
+      } else {
+        showAlert('error', 'Failed to accept quote');
+      }
+    } catch (error) {
+      console.error('Error accepting quote:', error);
+      showAlert('error', 'Failed to accept quote');
+    }
+  };
+
+  const handleRejectQuote = async (quoteId) => {
+    try {
+      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quote_status: 'REJECTED' })
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote rejected');
+        await loadQuotes();
+      } else {
+        showAlert('error', 'Failed to reject quote');
+      }
+    } catch (error) {
+      console.error('Error rejecting quote:', error);
+      showAlert('error', 'Failed to reject quote');
+    }
+  };
+
+  const handleConvertToJob = async (quoteId) => {
+    try {
+      const quote = quotes.find(q => q.id === quoteId);
+      if (!quote) return;
+
+      // ✅ UPDATE existing work order instead of creating duplicate
+      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: 'approved',
+          quote_accepted_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+      }, user.company_id);
+
+      if (response.ok) {
+        showAlert('success', 'Quote converted to job successfully!');
+        await loadQuotes();
+        navigate('/jobs');
+      } else {
+        showAlert('error', 'Failed to convert quote to job');
+      }
+    } catch (error) {
+      console.error('Error converting quote to job:', error);
+      showAlert('error', 'Failed to convert quote to job');
+    }
+  };
+
+  const openEditForm = (quote) => {
+    setSelectedQuote(quote);
+    setFormData({
+      customer_id: quote.customer_id || '',
+      title: quote.title || '',
+      description: quote.description || '',
+      line_items: quote.line_items || [],
+      subtotal: quote.subtotal || 0,
+      tax_rate: quote.tax_rate || 0,
+      tax_amount: quote.tax_amount || 0,
+      total_amount: quote.total_amount || 0,
+      quote_status: quote.quote_status || 'DRAFT',
+      expiration_date: quote.expiration_date || '',
+      notes: quote.notes || ''
+    });
+    setShowEditForm(true);
+  };
+
+  const openProfileModal = (quote) => {
+    setSelectedQuote(quote);
+    setShowProfileModal(true);
+  };
+
+  return (
+    <div className="space-y-8 fade-in">
+      {/* Modern Page Header */}
+      <ModernPageHeader
+        title="Sales Quotes"
+        subtitle="Create professional estimates and convert them to jobs"
+        icon={DocumentTextIcon}
+        gradient="green"
+        stats={[
+          {
+            label: 'Active',
+            value: analytics.activeQuotes,
+            onClick: () => setStatusFilter('SENT')
+          },
+          {
+            label: 'Conversion',
+            value: `${analytics.conversionRate}%`,
+            onClick: () => navigate('/reports?view=quotes')
+          },
+          {
+            label: 'Pipeline',
+            value: formatCurrency(analytics.totalValue),
+            onClick: () => setStatusFilter('SENT')
+          }
+        ]}
+        actions={[
+          {
+            label: 'Create Quote',
+            icon: PlusIcon,
+            onClick: () => setShowCreateForm(true)
+          }
+        ]}
+      />
+
+      {/* Quote Analytics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <ModernCard
+          className="card-gradient-green text-white hover-lift cursor-pointer transition-transform hover:scale-105"
+          onClick={() => setStatusFilter('SENT')}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-green-100 text-sm font-medium">Active Quotes</p>
+                <p className="text-3xl font-bold text-white">{analytics.activeQuotes}</p>
+                <p className="text-green-200 text-xs mt-1">Click to view</p>
+              </div>
+              <DocumentTextIcon className="w-12 h-12 text-green-200" />
+            </div>
+          </div>
+        </ModernCard>
+
+        <ModernCard
+          className="card-gradient-blue text-white hover-lift cursor-pointer transition-transform hover:scale-105"
+          onClick={() => setStatusFilter('SENT')}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-blue-100 text-sm font-medium">Pipeline Value</p>
+                <p className="text-3xl font-bold text-white">{formatCurrency(analytics.totalValue)}</p>
+                <p className="text-blue-200 text-xs mt-1">Click to view pipeline</p>
+              </div>
+              <CurrencyDollarIcon className="w-12 h-12 text-blue-200" />
+            </div>
+          </div>
+        </ModernCard>
+
+        <ModernCard
+          className="card-gradient-purple text-white hover-lift cursor-pointer transition-transform hover:scale-105"
+          onClick={() => navigate('/reports?view=quotes')}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-medium">Conversion Rate</p>
+                <p className="text-3xl font-bold text-white">{analytics.conversionRate}%</p>
+                <p className="text-purple-200 text-xs mt-1">Click for analytics</p>
+              </div>
+              <ChartBarIcon className="w-12 h-12 text-purple-200" />
+            </div>
+          </div>
+        </ModernCard>
+
+        <ModernCard
+          className="card-gradient-orange text-white hover-lift cursor-pointer transition-transform hover:scale-105"
+          onClick={() => {
+            // Filter to show expiring quotes
+            setStatusFilter('SENT');
+            // You could add additional logic here to filter by expiration date
+          }}
+        >
+          <div className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-100 text-sm font-medium">Expiring Soon</p>
+                <p className="text-3xl font-bold text-white">{analytics.expiringQuotes.length}</p>
+                <p className="text-orange-200 text-xs mt-1">Click to follow up</p>
+              </div>
+              <ExclamationTriangleIcon className="w-12 h-12 text-orange-200" />
+            </div>
+          </div>
+        </ModernCard>
+      </div>
+
+      {/* Alert */}
+      {alert.show && (
+        <div className={`p-4 rounded-md ${
+          alert.type === 'success' ? 'bg-green-100 text-green-700' :
+          alert.type === 'warning' ? 'bg-yellow-100 text-yellow-700' :
+          'bg-red-100 text-red-700'
+        }`}>
+          {alert.message}
+        </div>
+      )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Summary Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center">
+            <DocumentTextIcon className="w-8 h-8 text-blue-500" />
+            <div className="ml-3">
+              <div className="text-2xl font-bold text-gray-900">{analytics.totalQuotes}</div>
+              <div className="text-sm text-gray-500">Total Quotes</div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center">
+            <ClockIcon className="w-8 h-8 text-gray-500" />
+            <div className="ml-3">
+              <div className="text-2xl font-bold text-gray-900">{analytics.draftQuotes}</div>
+              <div className="text-sm text-gray-500">Draft</div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center">
+            <PaperAirplaneIcon className="w-8 h-8 text-blue-500" />
+            <div className="ml-3">
+              <div className="text-2xl font-bold text-gray-900">{analytics.sentQuotes}</div>
+              <div className="text-sm text-gray-500">Sent</div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center">
+            <CheckCircleIcon className="w-8 h-8 text-green-500" />
+            <div className="ml-3">
+              <div className="text-2xl font-bold text-gray-900">{analytics.acceptedQuotes}</div>
+              <div className="text-sm text-gray-500">Accepted</div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center">
+            <XCircleIcon className="w-8 h-8 text-red-500" />
+            <div className="ml-3">
+              <div className="text-2xl font-bold text-gray-900">{analytics.rejectedQuotes}</div>
+              <div className="text-sm text-gray-500">Rejected</div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center">
+            <CurrencyDollarIcon className="w-8 h-8 text-purple-500" />
+            <div className="ml-3">
+              <div className="text-2xl font-bold text-gray-900">{formatCurrency(analytics.totalValue)}</div>
+              <div className="text-sm text-gray-500">Total Value</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{analytics.conversionRate.toFixed(1)}%</div>
+              <div className="text-sm text-gray-500">Conversion Rate</div>
+            </div>
+            <div className="text-xs text-gray-400">
+              {analytics.acceptedQuotes} accepted ÷ {analytics.sentQuotes} sent
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-2xl font-bold text-gray-900">{formatCurrency(analytics.outstandingValue)}</div>
+              <div className="text-sm text-gray-500">Outstanding Value</div>
+            </div>
+            <div className="text-xs text-gray-400">
+              Sent but not accepted
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="bg-white rounded-lg border border-gray-200 p-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          {/* Search */}
+          <div className="flex-1">
+            <div className="relative">
+              <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search quotes by title, customer, or ID..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex items-center gap-2">
+            <FunnelIcon className="w-4 h-4 text-gray-500" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="all">All Quotes</option>
+              <option value="draft">Draft</option>
+              <option value="sent">Sent</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between mt-4">
+          <div className="text-sm text-gray-600">
+            {filteredQuotes.length} quotes found
+          </div>
+        </div>
+      </div>
+
+      {/* Quotes Table */}
+      {loading ? (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+          <div className="mt-2 text-gray-600">Loading quotes...</div>
+        </div>
+      ) : filteredQuotes.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+          <DocumentTextIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No quotes found</h3>
+          <p className="text-gray-600 mb-4">Get started by creating your first quote</p>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="btn-primary"
+          >
+            Create Quote
+          </button>
+        </div>
+      ) : (
+        <QuotesTable />
+      )}
+
+      {/* Modals */}
+      {showCreateForm && <QuoteForm />}
+      {showEditForm && <QuoteEditForm />}
+      {showProfileModal && <QuoteProfileModal />}
+    </div>
+  );
+
+  // Quotes Table Component
+  function QuotesTable() {
+    return (
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Quote Details
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Customer
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Created Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Total Amount
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {filteredQuotes.map((quote) => {
+              const statusBadge = getStatusBadge(quote.quote_status);
+              const customer = customers.find(c => c.id === quote.customer_id);
+
+              return (
+                <tr key={quote.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        #{quote.id} - {quote.title}
+                      </div>
+                      <div className="text-sm text-gray-500 truncate max-w-xs">
+                        {quote.description}
+                      </div>
+                      {(isExpiring(quote) || isExpired(quote)) && (
+                        <div className={`text-xs mt-1 ${isExpired(quote) ? 'text-red-600' : 'text-yellow-600'}`}>
+                          {isExpired(quote) ? 'Expired' : 'Expires soon'}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {customer ? (
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium text-gray-900">{customer.name}</div>
+                        {customer.phone && (
+                          <div className="flex items-center text-sm text-gray-500">
+                            <PhoneIcon className="w-3 h-3 mr-1" />
+                            <a href={`tel:${customer.phone}`} className="hover:text-primary-600">
+                              {customer.phone}
+                            </a>
+                          </div>
+                        )}
+                        {customer.email && (
+                          <div className="flex items-center text-sm text-gray-500">
+                            <EnvelopeIcon className="w-3 h-3 mr-1" />
+                            <a href={`mailto:${customer.email}`} className="hover:text-primary-600">
+                              {customer.email}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500">Customer not found</div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${statusBadge.bg} ${statusBadge.text}`}>
+                      {statusBadge.label}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {new Date(quote.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {formatCurrency(quote.total_amount)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => openProfileModal(quote)}
+                        className="text-primary-600 hover:text-primary-900"
+                        title="View Quote"
+                      >
+                        <EyeIcon className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => openEditForm(quote)}
+                        className="text-blue-600 hover:text-blue-900"
+                        title="Edit Quote"
+                      >
+                        <PencilIcon className="w-4 h-4" />
+                      </button>
+                      {quote.quote_status === 'DRAFT' && (
+                        <button
+                          onClick={() => handleSendQuote(quote.id)}
+                          className="text-green-600 hover:text-green-900"
+                          title="Send Quote"
+                        >
+                          <PaperAirplaneIcon className="w-4 h-4" />
+                        </button>
+                      )}
+                      {quote.quote_status === 'SENT' && (
+                        <>
+                          <button
+                            onClick={() => handleAcceptQuote(quote.id)}
+                            className="text-green-600 hover:text-green-900"
+                            title="Accept Quote"
+                          >
+                            <CheckCircleIcon className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleRejectQuote(quote.id)}
+                            className="text-red-600 hover:text-red-900"
+                            title="Reject Quote"
+                          >
+                            <XCircleIcon className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                      {quote.quote_status === 'ACCEPTED' && (
+                        <button
+                          onClick={() => handleConvertToJob(quote.id)}
+                          className="text-purple-600 hover:text-purple-900"
+                          title="Convert to Job"
+                        >
+                          <ArrowPathIcon className="w-4 h-4" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDeleteQuote(quote.id)}
+                        className="text-red-600 hover:text-red-900"
+                        title="Delete Quote"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+  }
+
+  // Quote Form Component
+  function QuoteForm() {
+    return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-gray-900">Create New Quote</h3>
+          <button
+            onClick={() => {
+              setShowCreateForm(false);
+              resetForm();
+            }}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <XMarkIcon className="w-6 h-6" />
+          </button>
+        </div>
+
+        <form onSubmit={handleCreateQuote} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Customer *
+              </label>
+              <select
+                required
+                value={formData.customer_id}
+                onChange={(e) => setFormData({ ...formData, customer_id: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="">Select a customer</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quote Title *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                placeholder="e.g., Kitchen Renovation Quote"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              rows={3}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Describe the work to be performed..."
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Subtotal
+              </label>
+              <input
+                {...createCurrencyInputProps(
+                  formData.subtotal,
+                  (subtotal) => {
+                    const taxAmount = subtotal * (formData.tax_rate / 100);
+                    const totalAmount = subtotal + taxAmount;
+                    setFormData({
+                      ...formData,
+                      subtotal,
+                      tax_amount: taxAmount,
+                      total_amount: totalAmount
+                    });
+                  }
+                )}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tax Rate (%)
+              </label>
+              <input
+                {...createPercentageInputProps(
+                  formData.tax_rate / 100,
+                  (taxRateDecimal) => {
+                    const taxRate = taxRateDecimal * 100;
+                    const taxAmount = formData.subtotal * taxRateDecimal;
+                    const totalAmount = formData.subtotal + taxAmount;
+                    setFormData({
+                      ...formData,
+                      tax_rate: taxRate,
+                      tax_amount: taxAmount,
+                      total_amount: totalAmount
+                    });
+                  },
+                  { max: 50 }
+                )}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Total Amount
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={formData.total_amount}
+                readOnly
+                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Expiration Date
+              </label>
+              <input
+                type="date"
+                value={formData.expiration_date}
+                onChange={(e) => setFormData({ ...formData, expiration_date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select
+                value={formData.quote_status}
+                onChange={(e) => setFormData({ ...formData, quote_status: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="DRAFT">Draft</option>
+                <option value="SENT">Sent</option>
+                <option value="ACCEPTED">Accepted</option>
+                <option value="REJECTED">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Notes
+            </label>
+            <textarea
+              rows={3}
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              placeholder="Additional notes or terms..."
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => {
+                setShowCreateForm(false);
+                resetForm();
+              }}
+              className="btn-secondary"
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn-primary">
+              Create Quote
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+  }
+
+  // Quote Edit Form Component
+  function QuoteEditForm() {
+    return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-gray-900">Edit Quote</h3>
+          <button
+            onClick={() => {
+              setShowEditForm(false);
+              resetForm();
+            }}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <XMarkIcon className="w-6 h-6" />
+          </button>
+        </div>
+
+        <form onSubmit={handleUpdateQuote} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Customer *
+              </label>
+              <select
+                required
+                value={formData.customer_id}
+                onChange={(e) => setFormData({ ...formData, customer_id: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="">Select a customer</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quote Title *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description
+            </label>
+            <textarea
+              rows={3}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Subtotal
+              </label>
+              <input
+                {...createCurrencyInputProps(
+                  formData.subtotal,
+                  (subtotal) => {
+                    const taxAmount = subtotal * (formData.tax_rate / 100);
+                    const totalAmount = subtotal + taxAmount;
+                    setFormData({
+                      ...formData,
+                      subtotal,
+                      tax_amount: taxAmount,
+                      total_amount: totalAmount
+                    });
+                  }
+                )}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tax Rate (%)
+              </label>
+              <input
+                {...createPercentageInputProps(
+                  formData.tax_rate / 100,
+                  (taxRateDecimal) => {
+                    const taxRate = taxRateDecimal * 100;
+                    const taxAmount = formData.subtotal * taxRateDecimal;
+                    const totalAmount = formData.subtotal + taxAmount;
+                    setFormData({
+                      ...formData,
+                      tax_rate: taxRate,
+                      tax_amount: taxAmount,
+                      total_amount: totalAmount
+                    });
+                  },
+                  { max: 50 }
+                )}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Total Amount
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={formData.total_amount}
+                readOnly
+                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Expiration Date
+              </label>
+              <input
+                type="date"
+                value={formData.expiration_date}
+                onChange={(e) => setFormData({ ...formData, expiration_date: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select
+                value={formData.quote_status}
+                onChange={(e) => setFormData({ ...formData, quote_status: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="DRAFT">Draft</option>
+                <option value="SENT">Sent</option>
+                <option value="ACCEPTED">Accepted</option>
+                <option value="REJECTED">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Notes
+            </label>
+            <textarea
+              rows={3}
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={() => {
+                setShowEditForm(false);
+                resetForm();
+              }}
+              className="btn-secondary"
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn-primary">
+              Update Quote
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+  }
+
+  // Quote Profile Modal Component
+  function QuoteProfileModal() {
+    if (!selectedQuote) return null;
+
+    const customer = customers.find(c => c.id === selectedQuote.customer_id);
+
+    // Status history timeline
+    const statusHistory = [
+      { status: 'DRAFT', date: selectedQuote.created_at, label: 'Quote Created' },
+      selectedQuote.quote_status !== 'DRAFT' && { status: 'SENT', date: selectedQuote.updated_at, label: 'Quote Sent' },
+      (selectedQuote.quote_status === 'ACCEPTED' || selectedQuote.quote_status === 'REJECTED') && {
+        status: selectedQuote.quote_status,
+        date: selectedQuote.updated_at,
+        label: selectedQuote.quote_status === 'ACCEPTED' ? 'Quote Accepted' : 'Quote Rejected'
+      }
+    ].filter(Boolean);
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg w-full max-w-6xl mx-4 max-h-[90vh] overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Quote #{selectedQuote.id}</h2>
+              <p className="text-gray-600">{selectedQuote.title}</p>
+            </div>
+            <button
+              onClick={() => setShowProfileModal(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+          </div>
+
+          <div className="flex h-[calc(90vh-120px)]">
+            {/* Left Panel - Quote Details */}
+            <div className="w-1/2 border-r p-6 overflow-y-auto">
+              {/* Customer Info */}
+              {customer && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Customer Information</h3>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center">
+                        <UserIcon className="w-5 h-5 text-gray-400 mr-3" />
+                        <span className="font-medium text-gray-900">{customer.name}</span>
+                      </div>
+                      {customer.phone && (
+                        <div className="flex items-center">
+                          <PhoneIcon className="w-5 h-5 text-gray-400 mr-3" />
+                          <a href={`tel:${customer.phone}`} className="text-primary-600 hover:text-primary-800">
+                            {customer.phone}
+                          </a>
+                        </div>
+                      )}
+                      {customer.email && (
+                        <div className="flex items-center">
+                          <EnvelopeIcon className="w-5 h-5 text-gray-400 mr-3" />
+                          <a href={`mailto:${customer.email}`} className="text-primary-600 hover:text-primary-800">
+                            {customer.email}
+                          </a>
+                        </div>
+                      )}
+                      {customer.street_address && (
+                        <div className="flex items-start">
+                          <MapPinIcon className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                          <span className="text-gray-700">
+                            {customer.street_address}<br />
+                            {customer.city}, {customer.state} {customer.zip_code}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Quote Details */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Quote Details</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <p className="mt-1 text-sm text-gray-900">{selectedQuote.description || 'No description provided'}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Created Date</label>
+                      <p className="mt-1 text-sm text-gray-900">{new Date(selectedQuote.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Expiration Date</label>
+                      <p className="mt-1 text-sm text-gray-900">
+                        {selectedQuote.expiration_date ? new Date(selectedQuote.expiration_date).toLocaleDateString() : 'No expiration'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Status</label>
+                    <div className="mt-1">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadge(selectedQuote.quote_status).bg} ${getStatusBadge(selectedQuote.quote_status).text}`}>
+                        {getStatusBadge(selectedQuote.quote_status).label}
+                      </span>
+                    </div>
+                  </div>
+
+                  {selectedQuote.notes && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Notes</label>
+                      <p className="mt-1 text-sm text-gray-900">{selectedQuote.notes}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Pricing Breakdown */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Pricing</h3>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Subtotal:</span>
+                      <span className="text-sm font-medium text-gray-900">{formatCurrency(selectedQuote.subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-600">Tax ({selectedQuote.tax_rate || 0}%):</span>
+                      <span className="text-sm font-medium text-gray-900">{formatCurrency(selectedQuote.tax_amount)}</span>
+                    </div>
+                    <div className="border-t pt-2">
+                      <div className="flex justify-between">
+                        <span className="text-base font-medium text-gray-900">Total:</span>
+                        <span className="text-base font-bold text-gray-900">{formatCurrency(selectedQuote.total_amount)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setShowProfileModal(false);
+                    openEditForm(selectedQuote);
+                  }}
+                  className="w-full btn-secondary text-sm"
+                >
+                  Edit Quote
+                </button>
+
+                {selectedQuote.quote_status === 'DRAFT' && (
+                  <button
+                    onClick={() => {
+                      handleSendQuote(selectedQuote.id);
+                      setShowProfileModal(false);
+                    }}
+                    className="w-full btn-primary text-sm"
+                  >
+                    Send Quote
+                  </button>
+                )}
+
+                {selectedQuote.quote_status === 'ACCEPTED' && (
+                  <button
+                    onClick={() => {
+                      handleConvertToJob(selectedQuote.id);
+                      setShowProfileModal(false);
+                    }}
+                    className="w-full btn-primary text-sm"
+                  >
+                    Convert to Job
+                  </button>
+                )}
+
+                <button
+                  onClick={() => handleExportPDF(selectedQuote)}
+                  className="w-full btn-secondary text-sm flex items-center justify-center gap-2"
+                >
+                  <DocumentArrowDownIcon className="w-4 h-4" />
+                  Download PDF
+                </button>
+              </div>
+            </div>
+
+            {/* Right Panel - Status Timeline & Actions */}
+            <div className="flex-1 p-6 overflow-y-auto">
+              {/* Status Timeline */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Status History</h3>
+                <div className="space-y-4">
+                  {statusHistory.map((item, index) => (
+                    <div key={index} className="flex items-start">
+                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                        item.status === 'DRAFT' ? 'bg-gray-100' :
+                        item.status === 'SENT' ? 'bg-blue-100' :
+                        item.status === 'ACCEPTED' ? 'bg-green-100' :
+                        'bg-red-100'
+                      }`}>
+                        {item.status === 'DRAFT' && <ClockIconSolid className="w-4 h-4 text-gray-600" />}
+                        {item.status === 'SENT' && <PaperAirplaneIcon className="w-4 h-4 text-blue-600" />}
+                        {item.status === 'ACCEPTED' && <CheckCircleIconSolid className="w-4 h-4 text-green-600" />}
+                        {item.status === 'REJECTED' && <XCircleIcon className="w-4 h-4 text-red-600" />}
+                      </div>
+                      <div className="ml-3">
+                        <div className="text-sm font-medium text-gray-900">{item.label}</div>
+                        <div className="text-xs text-gray-500">{new Date(item.date).toLocaleString()}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Communication Actions */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Communication</h3>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => showAlert('info', 'Send to Customer feature coming soon - will integrate with Customer Portal and email system')}
+                    className="w-full btn-primary text-sm flex items-center justify-center gap-2"
+                  >
+                    <PaperAirplaneIcon className="w-4 h-4" />
+                    Send to Customer
+                  </button>
+                  {customer?.email && (
+                    <button
+                      onClick={() => window.open(`mailto:${customer.email}?subject=Quote #${selectedQuote.id} - ${selectedQuote.title}`)}
+                      className="w-full btn-secondary text-sm flex items-center justify-center gap-2"
+                    >
+                      <EnvelopeIcon className="w-4 h-4" />
+                      Send Email
+                    </button>
+                  )}
+                  {customer?.phone && (
+                    <button
+                      onClick={() => window.open(`sms:${customer.phone}?body=Hi ${customer.name}, regarding quote #${selectedQuote.id} for ${selectedQuote.title}`)}
+                      className="w-full btn-secondary text-sm flex items-center justify-center gap-2"
+                    >
+                      <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                      Send SMS
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Progress Stepper for this quote */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Progress</h3>
+                <ProgressStepper currentStep={selectedQuote.quote_status} />
+/* END LEGACY IMPLEMENTATION */
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+};
+
+export default Quotes;

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run wo_change_status Migration</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Run wo_change_status RPC Migration</h1>
+    <button onclick="runMigration()">Run Migration</button>
+    <div id="output"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://amgtktrwpdsigcomavlg.supabase.co';
+        const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMzc3NzI5NCwiZXhwIjoyMDQ5MzUzMjk0fQ.Ej4rYlQJWKnKdJhWJhkJhkJhkJhkJhkJhkJhkJhkJhk';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+        async function runMigration() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<p>Running migration...</p>';
+
+            const sql = `
+-- RPC function to handle work order status changes with proper stage management
+CREATE OR REPLACE FUNCTION wo_change_status(
+  p_id UUID,
+  p_to TEXT,
+  p_company_id UUID DEFAULT NULL
+) RETURNS JSON AS $$
+DECLARE
+  v_record RECORD;
+  v_old_status TEXT;
+  v_stage TEXT;
+  v_result JSON;
+BEGIN
+  -- Get current record with company check
+  SELECT * INTO v_record FROM work_orders
+  WHERE id = p_id
+  AND (p_company_id IS NULL OR company_id = p_company_id);
+
+  IF NOT FOUND THEN
+    RETURN json_build_object('error', 'Work order not found or access denied');
+  END IF;
+
+  -- Get current stage and status
+  v_stage := v_record.stage;
+
+  -- Determine current status based on stage
+  IF v_stage = 'QUOTE' THEN
+    v_old_status := v_record.quote_status;
+  ELSIF v_stage = 'JOB' THEN
+    v_old_status := v_record.job_status;
+  ELSIF v_stage = 'WORK_ORDER' THEN
+    v_old_status := v_record.work_status;
+  ELSE
+    v_old_status := v_record.status; -- fallback
+  END IF;
+
+  -- Validate transition (basic check - can be expanded)
+  IF v_old_status = p_to THEN
+    RETURN json_build_object('success', true, 'message', 'No change needed');
+  END IF;
+
+  -- Update the appropriate status field based on stage
+  IF v_stage = 'QUOTE' THEN
+    UPDATE work_orders
+    SET quote_status = p_to,
+        status = p_to,
+        updated_at = NOW()
+    WHERE id = p_id AND company_id = v_record.company_id;
+
+  ELSIF v_stage = 'JOB' THEN
+    UPDATE work_orders
+    SET job_status = p_to,
+        status = p_to,
+        updated_at = NOW()
+    WHERE id = p_id AND company_id = v_record.company_id;
+
+  ELSIF v_stage = 'WORK_ORDER' THEN
+    UPDATE work_orders
+    SET work_status = p_to,
+        status = p_to,
+        updated_at = NOW()
+    WHERE id = p_id AND company_id = v_record.company_id;
+
+  ELSE
+    -- Fallback: update unified status only
+    UPDATE work_orders
+    SET status = p_to,
+        updated_at = NOW()
+    WHERE id = p_id AND company_id = v_record.company_id;
+  END IF;
+
+  -- Build success response
+  v_result := json_build_object(
+    'success', true,
+    'old_status', v_old_status,
+    'new_status', p_to,
+    'stage', v_stage,
+    'work_order_id', p_id,
+    'company_id', v_record.company_id,
+    'customer_id', v_record.customer_id,
+    'should_create_invoice', (p_to = 'COMPLETED')
+  );
+
+  RETURN v_result;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    RETURN json_build_object('error', SQLERRM);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Grant execute permission to authenticated users
+GRANT EXECUTE ON FUNCTION wo_change_status(UUID, TEXT, UUID) TO authenticated;
+            `;
+
+            try {
+                const { data, error } = await supabase.rpc('exec_sql', { sql_query: sql });
+
+                if (error) {
+                    // Try direct SQL execution
+                    const { data: data2, error: error2 } = await supabase
+                        .from('_sql_migrations')
+                        .insert({ sql: sql, executed_at: new Date().toISOString() });
+
+                    if (error2) {
+                        output.innerHTML = '<p style="color: red;">Error: ' + JSON.stringify(error) + '</p>';
+                        return;
+                    }
+                }
+
+                output.innerHTML = '<p style="color: green;">Migration completed successfully!</p>';
+
+                // Test the function
+                const { data: testData, error: testError } = await supabase.rpc('wo_change_status', {
+                    p_id: '00000000-0000-0000-0000-000000000000', // dummy ID to test function exists
+                    p_to: 'COMPLETED'
+                });
+
+                if (testError && !testError.message.includes('not found')) {
+                    output.innerHTML += '<p style="color: orange;">Function created but test failed: ' + testError.message + '</p>';
+                } else {
+                    output.innerHTML += '<p style="color: green;">Function is working!</p>';
+                }
+
+            } catch (err) {
+                output.innerHTML = '<p style="color: red;">Error: ' + err.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

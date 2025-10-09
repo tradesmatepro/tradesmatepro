@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Runtime Error Capture</title>
+</head>
+<body>
+    <h1>Test Runtime Error Capture</h1>
+    <button onclick="generateError()">Generate Test Error</button>
+    <button onclick="checkCapturedErrors()">Check Captured Errors</button>
+    <div id="output"></div>
+
+    <script src="/console-error-capture.js"></script>
+    <script>
+        function generateError() {
+            console.error('Test error generated at', new Date().toISOString());
+            throw new Error('Test runtime error for capture testing');
+        }
+
+        function checkCapturedErrors() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<h2>Captured Errors:</h2><pre>' + 
+                JSON.stringify(window.capturedErrors, null, 2) + '</pre>';
+            
+            // Also send to error server
+            if (window.capturedErrors.length > 0) {
+                fetch('http://localhost:4000/save-errors', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(window.capturedErrors)
+                }).then(response => {
+                    console.log('Errors sent to server:', response.ok);
+                }).catch(err => {
+                    console.error('Failed to send errors to server:', err);
+                });
+            }
+        }
+
+        // Auto-send errors every 5 seconds
+        setInterval(() => {
+            if (window.capturedErrors && window.capturedErrors.length > 0) {
+                fetch('http://localhost:4000/save-errors', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(window.capturedErrors)
+                }).then(() => {
+                    console.log('Auto-sent', window.capturedErrors.length, 'errors to server');
+                    window.capturedErrors = []; // Clear after sending
+                }).catch(err => {
+                    console.error('Auto-send failed:', err);
+                });
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

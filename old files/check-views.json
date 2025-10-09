@@ -1,0 +1,1 @@
+{"sql": "SELECT viewname FROM pg_views WHERE schemaname = 'public' AND viewname LIKE '%job%' OR viewname LIKE '%quote%' OR viewname LIKE '%work_order%' ORDER BY viewname"}

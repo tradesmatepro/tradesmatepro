@@ -1,0 +1,82 @@
+[
+  {
+    "timestamp": "2025-09-18T00:23:54.935Z",
+    "message": "Error loading quotes: {}",
+    "args": [
+      "Error loading quotes:",
+      {}
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:147:15)",
+    "type": "ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T00:23:54.939Z",
+    "message": "Error loading quotes: {}",
+    "args": [
+      "Error loading quotes:",
+      {}
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/static/js/src_pages_Quotes_js.chunk.js:147:15)",
+    "type": "ERROR"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:24:01.700Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:24:31.710Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:25:01.722Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "type": "NETWORK_ERROR",
+    "message": "POST http://localhost:4000/save-errors - Fetch failed: Failed to fetch",
+    "url": "http://localhost:4000/save-errors",
+    "method": "POST",
+    "timestamp": "2025-09-18T00:25:31.704Z",
+    "stack": "TypeError: Failed to fetch\n    at window.fetch (http://localhost:3001/console-error-capture.js:142:26)\n    at window.fetch (http://localhost:3001/static/js/bundle.js:60681:46)\n    at sendErrors (http://localhost:3001/console-error-capture.js:409:5)"
+  },
+  {
+    "timestamp": "2025-09-18T00:26:29.517Z",
+    "message": "Error loading quotes: {}",
+    "args": [
+      "Error loading quotes:",
+      {}
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.e3dcc5cb33e1e863b534.hot-update.js:69:15)",
+    "type": "ERROR"
+  },
+  {
+    "type": "HTTP_ERROR",
+    "message": "GET https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments 400 ()",
+    "url": "https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/work_orders?customer_id=eq.d0174d4a-cc89-40d0-a8fa-eccf73c096ff&stage=eq.QUOTE&select=work_order_id,quote_number,created_at,total_amount,quote_status,title,description,attachments",
+    "method": "GET",
+    "status": 400,
+    "statusText": "",
+    "timestamp": "2025-09-18T00:26:46.705Z"
+  },
+  {
+    "timestamp": "2025-09-18T00:26:46.705Z",
+    "message": "Failed to load quotes",
+    "args": [
+      "Failed to load quotes"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3001/console-error-capture.js:31:14)\n    at console.error (http://localhost:3001/static/js/bundle.js:66932:21)\n    at console.error (http://localhost:3001/static/js/bundle.js:60650:21)\n    at loadQuotes (http://localhost:3001/src_pages_Quotes_js.311f989d21736662b7d0.hot-update.js:66:17)",
+    "type": "ERROR"
+  }
+]

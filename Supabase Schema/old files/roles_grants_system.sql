@@ -1,0 +1,288 @@
+-- TradeMate Pro Roles, Grants, and System Objects Dump
+-- Generated: 2025-09-20T22:40:48.059Z
+
+
+-- All roles (28 rows)
+-- ==================================================
+-- rolname | rolsuper | rolcreatedb | rolcreaterole | rolcanlogin
+-- --------+----------+-------------+---------------+------------
+-- anon | false | false | false | false
+-- authenticated | false | false | false | false
+-- authenticator | false | false | false | true
+-- dashboard_user | false | true | true | false
+-- pg_checkpoint | false | false | false | false
+-- pg_create_subscription | false | false | false | false
+-- pg_database_owner | false | false | false | false
+-- pg_execute_server_program | false | false | false | false
+-- pg_maintain | false | false | false | false
+-- pg_monitor | false | false | false | false
+-- pg_read_all_data | false | false | false | false
+-- pg_read_all_settings | false | false | false | false
+-- pg_read_all_stats | false | false | false | false
+-- pg_read_server_files | false | false | false | false
+-- pg_signal_backend | false | false | false | false
+-- pg_stat_scan_tables | false | false | false | false
+-- pg_use_reserved_connections | false | false | false | false
+-- pg_write_all_data | false | false | false | false
+-- pg_write_server_files | false | false | false | false
+-- pgbouncer | false | false | false | true
+-- postgres | false | true | true | true
+-- service_role | false | false | false | false
+-- supabase_admin | true | true | true | true
+-- supabase_auth_admin | false | false | true | true
+-- supabase_read_only_user | false | false | false | true
+-- supabase_realtime_admin | false | false | false | false
+-- supabase_replication_admin | false | false | false | true
+-- supabase_storage_admin | false | false | true | true
+
+
+-- Role memberships (17 rows)
+-- ==================================================
+-- role_name | member_name
+-- ----------+------------
+-- pg_monitor | postgres
+-- pg_read_all_settings | pg_monitor
+-- pg_read_all_stats | pg_monitor
+-- pg_stat_scan_tables | pg_monitor
+-- pg_signal_backend | postgres
+-- pg_read_all_data | postgres
+-- pg_read_all_data | supabase_read_only_user
+-- pg_create_subscription | postgres
+-- anon | postgres
+-- anon | authenticator
+-- authenticated | postgres
+-- authenticated | authenticator
+-- service_role | postgres
+-- service_role | authenticator
+-- authenticator | postgres
+-- authenticator | supabase_storage_admin
+-- supabase_realtime_admin | postgres
+
+
+-- Grants (ACLs) on tables/views/sequences/functions (398 rows)
+-- ==================================================
+-- schema | object_name | relkind | relacl
+-- -------+-------------+---------+-------
+-- auth | audit_log_entries | r | {supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin,postgres=ar*wdDxtm/supabase_auth_admin}
+-- auth | flow_state | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | identities | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | instances | r | {supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin,postgres=ar*wdDxtm/supabase_auth_admin}
+-- auth | mfa_amr_claims | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | mfa_challenges | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | mfa_factors | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | oauth_clients | r | {postgres=arwdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | one_time_tokens | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | refresh_tokens | r | {supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin,postgres=ar*wdDxtm/supabase_auth_admin}
+-- auth | refresh_tokens_id_seq | S | {supabase_auth_admin=rwU/supabase_auth_admin,dashboard_user=rwU/supabase_auth_admin,postgres=rwU/supabase_auth_admin}
+-- auth | saml_providers | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | saml_relay_states | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | schema_migrations | r | {supabase_auth_admin=arwdDxtm/supabase_auth_admin}
+-- auth | sessions | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | sso_domains | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | sso_providers | r | {postgres=ar*wdDxtm/supabase_auth_admin,supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+-- auth | users | r | {supabase_auth_admin=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin,postgres=ar*wdDxtm/supabase_auth_admin}
+-- extensions | pg_stat_statements | v | {postgres=a*r*w*d*D*x*t*m*/postgres,=r/postgres,dashboard_user=arwdDxtm/postgres}
+-- extensions | pg_stat_statements_info | v | {postgres=a*r*w*d*D*x*t*m*/postgres,=r/postgres,dashboard_user=arwdDxtm/postgres}
+-- graphql | seq_schema_version | S | {supabase_admin=rwU/supabase_admin,postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}
+-- information_schema | administrable_role_authorizations | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | applicable_roles | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | attributes | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | character_sets | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | check_constraint_routine_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | check_constraints | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | collation_character_set_applicability | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | collations | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | column_column_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | column_domain_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | column_options | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | column_privileges | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | column_udt_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | columns | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | constraint_column_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | constraint_table_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | data_type_privileges | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | domain_constraints | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | domain_udt_usage | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | domains | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | element_types | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | enabled_roles | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | foreign_data_wrapper_options | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | foreign_data_wrappers | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | foreign_server_options | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | foreign_servers | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | foreign_table_options | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | foreign_tables | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- information_schema | information_schema_catalog_name | v | {supabase_admin=arwdDxtm/supabase_admin,=r/supabase_admin}
+-- ... and 348 more rows
+
+
+-- Type Casts (229 rows)
+-- ==================================================
+-- oid | source_type | target_type | cast_function | context
+-- ----+-------------+-------------+---------------+--------
+-- 10132 | "char" | character | bpchar("char") | a
+-- 10133 | "char" | character varying | text("char") | a
+-- 10143 | "char" | integer | int4("char") | e
+-- 10131 | "char" | text | text("char") | i
+-- 10185 | bigint | bit | "bit"(bigint,integer) | e
+-- 10003 | bigint | double precision | float8(bigint) | i
+-- 10001 | bigint | integer | int4(bigint) | a
+-- 10033 | bigint | money | money(bigint) | a
+-- 10004 | bigint | numeric | "numeric"(bigint) | i
+-- 10037 | bigint | oid | oid(bigint) | i
+-- 10002 | bigint | real | float4(bigint) | i
+-- 10076 | bigint | regclass | oid(bigint) | i
+-- 10083 | bigint | regcollation | oid(bigint) | i
+-- 10097 | bigint | regconfig | oid(bigint) | i
+-- 10104 | bigint | regdictionary | oid(bigint) | i
+-- 10120 | bigint | regnamespace | oid(bigint) | i
+-- 10060 | bigint | regoper | oid(bigint) | i
+-- 10069 | bigint | regoperator | oid(bigint) | i
+-- 10044 | bigint | regproc | oid(bigint) | i
+-- 10053 | bigint | regprocedure | oid(bigint) | i
+-- 10113 | bigint | regrole | oid(bigint) | i
+-- 10090 | bigint | regtype | oid(bigint) | i
+-- 10000 | bigint | smallint | int2(bigint) | a
+-- 10187 | bit | bigint | int8(bit) | e
+-- 10211 | bit | bit | "bit"(bit,integer,boolean) | i
+-- 10183 | bit | bit varying | - | i
+-- 10188 | bit | integer | int4(bit) | e
+-- 10184 | bit varying | bit | - | i
+-- 10212 | bit varying | bit varying | varbit(bit varying,integer,boolean) | i
+-- 10201 | boolean | character | text(boolean) | a
+-- 10196 | boolean | character varying | text(boolean) | a
+-- 10035 | boolean | integer | int4(boolean) | e
+-- 10191 | boolean | text | text(boolean) | a
+-- 10171 | box | circle | circle(box) | e
+-- 10169 | box | lseg | lseg(box) | e
+-- 10168 | box | point | point(box) | e
+-- 10170 | box | polygon | polygon(box) | a
+-- 10138 | character | "char" | "char"(text) | a
+-- 10204 | character | character | bpchar(character,integer,boolean) | i
+-- 10128 | character | character varying | text(character) | i
+-- 10141 | character | name | name(character) | i
+-- 10127 | character | text | text(character) | i
+-- 10203 | character | xml | xml(text) | e
+-- 10139 | character varying | "char" | "char"(text) | a
+-- 10130 | character varying | character | - | i
+-- 10205 | character varying | character varying | "varchar"(character varying,integer,boolean) | i
+-- 10142 | character varying | name | name(character varying) | i
+-- 10110 | character varying | regclass | regclass(text) | i
+-- 10129 | character varying | text | - | i
+-- 10198 | character varying | xml | xml(text) | e
+-- ... and 179 more rows
+
+
+-- Operators (809 rows)
+-- ==================================================
+-- oid | operator_name | schema_name | left_type | right_type | function_name
+-- ----+---------------+-------------+-----------+------------+--------------
+-- 3682 | !! | pg_catalog | - | tsquery | tsquery_not(tsquery)
+-- 1056 | !~ | pg_catalog | character | text | bpcharregexne(character,text)
+-- 640 | !~ | pg_catalog | name | text | nameregexne(name,text)
+-- 642 | !~ | pg_catalog | text | text | textregexne(text,text)
+-- 1235 | !~* | pg_catalog | character | text | bpcharicregexne(character,text)
+-- 1227 | !~* | pg_catalog | name | text | nameicregexne(name,text)
+-- 1229 | !~* | pg_catalog | text | text | texticregexne(text,text)
+-- 2017 | !~~ | pg_catalog | bytea | bytea | byteanlike(bytea,bytea)
+-- 1212 | !~~ | pg_catalog | character | text | bpcharnlike(character,text)
+-- 1208 | !~~ | pg_catalog | name | text | namenlike(name,text)
+-- 1210 | !~~ | pg_catalog | text | text | textnlike(text,text)
+-- 1630 | !~~* | pg_catalog | character | text | bpcharicnlike(character,text)
+-- 1626 | !~~* | pg_catalog | name | text | nameicnlike(name,text)
+-- 1628 | !~~* | pg_catalog | text | text | texticnlike(text,text)
+-- 797 | # | pg_catalog | - | path | path_npoints(path)
+-- 1521 | # | pg_catalog | - | polygon | poly_npoints(polygon)
+-- 1888 | # | pg_catalog | bigint | bigint | int8xor(bigint,bigint)
+-- 1793 | # | pg_catalog | bit | bit | bitxor(bit,bit)
+-- 803 | # | pg_catalog | box | box | box_intersect(box,box)
+-- 1882 | # | pg_catalog | integer | integer | int4xor(integer,integer)
+-- 1617 | # | pg_catalog | line | line | line_interpt(line,line)
+-- 1536 | # | pg_catalog | lseg | lseg | lseg_interpt(lseg,lseg)
+-- 1876 | # | pg_catalog | smallint | smallint | int2xor(smallint,smallint)
+-- 1577 | ## | pg_catalog | line | lseg | close_ls(line,lseg)
+-- 1567 | ## | pg_catalog | lseg | box | close_sb(lseg,box)
+-- 1578 | ## | pg_catalog | lseg | lseg | close_lseg(lseg,lseg)
+-- 1559 | ## | pg_catalog | point | box | close_pb(point,box)
+-- 1557 | ## | pg_catalog | point | line | close_pl(point,line)
+-- 1558 | ## | pg_catalog | point | lseg | close_ps(point,lseg)
+-- 3287 | #- | pg_catalog | jsonb | text[] | jsonb_delete_path(jsonb,text[])
+-- 3966 | #> | pg_catalog | json | text[] | json_extract_path(json,text[])
+-- 3213 | #> | pg_catalog | jsonb | text[] | jsonb_extract_path(jsonb,text[])
+-- 3967 | #>> | pg_catalog | json | text[] | json_extract_path_text(json,text[])
+-- 3206 | #>> | pg_catalog | jsonb | text[] | jsonb_extract_path_text(jsonb,text[])
+-- 439 | % | pg_catalog | bigint | bigint | int8mod(bigint,bigint)
+-- 530 | % | pg_catalog | integer | integer | int4mod(integer,integer)
+-- 1762 | % | pg_catalog | numeric | numeric | numeric_mod(numeric,numeric)
+-- 529 | % | pg_catalog | smallint | smallint | int2mod(smallint,smallint)
+-- 98778 | % | public | text | text | similarity_op(text,text)
+-- 98782 | %> | public | text | text | word_similarity_commutator_op(text,text)
+-- 98840 | %>> | public | text | text | strict_word_similarity_commutator_op(text,text)
+-- 1886 | & | pg_catalog | bigint | bigint | int8and(bigint,bigint)
+-- 1791 | & | pg_catalog | bit | bit | bitand(bit,bit)
+-- 2635 | & | pg_catalog | inet | inet | inetand(inet,inet)
+-- 1880 | & | pg_catalog | integer | integer | int4and(integer,integer)
+-- 3148 | & | pg_catalog | macaddr | macaddr | macaddr_and(macaddr,macaddr)
+-- 3369 | & | pg_catalog | macaddr8 | macaddr8 | macaddr8_and(macaddr8,macaddr8)
+-- 1874 | & | pg_catalog | smallint | smallint | int2and(smallint,smallint)
+-- 2750 | && | pg_catalog | anyarray | anyarray | arrayoverlap(anyarray,anyarray)
+-- 2868 | && | pg_catalog | anymultirange | anymultirange | multirange_overlaps_multirange(anymultirange,anymultirange)
+-- ... and 759 more rows
+
+
+-- Dependencies (8391 rows)
+-- ==================================================
+-- dependent_class | dependent_object | referenced_class | referenced_object | deptype
+-- ----------------+------------------+------------------+-------------------+--------
+-- pg_type | 12001 | pg_type | 12002 | i
+-- pg_type | 12002 | pg_class | pg_roles | i
+-- pg_rewrite | 12003 | pg_class | pg_roles | i
+-- pg_type | 12006 | pg_type | 12007 | i
+-- pg_type | 12007 | pg_class | pg_shadow | i
+-- pg_rewrite | 12008 | pg_class | pg_shadow | i
+-- pg_type | 12011 | pg_type | 12012 | i
+-- pg_type | 12012 | pg_class | pg_group | i
+-- pg_rewrite | 12013 | pg_class | pg_group | i
+-- pg_type | 12015 | pg_type | 12016 | i
+-- pg_type | 12016 | pg_class | pg_user | i
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_shadow | n
+-- pg_rewrite | 12017 | pg_class | pg_user | i
+-- pg_type | 12019 | pg_type | 12020 | i
+-- pg_type | 12020 | pg_class | pg_policies | i
+-- pg_rewrite | 12021 | pg_class | pg_policies | i
+-- pg_type | 12024 | pg_type | 12025 | i
+-- pg_type | 12025 | pg_class | pg_rules | i
+-- pg_rewrite | 12026 | pg_class | pg_rules | i
+-- pg_type | 12029 | pg_type | 12030 | i
+-- pg_type | 12030 | pg_class | pg_views | i
+-- pg_rewrite | 12031 | pg_class | pg_views | i
+-- pg_type | 12034 | pg_type | 12035 | i
+-- pg_type | 12035 | pg_class | pg_tables | i
+-- pg_rewrite | 12036 | pg_class | pg_tables | i
+-- pg_type | 12039 | pg_type | 12040 | i
+-- pg_type | 12040 | pg_class | pg_matviews | i
+-- pg_rewrite | 12041 | pg_class | pg_matviews | i
+-- pg_type | 12044 | pg_type | 12045 | i
+-- pg_type | 12045 | pg_class | pg_indexes | i
+-- pg_rewrite | 12046 | pg_class | pg_indexes | i
+-- pg_type | 12049 | pg_type | 12050 | i
+-- pg_type | 12050 | pg_class | pg_sequences | i
+-- pg_rewrite | 12051 | pg_class | pg_sequences | i
+-- pg_type | 12054 | pg_type | 12055 | i
+-- pg_type | 12055 | pg_class | pg_stats | i
+-- pg_rewrite | 12056 | pg_class | pg_stats | i
+-- pg_type | 12059 | pg_type | 12060 | i
+-- pg_type | 12060 | pg_class | pg_stats_ext | i
+-- pg_rewrite | 12061 | pg_class | pg_stats_ext | i
+-- pg_type | 12064 | pg_type | 12065 | i
+-- pg_type | 12065 | pg_class | pg_stats_ext_exprs | i
+-- pg_rewrite | 12066 | pg_class | pg_stats_ext_exprs | i
+-- ... and 8341 more rows
+

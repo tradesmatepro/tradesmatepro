@@ -1,0 +1,4914 @@
+[
+  {
+    "table_schema": "auth",
+    "table_name": "audit_log_entries"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "flow_state"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "identities"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "instances"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "mfa_amr_claims"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "mfa_challenges"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "mfa_factors"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "oauth_clients"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "one_time_tokens"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "refresh_tokens"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "saml_providers"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "saml_relay_states"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "schema_migrations"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "sessions"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "sso_domains"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "sso_providers"
+  },
+  {
+    "table_schema": "auth",
+    "table_name": "users"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "audit_logs"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "billing_plans"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "companies"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "company_settings"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "customer_addresses"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "customer_contacts"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "customer_notes"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "customer_tag_assignments"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "customer_tags"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "customers"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "documents"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "employee_timesheets"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "employees"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "expenses"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "inventory_items"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "inventory_locations"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "inventory_movements"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "inventory_stock"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "invoice_line_items"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "invoices"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "messages"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "notifications"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "payments"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "payroll_line_items"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "payroll_runs"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "permissions"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "profiles"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "purchase_order_line_items"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "purchase_orders"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "schedule_events"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "service_categories"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "service_types"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "subscriptions"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "taxes"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "tools"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "user_dashboard_settings"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "users"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "vendors"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "work_order_attachments"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "work_order_line_items"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "work_order_notes"
+  },
+  {
+    "table_schema": "public",
+    "table_name": "work_orders"
+  },
+  {
+    "table_schema": "realtime",
+    "table_name": "messages"
+  },
+  {
+    "table_schema": "realtime",
+    "table_name": "schema_migrations"
+  },
+  {
+    "table_schema": "realtime",
+    "table_name": "subscription"
+  },
+  {
+    "table_schema": "storage",
+    "table_name": "buckets"
+  },
+  {
+    "table_schema": "storage",
+    "table_name": "migrations"
+  },
+  {
+    "table_schema": "storage",
+    "table_name": "objects"
+  },
+  {
+    "table_schema": "storage",
+    "table_name": "s3_multipart_uploads"
+  },
+  {
+    "table_schema": "storage",
+    "table_name": "s3_multipart_uploads_parts"
+  },
+  {
+    "table_schema": "vault",
+    "table_name": "secrets"
+  }
+]
+
+[
+  {
+    "enum_schema": "auth",
+    "enum_name": "aal_level",
+    "enum_value": "aal1"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "aal_level",
+    "enum_value": "aal2"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "aal_level",
+    "enum_value": "aal3"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "code_challenge_method",
+    "enum_value": "s256"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "code_challenge_method",
+    "enum_value": "plain"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "factor_status",
+    "enum_value": "unverified"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "factor_status",
+    "enum_value": "verified"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "factor_type",
+    "enum_value": "totp"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "factor_type",
+    "enum_value": "webauthn"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "factor_type",
+    "enum_value": "phone"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "oauth_registration_type",
+    "enum_value": "dynamic"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "oauth_registration_type",
+    "enum_value": "manual"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "one_time_token_type",
+    "enum_value": "confirmation_token"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "one_time_token_type",
+    "enum_value": "reauthentication_token"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "one_time_token_type",
+    "enum_value": "recovery_token"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "one_time_token_type",
+    "enum_value": "email_change_token_new"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "one_time_token_type",
+    "enum_value": "email_change_token_current"
+  },
+  {
+    "enum_schema": "auth",
+    "enum_name": "one_time_token_type",
+    "enum_value": "phone_change_token"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "alert_severity_enum",
+    "enum_value": "info"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "alert_severity_enum",
+    "enum_value": "warning"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "alert_severity_enum",
+    "enum_value": "error"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "alert_severity_enum",
+    "enum_value": "critical"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "alert_severity_enum",
+    "enum_value": "emergency"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "insert"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "update"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "delete"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "login"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "logout"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "permission_change"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "export"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "import"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "backup"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "audit_action_enum",
+    "enum_value": "restore"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "draft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "submitted"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "under_review"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "accepted"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "rejected"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "withdrawn"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "bid_status_enum",
+    "enum_value": "expired"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "certification_status_enum",
+    "enum_value": "active"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "certification_status_enum",
+    "enum_value": "expired"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "certification_status_enum",
+    "enum_value": "pending_renewal"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "certification_status_enum",
+    "enum_value": "suspended"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "certification_status_enum",
+    "enum_value": "revoked"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "customer_type_enum",
+    "enum_value": "residential"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "customer_type_enum",
+    "enum_value": "commercial"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "customer_type_enum",
+    "enum_value": "industrial"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "customer_type_enum",
+    "enum_value": "government"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "quote"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "invoice"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "receipt"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "contract"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "permit"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "warranty"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "photo"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "document_type_enum",
+    "enum_value": "other"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "probation"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "active"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "inactive"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "suspended"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "terminated"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "on_leave"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "employee_status_enum",
+    "enum_value": "retired"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "escrow_status_enum",
+    "enum_value": "pending"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "escrow_status_enum",
+    "enum_value": "funded"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "escrow_status_enum",
+    "enum_value": "held"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "escrow_status_enum",
+    "enum_value": "released_to_contractor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "escrow_status_enum",
+    "enum_value": "refunded_to_customer"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "escrow_status_enum",
+    "enum_value": "disputed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "labor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "material"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "equipment"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "subcontractor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "permit"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "travel"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "fuel"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "insurance"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "overhead"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "training"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "expense_type_enum",
+    "enum_value": "other"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "purchase"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "sale"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "transfer"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "adjustment"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "return"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "waste"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "theft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "damage"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "inventory_movement_type_enum",
+    "enum_value": "warranty_replacement"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "draft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "sent"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "viewed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "partially_paid"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "paid"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "overdue"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "disputed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "written_off"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "invoice_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "installation"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "repair"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "maintenance"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "inspection"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "diagnostic"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "emergency"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "warranty"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "job_template_type_enum",
+    "enum_value": "upgrade"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "draft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "posted"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "bidding_open"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "bidding_closed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "contractor_selected"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "work_in_progress"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "completed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "marketplace_request_status_enum",
+    "enum_value": "disputed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "message_type_enum",
+    "enum_value": "email"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "message_type_enum",
+    "enum_value": "sms"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "message_type_enum",
+    "enum_value": "in_app"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "message_type_enum",
+    "enum_value": "system"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "message_type_enum",
+    "enum_value": "webhook"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "pending"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "sent"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "delivered"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "read"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "clicked"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "failed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "bounced"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_status_enum",
+    "enum_value": "unsubscribed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "email"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "sms"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "in_app"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "push"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "webhook"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "slack"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "notification_type_enum",
+    "enum_value": "teams"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "optimization_type_enum",
+    "enum_value": "distance"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "optimization_type_enum",
+    "enum_value": "time"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "optimization_type_enum",
+    "enum_value": "cost"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "optimization_type_enum",
+    "enum_value": "customer_priority"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "optimization_type_enum",
+    "enum_value": "ai_hybrid"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "pending"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "processing"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "completed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "partially_completed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "failed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "refunded"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payment_status_enum",
+    "enum_value": "disputed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "draft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "calculating"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "pending_approval"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "approved"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "processing"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "completed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "failed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "payroll_run_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "performance_rating_enum",
+    "enum_value": "excellent"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "performance_rating_enum",
+    "enum_value": "good"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "performance_rating_enum",
+    "enum_value": "satisfactory"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "performance_rating_enum",
+    "enum_value": "needs_improvement"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "performance_rating_enum",
+    "enum_value": "unsatisfactory"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "hourly"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "flat_fee"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "per_unit"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "tiered"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "time_and_materials"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "value_based"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "rate_card_type_enum",
+    "enum_value": "subscription"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "schedule_status_enum",
+    "enum_value": "scheduled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "schedule_status_enum",
+    "enum_value": "confirmed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "schedule_status_enum",
+    "enum_value": "in_progress"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "schedule_status_enum",
+    "enum_value": "completed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "schedule_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "schedule_status_enum",
+    "enum_value": "rescheduled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sensor_status_enum",
+    "enum_value": "active"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sensor_status_enum",
+    "enum_value": "inactive"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sensor_status_enum",
+    "enum_value": "maintenance"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sensor_status_enum",
+    "enum_value": "error"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sensor_status_enum",
+    "enum_value": "calibrating"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sla_priority_enum",
+    "enum_value": "critical"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sla_priority_enum",
+    "enum_value": "high"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sla_priority_enum",
+    "enum_value": "medium"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sla_priority_enum",
+    "enum_value": "low"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "sla_priority_enum",
+    "enum_value": "scheduled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_plan_enum",
+    "enum_value": "starter"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_plan_enum",
+    "enum_value": "professional"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_plan_enum",
+    "enum_value": "enterprise"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_plan_enum",
+    "enum_value": "custom"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_status_enum",
+    "enum_value": "trial"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_status_enum",
+    "enum_value": "active"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_status_enum",
+    "enum_value": "past_due"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "subscription_status_enum",
+    "enum_value": "suspended"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "vat"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "sales_tax"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "gst"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "hst"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "pst"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "excise"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "import_duty"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tax_type_enum",
+    "enum_value": "none"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "draft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "submitted"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "under_review"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "approved"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "rejected"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "requires_correction"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "timesheet_status_enum",
+    "enum_value": "paid"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "available"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "assigned"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "in_use"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "maintenance"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "repair"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "calibration"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "lost"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "stolen"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "tool_status_enum",
+    "enum_value": "retired"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "owner"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "admin"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "manager"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "dispatcher"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "supervisor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "lead_technician"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "technician"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "apprentice"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "helper"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "accountant"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "sales_rep"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "customer_service"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "customer_portal"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "vendor_portal"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "APP_OWNER"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_role_enum",
+    "enum_value": "EMPLOYEE"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_status_enum",
+    "enum_value": "active"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_status_enum",
+    "enum_value": "inactive"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_status_enum",
+    "enum_value": "suspended"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_status_enum",
+    "enum_value": "terminated"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "user_status_enum",
+    "enum_value": "pending"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "vendor_type_enum",
+    "enum_value": "supplier"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "vendor_type_enum",
+    "enum_value": "subcontractor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "vendor_type_enum",
+    "enum_value": "manufacturer"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "vendor_type_enum",
+    "enum_value": "distributor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "vendor_type_enum",
+    "enum_value": "service_provider"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "vendor_type_enum",
+    "enum_value": "rental_company"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "labor"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "material"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "equipment"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "service"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "permit"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "disposal"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "travel"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "fee"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "discount"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_line_item_type_enum",
+    "enum_value": "tax"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_priority_enum",
+    "enum_value": "low"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_priority_enum",
+    "enum_value": "normal"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_priority_enum",
+    "enum_value": "high"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_priority_enum",
+    "enum_value": "urgent"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_priority_enum",
+    "enum_value": "emergency"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_priority_enum",
+    "enum_value": "seasonal_peak"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "draft"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "quote"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "approved"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "scheduled"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "parts_ordered"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "on_hold"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "in_progress"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "requires_approval"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "rework_needed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "completed"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "invoiced"
+  },
+  {
+    "enum_schema": "public",
+    "enum_name": "work_order_status_enum",
+    "enum_value": "cancelled"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "action",
+    "enum_value": "INSERT"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "action",
+    "enum_value": "UPDATE"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "action",
+    "enum_value": "DELETE"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "action",
+    "enum_value": "TRUNCATE"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "action",
+    "enum_value": "ERROR"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "eq"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "neq"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "lt"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "lte"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "gt"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "gte"
+  },
+  {
+    "enum_schema": "realtime",
+    "enum_name": "equality_op",
+    "enum_value": "in"
+  }
+]
+
+[
+  {
+    "schema": "auth",
+    "function_name": "email",
+    "return_type": "text",
+    "arguments": ""
+  },
+  {
+    "schema": "auth",
+    "function_name": "jwt",
+    "return_type": "jsonb",
+    "arguments": ""
+  },
+  {
+    "schema": "auth",
+    "function_name": "role",
+    "return_type": "text",
+    "arguments": ""
+  },
+  {
+    "schema": "auth",
+    "function_name": "uid",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "armor",
+    "return_type": "text",
+    "arguments": "bytea, text[], text[]"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "armor",
+    "return_type": "text",
+    "arguments": "bytea"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "crypt",
+    "return_type": "text",
+    "arguments": "text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "dearmor",
+    "return_type": "bytea",
+    "arguments": "text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "decrypt",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "decrypt_iv",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "digest",
+    "return_type": "bytea",
+    "arguments": "text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "digest",
+    "return_type": "bytea",
+    "arguments": "bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "encrypt",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "encrypt_iv",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "gen_random_bytes",
+    "return_type": "bytea",
+    "arguments": "integer"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "gen_random_uuid",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "gen_salt",
+    "return_type": "text",
+    "arguments": "text, integer"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "gen_salt",
+    "return_type": "text",
+    "arguments": "text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "grant_pg_cron_access",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "grant_pg_graphql_access",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "grant_pg_net_access",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "hmac",
+    "return_type": "bytea",
+    "arguments": "text, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "hmac",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pg_stat_statements",
+    "return_type": "SETOF record",
+    "arguments": "showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT shared_blk_read_time double precision, OUT shared_blk_write_time double precision, OUT local_blk_read_time double precision, OUT local_blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision, OUT jit_deform_count bigint, OUT jit_deform_time double precision, OUT stats_since timestamp with time zone, OUT minmax_stats_since timestamp with time zone"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pg_stat_statements_info",
+    "return_type": "record",
+    "arguments": "OUT dealloc bigint, OUT stats_reset timestamp with time zone"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pg_stat_statements_reset",
+    "return_type": "timestamp with time zone",
+    "arguments": "userid oid DEFAULT 0, dbid oid DEFAULT 0, queryid bigint DEFAULT 0, minmax_only boolean DEFAULT false"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_armor_headers",
+    "return_type": "SETOF record",
+    "arguments": "text, OUT key text, OUT value text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_key_id",
+    "return_type": "text",
+    "arguments": "bytea"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_decrypt",
+    "return_type": "text",
+    "arguments": "bytea, bytea"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_decrypt",
+    "return_type": "text",
+    "arguments": "bytea, bytea, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_decrypt",
+    "return_type": "text",
+    "arguments": "bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_decrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_decrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_decrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_encrypt",
+    "return_type": "bytea",
+    "arguments": "text, bytea"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_encrypt",
+    "return_type": "bytea",
+    "arguments": "text, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_encrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_pub_encrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_decrypt",
+    "return_type": "text",
+    "arguments": "bytea, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_decrypt",
+    "return_type": "text",
+    "arguments": "bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_decrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_decrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_encrypt",
+    "return_type": "bytea",
+    "arguments": "text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_encrypt",
+    "return_type": "bytea",
+    "arguments": "text, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_encrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, text, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgp_sym_encrypt_bytea",
+    "return_type": "bytea",
+    "arguments": "bytea, text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgrst_ddl_watch",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "pgrst_drop_watch",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "set_graphql_placeholder",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_generate_v1",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_generate_v1mc",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_generate_v3",
+    "return_type": "uuid",
+    "arguments": "namespace uuid, name text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_generate_v4",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_generate_v5",
+    "return_type": "uuid",
+    "arguments": "namespace uuid, name text"
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_nil",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_ns_dns",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_ns_oid",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_ns_url",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "extensions",
+    "function_name": "uuid_ns_x500",
+    "return_type": "uuid",
+    "arguments": ""
+  },
+  {
+    "schema": "graphql",
+    "function_name": "_internal_resolve",
+    "return_type": "jsonb",
+    "arguments": "query text, variables jsonb DEFAULT '{}'::jsonb, \"operationName\" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb"
+  },
+  {
+    "schema": "graphql",
+    "function_name": "comment_directive",
+    "return_type": "jsonb",
+    "arguments": "comment_ text"
+  },
+  {
+    "schema": "graphql",
+    "function_name": "exception",
+    "return_type": "text",
+    "arguments": "message text"
+  },
+  {
+    "schema": "graphql",
+    "function_name": "get_schema_version",
+    "return_type": "integer",
+    "arguments": ""
+  },
+  {
+    "schema": "graphql",
+    "function_name": "increment_schema_version",
+    "return_type": "event_trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "graphql",
+    "function_name": "resolve",
+    "return_type": "jsonb",
+    "arguments": "query text, variables jsonb DEFAULT '{}'::jsonb, \"operationName\" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb"
+  },
+  {
+    "schema": "graphql_public",
+    "function_name": "graphql",
+    "return_type": "jsonb",
+    "arguments": "\"operationName\" text DEFAULT NULL::text, query text DEFAULT NULL::text, variables jsonb DEFAULT NULL::jsonb, extensions jsonb DEFAULT NULL::jsonb"
+  },
+  {
+    "schema": "pgbouncer",
+    "function_name": "get_auth",
+    "return_type": "TABLE(username text, password text)",
+    "arguments": "p_usename text"
+  },
+  {
+    "schema": "public",
+    "function_name": "auto_generate_customer_number",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "auto_generate_invoice_number",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "calculate_invoice_balance_advanced",
+    "return_type": "jsonb",
+    "arguments": "p_invoice_id uuid, p_update_customer_balance boolean DEFAULT true"
+  },
+  {
+    "schema": "public",
+    "function_name": "calculate_invoice_totals",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "calculate_work_order_totals",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "calculate_work_order_totals_with_tax",
+    "return_type": "jsonb",
+    "arguments": "p_work_order_id uuid"
+  },
+  {
+    "schema": "public",
+    "function_name": "create_complete_user",
+    "return_type": "uuid",
+    "arguments": "p_auth_user_id uuid, p_company_id uuid, p_role user_role_enum DEFAULT 'technician'::user_role_enum, p_first_name text DEFAULT NULL::text, p_last_name text DEFAULT NULL::text, p_phone text DEFAULT NULL::text"
+  },
+  {
+    "schema": "public",
+    "function_name": "enforce_work_order_status",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "generate_company_number",
+    "return_type": "text",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "generate_customer_number",
+    "return_type": "text",
+    "arguments": "p_company_id uuid"
+  },
+  {
+    "schema": "public",
+    "function_name": "generate_invoice_number",
+    "return_type": "text",
+    "arguments": "p_company_id uuid"
+  },
+  {
+    "schema": "public",
+    "function_name": "generate_smart_reference_number",
+    "return_type": "text",
+    "arguments": "p_company_id uuid, p_type text, p_prefix text DEFAULT NULL::text"
+  },
+  {
+    "schema": "public",
+    "function_name": "generate_work_order_number",
+    "return_type": "text",
+    "arguments": "p_company_id uuid"
+  },
+  {
+    "schema": "public",
+    "function_name": "get_user_by_auth_id",
+    "return_type": "TABLE(user_id uuid, company_id uuid, role user_role_enum, status user_status_enum, first_name text, last_name text, phone text, avatar_url text, company_name text)",
+    "arguments": "auth_id uuid"
+  },
+  {
+    "schema": "public",
+    "function_name": "get_user_dashboard_data",
+    "return_type": "json",
+    "arguments": "p_user_id uuid"
+  },
+  {
+    "schema": "public",
+    "function_name": "log_audit_event",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "set_company_number",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "update_invoice_amount_paid",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "update_updated_at_column",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "update_user_dashboard_settings_updated_at",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "public",
+    "function_name": "validate_work_order_status_transition",
+    "return_type": "boolean",
+    "arguments": "p_old_status work_order_status_enum, p_new_status work_order_status_enum"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "apply_rls",
+    "return_type": "SETOF realtime.wal_rls",
+    "arguments": "wal jsonb, max_record_bytes integer DEFAULT (1024 * 1024)"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "broadcast_changes",
+    "return_type": "void",
+    "arguments": "topic_name text, event_name text, operation text, table_name text, table_schema text, new record, old record, level text DEFAULT 'ROW'::text"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "build_prepared_statement_sql",
+    "return_type": "text",
+    "arguments": "prepared_statement_name text, entity regclass, columns realtime.wal_column[]"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "cast",
+    "return_type": "jsonb",
+    "arguments": "val text, type_ regtype"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "check_equality_op",
+    "return_type": "boolean",
+    "arguments": "op realtime.equality_op, type_ regtype, val_1 text, val_2 text"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "is_visible_through_filters",
+    "return_type": "boolean",
+    "arguments": "columns realtime.wal_column[], filters realtime.user_defined_filter[]"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "list_changes",
+    "return_type": "SETOF realtime.wal_rls",
+    "arguments": "publication name, slot_name name, max_changes integer, max_record_bytes integer"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "quote_wal2json",
+    "return_type": "text",
+    "arguments": "entity regclass"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "send",
+    "return_type": "void",
+    "arguments": "payload jsonb, event text, topic text, private boolean DEFAULT true"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "subscription_check_filters",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "realtime",
+    "function_name": "to_regrole",
+    "return_type": "regrole",
+    "arguments": "role_name text"
+  },
+  {
+    "schema": "realtime",
+    "function_name": "topic",
+    "return_type": "text",
+    "arguments": ""
+  },
+  {
+    "schema": "storage",
+    "function_name": "can_insert_object",
+    "return_type": "void",
+    "arguments": "bucketid text, name text, owner uuid, metadata jsonb"
+  },
+  {
+    "schema": "storage",
+    "function_name": "extension",
+    "return_type": "text",
+    "arguments": "name text"
+  },
+  {
+    "schema": "storage",
+    "function_name": "filename",
+    "return_type": "text",
+    "arguments": "name text"
+  },
+  {
+    "schema": "storage",
+    "function_name": "foldername",
+    "return_type": "text[]",
+    "arguments": "name text"
+  },
+  {
+    "schema": "storage",
+    "function_name": "get_size_by_bucket",
+    "return_type": "TABLE(size bigint, bucket_id text)",
+    "arguments": ""
+  },
+  {
+    "schema": "storage",
+    "function_name": "list_multipart_uploads_with_delimiter",
+    "return_type": "TABLE(key text, id text, created_at timestamp with time zone)",
+    "arguments": "bucket_id text, prefix_param text, delimiter_param text, max_keys integer DEFAULT 100, next_key_token text DEFAULT ''::text, next_upload_token text DEFAULT ''::text"
+  },
+  {
+    "schema": "storage",
+    "function_name": "list_objects_with_delimiter",
+    "return_type": "TABLE(name text, id uuid, metadata jsonb, updated_at timestamp with time zone)",
+    "arguments": "bucket_id text, prefix_param text, delimiter_param text, max_keys integer DEFAULT 100, start_after text DEFAULT ''::text, next_token text DEFAULT ''::text"
+  },
+  {
+    "schema": "storage",
+    "function_name": "operation",
+    "return_type": "text",
+    "arguments": ""
+  },
+  {
+    "schema": "storage",
+    "function_name": "search",
+    "return_type": "TABLE(name text, id uuid, updated_at timestamp with time zone, created_at timestamp with time zone, last_accessed_at timestamp with time zone, metadata jsonb)",
+    "arguments": "prefix text, bucketname text, limits integer DEFAULT 100, levels integer DEFAULT 1, offsets integer DEFAULT 0, search text DEFAULT ''::text, sortcolumn text DEFAULT 'name'::text, sortorder text DEFAULT 'asc'::text"
+  },
+  {
+    "schema": "storage",
+    "function_name": "update_updated_at_column",
+    "return_type": "trigger",
+    "arguments": ""
+  },
+  {
+    "schema": "vault",
+    "function_name": "_crypto_aead_det_decrypt",
+    "return_type": "bytea",
+    "arguments": "message bytea, additional bytea, key_id bigint, context bytea DEFAULT '\\x7067736f6469756d'::bytea, nonce bytea DEFAULT NULL::bytea"
+  },
+  {
+    "schema": "vault",
+    "function_name": "_crypto_aead_det_encrypt",
+    "return_type": "bytea",
+    "arguments": "message bytea, additional bytea, key_id bigint, context bytea DEFAULT '\\x7067736f6469756d'::bytea, nonce bytea DEFAULT NULL::bytea"
+  },
+  {
+    "schema": "vault",
+    "function_name": "_crypto_aead_det_noncegen",
+    "return_type": "bytea",
+    "arguments": ""
+  },
+  {
+    "schema": "vault",
+    "function_name": "create_secret",
+    "return_type": "uuid",
+    "arguments": "new_secret text, new_name text DEFAULT NULL::text, new_description text DEFAULT ''::text, new_key_id uuid DEFAULT NULL::uuid"
+  },
+  {
+    "schema": "vault",
+    "function_name": "update_secret",
+    "return_type": "void",
+    "arguments": "secret_id uuid, new_secret text DEFAULT NULL::text, new_name text DEFAULT NULL::text, new_description text DEFAULT NULL::text, new_key_id uuid DEFAULT NULL::uuid"
+  }
+]
+[
+  {
+    "table_name": "companies",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "company_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "legal_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "tax_id",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "website",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "address_line1",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "address_line2",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "city",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "state_province",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "postal_code",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "country",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "time_zone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "currency",
+    "data_type": "text"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "default_tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "companies",
+    "column_name": "created_by",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "business_hours",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "default_tax_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "invoice_terms",
+    "data_type": "text"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "auto_invoice",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "require_signatures",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "allow_online_payments",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "emergency_rate_multiplier",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "travel_charge_per_mile",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "minimum_travel_charge",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "cancellation_fee",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "transparency_mode",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "company_settings",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "employee_number",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "hire_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "termination_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "job_title",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "department",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "hourly_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "overtime_rate",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "emergency_contact_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "emergency_contact_phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "certifications",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "skills",
+    "data_type": "ARRAY"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "notes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "employees",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "first_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "last_name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "avatar_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "preferences",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "emergency_contact_phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "hire_date",
+    "data_type": "date"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "email",
+    "data_type": "text"
+  },
+  {
+    "table_name": "profiles",
+    "column_name": "role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "icon_url",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "color",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "sort_order",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "service_categories",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "category_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "base_price",
+    "data_type": "numeric"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "estimated_duration",
+    "data_type": "text"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "requires_permit",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "is_active",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "service_types",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "billing_plan_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "status",
+    "data_type": "text"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "current_period_start",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "current_period_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "trial_end",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "subscriptions",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "instance_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "auth_user_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "company_id",
+    "data_type": "uuid"
+  },
+  {
+    "table_name": "users",
+    "column_name": "aud",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "role",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "role",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "status",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "table_name": "users",
+    "column_name": "encrypted_password",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email_confirmed_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "login_count",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "users",
+    "column_name": "invited_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "confirmation_token",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "confirmation_sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "recovery_token",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "recovery_sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email_change_token_new",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email_change",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email_change_sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "last_sign_in_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "raw_app_meta_data",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "users",
+    "column_name": "raw_user_meta_data",
+    "data_type": "jsonb"
+  },
+  {
+    "table_name": "users",
+    "column_name": "is_super_admin",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "users",
+    "column_name": "created_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "updated_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "phone",
+    "data_type": "text"
+  },
+  {
+    "table_name": "users",
+    "column_name": "phone_confirmed_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "phone_change",
+    "data_type": "text"
+  },
+  {
+    "table_name": "users",
+    "column_name": "phone_change_token",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "phone_change_sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "confirmed_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email_change_token_current",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "email_change_confirm_status",
+    "data_type": "smallint"
+  },
+  {
+    "table_name": "users",
+    "column_name": "banned_until",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "reauthentication_token",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "users",
+    "column_name": "reauthentication_sent_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "is_sso_user",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "users",
+    "column_name": "deleted_at",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "users",
+    "column_name": "is_anonymous",
+    "data_type": "boolean"
+  }
+]
+
+[
+  {
+    "schema_name": "auth",
+    "table_name": "audit_log_entries",
+    "index_name": "audit_log_entries_pkey",
+    "index_def": "CREATE UNIQUE INDEX audit_log_entries_pkey ON auth.audit_log_entries USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "audit_log_entries",
+    "index_name": "audit_logs_instance_id_idx",
+    "index_def": "CREATE INDEX audit_logs_instance_id_idx ON auth.audit_log_entries USING btree (instance_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "flow_state",
+    "index_name": "flow_state_created_at_idx",
+    "index_def": "CREATE INDEX flow_state_created_at_idx ON auth.flow_state USING btree (created_at DESC)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "flow_state",
+    "index_name": "flow_state_pkey",
+    "index_def": "CREATE UNIQUE INDEX flow_state_pkey ON auth.flow_state USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "flow_state",
+    "index_name": "idx_auth_code",
+    "index_def": "CREATE INDEX idx_auth_code ON auth.flow_state USING btree (auth_code)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "flow_state",
+    "index_name": "idx_user_id_auth_method",
+    "index_def": "CREATE INDEX idx_user_id_auth_method ON auth.flow_state USING btree (user_id, authentication_method)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "identities",
+    "index_name": "identities_email_idx",
+    "index_def": "CREATE INDEX identities_email_idx ON auth.identities USING btree (email text_pattern_ops)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "identities",
+    "index_name": "identities_pkey",
+    "index_def": "CREATE UNIQUE INDEX identities_pkey ON auth.identities USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "identities",
+    "index_name": "identities_provider_id_provider_unique",
+    "index_def": "CREATE UNIQUE INDEX identities_provider_id_provider_unique ON auth.identities USING btree (provider_id, provider)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "identities",
+    "index_name": "identities_user_id_idx",
+    "index_def": "CREATE INDEX identities_user_id_idx ON auth.identities USING btree (user_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "instances",
+    "index_name": "instances_pkey",
+    "index_def": "CREATE UNIQUE INDEX instances_pkey ON auth.instances USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_amr_claims",
+    "index_name": "amr_id_pk",
+    "index_def": "CREATE UNIQUE INDEX amr_id_pk ON auth.mfa_amr_claims USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_amr_claims",
+    "index_name": "mfa_amr_claims_session_id_authentication_method_pkey",
+    "index_def": "CREATE UNIQUE INDEX mfa_amr_claims_session_id_authentication_method_pkey ON auth.mfa_amr_claims USING btree (session_id, authentication_method)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_challenges",
+    "index_name": "mfa_challenge_created_at_idx",
+    "index_def": "CREATE INDEX mfa_challenge_created_at_idx ON auth.mfa_challenges USING btree (created_at DESC)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_challenges",
+    "index_name": "mfa_challenges_pkey",
+    "index_def": "CREATE UNIQUE INDEX mfa_challenges_pkey ON auth.mfa_challenges USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_factors",
+    "index_name": "factor_id_created_at_idx",
+    "index_def": "CREATE INDEX factor_id_created_at_idx ON auth.mfa_factors USING btree (user_id, created_at)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_factors",
+    "index_name": "mfa_factors_last_challenged_at_key",
+    "index_def": "CREATE UNIQUE INDEX mfa_factors_last_challenged_at_key ON auth.mfa_factors USING btree (last_challenged_at)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_factors",
+    "index_name": "mfa_factors_pkey",
+    "index_def": "CREATE UNIQUE INDEX mfa_factors_pkey ON auth.mfa_factors USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_factors",
+    "index_name": "mfa_factors_user_friendly_name_unique",
+    "index_def": "CREATE UNIQUE INDEX mfa_factors_user_friendly_name_unique ON auth.mfa_factors USING btree (friendly_name, user_id) WHERE (TRIM(BOTH FROM friendly_name) <> ''::text)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_factors",
+    "index_name": "mfa_factors_user_id_idx",
+    "index_def": "CREATE INDEX mfa_factors_user_id_idx ON auth.mfa_factors USING btree (user_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "mfa_factors",
+    "index_name": "unique_phone_factor_per_user",
+    "index_def": "CREATE UNIQUE INDEX unique_phone_factor_per_user ON auth.mfa_factors USING btree (user_id, phone)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "oauth_clients",
+    "index_name": "oauth_clients_client_id_idx",
+    "index_def": "CREATE INDEX oauth_clients_client_id_idx ON auth.oauth_clients USING btree (client_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "oauth_clients",
+    "index_name": "oauth_clients_client_id_key",
+    "index_def": "CREATE UNIQUE INDEX oauth_clients_client_id_key ON auth.oauth_clients USING btree (client_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "oauth_clients",
+    "index_name": "oauth_clients_deleted_at_idx",
+    "index_def": "CREATE INDEX oauth_clients_deleted_at_idx ON auth.oauth_clients USING btree (deleted_at)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "oauth_clients",
+    "index_name": "oauth_clients_pkey",
+    "index_def": "CREATE UNIQUE INDEX oauth_clients_pkey ON auth.oauth_clients USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "one_time_tokens",
+    "index_name": "one_time_tokens_pkey",
+    "index_def": "CREATE UNIQUE INDEX one_time_tokens_pkey ON auth.one_time_tokens USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "one_time_tokens",
+    "index_name": "one_time_tokens_relates_to_hash_idx",
+    "index_def": "CREATE INDEX one_time_tokens_relates_to_hash_idx ON auth.one_time_tokens USING hash (relates_to)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "one_time_tokens",
+    "index_name": "one_time_tokens_token_hash_hash_idx",
+    "index_def": "CREATE INDEX one_time_tokens_token_hash_hash_idx ON auth.one_time_tokens USING hash (token_hash)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "one_time_tokens",
+    "index_name": "one_time_tokens_user_id_token_type_key",
+    "index_def": "CREATE UNIQUE INDEX one_time_tokens_user_id_token_type_key ON auth.one_time_tokens USING btree (user_id, token_type)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_instance_id_idx",
+    "index_def": "CREATE INDEX refresh_tokens_instance_id_idx ON auth.refresh_tokens USING btree (instance_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_instance_id_user_id_idx",
+    "index_def": "CREATE INDEX refresh_tokens_instance_id_user_id_idx ON auth.refresh_tokens USING btree (instance_id, user_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_parent_idx",
+    "index_def": "CREATE INDEX refresh_tokens_parent_idx ON auth.refresh_tokens USING btree (parent)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_pkey",
+    "index_def": "CREATE UNIQUE INDEX refresh_tokens_pkey ON auth.refresh_tokens USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_session_id_revoked_idx",
+    "index_def": "CREATE INDEX refresh_tokens_session_id_revoked_idx ON auth.refresh_tokens USING btree (session_id, revoked)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_token_unique",
+    "index_def": "CREATE UNIQUE INDEX refresh_tokens_token_unique ON auth.refresh_tokens USING btree (token)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "refresh_tokens",
+    "index_name": "refresh_tokens_updated_at_idx",
+    "index_def": "CREATE INDEX refresh_tokens_updated_at_idx ON auth.refresh_tokens USING btree (updated_at DESC)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_providers",
+    "index_name": "saml_providers_entity_id_key",
+    "index_def": "CREATE UNIQUE INDEX saml_providers_entity_id_key ON auth.saml_providers USING btree (entity_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_providers",
+    "index_name": "saml_providers_pkey",
+    "index_def": "CREATE UNIQUE INDEX saml_providers_pkey ON auth.saml_providers USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_providers",
+    "index_name": "saml_providers_sso_provider_id_idx",
+    "index_def": "CREATE INDEX saml_providers_sso_provider_id_idx ON auth.saml_providers USING btree (sso_provider_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_relay_states",
+    "index_name": "saml_relay_states_created_at_idx",
+    "index_def": "CREATE INDEX saml_relay_states_created_at_idx ON auth.saml_relay_states USING btree (created_at DESC)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_relay_states",
+    "index_name": "saml_relay_states_for_email_idx",
+    "index_def": "CREATE INDEX saml_relay_states_for_email_idx ON auth.saml_relay_states USING btree (for_email)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_relay_states",
+    "index_name": "saml_relay_states_pkey",
+    "index_def": "CREATE UNIQUE INDEX saml_relay_states_pkey ON auth.saml_relay_states USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "saml_relay_states",
+    "index_name": "saml_relay_states_sso_provider_id_idx",
+    "index_def": "CREATE INDEX saml_relay_states_sso_provider_id_idx ON auth.saml_relay_states USING btree (sso_provider_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "schema_migrations",
+    "index_name": "schema_migrations_pkey",
+    "index_def": "CREATE UNIQUE INDEX schema_migrations_pkey ON auth.schema_migrations USING btree (version)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sessions",
+    "index_name": "sessions_not_after_idx",
+    "index_def": "CREATE INDEX sessions_not_after_idx ON auth.sessions USING btree (not_after DESC)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sessions",
+    "index_name": "sessions_pkey",
+    "index_def": "CREATE UNIQUE INDEX sessions_pkey ON auth.sessions USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sessions",
+    "index_name": "sessions_user_id_idx",
+    "index_def": "CREATE INDEX sessions_user_id_idx ON auth.sessions USING btree (user_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sessions",
+    "index_name": "user_id_created_at_idx",
+    "index_def": "CREATE INDEX user_id_created_at_idx ON auth.sessions USING btree (user_id, created_at)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sso_domains",
+    "index_name": "sso_domains_domain_idx",
+    "index_def": "CREATE UNIQUE INDEX sso_domains_domain_idx ON auth.sso_domains USING btree (lower(domain))"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sso_domains",
+    "index_name": "sso_domains_pkey",
+    "index_def": "CREATE UNIQUE INDEX sso_domains_pkey ON auth.sso_domains USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sso_domains",
+    "index_name": "sso_domains_sso_provider_id_idx",
+    "index_def": "CREATE INDEX sso_domains_sso_provider_id_idx ON auth.sso_domains USING btree (sso_provider_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sso_providers",
+    "index_name": "sso_providers_pkey",
+    "index_def": "CREATE UNIQUE INDEX sso_providers_pkey ON auth.sso_providers USING btree (id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sso_providers",
+    "index_name": "sso_providers_resource_id_idx",
+    "index_def": "CREATE UNIQUE INDEX sso_providers_resource_id_idx ON auth.sso_providers USING btree (lower(resource_id))"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "sso_providers",
+    "index_name": "sso_providers_resource_id_pattern_idx",
+    "index_def": "CREATE INDEX sso_providers_resource_id_pattern_idx ON auth.sso_providers USING btree (resource_id text_pattern_ops)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "confirmation_token_idx",
+    "index_def": "CREATE UNIQUE INDEX confirmation_token_idx ON auth.users USING btree (confirmation_token) WHERE ((confirmation_token)::text !~ '^[0-9 ]*$'::text)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "email_change_token_current_idx",
+    "index_def": "CREATE UNIQUE INDEX email_change_token_current_idx ON auth.users USING btree (email_change_token_current) WHERE ((email_change_token_current)::text !~ '^[0-9 ]*$'::text)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "email_change_token_new_idx",
+    "index_def": "CREATE UNIQUE INDEX email_change_token_new_idx ON auth.users USING btree (email_change_token_new) WHERE ((email_change_token_new)::text !~ '^[0-9 ]*$'::text)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "reauthentication_token_idx",
+    "index_def": "CREATE UNIQUE INDEX reauthentication_token_idx ON auth.users USING btree (reauthentication_token) WHERE ((reauthentication_token)::text !~ '^[0-9 ]*$'::text)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "recovery_token_idx",
+    "index_def": "CREATE UNIQUE INDEX recovery_token_idx ON auth.users USING btree (recovery_token) WHERE ((recovery_token)::text !~ '^[0-9 ]*$'::text)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "users_email_partial_key",
+    "index_def": "CREATE UNIQUE INDEX users_email_partial_key ON auth.users USING btree (email) WHERE (is_sso_user = false)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "users_instance_id_email_idx",
+    "index_def": "CREATE INDEX users_instance_id_email_idx ON auth.users USING btree (instance_id, lower((email)::text))"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "users_instance_id_idx",
+    "index_def": "CREATE INDEX users_instance_id_idx ON auth.users USING btree (instance_id)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "users_is_anonymous_idx",
+    "index_def": "CREATE INDEX users_is_anonymous_idx ON auth.users USING btree (is_anonymous)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "users_phone_key",
+    "index_def": "CREATE UNIQUE INDEX users_phone_key ON auth.users USING btree (phone)"
+  },
+  {
+    "schema_name": "auth",
+    "table_name": "users",
+    "index_name": "users_pkey",
+    "index_def": "CREATE UNIQUE INDEX users_pkey ON auth.users USING btree (id)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1213",
+    "index_name": "pg_toast_1213_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1213_index ON pg_toast.pg_toast_1213 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1247",
+    "index_name": "pg_toast_1247_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1247_index ON pg_toast.pg_toast_1247 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1255",
+    "index_name": "pg_toast_1255_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1255_index ON pg_toast.pg_toast_1255 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1260",
+    "index_name": "pg_toast_1260_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1260_index ON pg_toast.pg_toast_1260 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1262",
+    "index_name": "pg_toast_1262_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1262_index ON pg_toast.pg_toast_1262 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_13401",
+    "index_name": "pg_toast_13401_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_13401_index ON pg_toast.pg_toast_13401 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_13406",
+    "index_name": "pg_toast_13406_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_13406_index ON pg_toast.pg_toast_13406 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_13411",
+    "index_name": "pg_toast_13411_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_13411_index ON pg_toast.pg_toast_13411 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_13416",
+    "index_name": "pg_toast_13416_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_13416_index ON pg_toast.pg_toast_13416 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1417",
+    "index_name": "pg_toast_1417_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1417_index ON pg_toast.pg_toast_1417 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_1418",
+    "index_name": "pg_toast_1418_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_1418_index ON pg_toast.pg_toast_1418 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16495",
+    "index_name": "pg_toast_16495_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16495_index ON pg_toast.pg_toast_16495 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16507",
+    "index_name": "pg_toast_16507_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16507_index ON pg_toast.pg_toast_16507 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16518",
+    "index_name": "pg_toast_16518_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16518_index ON pg_toast.pg_toast_16518 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16525",
+    "index_name": "pg_toast_16525_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16525_index ON pg_toast.pg_toast_16525 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16546",
+    "index_name": "pg_toast_16546_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16546_index ON pg_toast.pg_toast_16546 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16561",
+    "index_name": "pg_toast_16561_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16561_index ON pg_toast.pg_toast_16561 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16658",
+    "index_name": "pg_toast_16658_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16658_index ON pg_toast.pg_toast_16658 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16725",
+    "index_name": "pg_toast_16725_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16725_index ON pg_toast.pg_toast_16725 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16755",
+    "index_name": "pg_toast_16755_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16755_index ON pg_toast.pg_toast_16755 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16789",
+    "index_name": "pg_toast_16789_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16789_index ON pg_toast.pg_toast_16789 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16802",
+    "index_name": "pg_toast_16802_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16802_index ON pg_toast.pg_toast_16802 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16814",
+    "index_name": "pg_toast_16814_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16814_index ON pg_toast.pg_toast_16814 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16832",
+    "index_name": "pg_toast_16832_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16832_index ON pg_toast.pg_toast_16832 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16841",
+    "index_name": "pg_toast_16841_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16841_index ON pg_toast.pg_toast_16841 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16856",
+    "index_name": "pg_toast_16856_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16856_index ON pg_toast.pg_toast_16856 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16874",
+    "index_name": "pg_toast_16874_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16874_index ON pg_toast.pg_toast_16874 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16927",
+    "index_name": "pg_toast_16927_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16927_index ON pg_toast.pg_toast_16927 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_16977",
+    "index_name": "pg_toast_16977_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_16977_index ON pg_toast.pg_toast_16977 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17009",
+    "index_name": "pg_toast_17009_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17009_index ON pg_toast.pg_toast_17009 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17062",
+    "index_name": "pg_toast_17062_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17062_index ON pg_toast.pg_toast_17062 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17076",
+    "index_name": "pg_toast_17076_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17076_index ON pg_toast.pg_toast_17076 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17131",
+    "index_name": "pg_toast_17131_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17131_index ON pg_toast.pg_toast_17131 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17798",
+    "index_name": "pg_toast_17798_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17798_index ON pg_toast.pg_toast_17798 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17816",
+    "index_name": "pg_toast_17816_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17816_index ON pg_toast.pg_toast_17816 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17828",
+    "index_name": "pg_toast_17828_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17828_index ON pg_toast.pg_toast_17828 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17855",
+    "index_name": "pg_toast_17855_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17855_index ON pg_toast.pg_toast_17855 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17881",
+    "index_name": "pg_toast_17881_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17881_index ON pg_toast.pg_toast_17881 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17895",
+    "index_name": "pg_toast_17895_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17895_index ON pg_toast.pg_toast_17895 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17917",
+    "index_name": "pg_toast_17917_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17917_index ON pg_toast.pg_toast_17917 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17946",
+    "index_name": "pg_toast_17946_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17946_index ON pg_toast.pg_toast_17946 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17964",
+    "index_name": "pg_toast_17964_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17964_index ON pg_toast.pg_toast_17964 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_17981",
+    "index_name": "pg_toast_17981_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_17981_index ON pg_toast.pg_toast_17981 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18018",
+    "index_name": "pg_toast_18018_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18018_index ON pg_toast.pg_toast_18018 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18040",
+    "index_name": "pg_toast_18040_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18040_index ON pg_toast.pg_toast_18040 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18059",
+    "index_name": "pg_toast_18059_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18059_index ON pg_toast.pg_toast_18059 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18077",
+    "index_name": "pg_toast_18077_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18077_index ON pg_toast.pg_toast_18077 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18130",
+    "index_name": "pg_toast_18130_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18130_index ON pg_toast.pg_toast_18130 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18148",
+    "index_name": "pg_toast_18148_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18148_index ON pg_toast.pg_toast_18148 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18167",
+    "index_name": "pg_toast_18167_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18167_index ON pg_toast.pg_toast_18167 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18189",
+    "index_name": "pg_toast_18189_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18189_index ON pg_toast.pg_toast_18189 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18218",
+    "index_name": "pg_toast_18218_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18218_index ON pg_toast.pg_toast_18218 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18248",
+    "index_name": "pg_toast_18248_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18248_index ON pg_toast.pg_toast_18248 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18283",
+    "index_name": "pg_toast_18283_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18283_index ON pg_toast.pg_toast_18283 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18301",
+    "index_name": "pg_toast_18301_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18301_index ON pg_toast.pg_toast_18301 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18331",
+    "index_name": "pg_toast_18331_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18331_index ON pg_toast.pg_toast_18331 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18366",
+    "index_name": "pg_toast_18366_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18366_index ON pg_toast.pg_toast_18366 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18385",
+    "index_name": "pg_toast_18385_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18385_index ON pg_toast.pg_toast_18385 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18410",
+    "index_name": "pg_toast_18410_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18410_index ON pg_toast.pg_toast_18410 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18487",
+    "index_name": "pg_toast_18487_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18487_index ON pg_toast.pg_toast_18487 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18505",
+    "index_name": "pg_toast_18505_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18505_index ON pg_toast.pg_toast_18505 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18555",
+    "index_name": "pg_toast_18555_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18555_index ON pg_toast.pg_toast_18555 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18590",
+    "index_name": "pg_toast_18590_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18590_index ON pg_toast.pg_toast_18590 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18615",
+    "index_name": "pg_toast_18615_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18615_index ON pg_toast.pg_toast_18615 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18654",
+    "index_name": "pg_toast_18654_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18654_index ON pg_toast.pg_toast_18654 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18676",
+    "index_name": "pg_toast_18676_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18676_index ON pg_toast.pg_toast_18676 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18701",
+    "index_name": "pg_toast_18701_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18701_index ON pg_toast.pg_toast_18701 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18735",
+    "index_name": "pg_toast_18735_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18735_index ON pg_toast.pg_toast_18735 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_18758",
+    "index_name": "pg_toast_18758_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_18758_index ON pg_toast.pg_toast_18758 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_19152",
+    "index_name": "pg_toast_19152_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_19152_index ON pg_toast.pg_toast_19152 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2328",
+    "index_name": "pg_toast_2328_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2328_index ON pg_toast.pg_toast_2328 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2396",
+    "index_name": "pg_toast_2396_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2396_index ON pg_toast.pg_toast_2396 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2600",
+    "index_name": "pg_toast_2600_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2600_index ON pg_toast.pg_toast_2600 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2604",
+    "index_name": "pg_toast_2604_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2604_index ON pg_toast.pg_toast_2604 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2606",
+    "index_name": "pg_toast_2606_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2606_index ON pg_toast.pg_toast_2606 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2609",
+    "index_name": "pg_toast_2609_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2609_index ON pg_toast.pg_toast_2609 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2612",
+    "index_name": "pg_toast_2612_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2612_index ON pg_toast.pg_toast_2612 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2615",
+    "index_name": "pg_toast_2615_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2615_index ON pg_toast.pg_toast_2615 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2618",
+    "index_name": "pg_toast_2618_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2618_index ON pg_toast.pg_toast_2618 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2619",
+    "index_name": "pg_toast_2619_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2619_index ON pg_toast.pg_toast_2619 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2620",
+    "index_name": "pg_toast_2620_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2620_index ON pg_toast.pg_toast_2620 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_2964",
+    "index_name": "pg_toast_2964_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_2964_index ON pg_toast.pg_toast_2964 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3079",
+    "index_name": "pg_toast_3079_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3079_index ON pg_toast.pg_toast_3079 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3118",
+    "index_name": "pg_toast_3118_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3118_index ON pg_toast.pg_toast_3118 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3256",
+    "index_name": "pg_toast_3256_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3256_index ON pg_toast.pg_toast_3256 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3350",
+    "index_name": "pg_toast_3350_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3350_index ON pg_toast.pg_toast_3350 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3381",
+    "index_name": "pg_toast_3381_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3381_index ON pg_toast.pg_toast_3381 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3394",
+    "index_name": "pg_toast_3394_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3394_index ON pg_toast.pg_toast_3394 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3429",
+    "index_name": "pg_toast_3429_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3429_index ON pg_toast.pg_toast_3429 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3456",
+    "index_name": "pg_toast_3456_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3456_index ON pg_toast.pg_toast_3456 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3466",
+    "index_name": "pg_toast_3466_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3466_index ON pg_toast.pg_toast_3466 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3592",
+    "index_name": "pg_toast_3592_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3592_index ON pg_toast.pg_toast_3592 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3596",
+    "index_name": "pg_toast_3596_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3596_index ON pg_toast.pg_toast_3596 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_3600",
+    "index_name": "pg_toast_3600_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_3600_index ON pg_toast.pg_toast_3600 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_6000",
+    "index_name": "pg_toast_6000_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_6000_index ON pg_toast.pg_toast_6000 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_6100",
+    "index_name": "pg_toast_6100_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_6100_index ON pg_toast.pg_toast_6100 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_6106",
+    "index_name": "pg_toast_6106_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_6106_index ON pg_toast.pg_toast_6106 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_6243",
+    "index_name": "pg_toast_6243_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_6243_index ON pg_toast.pg_toast_6243 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "pg_toast",
+    "table_name": "pg_toast_826",
+    "index_name": "pg_toast_826_index",
+    "index_def": "CREATE UNIQUE INDEX pg_toast_826_index ON pg_toast.pg_toast_826 USING btree (chunk_id, chunk_seq)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "audit_logs",
+    "index_name": "audit_logs_pkey",
+    "index_def": "CREATE UNIQUE INDEX audit_logs_pkey ON public.audit_logs USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "audit_logs",
+    "index_name": "idx_audit_logs_company_id",
+    "index_def": "CREATE INDEX idx_audit_logs_company_id ON public.audit_logs USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "audit_logs",
+    "index_name": "idx_audit_logs_created_at",
+    "index_def": "CREATE INDEX idx_audit_logs_created_at ON public.audit_logs USING btree (created_at)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "audit_logs",
+    "index_name": "idx_audit_logs_table_name",
+    "index_def": "CREATE INDEX idx_audit_logs_table_name ON public.audit_logs USING btree (table_name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "audit_logs",
+    "index_name": "idx_audit_logs_user_id",
+    "index_def": "CREATE INDEX idx_audit_logs_user_id ON public.audit_logs USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "billing_plans",
+    "index_name": "billing_plans_name_key",
+    "index_def": "CREATE UNIQUE INDEX billing_plans_name_key ON public.billing_plans USING btree (name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "billing_plans",
+    "index_name": "billing_plans_pkey",
+    "index_def": "CREATE UNIQUE INDEX billing_plans_pkey ON public.billing_plans USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "companies",
+    "index_name": "companies_company_number_key",
+    "index_def": "CREATE UNIQUE INDEX companies_company_number_key ON public.companies USING btree (company_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "companies",
+    "index_name": "companies_pkey",
+    "index_def": "CREATE UNIQUE INDEX companies_pkey ON public.companies USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "company_settings",
+    "index_name": "company_settings_pkey",
+    "index_def": "CREATE UNIQUE INDEX company_settings_pkey ON public.company_settings USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_addresses",
+    "index_name": "customer_addresses_pkey",
+    "index_def": "CREATE UNIQUE INDEX customer_addresses_pkey ON public.customer_addresses USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_addresses",
+    "index_name": "idx_customer_addresses_customer_id",
+    "index_def": "CREATE INDEX idx_customer_addresses_customer_id ON public.customer_addresses USING btree (customer_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_addresses",
+    "index_name": "idx_customer_addresses_type",
+    "index_def": "CREATE INDEX idx_customer_addresses_type ON public.customer_addresses USING btree (type)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_addresses",
+    "index_name": "unique_primary_address_per_customer",
+    "index_def": "CREATE INDEX unique_primary_address_per_customer ON public.customer_addresses USING btree (customer_id) WHERE (is_primary = true)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_contacts",
+    "index_name": "customer_contacts_pkey",
+    "index_def": "CREATE UNIQUE INDEX customer_contacts_pkey ON public.customer_contacts USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_contacts",
+    "index_name": "unique_primary_contact_per_customer",
+    "index_def": "CREATE INDEX unique_primary_contact_per_customer ON public.customer_contacts USING btree (customer_id) WHERE (is_primary = true)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_notes",
+    "index_name": "customer_notes_pkey",
+    "index_def": "CREATE UNIQUE INDEX customer_notes_pkey ON public.customer_notes USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_tag_assignments",
+    "index_name": "customer_tag_assignments_customer_id_tag_id_key",
+    "index_def": "CREATE UNIQUE INDEX customer_tag_assignments_customer_id_tag_id_key ON public.customer_tag_assignments USING btree (customer_id, tag_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_tag_assignments",
+    "index_name": "customer_tag_assignments_pkey",
+    "index_def": "CREATE UNIQUE INDEX customer_tag_assignments_pkey ON public.customer_tag_assignments USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_tags",
+    "index_name": "customer_tags_name_key",
+    "index_def": "CREATE UNIQUE INDEX customer_tags_name_key ON public.customer_tags USING btree (name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customer_tags",
+    "index_name": "customer_tags_pkey",
+    "index_def": "CREATE UNIQUE INDEX customer_tags_pkey ON public.customer_tags USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customers",
+    "index_name": "customers_customer_number_key",
+    "index_def": "CREATE UNIQUE INDEX customers_customer_number_key ON public.customers USING btree (customer_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customers",
+    "index_name": "customers_pkey",
+    "index_def": "CREATE UNIQUE INDEX customers_pkey ON public.customers USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customers",
+    "index_name": "idx_customers_company_id",
+    "index_def": "CREATE INDEX idx_customers_company_id ON public.customers USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customers",
+    "index_name": "idx_customers_customer_number",
+    "index_def": "CREATE INDEX idx_customers_customer_number ON public.customers USING btree (customer_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customers",
+    "index_name": "idx_customers_email",
+    "index_def": "CREATE INDEX idx_customers_email ON public.customers USING btree (email)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "customers",
+    "index_name": "idx_customers_phone",
+    "index_def": "CREATE INDEX idx_customers_phone ON public.customers USING btree (phone)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "documents",
+    "index_name": "documents_pkey",
+    "index_def": "CREATE UNIQUE INDEX documents_pkey ON public.documents USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "employee_timesheets",
+    "index_name": "employee_timesheets_pkey",
+    "index_def": "CREATE UNIQUE INDEX employee_timesheets_pkey ON public.employee_timesheets USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "employees",
+    "index_name": "employees_employee_number_key",
+    "index_def": "CREATE UNIQUE INDEX employees_employee_number_key ON public.employees USING btree (employee_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "employees",
+    "index_name": "employees_pkey",
+    "index_def": "CREATE UNIQUE INDEX employees_pkey ON public.employees USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "employees",
+    "index_name": "idx_employees_company_id",
+    "index_def": "CREATE INDEX idx_employees_company_id ON public.employees USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "employees",
+    "index_name": "idx_employees_user_id",
+    "index_def": "CREATE INDEX idx_employees_user_id ON public.employees USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "expenses",
+    "index_name": "expenses_pkey",
+    "index_def": "CREATE UNIQUE INDEX expenses_pkey ON public.expenses USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "expenses",
+    "index_name": "idx_expenses_company_id",
+    "index_def": "CREATE INDEX idx_expenses_company_id ON public.expenses USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "expenses",
+    "index_name": "idx_expenses_employee_id",
+    "index_def": "CREATE INDEX idx_expenses_employee_id ON public.expenses USING btree (employee_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "expenses",
+    "index_name": "idx_expenses_work_order_id",
+    "index_def": "CREATE INDEX idx_expenses_work_order_id ON public.expenses USING btree (work_order_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_items",
+    "index_name": "idx_inventory_items_company_id",
+    "index_def": "CREATE INDEX idx_inventory_items_company_id ON public.inventory_items USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_items",
+    "index_name": "idx_inventory_items_sku",
+    "index_def": "CREATE INDEX idx_inventory_items_sku ON public.inventory_items USING btree (sku)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_items",
+    "index_name": "inventory_items_pkey",
+    "index_def": "CREATE UNIQUE INDEX inventory_items_pkey ON public.inventory_items USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_items",
+    "index_name": "inventory_items_sku_key",
+    "index_def": "CREATE UNIQUE INDEX inventory_items_sku_key ON public.inventory_items USING btree (sku)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_locations",
+    "index_name": "inventory_locations_company_id_name_key",
+    "index_def": "CREATE UNIQUE INDEX inventory_locations_company_id_name_key ON public.inventory_locations USING btree (company_id, name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_locations",
+    "index_name": "inventory_locations_pkey",
+    "index_def": "CREATE UNIQUE INDEX inventory_locations_pkey ON public.inventory_locations USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_movements",
+    "index_name": "inventory_movements_pkey",
+    "index_def": "CREATE UNIQUE INDEX inventory_movements_pkey ON public.inventory_movements USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_stock",
+    "index_name": "idx_inventory_stock_item_id",
+    "index_def": "CREATE INDEX idx_inventory_stock_item_id ON public.inventory_stock USING btree (item_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_stock",
+    "index_name": "idx_inventory_stock_location_id",
+    "index_def": "CREATE INDEX idx_inventory_stock_location_id ON public.inventory_stock USING btree (location_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_stock",
+    "index_name": "inventory_stock_item_id_location_id_key",
+    "index_def": "CREATE UNIQUE INDEX inventory_stock_item_id_location_id_key ON public.inventory_stock USING btree (item_id, location_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "inventory_stock",
+    "index_name": "inventory_stock_pkey",
+    "index_def": "CREATE UNIQUE INDEX inventory_stock_pkey ON public.inventory_stock USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoice_line_items",
+    "index_name": "invoice_line_items_pkey",
+    "index_def": "CREATE UNIQUE INDEX invoice_line_items_pkey ON public.invoice_line_items USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoices",
+    "index_name": "idx_invoices_company_id",
+    "index_def": "CREATE INDEX idx_invoices_company_id ON public.invoices USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoices",
+    "index_name": "idx_invoices_customer_id",
+    "index_def": "CREATE INDEX idx_invoices_customer_id ON public.invoices USING btree (customer_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoices",
+    "index_name": "idx_invoices_due_date",
+    "index_def": "CREATE INDEX idx_invoices_due_date ON public.invoices USING btree (due_date)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoices",
+    "index_name": "idx_invoices_status",
+    "index_def": "CREATE INDEX idx_invoices_status ON public.invoices USING btree (status)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoices",
+    "index_name": "invoices_invoice_number_key",
+    "index_def": "CREATE UNIQUE INDEX invoices_invoice_number_key ON public.invoices USING btree (invoice_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "invoices",
+    "index_name": "invoices_pkey",
+    "index_def": "CREATE UNIQUE INDEX invoices_pkey ON public.invoices USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "messages",
+    "index_name": "idx_messages_company_id",
+    "index_def": "CREATE INDEX idx_messages_company_id ON public.messages USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "messages",
+    "index_name": "idx_messages_customer_id",
+    "index_def": "CREATE INDEX idx_messages_customer_id ON public.messages USING btree (customer_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "messages",
+    "index_name": "idx_messages_work_order_id",
+    "index_def": "CREATE INDEX idx_messages_work_order_id ON public.messages USING btree (work_order_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "messages",
+    "index_name": "messages_pkey",
+    "index_def": "CREATE UNIQUE INDEX messages_pkey ON public.messages USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "notifications",
+    "index_name": "idx_notifications_company_id",
+    "index_def": "CREATE INDEX idx_notifications_company_id ON public.notifications USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "notifications",
+    "index_name": "idx_notifications_status",
+    "index_def": "CREATE INDEX idx_notifications_status ON public.notifications USING btree (status)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "notifications",
+    "index_name": "idx_notifications_user_id",
+    "index_def": "CREATE INDEX idx_notifications_user_id ON public.notifications USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "notifications",
+    "index_name": "notifications_pkey",
+    "index_def": "CREATE UNIQUE INDEX notifications_pkey ON public.notifications USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payments",
+    "index_name": "idx_payments_company_id",
+    "index_def": "CREATE INDEX idx_payments_company_id ON public.payments USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payments",
+    "index_name": "idx_payments_customer_id",
+    "index_def": "CREATE INDEX idx_payments_customer_id ON public.payments USING btree (customer_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payments",
+    "index_name": "idx_payments_invoice_id",
+    "index_def": "CREATE INDEX idx_payments_invoice_id ON public.payments USING btree (invoice_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payments",
+    "index_name": "idx_payments_received_at",
+    "index_def": "CREATE INDEX idx_payments_received_at ON public.payments USING btree (received_at)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payments",
+    "index_name": "payments_pkey",
+    "index_def": "CREATE UNIQUE INDEX payments_pkey ON public.payments USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payroll_line_items",
+    "index_name": "payroll_line_items_pkey",
+    "index_def": "CREATE UNIQUE INDEX payroll_line_items_pkey ON public.payroll_line_items USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "payroll_runs",
+    "index_name": "payroll_runs_pkey",
+    "index_def": "CREATE UNIQUE INDEX payroll_runs_pkey ON public.payroll_runs USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "permissions",
+    "index_name": "permissions_name_key",
+    "index_def": "CREATE UNIQUE INDEX permissions_name_key ON public.permissions USING btree (name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "permissions",
+    "index_name": "permissions_pkey",
+    "index_def": "CREATE UNIQUE INDEX permissions_pkey ON public.permissions USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "profiles",
+    "index_name": "idx_profiles_name",
+    "index_def": "CREATE INDEX idx_profiles_name ON public.profiles USING btree (first_name, last_name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "profiles",
+    "index_name": "idx_profiles_status",
+    "index_def": "CREATE INDEX idx_profiles_status ON public.profiles USING btree (status)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "profiles",
+    "index_name": "idx_profiles_user_id",
+    "index_def": "CREATE INDEX idx_profiles_user_id ON public.profiles USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "profiles",
+    "index_name": "profiles_pkey",
+    "index_def": "CREATE UNIQUE INDEX profiles_pkey ON public.profiles USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "purchase_order_line_items",
+    "index_name": "purchase_order_line_items_pkey",
+    "index_def": "CREATE UNIQUE INDEX purchase_order_line_items_pkey ON public.purchase_order_line_items USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "purchase_orders",
+    "index_name": "idx_purchase_orders_company_id",
+    "index_def": "CREATE INDEX idx_purchase_orders_company_id ON public.purchase_orders USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "purchase_orders",
+    "index_name": "idx_purchase_orders_vendor_id",
+    "index_def": "CREATE INDEX idx_purchase_orders_vendor_id ON public.purchase_orders USING btree (vendor_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "purchase_orders",
+    "index_name": "purchase_orders_pkey",
+    "index_def": "CREATE UNIQUE INDEX purchase_orders_pkey ON public.purchase_orders USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "purchase_orders",
+    "index_name": "purchase_orders_po_number_key",
+    "index_def": "CREATE UNIQUE INDEX purchase_orders_po_number_key ON public.purchase_orders USING btree (po_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "schedule_events",
+    "index_name": "idx_schedule_events_company_id",
+    "index_def": "CREATE INDEX idx_schedule_events_company_id ON public.schedule_events USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "schedule_events",
+    "index_name": "idx_schedule_events_start_time",
+    "index_def": "CREATE INDEX idx_schedule_events_start_time ON public.schedule_events USING btree (start_time)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "schedule_events",
+    "index_name": "idx_schedule_events_user_id",
+    "index_def": "CREATE INDEX idx_schedule_events_user_id ON public.schedule_events USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "schedule_events",
+    "index_name": "idx_schedule_events_work_order_id",
+    "index_def": "CREATE INDEX idx_schedule_events_work_order_id ON public.schedule_events USING btree (work_order_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "schedule_events",
+    "index_name": "schedule_events_pkey",
+    "index_def": "CREATE UNIQUE INDEX schedule_events_pkey ON public.schedule_events USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "service_categories",
+    "index_name": "service_categories_company_id_name_key",
+    "index_def": "CREATE UNIQUE INDEX service_categories_company_id_name_key ON public.service_categories USING btree (company_id, name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "service_categories",
+    "index_name": "service_categories_pkey",
+    "index_def": "CREATE UNIQUE INDEX service_categories_pkey ON public.service_categories USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "service_types",
+    "index_name": "service_types_pkey",
+    "index_def": "CREATE UNIQUE INDEX service_types_pkey ON public.service_types USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "subscriptions",
+    "index_name": "subscriptions_pkey",
+    "index_def": "CREATE UNIQUE INDEX subscriptions_pkey ON public.subscriptions USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "taxes",
+    "index_name": "taxes_company_id_name_key",
+    "index_def": "CREATE UNIQUE INDEX taxes_company_id_name_key ON public.taxes USING btree (company_id, name)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "taxes",
+    "index_name": "taxes_pkey",
+    "index_def": "CREATE UNIQUE INDEX taxes_pkey ON public.taxes USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "tools",
+    "index_name": "idx_tools_assigned_to",
+    "index_def": "CREATE INDEX idx_tools_assigned_to ON public.tools USING btree (assigned_to)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "tools",
+    "index_name": "idx_tools_company_id",
+    "index_def": "CREATE INDEX idx_tools_company_id ON public.tools USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "tools",
+    "index_name": "idx_tools_status",
+    "index_def": "CREATE INDEX idx_tools_status ON public.tools USING btree (status)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "tools",
+    "index_name": "tools_pkey",
+    "index_def": "CREATE UNIQUE INDEX tools_pkey ON public.tools USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "tools",
+    "index_name": "tools_tool_number_key",
+    "index_def": "CREATE UNIQUE INDEX tools_tool_number_key ON public.tools USING btree (tool_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "user_dashboard_settings",
+    "index_name": "idx_user_dashboard_settings_user_id",
+    "index_def": "CREATE INDEX idx_user_dashboard_settings_user_id ON public.user_dashboard_settings USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "user_dashboard_settings",
+    "index_name": "user_dashboard_settings_pkey",
+    "index_def": "CREATE UNIQUE INDEX user_dashboard_settings_pkey ON public.user_dashboard_settings USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "user_dashboard_settings",
+    "index_name": "user_dashboard_settings_user_id_key",
+    "index_def": "CREATE UNIQUE INDEX user_dashboard_settings_user_id_key ON public.user_dashboard_settings USING btree (user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "index_name": "idx_users_auth_user_id",
+    "index_def": "CREATE INDEX idx_users_auth_user_id ON public.users USING btree (auth_user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "index_name": "idx_users_company_id",
+    "index_def": "CREATE INDEX idx_users_company_id ON public.users USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "index_name": "idx_users_role",
+    "index_def": "CREATE INDEX idx_users_role ON public.users USING btree (role)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "index_name": "idx_users_status",
+    "index_def": "CREATE INDEX idx_users_status ON public.users USING btree (status)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "index_name": "users_company_id_auth_user_id_key",
+    "index_def": "CREATE UNIQUE INDEX users_company_id_auth_user_id_key ON public.users USING btree (company_id, auth_user_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "users",
+    "index_name": "users_pkey",
+    "index_def": "CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "vendors",
+    "index_name": "idx_vendors_company_id",
+    "index_def": "CREATE INDEX idx_vendors_company_id ON public.vendors USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "vendors",
+    "index_name": "vendors_pkey",
+    "index_def": "CREATE UNIQUE INDEX vendors_pkey ON public.vendors USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "vendors",
+    "index_name": "vendors_vendor_number_key",
+    "index_def": "CREATE UNIQUE INDEX vendors_vendor_number_key ON public.vendors USING btree (vendor_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_order_attachments",
+    "index_name": "work_order_attachments_pkey",
+    "index_def": "CREATE UNIQUE INDEX work_order_attachments_pkey ON public.work_order_attachments USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_order_line_items",
+    "index_name": "idx_work_order_line_items_work_order_id",
+    "index_def": "CREATE INDEX idx_work_order_line_items_work_order_id ON public.work_order_line_items USING btree (work_order_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_order_line_items",
+    "index_name": "work_order_line_items_pkey",
+    "index_def": "CREATE UNIQUE INDEX work_order_line_items_pkey ON public.work_order_line_items USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_order_notes",
+    "index_name": "work_order_notes_pkey",
+    "index_def": "CREATE UNIQUE INDEX work_order_notes_pkey ON public.work_order_notes USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "idx_work_orders_assigned_to",
+    "index_def": "CREATE INDEX idx_work_orders_assigned_to ON public.work_orders USING btree (assigned_to)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "idx_work_orders_company_id",
+    "index_def": "CREATE INDEX idx_work_orders_company_id ON public.work_orders USING btree (company_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "idx_work_orders_customer_id",
+    "index_def": "CREATE INDEX idx_work_orders_customer_id ON public.work_orders USING btree (customer_id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "idx_work_orders_scheduled_start",
+    "index_def": "CREATE INDEX idx_work_orders_scheduled_start ON public.work_orders USING btree (scheduled_start)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "idx_work_orders_status",
+    "index_def": "CREATE INDEX idx_work_orders_status ON public.work_orders USING btree (status)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "idx_work_orders_work_order_number",
+    "index_def": "CREATE INDEX idx_work_orders_work_order_number ON public.work_orders USING btree (work_order_number)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "work_orders_pkey",
+    "index_def": "CREATE UNIQUE INDEX work_orders_pkey ON public.work_orders USING btree (id)"
+  },
+  {
+    "schema_name": "public",
+    "table_name": "work_orders",
+    "index_name": "work_orders_work_order_number_key",
+    "index_def": "CREATE UNIQUE INDEX work_orders_work_order_number_key ON public.work_orders USING btree (work_order_number)"
+  },
+  {
+    "schema_name": "realtime",
+    "table_name": "messages",
+    "index_name": "messages_inserted_at_topic_index",
+    "index_def": "CREATE INDEX messages_inserted_at_topic_index ON ONLY realtime.messages USING btree (inserted_at DESC, topic) WHERE ((extension = 'broadcast'::text) AND (private IS TRUE))"
+  },
+  {
+    "schema_name": "realtime",
+    "table_name": "messages",
+    "index_name": "messages_pkey",
+    "index_def": "CREATE UNIQUE INDEX messages_pkey ON ONLY realtime.messages USING btree (id, inserted_at)"
+  },
+  {
+    "schema_name": "realtime",
+    "table_name": "schema_migrations",
+    "index_name": "schema_migrations_pkey",
+    "index_def": "CREATE UNIQUE INDEX schema_migrations_pkey ON realtime.schema_migrations USING btree (version)"
+  },
+  {
+    "schema_name": "realtime",
+    "table_name": "subscription",
+    "index_name": "ix_realtime_subscription_entity",
+    "index_def": "CREATE INDEX ix_realtime_subscription_entity ON realtime.subscription USING btree (entity)"
+  },
+  {
+    "schema_name": "realtime",
+    "table_name": "subscription",
+    "index_name": "pk_subscription",
+    "index_def": "CREATE UNIQUE INDEX pk_subscription ON realtime.subscription USING btree (id)"
+  },
+  {
+    "schema_name": "realtime",
+    "table_name": "subscription",
+    "index_name": "subscription_subscription_id_entity_filters_key",
+    "index_def": "CREATE UNIQUE INDEX subscription_subscription_id_entity_filters_key ON realtime.subscription USING btree (subscription_id, entity, filters)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "buckets",
+    "index_name": "bname",
+    "index_def": "CREATE UNIQUE INDEX bname ON storage.buckets USING btree (name)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "buckets",
+    "index_name": "buckets_pkey",
+    "index_def": "CREATE UNIQUE INDEX buckets_pkey ON storage.buckets USING btree (id)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "migrations",
+    "index_name": "migrations_name_key",
+    "index_def": "CREATE UNIQUE INDEX migrations_name_key ON storage.migrations USING btree (name)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "migrations",
+    "index_name": "migrations_pkey",
+    "index_def": "CREATE UNIQUE INDEX migrations_pkey ON storage.migrations USING btree (id)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "objects",
+    "index_name": "bucketid_objname",
+    "index_def": "CREATE UNIQUE INDEX bucketid_objname ON storage.objects USING btree (bucket_id, name)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "objects",
+    "index_name": "idx_objects_bucket_id_name",
+    "index_def": "CREATE INDEX idx_objects_bucket_id_name ON storage.objects USING btree (bucket_id, name COLLATE \"C\")"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "objects",
+    "index_name": "name_prefix_search",
+    "index_def": "CREATE INDEX name_prefix_search ON storage.objects USING btree (name text_pattern_ops)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "objects",
+    "index_name": "objects_pkey",
+    "index_def": "CREATE UNIQUE INDEX objects_pkey ON storage.objects USING btree (id)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "s3_multipart_uploads",
+    "index_name": "idx_multipart_uploads_list",
+    "index_def": "CREATE INDEX idx_multipart_uploads_list ON storage.s3_multipart_uploads USING btree (bucket_id, key, created_at)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "s3_multipart_uploads",
+    "index_name": "s3_multipart_uploads_pkey",
+    "index_def": "CREATE UNIQUE INDEX s3_multipart_uploads_pkey ON storage.s3_multipart_uploads USING btree (id)"
+  },
+  {
+    "schema_name": "storage",
+    "table_name": "s3_multipart_uploads_parts",
+    "index_name": "s3_multipart_uploads_parts_pkey",
+    "index_def": "CREATE UNIQUE INDEX s3_multipart_uploads_parts_pkey ON storage.s3_multipart_uploads_parts USING btree (id)"
+  },
+  {
+    "schema_name": "vault",
+    "table_name": "secrets",
+    "index_name": "secrets_name_idx",
+    "index_def": "CREATE UNIQUE INDEX secrets_name_idx ON vault.secrets USING btree (name) WHERE (name IS NOT NULL)"
+  },
+  {
+    "schema_name": "vault",
+    "table_name": "secrets",
+    "index_name": "secrets_pkey",
+    "index_def": "CREATE UNIQUE INDEX secrets_pkey ON vault.secrets USING btree (id)"
+  }
+]

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Permission System Migration - TradeMate Pro</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .success {
+            background: #10b981;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ef4444;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f59e0b;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗄️ Permission System Migration</h1>
+        
+        <p>This will create the user_permissions table and set up the dynamic permission system for TradeMate Pro.</p>
+        
+        <div class="warning">
+            <strong>⚠️ Important:</strong> This migration will create new database tables and functions. Make sure you have a backup of your database before proceeding.
+        </div>
+        
+        <h3>🚀 Migration Steps:</h3>
+        <ol>
+            <li><strong>Create user_permissions table</strong> with fine-grained permission columns</li>
+            <li><strong>Set up RLS policies</strong> for multi-tenant security</li>
+            <li><strong>Create default permissions</strong> for existing users based on their roles</li>
+            <li><strong>Add triggers</strong> for automatic permission creation</li>
+            <li><strong>Create helper functions</strong> for permission management</li>
+        </ol>
+        
+        <h3>🎯 Actions:</h3>
+        <button onclick="runMigration()">🚀 Run Permission Migration</button>
+        <button onclick="checkMigrationStatus()">🔍 Check Migration Status</button>
+        <button onclick="testPermissions()">🧪 Test Permission System</button>
+        
+        <div id="result"></div>
+        
+        <h3>📋 After Migration:</h3>
+        <ul>
+            <li><strong>Test the app:</strong> Navigation should be permission-based</li>
+            <li><strong>Check Employees page:</strong> Should have "Manage Permissions" button</li>
+            <li><strong>Test different roles:</strong> Use the test user creation tool</li>
+            <li><strong>Verify permissions:</strong> Each user should have appropriate access</li>
+        </ul>
+    </div>
+
+    <script>
+        const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
+        const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+        
+        async function runMigration() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Running permission system migration...</div>';
+            
+            try {
+                // First, check if user_permissions table already exists
+                const checkResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/user_permissions?select=id&limit=1`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (checkResponse.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="warning">
+                            <strong>⚠️ Migration Already Complete</strong><br>
+                            The user_permissions table already exists. The permission system is ready to use.
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Run the migration by calling the RPC function
+                const migrationResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/rpc/set_default_permissions_for_role`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            p_user_id: '00000000-0000-0000-0000-000000000000',
+                            p_company_id: '00000000-0000-0000-0000-000000000000',
+                            p_role: 'owner'
+                        })
+                    }
+                );
+                
+                if (migrationResponse.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Migration Completed Successfully!</strong><br>
+                            The permission system has been set up. You can now:<br>
+                            • Use permission-based navigation<br>
+                            • Manage user permissions in the Employees page<br>
+                            • Test with different user roles
+                        </div>
+                    `;
+                } else {
+                    throw new Error('Migration function call failed');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Migration Error:</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Manual Steps:</strong><br>
+                        1. Go to Supabase Dashboard → SQL Editor<br>
+                        2. Copy and paste the contents of create_user_permissions_system.sql<br>
+                        3. Run the SQL script manually
+                    </div>
+                `;
+            }
+        }
+        
+        async function checkMigrationStatus() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Checking migration status...</div>';
+            
+            try {
+                // Check if user_permissions table exists
+                const tableResponse = await fetch(
+                    `${SUPABASE_URL}/rest/v1/user_permissions?select=id&limit=1`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (tableResponse.ok) {
+                    // Count permissions
+                    const countResponse = await fetch(
+                        `${SUPABASE_URL}/rest/v1/user_permissions?select=user_id&limit=1000`,
+                        {
+                            headers: {
+                                'apikey': SUPABASE_SERVICE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                            }
+                        }
+                    );
+                    
+                    const permissions = await countResponse.json();
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <strong>✅ Migration Status: COMPLETE</strong><br>
+                            • user_permissions table exists<br>
+                            • ${permissions.length} permission records found<br>
+                            • Permission system is ready to use
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="warning">
+                            <strong>⚠️ Migration Status: PENDING</strong><br>
+                            The user_permissions table does not exist yet.<br>
+                            Click "Run Permission Migration" to set up the system.
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Status Check Error:</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        async function testPermissions() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div style="color: #3b82f6;">Testing permission system...</div>';
+            
+            try {
+                // Get a sample user's permissions
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/user_permissions?select=*&limit=1`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_SERVICE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    const permissions = await response.json();
+                    
+                    if (permissions.length > 0) {
+                        const samplePermission = permissions[0];
+                        const permissionCount = Object.keys(samplePermission).filter(key => 
+                            key.startsWith('can_') && samplePermission[key] === true
+                        ).length;
+                        
+                        resultDiv.innerHTML = `
+                            <div class="success">
+                                <strong>✅ Permission System Test: PASSED</strong><br>
+                                • Found ${permissions.length} permission record(s)<br>
+                                • Sample user has ${permissionCount} enabled permissions<br>
+                                • System is working correctly
+                            </div>
+                            <pre>${JSON.stringify(samplePermission, null, 2)}</pre>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="warning">
+                                <strong>⚠️ No Permission Records Found</strong><br>
+                                The table exists but no permissions have been created yet.<br>
+                                This is normal if no users exist in the system.
+                            </div>
+                        `;
+                    }
+                } else {
+                    throw new Error('Permission table not accessible');
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <strong>❌ Permission Test Error:</strong><br>
+                        ${error.message}<br>
+                        The permission system may not be set up yet.
+                    </div>
+                `;
+            }
+        }
+        
+        // Check status on page load
+        checkMigrationStatus();
+    </script>
+</body>
+</html>

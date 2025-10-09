@@ -1,0 +1,47 @@
+💳 Payments & Finance
+
+Stripe / Square / Plaid / QuickBooks
+
+Collect card + ACH payments
+
+Auto-reconcile invoices
+
+Financing options (BNPL / partner lending APIs)
+
+📱 Communications
+
+Twilio / Vonage / SendGrid
+
+SMS/email reminders & confirmations
+
+On-my-way texts with live ETA links
+
+Customer review requests & marketing campaigns
+
+🤖 AI-Powered Features
+
+Estimating & Takeoffs (photo-to-scope, assembly suggestions, AI upsells)
+
+AI Dispatch Assistance (recommend best tech by skills/location)
+
+Voice-to-Text Daily Logs (convert jobsite notes/photos into reports)
+
+Predictive Analytics (cash flow forecasts, PTO coverage warnings, marketing ROI)
+
+📦 Vendor & Inventory
+
+Supplier APIs / EDI Integrations (e.g., Graybar, Ferguson, Grainger)
+
+Live pricing and availability
+
+One-click PO submission
+
+Accounting Systems (QuickBooks, Xero, Sage)
+
+Sync expenses, payroll, invoices
+
+📂 Customer/Subcontractor Portal
+
+Identity / Portal Access (Auth0, Supabase Auth with SSO if scaling up)
+
+Payment Gateway Integration (Stripe hosted checkout or in-portal payment links)

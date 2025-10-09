@@ -1,0 +1,68 @@
+🔹 1. Preferred Contractors (Customer-Side)
+
+Customers (homeowners or business clients) can mark a contractor as Preferred in their profile.
+
+Effects:
+
+When that customer posts a new request, preferred contractors get pinged first.
+
+They might even get a 24h early window before it goes to the wider marketplace.
+
+If the customer enables auto-accept, preferreds can be auto-booked if they meet the thresholds.
+
+👉 This means you’re protecting relationships. Customers keep “their guy,” but can still fall back to the open network if they need.
+
+🔹 2. Preferred Subs (Contractor-Side)
+
+GCs or company owners can mark subs as Preferred Vendors/Contractors.
+
+Effects:
+
+When they ping out for help, preferreds are offered first.
+
+Optionally: preferred subs can be auto-accepted without bidding if they’re available.
+
+👉 This makes the app an extension of how trades really work: good crews stick together, but there’s still flexibility.
+
+🔹 3. Fairness Layer
+
+Transparency: Preferred status is visible to the user who set it, not hidden.
+
+Choice: Customers can still choose from others if preferreds aren’t available, overpriced, or underperforming.
+
+Performance feedback: If a contractor loses preferred status, they see why (bad reviews, slow response, higher price).
+
+🔹 4. Supabase Schema Additions
+
+You don’t need anything heavy. Just a join table:
+
+-- Preferred contractors set by customers
+create table public.preferred_contractors (
+  id uuid primary key default gen_random_uuid(),
+  customer_id uuid references public.customers(id) on delete cascade,
+  contractor_id uuid references public.contractors(id) on delete cascade,
+  created_at timestamptz default now(),
+  unique(customer_id, contractor_id)
+);
+
+-- Preferred subcontractors set by contractors
+create table public.preferred_subs (
+  id uuid primary key default gen_random_uuid(),
+  contractor_id uuid references public.contractors(id) on delete cascade,
+  sub_id uuid references public.contractors(id) on delete cascade,
+  created_at timestamptz default now(),
+  unique(contractor_id, sub_id)
+);
+
+🔹 5. Benefits
+
+Customers feel safe → they keep their trusted contractor, not “lose” them to the marketplace.
+
+Contractors feel respected → they can build loyalty and repeat business.
+
+Marketplace still works → fills gaps when preferreds are unavailable.
+
+Platform stays neutral → you’re not “stealing customers,” just enabling fair competition.
+
+✅ In one line:
+Preferred contractors/subs let users lock in relationships they already trust while still giving them freedom to use the open marketplace — ensuring fairness, loyalty, and transparency without the “stealing” stigma.

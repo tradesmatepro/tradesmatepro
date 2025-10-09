@@ -1,0 +1,1 @@
+{"sql": "SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('users', 'companies', 'customers', 'work_orders', 'quotes', 'invoices', 'inventory_items', 'employees', 'app_logs') ORDER BY tablename"}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run Enhanced Work Order Trigger Migration</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Run Enhanced Work Order Trigger Migration</h1>
+    <button onclick="runMigration()">Run Migration</button>
+    <div id="output"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://amgtktrwpdsigcomavlg.supabase.co';
+        const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMzc3NzI5NCwiZXhwIjoyMDQ5MzUzMjk0fQ.Ej4rYlQJWKnKdJhWJhkJhkJhkJhkJhkJhkJhkJhkJhk';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+        async function runMigration() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<p>Running enhanced trigger migration...</p>';
+
+            const sql = `
+-- Enhanced work order stage/status management with backward transitions and audit logging
+
+-- First, ensure work_order_audit table exists
+CREATE TABLE IF NOT EXISTS work_order_audit (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    work_order_id UUID NOT NULL REFERENCES work_orders(id) ON DELETE CASCADE,
+    changed_by UUID REFERENCES auth.users(id),
+    old_stage TEXT,
+    new_stage TEXT,
+    old_status TEXT,
+    new_status TEXT,
+    reason TEXT,
+    changed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create indexes for performance
+CREATE INDEX IF NOT EXISTS idx_work_order_audit_work_order_id ON work_order_audit(work_order_id);
+CREATE INDEX IF NOT EXISTS idx_work_order_audit_changed_at ON work_order_audit(changed_at);
+
+-- Enhanced stage/status management function
+CREATE OR REPLACE FUNCTION wo_stage_status_auto()
+RETURNS TRIGGER AS $$
+DECLARE
+    old_stage TEXT;
+    new_stage TEXT;
+    old_status TEXT;
+    new_status TEXT;
+    current_user_id UUID;
+    is_backward_move BOOLEAN := FALSE;
+    stage_order_old INTEGER;
+    stage_order_new INTEGER;
+    reason_text TEXT;
+BEGIN
+    current_user_id := auth.uid();
+    reason_text := NEW.reason;
+    
+    IF TG_OP = 'INSERT' THEN
+        old_stage := NULL;
+        old_status := NULL;
+        new_stage := NEW.stage;
+        new_status := CASE 
+            WHEN NEW.stage = 'QUOTE' THEN NEW.quote_status
+            WHEN NEW.stage = 'JOB' THEN NEW.job_status  
+            WHEN NEW.stage = 'WORK_ORDER' THEN NEW.work_status
+            ELSE NEW.status
+        END;
+        
+    ELSIF TG_OP = 'UPDATE' THEN
+        old_stage := OLD.stage;
+        new_stage := NEW.stage;
+        
+        old_status := CASE 
+            WHEN OLD.stage = 'QUOTE' THEN OLD.quote_status
+            WHEN OLD.stage = 'JOB' THEN OLD.job_status
+            WHEN OLD.stage = 'WORK_ORDER' THEN OLD.work_status
+            ELSE OLD.status
+        END;
+        
+        new_status := CASE 
+            WHEN NEW.stage = 'QUOTE' THEN NEW.quote_status
+            WHEN NEW.stage = 'JOB' THEN NEW.job_status
+            WHEN NEW.stage = 'WORK_ORDER' THEN NEW.work_status
+            ELSE NEW.status
+        END;
+        
+        stage_order_old := CASE old_stage
+            WHEN 'QUOTE' THEN 1
+            WHEN 'JOB' THEN 2  
+            WHEN 'WORK_ORDER' THEN 3
+            WHEN 'INVOICED' THEN 4
+            WHEN 'PAID' THEN 5
+            ELSE 0
+        END;
+        
+        stage_order_new := CASE new_stage
+            WHEN 'QUOTE' THEN 1
+            WHEN 'JOB' THEN 2
+            WHEN 'WORK_ORDER' THEN 3  
+            WHEN 'INVOICED' THEN 4
+            WHEN 'PAID' THEN 5
+            ELSE 0
+        END;
+        
+        is_backward_move := (stage_order_new < stage_order_old);
+        
+        IF is_backward_move AND (reason_text IS NULL OR trim(reason_text) = '') THEN
+            RAISE EXCEPTION 'Backward stage transition requires a reason';
+        END IF;
+        
+        IF is_backward_move THEN
+            IF NOT (
+                (old_stage = 'WORK_ORDER' AND new_stage = 'JOB') OR
+                (old_stage = 'INVOICED' AND new_stage = 'WORK_ORDER') OR  
+                (old_stage = 'PAID' AND new_stage = 'INVOICED')
+            ) THEN
+                RAISE EXCEPTION 'Backward transition not allowed';
+            END IF;
+        END IF;
+        
+        IF NOT is_backward_move AND old_stage != new_stage THEN
+            IF NOT (
+                (old_stage = 'QUOTE' AND new_stage = 'JOB') OR
+                (old_stage = 'JOB' AND new_stage = 'WORK_ORDER') OR
+                (old_stage = 'WORK_ORDER' AND new_stage = 'INVOICED') OR
+                (old_stage = 'INVOICED' AND new_stage = 'PAID')
+            ) THEN
+                RAISE EXCEPTION 'Invalid stage transition';
+            END IF;
+        END IF;
+        
+        NEW.status := new_status;
+        NEW.updated_at := NOW();
+    END IF;
+    
+    IF TG_OP = 'INSERT' OR (old_stage != new_stage OR old_status != new_status) THEN
+        INSERT INTO work_order_audit (
+            work_order_id, changed_by, old_stage, new_stage, old_status, new_status, reason, changed_at
+        ) VALUES (
+            COALESCE(NEW.id, OLD.id), current_user_id, old_stage, new_stage, old_status, new_status, reason_text, NOW()
+        );
+    END IF;
+    
+    IF TG_OP = 'UPDATE' AND NEW.reason IS NOT NULL THEN
+        NEW.reason := NULL;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS trg_wo_stage_status_auto ON work_orders;
+CREATE TRIGGER trg_wo_stage_status_auto BEFORE INSERT OR UPDATE ON work_orders FOR EACH ROW EXECUTE FUNCTION wo_stage_status_auto();
+GRANT SELECT, INSERT ON work_order_audit TO authenticated;
+            `;
+
+            try {
+                // Execute the SQL
+                const { data, error } = await supabase.rpc('exec_sql', { sql_query: sql });
+                
+                if (error) {
+                    output.innerHTML = '<p style="color: red;">Error: ' + JSON.stringify(error) + '</p>';
+                    return;
+                }
+                
+                output.innerHTML = '<p style="color: green;">Enhanced trigger migration completed successfully!</p>';
+                
+                // Test the audit table exists
+                const { data: auditTest, error: auditError } = await supabase
+                    .from('work_order_audit')
+                    .select('id')
+                    .limit(1);
+                
+                if (auditError) {
+                    output.innerHTML += '<p style="color: orange;">Trigger created but audit table test failed: ' + auditError.message + '</p>';
+                } else {
+                    output.innerHTML += '<p style="color: green;">Audit table is working!</p>';
+                }
+                
+            } catch (err) {
+                output.innerHTML = '<p style="color: red;">Error: ' + err.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

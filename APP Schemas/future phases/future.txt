@@ -1,0 +1,1 @@
+ability to add services predefined for contractors. esample little cards that say like leak repair with a deswscription and price per service. 

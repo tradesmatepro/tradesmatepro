@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-09-16T03:35:11.564Z",
+  "summary": {
+    "totalNetworkErrors": 0,
+    "totalConsoleErrors": 0,
+    "totalPageErrors": 0,
+    "totalFailedRequests": 5
+  },
+  "networkErrors": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "failedRequests": [
+    {
+      "url": "http://localhost:3000/",
+      "method": "GET",
+      "failure": "net::ERR_CONNECTION_REFUSED",
+      "timestamp": "2025-09-16T03:35:02.415Z"
+    },
+    {
+      "url": "http://localhost:3001/",
+      "method": "GET",
+      "failure": "net::ERR_CONNECTION_REFUSED",
+      "timestamp": "2025-09-16T03:35:04.702Z"
+    },
+    {
+      "url": "http://localhost:3002/",
+      "method": "GET",
+      "failure": "net::ERR_CONNECTION_REFUSED",
+      "timestamp": "2025-09-16T03:35:06.990Z"
+    },
+    {
+      "url": "http://localhost:5173/",
+      "method": "GET",
+      "failure": "net::ERR_CONNECTION_REFUSED",
+      "timestamp": "2025-09-16T03:35:09.282Z"
+    },
+    {
+      "url": "http://localhost:8080/",
+      "method": "GET",
+      "failure": "net::ERR_CONNECTION_REFUSED",
+      "timestamp": "2025-09-16T03:35:11.562Z"
+    }
+  ],
+  "pageResults": {}
+}

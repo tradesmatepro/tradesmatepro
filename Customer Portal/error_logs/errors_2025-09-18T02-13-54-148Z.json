@@ -1,0 +1,49 @@
+[
+  {
+    "timestamp": "2025-09-18T02:13:44.141Z",
+    "message": "Uncaught TypeError: Cannot read properties of undefined (reading 'length')",
+    "filename": "http://localhost:3005/src_pages_RequestService_js.11ce9d5e63b499e1b7e0.hot-update.js",
+    "lineno": 403,
+    "colno": 50,
+    "error": {},
+    "type": "RUNTIME_ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T02:13:44.149Z",
+    "message": "Uncaught TypeError: Cannot read properties of undefined (reading 'length')",
+    "filename": "http://localhost:3005/src_pages_RequestService_js.11ce9d5e63b499e1b7e0.hot-update.js",
+    "lineno": 403,
+    "colno": 50,
+    "error": {},
+    "type": "RUNTIME_ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T02:13:44.150Z",
+    "message": "The above error occurred in the <RequestService> component:\n\n    at RequestService (http://localhost:3005/src_pages_RequestService_js.11ce9d5e63b499e1b7e0.hot-update.js:43:56)\n    at div\n    at main\n    at div\n    at Layout (http://localhost:3005/static/js/bundle.js:58936:3)\n    at ProtectedRoute (http://localhost:3005/static/js/bundle.js:59690:3)\n    at RenderedRoute (http://localhost:3005/static/js/bundle.js:49711:5)\n    at Routes (http://localhost:3005/static/js/bundle.js:50445:5)\n    at Suspense\n    at div\n    at Router (http://localhost:3005/static/js/bundle.js:50379:15)\n    at BrowserRouter (http://localhost:3005/static/js/bundle.js:48280:5)\n    at CustomerProvider (http://localhost:3005/static/js/bundle.js:59842:3)\n    at DevToolsErrorBoundary (http://localhost:3005/static/js/bundle.js:58425:5)\n    at App (http://localhost:3005/static/js/bundle.js:57904:51)\n\nReact will try to recreate this component tree from scratch using the error boundary you provided, DevToolsErrorBoundary.",
+    "args": [
+      "The above error occurred in the <RequestService> component:\n\n    at RequestService (http://localhost:3005/src_pages_RequestService_js.11ce9d5e63b499e1b7e0.hot-update.js:43:56)\n    at div\n    at main\n    at div\n    at Layout (http://localhost:3005/static/js/bundle.js:58936:3)\n    at ProtectedRoute (http://localhost:3005/static/js/bundle.js:59690:3)\n    at RenderedRoute (http://localhost:3005/static/js/bundle.js:49711:5)\n    at Routes (http://localhost:3005/static/js/bundle.js:50445:5)\n    at Suspense\n    at div\n    at Router (http://localhost:3005/static/js/bundle.js:50379:15)\n    at BrowserRouter (http://localhost:3005/static/js/bundle.js:48280:5)\n    at CustomerProvider (http://localhost:3005/static/js/bundle.js:59842:3)\n    at DevToolsErrorBoundary (http://localhost:3005/static/js/bundle.js:58425:5)\n    at App (http://localhost:3005/static/js/bundle.js:57904:51)\n\nReact will try to recreate this component tree from scratch using the error boundary you provided, DevToolsErrorBoundary."
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3005/console-error-capture.js:31:14)\n    at console.error (http://localhost:3005/static/js/bundle.js:66940:21)\n    at console.error (http://localhost:3005/static/js/bundle.js:60658:21)\n    at logCapturedError (http://localhost:3005/static/js/bundle.js:37330:27)\n    at DevToolsErrorBoundary.callback (http://localhost:3005/static/js/bundle.js:37382:11)\n    at callCallback (http://localhost:3005/static/js/bundle.js:34160:16)\n    at commitUpdateQueue (http://localhost:3005/static/js/bundle.js:34178:13)\n    at commitLayoutEffectOnFiber (http://localhost:3005/static/js/bundle.js:41321:17)\n    at commitLayoutMountEffects_complete (http://localhost:3005/static/js/bundle.js:42435:13)\n    at commitLayoutEffects_begin (http://localhost:3005/static/js/bundle.js:42424:11)",
+    "type": "ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T02:13:44.150Z",
+    "message": "🚨 React Error Boundary caught an error: {}",
+    "args": [
+      "🚨 React Error Boundary caught an error:",
+      {}
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3005/console-error-capture.js:31:14)\n    at console.error (http://localhost:3005/static/js/bundle.js:66940:21)\n    at console.error (http://localhost:3005/static/js/bundle.js:60658:21)\n    at DevToolsErrorBoundary.componentDidCatch (http://localhost:3005/static/js/bundle.js:58501:13)\n    at DevToolsErrorBoundary.callback (http://localhost:3005/static/js/bundle.js:37393:16)\n    at callCallback (http://localhost:3005/static/js/bundle.js:34160:16)\n    at commitUpdateQueue (http://localhost:3005/static/js/bundle.js:34178:13)\n    at commitLayoutEffectOnFiber (http://localhost:3005/static/js/bundle.js:41321:17)\n    at commitLayoutMountEffects_complete (http://localhost:3005/static/js/bundle.js:42435:13)\n    at commitLayoutEffects_begin (http://localhost:3005/static/js/bundle.js:42424:11)",
+    "type": "ERROR"
+  },
+  {
+    "timestamp": "2025-09-18T02:13:44.150Z",
+    "message": "📍 Component Stack: \n    at RequestService (http://localhost:3005/src_pages_RequestService_js.11ce9d5e63b499e1b7e0.hot-update.js:43:56)\n    at div\n    at main\n    at div\n    at Layout (http://localhost:3005/static/js/bundle.js:58936:3)\n    at ProtectedRoute (http://localhost:3005/static/js/bundle.js:59690:3)\n    at RenderedRoute (http://localhost:3005/static/js/bundle.js:49711:5)\n    at Routes (http://localhost:3005/static/js/bundle.js:50445:5)\n    at Suspense\n    at div\n    at Router (http://localhost:3005/static/js/bundle.js:50379:15)\n    at BrowserRouter (http://localhost:3005/static/js/bundle.js:48280:5)\n    at CustomerProvider (http://localhost:3005/static/js/bundle.js:59842:3)\n    at DevToolsErrorBoundary (http://localhost:3005/static/js/bundle.js:58425:5)\n    at App (http://localhost:3005/static/js/bundle.js:57904:51)",
+    "args": [
+      "📍 Component Stack:",
+      "\n    at RequestService (http://localhost:3005/src_pages_RequestService_js.11ce9d5e63b499e1b7e0.hot-update.js:43:56)\n    at div\n    at main\n    at div\n    at Layout (http://localhost:3005/static/js/bundle.js:58936:3)\n    at ProtectedRoute (http://localhost:3005/static/js/bundle.js:59690:3)\n    at RenderedRoute (http://localhost:3005/static/js/bundle.js:49711:5)\n    at Routes (http://localhost:3005/static/js/bundle.js:50445:5)\n    at Suspense\n    at div\n    at Router (http://localhost:3005/static/js/bundle.js:50379:15)\n    at BrowserRouter (http://localhost:3005/static/js/bundle.js:48280:5)\n    at CustomerProvider (http://localhost:3005/static/js/bundle.js:59842:3)\n    at DevToolsErrorBoundary (http://localhost:3005/static/js/bundle.js:58425:5)\n    at App (http://localhost:3005/static/js/bundle.js:57904:51)"
+    ],
+    "stack": "Error\n    at console.error (http://localhost:3005/console-error-capture.js:31:14)\n    at console.error (http://localhost:3005/static/js/bundle.js:66940:21)\n    at console.error (http://localhost:3005/static/js/bundle.js:60658:21)\n    at DevToolsErrorBoundary.componentDidCatch (http://localhost:3005/static/js/bundle.js:58502:13)\n    at DevToolsErrorBoundary.callback (http://localhost:3005/static/js/bundle.js:37393:16)\n    at callCallback (http://localhost:3005/static/js/bundle.js:34160:16)\n    at commitUpdateQueue (http://localhost:3005/static/js/bundle.js:34178:13)\n    at commitLayoutEffectOnFiber (http://localhost:3005/static/js/bundle.js:41321:17)\n    at commitLayoutMountEffects_complete (http://localhost:3005/static/js/bundle.js:42435:13)\n    at commitLayoutEffects_begin (http://localhost:3005/static/js/bundle.js:42424:11)",
+    "type": "ERROR"
+  }
+]

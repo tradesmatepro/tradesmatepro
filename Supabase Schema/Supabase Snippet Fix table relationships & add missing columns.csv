@@ -1,0 +1,1366 @@
+table_name,column_name,data_type,is_nullable,column_default
+audit_logs,id,uuid,NO,gen_random_uuid()
+audit_logs,company_id,uuid,YES,null
+audit_logs,user_id,uuid,YES,null
+audit_logs,table_name,text,NO,null
+audit_logs,record_id,uuid,YES,null
+audit_logs,action,USER-DEFINED,NO,null
+audit_logs,old_values,jsonb,YES,null
+audit_logs,new_values,jsonb,YES,null
+audit_logs,ip_address,inet,YES,null
+audit_logs,user_agent,text,YES,null
+audit_logs,created_at,timestamp with time zone,YES,now()
+billing_plans,id,uuid,NO,gen_random_uuid()
+billing_plans,name,text,NO,null
+billing_plans,description,text,YES,null
+billing_plans,price_monthly,numeric,NO,null
+billing_plans,price_yearly,numeric,YES,null
+billing_plans,features,jsonb,YES,'{}'::jsonb
+billing_plans,max_users,integer,YES,1
+billing_plans,max_work_orders,integer,YES,null
+billing_plans,is_active,boolean,YES,true
+billing_plans,created_at,timestamp with time zone,YES,now()
+change_order_items,id,uuid,NO,gen_random_uuid()
+change_order_items,company_id,uuid,NO,null
+change_order_items,change_order_id,uuid,NO,null
+change_order_items,item_type,text,NO,null
+change_order_items,description,text,NO,null
+change_order_items,category,text,YES,null
+change_order_items,quantity,numeric,NO,1
+change_order_items,unit_price,numeric,NO,0
+change_order_items,total,numeric,NO,0
+change_order_items,sort_order,integer,YES,0
+change_order_items,created_at,timestamp with time zone,NO,now()
+change_orders,id,uuid,NO,gen_random_uuid()
+change_orders,company_id,uuid,NO,null
+change_orders,work_order_id,uuid,NO,null
+change_orders,change_order_number,text,NO,null
+change_orders,title,text,NO,null
+change_orders,description,text,YES,null
+change_orders,reason,text,YES,null
+change_orders,status,text,NO,'draft'::text
+change_orders,subtotal,numeric,NO,0
+change_orders,discount_amount,numeric,YES,0
+change_orders,tax_rate,numeric,YES,0
+change_orders,tax_amount,numeric,YES,0
+change_orders,total_amount,numeric,NO,0
+change_orders,requested_by,uuid,YES,null
+change_orders,approved_by_name,text,YES,null
+change_orders,approved_by_email,text,YES,null
+change_orders,signature_id,uuid,YES,null
+change_orders,signature_data,text,YES,null
+change_orders,created_at,timestamp with time zone,NO,now()
+change_orders,sent_at,timestamp with time zone,YES,null
+change_orders,approved_at,timestamp with time zone,YES,null
+change_orders,rejected_at,timestamp with time zone,YES,null
+change_orders,updated_at,timestamp with time zone,NO,now()
+companies,id,uuid,NO,gen_random_uuid()
+companies,company_number,text,NO,generate_company_number()
+companies,name,text,NO,null
+companies,legal_name,text,YES,null
+companies,tax_id,text,YES,null
+companies,phone,text,YES,null
+companies,email,text,YES,null
+companies,website,text,YES,null
+companies,address_line1,text,YES,null
+companies,address_line2,text,YES,null
+companies,city,text,YES,null
+companies,state_province,text,YES,null
+companies,postal_code,text,YES,null
+companies,country,text,YES,'US'::text
+companies,time_zone,text,YES,'UTC'::text
+companies,currency,text,YES,'USD'::text
+companies,is_active,boolean,YES,true
+companies,created_at,timestamp with time zone,YES,now()
+companies,updated_at,timestamp with time zone,YES,now()
+companies,default_tax_rate,numeric,YES,0.0875
+companies,created_by,uuid,YES,null
+companies,tagline,text,YES,null
+companies,logo_url,text,YES,null
+companies,industry,text,YES,null
+companies,industry_tags,ARRAY,YES,null
+company_settings,id,uuid,NO,gen_random_uuid()
+company_settings,company_id,uuid,YES,null
+company_settings,business_hours,jsonb,YES,"'{""monday"": {""open"": ""08:00"", ""close"": ""17:00""}}'::jsonb"
+company_settings,default_tax_rate,numeric,YES,0.0000
+company_settings,invoice_terms,text,YES,'NET30'::text
+company_settings,auto_invoice,boolean,YES,false
+company_settings,require_signatures,boolean,YES,true
+company_settings,allow_online_payments,boolean,YES,true
+company_settings,emergency_rate_multiplier,numeric,YES,1.50
+company_settings,travel_charge_per_mile,numeric,YES,0.65
+company_settings,minimum_travel_charge,numeric,YES,25.00
+company_settings,cancellation_fee,numeric,YES,50.00
+company_settings,transparency_mode,boolean,YES,true
+company_settings,created_at,timestamp with time zone,YES,now()
+company_settings,updated_at,timestamp with time zone,YES,now()
+company_settings,onboarding_progress,jsonb,YES,"'{""steps"": {""1"": {""name"": ""Company Basics"", ""completed"": false, ""completed_at"": null}, ""2"": {""name"": ""Services & Pricing"", ""completed"": false, ""completed_at"": null}, ""3"": {""name"": ""Team Setup"", ""completed"": false, ""completed_at"": null}, ""4"": {""name"": ""Business Preferences"", ""completed"": false, ""completed_at"": null}, ""5"": {""name"": ""Financial Setup"", ""completed"": false, ""completed_at"": null}, ""6"": {""name"": ""Go Live"", ""completed"": false, ""completed_at"": null}}, ""skipped"": false, ""started_at"": null, ""completed_at"": null, ""current_step"": 1, ""completed_steps"": []}'::jsonb"
+company_settings,timezone,text,YES,'America/New_York'::text
+company_settings,display_name,text,YES,null
+company_settings,labor_rate,numeric,YES,75.00
+company_settings,overtime_multiplier,numeric,YES,1.5
+company_settings,parts_markup,numeric,YES,25.00
+customer_addresses,id,uuid,NO,gen_random_uuid()
+customer_addresses,customer_id,uuid,YES,null
+customer_addresses,address_type,text,YES,'SERVICE'::text
+customer_addresses,address_line_1,text,NO,null
+customer_addresses,address_line2,text,YES,null
+customer_addresses,city,text,NO,null
+customer_addresses,state,text,NO,null
+customer_addresses,zip_code,text,NO,null
+customer_addresses,country,text,YES,'US'::text
+customer_addresses,is_primary,boolean,YES,false
+customer_addresses,latitude,numeric,YES,null
+customer_addresses,longitude,numeric,YES,null
+customer_addresses,access_notes,text,YES,null
+customer_addresses,created_at,timestamp with time zone,YES,now()
+customer_addresses,company_id,uuid,YES,null
+customer_addresses,address_name,text,YES,null
+customer_equipment,id,uuid,NO,gen_random_uuid()
+customer_equipment,company_id,uuid,YES,null
+customer_equipment,customer_id,uuid,YES,null
+customer_equipment,customer_address_id,uuid,YES,null
+customer_equipment,equipment_type,text,YES,null
+customer_equipment,manufacturer,text,YES,null
+customer_equipment,model_number,text,YES,null
+customer_equipment,serial_number,text,YES,null
+customer_equipment,install_date,date,YES,null
+customer_equipment,installed_by,uuid,YES,null
+customer_equipment,warranty_start_date,date,YES,null
+customer_equipment,warranty_end_date,date,YES,null
+customer_equipment,warranty_provider,text,YES,null
+customer_equipment,location_description,text,YES,null
+customer_equipment,status,text,YES,'active'::text
+customer_equipment,notes,text,YES,null
+customer_equipment,photos,ARRAY,YES,null
+customer_equipment,documents,ARRAY,YES,null
+customer_equipment,created_at,timestamp with time zone,YES,now()
+customer_equipment,updated_at,timestamp with time zone,YES,now()
+customer_equipment,last_service_date,date,YES,null
+customer_feedback,id,uuid,NO,gen_random_uuid()
+customer_feedback,company_id,uuid,NO,null
+customer_feedback,work_order_id,uuid,NO,null
+customer_feedback,customer_id,uuid,NO,null
+customer_feedback,overall_rating,integer,YES,null
+customer_feedback,quality_rating,integer,YES,null
+customer_feedback,timeliness_rating,integer,YES,null
+customer_feedback,professionalism_rating,integer,YES,null
+customer_feedback,value_rating,integer,YES,null
+customer_feedback,comments,text,YES,null
+customer_feedback,would_recommend,boolean,YES,null
+customer_feedback,review_posted,boolean,YES,false
+customer_feedback,review_platform,text,YES,null
+customer_feedback,review_url,text,YES,null
+customer_feedback,submitted_at,timestamp with time zone,NO,now()
+customer_feedback,created_at,timestamp with time zone,NO,now()
+customer_financial_summary,customer_id,uuid,YES,null
+customer_financial_summary,lifetime_revenue,numeric,YES,null
+customer_financial_summary,total_paid,numeric,YES,null
+customer_financial_summary,outstanding_balance,numeric,YES,null
+customer_financial_summary,total_jobs,bigint,YES,null
+customer_financial_summary,last_service_date,timestamp with time zone,YES,null
+customer_financial_summary,average_job_value,numeric,YES,null
+customer_tag_assignments,id,uuid,NO,gen_random_uuid()
+customer_tag_assignments,customer_id,uuid,YES,null
+customer_tag_assignments,tag_id,uuid,YES,null
+customer_tag_assignments,assigned_by,uuid,YES,null
+customer_tag_assignments,created_at,timestamp with time zone,YES,now()
+customer_tags,id,uuid,NO,gen_random_uuid()
+customer_tags,name,text,NO,null
+customer_tags,description,text,YES,null
+customer_tags,color,text,YES,'#6b7280'::text
+customer_tags,priority,integer,YES,50
+customer_tags,created_at,timestamp with time zone,YES,now()
+customer_tags,company_id,uuid,NO,null
+customers,id,uuid,NO,gen_random_uuid()
+customers,company_id,uuid,YES,null
+customers,customer_number,text,NO,null
+customers,type,text,YES,'residential'::text
+customers,first_name,text,YES,null
+customers,last_name,text,YES,null
+customers,company_name,text,YES,null
+customers,email,text,YES,null
+customers,phone,text,YES,null
+customers,mobile_phone,text,YES,null
+customers,preferred_contact,text,YES,'phone'::text
+customers,source,text,YES,null
+customers,notes,text,YES,null
+customers,credit_limit,numeric,YES,0.00
+customers,payment_terms,text,YES,'NET30'::text
+customers,tax_exempt,boolean,YES,false
+customers,is_active,boolean,YES,true
+customers,created_at,timestamp with time zone,YES,now()
+customers,updated_at,timestamp with time zone,YES,now()
+customers,customer_since,date,YES,CURRENT_DATE
+customers,status,text,YES,'active'::text
+customers,billing_address_line_1,text,YES,null
+customers,billing_address_line_2,text,YES,null
+customers,billing_city,text,YES,null
+customers,billing_state,text,YES,null
+customers,billing_zip_code,text,YES,null
+customers,billing_country,text,YES,'United States'::text
+customers,primary_contact_name,text,YES,null
+customers,primary_contact_phone,text,YES,null
+customers,primary_contact_email,text,YES,null
+customers,preferred_contact_method,text,YES,'email'::text
+customers,preferred_contact_time,text,YES,null
+customers,communication_preferences,jsonb,YES,"'{""marketing_emails"": false, ""sms_notifications"": false, ""email_notifications"": true}'::jsonb"
+customers,name,text,YES,null
+customers_financial_summary,id,uuid,YES,null
+customers_financial_summary,customer_number,text,YES,null
+customers_financial_summary,type,text,YES,null
+customers_financial_summary,display_name,text,YES,null
+customers_financial_summary,email,text,YES,null
+customers_financial_summary,phone,text,YES,null
+customers_financial_summary,credit_limit,numeric,YES,null
+customers_financial_summary,payment_terms,text,YES,null
+customers_financial_summary,created_at,timestamp with time zone,YES,null
+customers_financial_summary,primary_address,text,YES,null
+customers_financial_summary,total_work_orders,bigint,YES,null
+customers_financial_summary,completed_work_orders,bigint,YES,null
+customers_financial_summary,active_work_orders,bigint,YES,null
+customers_financial_summary,total_work_value,numeric,YES,null
+customers_financial_summary,completed_work_value,numeric,YES,null
+customers_financial_summary,total_invoices,bigint,YES,null
+customers_financial_summary,total_invoiced,numeric,YES,null
+customers_financial_summary,total_paid,numeric,YES,null
+customers_financial_summary,outstanding_balance,numeric,YES,null
+customers_financial_summary,last_service_date,timestamp with time zone,YES,null
+customers_financial_summary,first_service_date,timestamp with time zone,YES,null
+customers_financial_summary,customer_tier,text,YES,null
+customers_financial_summary,payment_status,text,YES,null
+customers_summary,id,uuid,YES,null
+customers_summary,customer_number,text,YES,null
+customers_summary,type,text,YES,null
+customers_summary,display_name,text,YES,null
+customers_summary,email,text,YES,null
+customers_summary,phone,text,YES,null
+customers_summary,primary_address,text,YES,null
+customers_summary,total_work_orders,bigint,YES,null
+customers_summary,total_revenue,numeric,YES,null
+customers_summary,last_service_date,timestamp with time zone,YES,null
+customers_summary,created_at,timestamp with time zone,YES,null
+customers_summary,is_active,boolean,YES,null
+customers_with_tags,id,uuid,YES,null
+customers_with_tags,company_id,uuid,YES,null
+customers_with_tags,customer_number,text,YES,null
+customers_with_tags,type,text,YES,null
+customers_with_tags,first_name,text,YES,null
+customers_with_tags,last_name,text,YES,null
+customers_with_tags,company_name,text,YES,null
+customers_with_tags,display_name,text,YES,null
+customers_with_tags,email,text,YES,null
+customers_with_tags,phone,text,YES,null
+customers_with_tags,mobile_phone,text,YES,null
+customers_with_tags,preferred_contact,text,YES,null
+customers_with_tags,source,text,YES,null
+customers_with_tags,notes,text,YES,null
+customers_with_tags,credit_limit,numeric,YES,null
+customers_with_tags,payment_terms,text,YES,null
+customers_with_tags,tax_exempt,boolean,YES,null
+customers_with_tags,is_active,boolean,YES,null
+customers_with_tags,customer_since,date,YES,null
+customers_with_tags,created_at,timestamp with time zone,YES,null
+customers_with_tags,updated_at,timestamp with time zone,YES,null
+customers_with_tags,customer_tags,json,YES,null
+customers_with_tags,tag_count,bigint,YES,null
+customers_with_tags,tag_names,ARRAY,YES,null
+document_templates,id,uuid,NO,gen_random_uuid()
+document_templates,company_id,uuid,NO,null
+document_templates,name,text,NO,null
+document_templates,type,text,NO,null
+document_templates,header_text,text,YES,null
+document_templates,footer_text,text,YES,null
+document_templates,terms,text,YES,null
+document_templates,logo_url,text,YES,null
+document_templates,is_default,boolean,YES,false
+document_templates,created_at,timestamp with time zone,YES,now()
+document_templates,updated_at,timestamp with time zone,YES,now()
+documents,id,uuid,NO,gen_random_uuid()
+documents,company_id,uuid,YES,null
+documents,work_order_id,uuid,YES,null
+documents,customer_id,uuid,YES,null
+documents,document_type,text,NO,null
+documents,title,text,NO,null
+documents,file_name,text,NO,null
+documents,file_url,text,NO,null
+documents,file_size,integer,YES,null
+documents,mime_type,text,YES,null
+documents,created_by,uuid,YES,null
+documents,created_at,timestamp with time zone,YES,now()
+employee_performance,id,uuid,YES,null
+employee_performance,employee_number,text,YES,null
+employee_performance,employee_name,text,YES,null
+employee_performance,job_title,text,YES,null
+employee_performance,department,text,YES,null
+employee_performance,total_work_orders,bigint,YES,null
+employee_performance,avg_job_hours,numeric,YES,null
+employee_performance,total_revenue,numeric,YES,null
+employee_performance,completed_jobs,bigint,YES,null
+employee_performance,completion_rate,numeric,YES,null
+employee_performance,hire_date,date,YES,null
+employee_performance,status,USER-DEFINED,YES,null
+employee_performance_metrics,id,uuid,YES,null
+employee_performance_metrics,employee_number,text,YES,null
+employee_performance_metrics,employee_name,text,YES,null
+employee_performance_metrics,job_title,text,YES,null
+employee_performance_metrics,department,text,YES,null
+employee_performance_metrics,role,USER-DEFINED,YES,null
+employee_performance_metrics,status,USER-DEFINED,YES,null
+employee_performance_metrics,hire_date,date,YES,null
+employee_performance_metrics,total_work_orders,bigint,YES,null
+employee_performance_metrics,completed_work_orders,bigint,YES,null
+employee_performance_metrics,cancelled_work_orders,bigint,YES,null
+employee_performance_metrics,completion_rate,numeric,YES,null
+employee_performance_metrics,total_revenue,numeric,YES,null
+employee_performance_metrics,avg_job_value,numeric,YES,null
+employee_performance_metrics,avg_job_duration_hours,numeric,YES,null
+employee_performance_metrics,late_starts,bigint,YES,null
+employee_performance_metrics,overruns,bigint,YES,null
+employee_performance_metrics,last_job_date,timestamp with time zone,YES,null
+employee_performance_metrics,jobs_last_30_days,bigint,YES,null
+employee_timesheets,id,uuid,NO,gen_random_uuid()
+employee_timesheets,employee_id,uuid,YES,null
+employee_timesheets,work_order_id,uuid,YES,null
+employee_timesheets,date,date,NO,null
+employee_timesheets,clock_in,timestamp with time zone,YES,null
+employee_timesheets,clock_out,timestamp with time zone,YES,null
+employee_timesheets,break_duration,integer,YES,0
+employee_timesheets,regular_hours,numeric,YES,0.00
+employee_timesheets,overtime_hours,numeric,YES,0.00
+employee_timesheets,status,USER-DEFINED,YES,'draft'::timesheet_status_enum
+employee_timesheets,notes,text,YES,null
+employee_timesheets,approved_by,uuid,YES,null
+employee_timesheets,approved_at,timestamp with time zone,YES,null
+employee_timesheets,created_at,timestamp with time zone,YES,now()
+employee_timesheets,updated_at,timestamp with time zone,YES,now()
+employees,id,uuid,NO,gen_random_uuid()
+employees,company_id,uuid,YES,null
+employees,user_id,uuid,YES,null
+employees,employee_number,text,NO,null
+employees,hire_date,date,YES,CURRENT_DATE
+employees,termination_date,date,YES,null
+employees,job_title,text,YES,null
+employees,department,text,YES,null
+employees,hourly_rate,numeric,YES,0.00
+employees,overtime_rate,numeric,YES,null
+employees,emergency_contact_name,text,YES,null
+employees,emergency_contact_phone,text,YES,null
+employees,certifications,ARRAY,YES,null
+employees,skills,ARRAY,YES,null
+employees,notes,text,YES,null
+employees,created_at,timestamp with time zone,YES,now()
+employees,updated_at,timestamp with time zone,YES,now()
+employees,employee_type,text,YES,null
+employees,pay_type,text,YES,null
+expenses,id,uuid,NO,gen_random_uuid()
+expenses,company_id,uuid,YES,null
+expenses,work_order_id,uuid,YES,null
+expenses,employee_id,uuid,YES,null
+expenses,expense_type,USER-DEFINED,NO,null
+expenses,description,text,NO,null
+expenses,amount,numeric,NO,null
+expenses,expense_date,date,YES,CURRENT_DATE
+expenses,receipt_url,text,YES,null
+expenses,is_billable,boolean,YES,false
+expenses,is_reimbursable,boolean,YES,true
+expenses,status,text,YES,'pending'::text
+expenses,approved_by,uuid,YES,null
+expenses,approved_at,timestamp with time zone,YES,null
+expenses,notes,text,YES,null
+expenses,created_at,timestamp with time zone,YES,now()
+inventory_items,id,uuid,NO,gen_random_uuid()
+inventory_items,company_id,uuid,YES,null
+inventory_items,sku,text,NO,null
+inventory_items,name,text,NO,null
+inventory_items,description,text,YES,null
+inventory_items,category,text,YES,null
+inventory_items,unit_of_measure,text,YES,'each'::text
+inventory_items,cost_price,numeric,YES,0.00
+inventory_items,sell_price,numeric,YES,0.00
+inventory_items,reorder_point,integer,YES,0
+inventory_items,reorder_quantity,integer,YES,0
+inventory_items,barcode,text,YES,null
+inventory_items,manufacturer,text,YES,null
+inventory_items,model_number,text,YES,null
+inventory_items,is_active,boolean,YES,true
+inventory_items,created_at,timestamp with time zone,YES,now()
+inventory_items,updated_at,timestamp with time zone,YES,now()
+inventory_locations,id,uuid,NO,gen_random_uuid()
+inventory_locations,company_id,uuid,YES,null
+inventory_locations,name,text,NO,null
+inventory_locations,description,text,YES,null
+inventory_locations,address_line1,text,YES,null
+inventory_locations,address_line2,text,YES,null
+inventory_locations,city,text,YES,null
+inventory_locations,state_province,text,YES,null
+inventory_locations,postal_code,text,YES,null
+inventory_locations,is_mobile,boolean,YES,false
+inventory_locations,is_active,boolean,YES,true
+inventory_locations,created_at,timestamp with time zone,YES,now()
+inventory_movements,id,uuid,NO,gen_random_uuid()
+inventory_movements,company_id,uuid,YES,null
+inventory_movements,item_id,uuid,YES,null
+inventory_movements,location_id,uuid,YES,null
+inventory_movements,work_order_id,uuid,YES,null
+inventory_movements,movement_type,USER-DEFINED,NO,null
+inventory_movements,quantity,integer,NO,null
+inventory_movements,unit_cost,numeric,YES,0.00
+inventory_movements,reference_number,text,YES,null
+inventory_movements,notes,text,YES,null
+inventory_movements,created_by,uuid,YES,null
+inventory_movements,created_at,timestamp with time zone,YES,now()
+inventory_status_summary,id,uuid,YES,null
+inventory_status_summary,sku,text,YES,null
+inventory_status_summary,name,text,YES,null
+inventory_status_summary,category,text,YES,null
+inventory_status_summary,unit_of_measure,text,YES,null
+inventory_status_summary,cost_price,numeric,YES,null
+inventory_status_summary,sell_price,numeric,YES,null
+inventory_status_summary,reorder_point,integer,YES,null
+inventory_status_summary,reorder_quantity,integer,YES,null
+inventory_status_summary,total_on_hand,bigint,YES,null
+inventory_status_summary,total_allocated,bigint,YES,null
+inventory_status_summary,total_available,bigint,YES,null
+inventory_status_summary,stock_status,text,YES,null
+inventory_status_summary,total_cost_value,numeric,YES,null
+inventory_status_summary,total_sell_value,numeric,YES,null
+inventory_status_summary,locations_count,bigint,YES,null
+inventory_status_summary,is_active,boolean,YES,null
+inventory_status_summary,created_at,timestamp with time zone,YES,null
+inventory_status_summary,updated_at,timestamp with time zone,YES,null
+inventory_stock,id,uuid,NO,gen_random_uuid()
+inventory_stock,item_id,uuid,YES,null
+inventory_stock,location_id,uuid,YES,null
+inventory_stock,quantity_on_hand,integer,YES,0
+inventory_stock,quantity_allocated,integer,YES,0
+inventory_stock,quantity_available,integer,YES,null
+inventory_stock,last_counted_at,timestamp with time zone,YES,null
+inventory_stock,last_counted_by,uuid,YES,null
+inventory_stock,updated_at,timestamp with time zone,YES,now()
+inventory_summary,id,uuid,YES,null
+inventory_summary,sku,text,YES,null
+inventory_summary,name,text,YES,null
+inventory_summary,category,text,YES,null
+inventory_summary,cost_price,numeric,YES,null
+inventory_summary,sell_price,numeric,YES,null
+inventory_summary,reorder_point,integer,YES,null
+inventory_summary,total_on_hand,bigint,YES,null
+inventory_summary,total_allocated,bigint,YES,null
+inventory_summary,total_available,bigint,YES,null
+inventory_summary,stock_status,text,YES,null
+inventory_summary,is_active,boolean,YES,null
+invoice_deliveries,id,uuid,NO,gen_random_uuid()
+invoice_deliveries,company_id,uuid,NO,null
+invoice_deliveries,invoice_id,uuid,NO,null
+invoice_deliveries,delivery_method,text,NO,null
+invoice_deliveries,recipient_email,text,YES,null
+invoice_deliveries,recipient_phone,text,YES,null
+invoice_deliveries,sent_at,timestamp with time zone,NO,now()
+invoice_deliveries,delivered_at,timestamp with time zone,YES,null
+invoice_deliveries,viewed_at,timestamp with time zone,YES,null
+invoice_deliveries,opened_at,timestamp with time zone,YES,null
+invoice_deliveries,pdf_url,text,YES,null
+invoice_deliveries,portal_link,text,YES,null
+invoice_deliveries,payment_link,text,YES,null
+invoice_deliveries,delivery_status,text,NO,'pending'::text
+invoice_deliveries,error_message,text,YES,null
+invoice_deliveries,sent_by,uuid,YES,null
+invoice_deliveries,created_at,timestamp with time zone,NO,now()
+invoice_deliveries,updated_at,timestamp with time zone,NO,now()
+invoice_line_items,id,uuid,NO,gen_random_uuid()
+invoice_line_items,invoice_id,uuid,YES,null
+invoice_line_items,description,text,NO,null
+invoice_line_items,quantity,numeric,YES,1.000
+invoice_line_items,unit_price,numeric,NO,null
+invoice_line_items,total_price,numeric,YES,null
+invoice_line_items,tax_rate,numeric,YES,0.0000
+invoice_line_items,sort_order,integer,YES,0
+invoice_line_items,created_at,timestamp with time zone,YES,now()
+invoice_line_items,item_type,text,YES,null
+invoice_line_items,line_number,integer,YES,null
+invoices,id,uuid,NO,gen_random_uuid()
+invoices,company_id,uuid,YES,null
+invoices,work_order_id,uuid,YES,null
+invoices,customer_id,uuid,NO,null
+invoices,invoice_number,text,NO,null
+invoices,status,USER-DEFINED,YES,'draft'::invoice_status_enum
+invoices,issue_date,date,YES,CURRENT_DATE
+invoices,due_date,date,YES,null
+invoices,subtotal,numeric,YES,0.00
+invoices,tax_amount,numeric,YES,0.00
+invoices,total_amount,numeric,YES,0.00
+invoices,amount_paid,numeric,YES,0.00
+invoices,balance_due,numeric,YES,null
+invoices,terms,text,YES,'NET30'::text
+invoices,notes,text,YES,null
+invoices,sent_at,timestamp with time zone,YES,null
+invoices,created_at,timestamp with time zone,YES,now()
+invoices,updated_at,timestamp with time zone,YES,now()
+invoices,discount_percentage,numeric,YES,0
+invoices,late_fee_amount,numeric,YES,0
+invoices,pdf_url,text,YES,null
+invoices,customer_name_snapshot,text,YES,null
+invoices,customer_address_snapshot,text,YES,null
+invoices,customer_tax_id_snapshot,text,YES,null
+invoices,company_name_snapshot,text,YES,null
+invoices,company_address_snapshot,text,YES,null
+invoices,company_tax_id_snapshot,text,YES,null
+invoices_summary,id,uuid,YES,null
+invoices_summary,invoice_number,text,YES,null
+invoices_summary,status,USER-DEFINED,YES,null
+invoices_summary,issue_date,date,YES,null
+invoices_summary,due_date,date,YES,null
+invoices_summary,total_amount,numeric,YES,null
+invoices_summary,amount_paid,numeric,YES,null
+invoices_summary,balance_due,numeric,YES,null
+invoices_summary,customer_name,text,YES,null
+invoices_summary,company_name,text,YES,null
+invoices_summary,work_order_number,text,YES,null
+invoices_summary,payment_status,text,YES,null
+invoices_summary,created_at,timestamp with time zone,YES,null
+job_completion_checklist,id,uuid,NO,gen_random_uuid()
+job_completion_checklist,company_id,uuid,NO,null
+job_completion_checklist,work_order_id,uuid,NO,null
+job_completion_checklist,item_text,text,NO,null
+job_completion_checklist,is_required,boolean,YES,true
+job_completion_checklist,is_completed,boolean,YES,false
+job_completion_checklist,completed_by,uuid,YES,null
+job_completion_checklist,completed_at,timestamp with time zone,YES,null
+job_completion_checklist,notes,text,YES,null
+job_completion_checklist,sort_order,integer,YES,0
+job_completion_checklist,created_at,timestamp with time zone,NO,now()
+marketplace_messages,id,uuid,NO,gen_random_uuid()
+marketplace_messages,request_id,uuid,YES,null
+marketplace_messages,response_id,uuid,YES,null
+marketplace_messages,sender_company_id,uuid,YES,null
+marketplace_messages,sender_user_id,uuid,YES,null
+marketplace_messages,message,text,NO,null
+marketplace_messages,attachments,ARRAY,YES,null
+marketplace_messages,is_read,boolean,YES,false
+marketplace_messages,read_at,timestamp with time zone,YES,null
+marketplace_messages,created_at,timestamp with time zone,YES,now()
+marketplace_requests,id,uuid,NO,gen_random_uuid()
+marketplace_requests,company_id,uuid,YES,null
+marketplace_requests,customer_id,uuid,YES,null
+marketplace_requests,title,text,NO,null
+marketplace_requests,description,text,YES,null
+marketplace_requests,service_category_id,uuid,YES,null
+marketplace_requests,service_type_id,uuid,YES,null
+marketplace_requests,service_address,text,YES,null
+marketplace_requests,service_city,text,YES,null
+marketplace_requests,service_state,text,YES,null
+marketplace_requests,service_zip,text,YES,null
+marketplace_requests,service_location_lat,numeric,YES,null
+marketplace_requests,service_location_lng,numeric,YES,null
+marketplace_requests,preferred_date,date,YES,null
+marketplace_requests,preferred_time_start,time without time zone,YES,null
+marketplace_requests,preferred_time_end,time without time zone,YES,null
+marketplace_requests,is_flexible,boolean,YES,true
+marketplace_requests,is_emergency,boolean,YES,false
+marketplace_requests,budget_min,numeric,YES,null
+marketplace_requests,budget_max,numeric,YES,null
+marketplace_requests,status,text,YES,'OPEN'::text
+marketplace_requests,photos,ARRAY,YES,null
+marketplace_requests,attachments,ARRAY,YES,null
+marketplace_requests,response_count,integer,YES,0
+marketplace_requests,view_count,integer,YES,0
+marketplace_requests,created_at,timestamp with time zone,YES,now()
+marketplace_requests,updated_at,timestamp with time zone,YES,now()
+marketplace_requests,expires_at,timestamp with time zone,YES,null
+marketplace_requests,closed_at,timestamp with time zone,YES,null
+marketplace_responses,id,uuid,NO,gen_random_uuid()
+marketplace_responses,request_id,uuid,YES,null
+marketplace_responses,contractor_company_id,uuid,YES,null
+marketplace_responses,message,text,YES,null
+marketplace_responses,estimated_cost,numeric,YES,null
+marketplace_responses,estimated_duration,integer,YES,null
+marketplace_responses,available_date,date,YES,null
+marketplace_responses,available_time_start,time without time zone,YES,null
+marketplace_responses,available_time_end,time without time zone,YES,null
+marketplace_responses,status,text,YES,'PENDING'::text
+marketplace_responses,response_time_minutes,integer,YES,null
+marketplace_responses,photos,ARRAY,YES,null
+marketplace_responses,attachments,ARRAY,YES,null
+marketplace_responses,created_at,timestamp with time zone,YES,now()
+marketplace_responses,updated_at,timestamp with time zone,YES,now()
+marketplace_responses,viewed_at,timestamp with time zone,YES,null
+marketplace_responses,accepted_at,timestamp with time zone,YES,null
+marketplace_responses,rejected_at,timestamp with time zone,YES,null
+marketplace_settings,id,uuid,NO,gen_random_uuid()
+marketplace_settings,company_id,uuid,NO,null
+marketplace_settings,emergency_rate_multiplier,numeric,YES,1.0
+marketplace_settings,transparency_mode,boolean,YES,false
+marketplace_settings,auto_accept_jobs,boolean,YES,false
+marketplace_settings,created_at,timestamp with time zone,YES,now()
+marketplace_settings,updated_at,timestamp with time zone,YES,now()
+messages,id,uuid,NO,gen_random_uuid()
+messages,company_id,uuid,YES,null
+messages,work_order_id,uuid,YES,null
+messages,customer_id,uuid,YES,null
+messages,sender_id,uuid,YES,null
+messages,recipient_type,text,NO,null
+messages,recipient_id,uuid,YES,null
+messages,subject,text,YES,null
+messages,content,text,NO,null
+messages,message_type,text,YES,'email'::text
+messages,status,text,YES,'draft'::text
+messages,sent_at,timestamp with time zone,YES,null
+messages,read_at,timestamp with time zone,YES,null
+messages,created_at,timestamp with time zone,YES,now()
+messages,delivered_at,timestamp with time zone,YES,null
+notifications,id,uuid,NO,gen_random_uuid()
+notifications,company_id,uuid,YES,null
+notifications,user_id,uuid,YES,null
+notifications,type,USER-DEFINED,YES,'in_app'::notification_type_enum
+notifications,title,text,NO,null
+notifications,message,text,NO,null
+notifications,data,jsonb,YES,'{}'::jsonb
+notifications,status,USER-DEFINED,YES,'pending'::notification_status_enum
+notifications,scheduled_for,timestamp with time zone,YES,now()
+notifications,sent_at,timestamp with time zone,YES,null
+notifications,read_at,timestamp with time zone,YES,null
+notifications,created_at,timestamp with time zone,YES,now()
+notifications,expires_at,timestamp with time zone,YES,null
+notifications,action_url,text,YES,null
+onboarding_progress,id,uuid,NO,gen_random_uuid()
+onboarding_progress,company_id,uuid,NO,null
+onboarding_progress,current_step,integer,YES,1
+onboarding_progress,steps,jsonb,YES,'{}'::jsonb
+onboarding_progress,skipped,boolean,YES,false
+onboarding_progress,started_at,timestamp with time zone,YES,now()
+onboarding_progress,completed_at,timestamp with time zone,YES,null
+payment_deliveries,id,uuid,NO,gen_random_uuid()
+payment_deliveries,company_id,uuid,NO,null
+payment_deliveries,payment_id,uuid,NO,null
+payment_deliveries,delivery_method,text,NO,null
+payment_deliveries,recipient_email,text,YES,null
+payment_deliveries,recipient_phone,text,YES,null
+payment_deliveries,sent_at,timestamp with time zone,NO,now()
+payment_deliveries,delivered_at,timestamp with time zone,YES,null
+payment_deliveries,receipt_pdf_url,text,YES,null
+payment_deliveries,delivery_status,text,NO,'pending'::text
+payment_deliveries,error_message,text,YES,null
+payment_deliveries,created_at,timestamp with time zone,NO,now()
+payment_settings,id,uuid,NO,gen_random_uuid()
+payment_settings,company_id,uuid,NO,null
+payment_settings,default_payment_method,text,YES,'CARD'::text
+payment_settings,invoice_template_id,uuid,YES,null
+payment_settings,created_at,timestamp with time zone,YES,now()
+payment_settings,updated_at,timestamp with time zone,YES,now()
+payments,id,uuid,NO,gen_random_uuid()
+payments,company_id,uuid,YES,null
+payments,invoice_id,uuid,YES,null
+payments,customer_id,uuid,NO,null
+payments,payment_method,text,YES,'cash'::text
+payments,amount,numeric,NO,null
+payments,status,USER-DEFINED,YES,'pending'::payment_status_enum
+payments,reference_number,text,YES,null
+payments,transaction_id,text,YES,null
+payments,payment_date,date,YES,CURRENT_DATE
+payments,notes,text,YES,null
+payments,created_at,timestamp with time zone,YES,now()
+payments,updated_at,timestamp with time zone,YES,now()
+payments,received_at,timestamp with time zone,YES,now()
+payments,gateway_response,jsonb,YES,null
+payments,refund_amount,numeric,YES,0
+payments,refund_date,date,YES,null
+payroll_line_items,id,uuid,NO,gen_random_uuid()
+payroll_line_items,payroll_run_id,uuid,YES,null
+payroll_line_items,employee_id,uuid,YES,null
+payroll_line_items,regular_hours,numeric,YES,0.00
+payroll_line_items,overtime_hours,numeric,YES,0.00
+payroll_line_items,regular_pay,numeric,YES,0.00
+payroll_line_items,overtime_pay,numeric,YES,0.00
+payroll_line_items,gross_pay,numeric,YES,0.00
+payroll_line_items,deductions,numeric,YES,0.00
+payroll_line_items,net_pay,numeric,YES,0.00
+payroll_line_items,created_at,timestamp with time zone,YES,now()
+payroll_runs,id,uuid,NO,gen_random_uuid()
+payroll_runs,company_id,uuid,YES,null
+payroll_runs,pay_period_start,date,NO,null
+payroll_runs,pay_period_end,date,NO,null
+payroll_runs,pay_date,date,NO,null
+payroll_runs,status,USER-DEFINED,YES,'draft'::payroll_run_status_enum
+payroll_runs,total_gross,numeric,YES,0.00
+payroll_runs,total_deductions,numeric,YES,0.00
+payroll_runs,total_net,numeric,YES,0.00
+payroll_runs,processed_by,uuid,YES,null
+payroll_runs,created_at,timestamp with time zone,YES,now()
+payroll_runs,updated_at,timestamp with time zone,YES,now()
+permissions,id,uuid,NO,gen_random_uuid()
+permissions,name,text,NO,null
+permissions,description,text,YES,null
+permissions,level,integer,NO,null
+permissions,created_at,timestamp with time zone,YES,now()
+profiles,id,uuid,NO,gen_random_uuid()
+profiles,user_id,uuid,YES,null
+profiles,first_name,text,NO,null
+profiles,last_name,text,NO,null
+profiles,phone,text,YES,null
+profiles,avatar_url,text,YES,null
+profiles,preferences,jsonb,YES,'{}'::jsonb
+profiles,created_at,timestamp with time zone,YES,now()
+profiles,updated_at,timestamp with time zone,YES,now()
+profiles,status,USER-DEFINED,YES,'active'::employee_status_enum
+profiles,emergency_contact_phone,text,YES,null
+profiles,hire_date,date,YES,null
+profiles,company_id,uuid,YES,null
+profiles,email,text,YES,null
+profiles,role,USER-DEFINED,YES,'technician'::user_role_enum
+profiles,date_of_birth,date,YES,null
+profiles,bio,text,YES,null
+profiles,address_line_1,text,YES,null
+profiles,address_line_2,text,YES,null
+profiles,city,text,YES,null
+profiles,state_province,text,YES,null
+profiles,postal_code,text,YES,null
+profiles,country,text,YES,'US'::text
+profiles,emergency_contact_name,text,YES,null
+profiles,emergency_contact_relationship,text,YES,null
+profiles,timezone,text,YES,'America/Los_Angeles'::text
+profiles,language,text,YES,'en'::text
+profiles,date_format,text,YES,'MM/DD/YYYY'::text
+profiles,time_format,text,YES,'12h'::text
+profiles,email_verified,boolean,YES,false
+profiles,phone_verified,boolean,YES,false
+profiles,two_factor_enabled,boolean,YES,false
+profiles,two_factor_secret,text,YES,null
+profiles,notification_preferences,jsonb,YES,"'{""sms"": false, ""push"": true, ""email"": true, ""job_updates"": true, ""pto_updates"": true, ""schedule_changes"": true, ""timesheet_reminders"": true}'::jsonb"
+purchase_order_line_items,id,uuid,NO,gen_random_uuid()
+purchase_order_line_items,purchase_order_id,uuid,YES,null
+purchase_order_line_items,inventory_item_id,uuid,YES,null
+purchase_order_line_items,description,text,NO,null
+purchase_order_line_items,quantity,numeric,NO,null
+purchase_order_line_items,unit_price,numeric,NO,null
+purchase_order_line_items,total_price,numeric,YES,null
+purchase_order_line_items,quantity_received,numeric,YES,0
+purchase_order_line_items,sort_order,integer,YES,0
+purchase_order_line_items,created_at,timestamp with time zone,YES,now()
+purchase_orders,id,uuid,NO,gen_random_uuid()
+purchase_orders,company_id,uuid,YES,null
+purchase_orders,vendor_id,uuid,NO,null
+purchase_orders,work_order_id,uuid,YES,null
+purchase_orders,po_number,text,NO,null
+purchase_orders,status,text,YES,'draft'::text
+purchase_orders,order_date,date,YES,CURRENT_DATE
+purchase_orders,expected_date,date,YES,null
+purchase_orders,subtotal,numeric,YES,0.00
+purchase_orders,tax_amount,numeric,YES,0.00
+purchase_orders,shipping_amount,numeric,YES,0.00
+purchase_orders,total_amount,numeric,YES,0.00
+purchase_orders,notes,text,YES,null
+purchase_orders,created_by,uuid,YES,null
+purchase_orders,created_at,timestamp with time zone,YES,now()
+purchase_orders,updated_at,timestamp with time zone,YES,now()
+quote_analytics,id,uuid,NO,gen_random_uuid()
+quote_analytics,work_order_id,uuid,YES,null
+quote_analytics,company_id,uuid,YES,null
+quote_analytics,quote_created_at,timestamp with time zone,NO,null
+quote_analytics,quote_sent_at,timestamp with time zone,YES,null
+quote_analytics,quote_viewed_at,timestamp with time zone,YES,null
+quote_analytics,quote_accepted_at,timestamp with time zone,YES,null
+quote_analytics,quote_rejected_at,timestamp with time zone,YES,null
+quote_analytics,time_to_send_hours,numeric,YES,null
+quote_analytics,time_to_view_hours,numeric,YES,null
+quote_analytics,time_to_decision_hours,numeric,YES,null
+quote_analytics,conversion_rate,numeric,YES,null
+quote_analytics,quote_value,numeric,YES,null
+quote_analytics,quote_version,integer,YES,1
+quote_analytics,revision_count,integer,YES,0
+quote_analytics,view_count,integer,YES,0
+quote_analytics,follow_up_count,integer,YES,0
+quote_analytics,created_at,timestamp with time zone,YES,now()
+quote_analytics,updated_at,timestamp with time zone,YES,now()
+quote_approval_workflows,id,uuid,NO,gen_random_uuid()
+quote_approval_workflows,company_id,uuid,NO,null
+quote_approval_workflows,work_order_id,uuid,NO,null
+quote_approval_workflows,workflow_name,character varying,NO,null
+quote_approval_workflows,approval_threshold,numeric,YES,null
+quote_approval_workflows,current_step,integer,YES,1
+quote_approval_workflows,total_steps,integer,NO,null
+quote_approval_workflows,overall_status,character varying,YES,'pending'::character varying
+quote_approval_workflows,approver_user_id,uuid,YES,null
+quote_approval_workflows,approver_role,character varying,YES,null
+quote_approval_workflows,submitted_at,timestamp with time zone,YES,now()
+quote_approval_workflows,approved_at,timestamp with time zone,YES,null
+quote_approval_workflows,rejected_at,timestamp with time zone,YES,null
+quote_approval_workflows,approval_notes,text,YES,null
+quote_approval_workflows,rejection_reason,text,YES,null
+quote_approval_workflows,escalated,boolean,YES,false
+quote_approval_workflows,escalated_at,timestamp with time zone,YES,null
+quote_approval_workflows,escalated_to,uuid,YES,null
+quote_approval_workflows,created_at,timestamp with time zone,YES,now()
+quote_approval_workflows,updated_at,timestamp with time zone,YES,now()
+quote_approvals,id,uuid,NO,gen_random_uuid()
+quote_approvals,work_order_id,uuid,YES,null
+quote_approvals,company_id,uuid,YES,null
+quote_approvals,approver_id,uuid,YES,null
+quote_approvals,approver_role,text,YES,null
+quote_approvals,status,text,YES,'PENDING'::text
+quote_approvals,approved_at,timestamp with time zone,YES,null
+quote_approvals,rejected_at,timestamp with time zone,YES,null
+quote_approvals,decision_notes,text,YES,null
+quote_approvals,auto_approved,boolean,YES,false
+quote_approvals,created_at,timestamp with time zone,YES,now()
+quote_approvals,updated_at,timestamp with time zone,YES,now()
+quote_defaults,id,uuid,NO,gen_random_uuid()
+quote_defaults,company_id,uuid,YES,null
+quote_defaults,default_tax_rate,numeric,YES,0.00
+quote_defaults,default_payment_terms,text,YES,'Net 30'::text
+quote_defaults,default_deposit_percentage,numeric,YES,null
+quote_defaults,require_deposit,boolean,YES,false
+quote_defaults,default_terms_and_conditions,text,YES,null
+quote_defaults,default_warranty_info,text,YES,null
+quote_defaults,default_cancellation_policy,text,YES,null
+quote_defaults,default_quote_expiration_days,integer,YES,30
+quote_defaults,auto_send_follow_ups,boolean,YES,true
+quote_defaults,follow_up_days,ARRAY,YES,"ARRAY[3, 7, 14]"
+quote_defaults,require_manager_approval,boolean,YES,false
+quote_defaults,approval_threshold_amount,numeric,YES,null
+quote_defaults,created_at,timestamp with time zone,YES,now()
+quote_defaults,updated_at,timestamp with time zone,YES,now()
+quote_deliveries,id,uuid,NO,gen_random_uuid()
+quote_deliveries,company_id,uuid,NO,null
+quote_deliveries,work_order_id,uuid,NO,null
+quote_deliveries,delivery_method,text,NO,null
+quote_deliveries,recipient_email,text,YES,null
+quote_deliveries,recipient_phone,text,YES,null
+quote_deliveries,sent_at,timestamp with time zone,NO,now()
+quote_deliveries,delivered_at,timestamp with time zone,YES,null
+quote_deliveries,viewed_at,timestamp with time zone,YES,null
+quote_deliveries,opened_at,timestamp with time zone,YES,null
+quote_deliveries,pdf_url,text,YES,null
+quote_deliveries,portal_link,text,YES,null
+quote_deliveries,email_subject,text,YES,null
+quote_deliveries,email_body,text,YES,null
+quote_deliveries,sms_body,text,YES,null
+quote_deliveries,delivery_status,text,NO,'pending'::text
+quote_deliveries,error_message,text,YES,null
+quote_deliveries,sent_by,uuid,YES,null
+quote_deliveries,created_at,timestamp with time zone,NO,now()
+quote_deliveries,updated_at,timestamp with time zone,NO,now()
+quote_follow_ups,id,uuid,NO,gen_random_uuid()
+quote_follow_ups,work_order_id,uuid,YES,null
+quote_follow_ups,company_id,uuid,YES,null
+quote_follow_ups,follow_up_type,text,YES,null
+quote_follow_ups,scheduled_date,timestamp with time zone,NO,null
+quote_follow_ups,completed_date,timestamp with time zone,YES,null
+quote_follow_ups,status,text,YES,'SCHEDULED'::text
+quote_follow_ups,outcome,text,YES,null
+quote_follow_ups,subject,text,YES,null
+quote_follow_ups,message,text,YES,null
+quote_follow_ups,notes,text,YES,null
+quote_follow_ups,assigned_to,uuid,YES,null
+quote_follow_ups,is_automated,boolean,YES,false
+quote_follow_ups,attempt_number,integer,YES,1
+quote_follow_ups,created_at,timestamp with time zone,YES,now()
+quote_follow_ups,updated_at,timestamp with time zone,YES,now()
+quote_responses,id,uuid,NO,gen_random_uuid()
+quote_responses,company_id,uuid,NO,null
+quote_responses,work_order_id,uuid,NO,null
+quote_responses,response_type,text,NO,null
+quote_responses,rejection_reason,text,YES,null
+quote_responses,rejection_category,text,YES,null
+quote_responses,change_request_notes,text,YES,null
+quote_responses,signature_id,uuid,YES,null
+quote_responses,signature_data,text,YES,null
+quote_responses,responded_by_name,text,YES,null
+quote_responses,responded_by_email,text,YES,null
+quote_responses,responded_by_phone,text,YES,null
+quote_responses,responded_at,timestamp with time zone,NO,now()
+quote_responses,ip_address,text,YES,null
+quote_responses,user_agent,text,YES,null
+quote_responses,created_at,timestamp with time zone,NO,now()
+quote_template_items,id,uuid,NO,gen_random_uuid()
+quote_template_items,template_id,uuid,YES,null
+quote_template_items,line_type,text,NO,null
+quote_template_items,description,text,NO,null
+quote_template_items,quantity,numeric,YES,1.000
+quote_template_items,unit_price,numeric,NO,null
+quote_template_items,is_optional,boolean,YES,false
+quote_template_items,sort_order,integer,YES,0
+quote_template_items,created_at,timestamp with time zone,YES,now()
+quote_templates,id,uuid,NO,gen_random_uuid()
+quote_templates,company_id,uuid,YES,null
+quote_templates,name,text,NO,null
+quote_templates,description,text,YES,null
+quote_templates,category,text,YES,null
+quote_templates,default_pricing_model,text,YES,'TIME_MATERIALS'::text
+quote_templates,default_terms,text,YES,'Net 30'::text
+quote_templates,default_notes,text,YES,null
+quote_templates,is_active,boolean,YES,true
+quote_templates,use_count,integer,YES,0
+quote_templates,created_by,uuid,YES,null
+quote_templates,created_at,timestamp with time zone,YES,now()
+quote_templates,updated_at,timestamp with time zone,YES,now()
+rate_cards,id,uuid,NO,gen_random_uuid()
+rate_cards,company_id,uuid,NO,null
+rate_cards,service_category_id,uuid,NO,null
+rate_cards,service_type_id,uuid,NO,null
+rate_cards,name,text,NO,null
+rate_cards,description,text,YES,null
+rate_cards,base_rate,numeric,NO,null
+rate_cards,unit_type,text,NO,null
+rate_cards,unit_label,text,YES,null
+rate_cards,is_active,boolean,YES,true
+rate_cards,created_at,timestamp with time zone,YES,now()
+rate_cards,updated_at,timestamp with time zone,YES,now()
+rate_cards,category,USER-DEFINED,NO,'OTHER'::service_category_enum
+rate_cards,effective_date,date,YES,CURRENT_DATE
+rate_cards,expiration_date,date,YES,null
+recurring_schedules,id,uuid,NO,gen_random_uuid()
+recurring_schedules,company_id,uuid,YES,null
+recurring_schedules,customer_id,uuid,YES,null
+recurring_schedules,title,text,NO,null
+recurring_schedules,description,text,YES,null
+recurring_schedules,service_type_id,uuid,YES,null
+recurring_schedules,frequency,text,YES,null
+recurring_schedules,interval,integer,YES,1
+recurring_schedules,day_of_week,integer,YES,null
+recurring_schedules,day_of_month,integer,YES,null
+recurring_schedules,start_date,date,NO,null
+recurring_schedules,end_date,date,YES,null
+recurring_schedules,next_occurrence,date,YES,null
+recurring_schedules,assigned_to,uuid,YES,null
+recurring_schedules,price_per_occurrence,numeric,YES,null
+recurring_schedules,is_active,boolean,YES,true
+recurring_schedules,status,text,YES,'active'::text
+recurring_schedules,occurrences_completed,integer,YES,0
+recurring_schedules,last_occurrence_date,date,YES,null
+recurring_schedules,created_at,timestamp with time zone,YES,now()
+recurring_schedules,updated_at,timestamp with time zone,YES,now()
+schedule_events,id,uuid,NO,gen_random_uuid()
+schedule_events,company_id,uuid,YES,null
+schedule_events,work_order_id,uuid,YES,null
+schedule_events,user_id,uuid,YES,null
+schedule_events,title,text,NO,null
+schedule_events,description,text,YES,null
+schedule_events,start_time,timestamp with time zone,NO,null
+schedule_events,end_time,timestamp with time zone,NO,null
+schedule_events,all_day,boolean,YES,false
+schedule_events,location,text,YES,null
+schedule_events,status,text,YES,'scheduled'::text
+schedule_events,created_at,timestamp with time zone,YES,now()
+schedule_events,updated_at,timestamp with time zone,YES,now()
+service_address_tax_rates,id,uuid,NO,gen_random_uuid()
+service_address_tax_rates,company_id,uuid,NO,null
+service_address_tax_rates,address,text,NO,null
+service_address_tax_rates,city,character varying,YES,null
+service_address_tax_rates,state,character varying,YES,null
+service_address_tax_rates,zip_code,character varying,YES,null
+service_address_tax_rates,latitude,numeric,YES,null
+service_address_tax_rates,longitude,numeric,YES,null
+service_address_tax_rates,combined_rate,numeric,NO,null
+service_address_tax_rates,jurisdiction_breakdown,jsonb,YES,null
+service_address_tax_rates,jurisdiction_ids,ARRAY,YES,null
+service_address_tax_rates,last_verified,timestamp with time zone,YES,now()
+service_address_tax_rates,verification_source,character varying,YES,null
+service_address_tax_rates,created_at,timestamp with time zone,YES,now()
+service_address_tax_rates,updated_at,timestamp with time zone,YES,now()
+service_agreements,id,uuid,NO,gen_random_uuid()
+service_agreements,company_id,uuid,NO,null
+service_agreements,customer_id,uuid,NO,null
+service_agreements,agreement_number,text,NO,null
+service_agreements,title,text,NO,null
+service_agreements,description,text,YES,null
+service_agreements,agreement_type,text,NO,null
+service_agreements,status,text,YES,'active'::text
+service_agreements,start_date,date,NO,null
+service_agreements,end_date,date,YES,null
+service_agreements,auto_renew,boolean,YES,false
+service_agreements,renewal_period_months,integer,YES,12
+service_agreements,service_frequency,text,YES,null
+service_agreements,contract_value,numeric,YES,0.00
+service_agreements,billing_frequency,text,YES,'monthly'::text
+service_agreements,next_service_date,date,YES,null
+service_agreements,last_service_date,date,YES,null
+service_agreements,terms_and_conditions,text,YES,null
+service_agreements,created_by,uuid,YES,null
+service_agreements,created_at,timestamp with time zone,YES,now()
+service_agreements,updated_at,timestamp with time zone,YES,now()
+service_agreements,renewal_date,date,YES,null
+service_agreements,cancellation_date,date,YES,null
+service_agreements,cancellation_reason,text,YES,null
+service_categories,id,uuid,NO,gen_random_uuid()
+service_categories,company_id,uuid,YES,null
+service_categories,name,text,NO,null
+service_categories,description,text,YES,null
+service_categories,icon_url,text,YES,null
+service_categories,color,text,YES,'#6b7280'::text
+service_categories,sort_order,integer,YES,0
+service_categories,is_active,boolean,YES,true
+service_categories,created_at,timestamp with time zone,YES,now()
+service_types,id,uuid,NO,gen_random_uuid()
+service_types,category_id,uuid,YES,null
+service_types,name,text,NO,null
+service_types,description,text,YES,null
+service_types,base_price,numeric,YES,0.00
+service_types,estimated_duration,text,YES,'2 hours'::text
+service_types,requires_permit,boolean,YES,false
+service_types,is_active,boolean,YES,true
+service_types,created_at,timestamp with time zone,YES,now()
+subscriptions,id,uuid,NO,gen_random_uuid()
+subscriptions,company_id,uuid,YES,null
+subscriptions,billing_plan_id,uuid,YES,null
+subscriptions,status,text,YES,'active'::text
+subscriptions,current_period_start,timestamp with time zone,YES,null
+subscriptions,current_period_end,timestamp with time zone,YES,null
+subscriptions,trial_end,timestamp with time zone,YES,null
+subscriptions,created_at,timestamp with time zone,YES,now()
+subscriptions,updated_at,timestamp with time zone,YES,now()
+tax_exemptions,id,uuid,NO,gen_random_uuid()
+tax_exemptions,customer_id,uuid,NO,null
+tax_exemptions,exemption_type,character varying,NO,null
+tax_exemptions,certificate_number,character varying,YES,null
+tax_exemptions,issuing_state,character varying,YES,null
+tax_exemptions,issuing_authority,character varying,YES,null
+tax_exemptions,issue_date,date,YES,null
+tax_exemptions,expiration_date,date,YES,null
+tax_exemptions,applies_to,character varying,YES,'all'::character varying
+tax_exemptions,exempt_jurisdictions,ARRAY,YES,null
+tax_exemptions,document_url,text,YES,null
+tax_exemptions,notes,text,YES,null
+tax_exemptions,active,boolean,YES,true
+tax_exemptions,verified,boolean,YES,false
+tax_exemptions,verified_at,timestamp with time zone,YES,null
+tax_exemptions,verified_by,uuid,YES,null
+tax_exemptions,created_at,timestamp with time zone,YES,now()
+tax_exemptions,updated_at,timestamp with time zone,YES,now()
+tax_exemptions,created_by,uuid,YES,null
+tax_jurisdictions,id,uuid,NO,gen_random_uuid()
+tax_jurisdictions,company_id,uuid,NO,null
+tax_jurisdictions,name,character varying,NO,null
+tax_jurisdictions,jurisdiction_type,character varying,NO,null
+tax_jurisdictions,tax_rate,numeric,NO,null
+tax_jurisdictions,applies_to,character varying,YES,'all'::character varying
+tax_jurisdictions,state_code,character varying,YES,null
+tax_jurisdictions,county_name,character varying,YES,null
+tax_jurisdictions,city_name,character varying,YES,null
+tax_jurisdictions,zip_codes,ARRAY,YES,null
+tax_jurisdictions,active,boolean,YES,true
+tax_jurisdictions,effective_date,date,YES,CURRENT_DATE
+tax_jurisdictions,expiration_date,date,YES,null
+tax_jurisdictions,notes,text,YES,null
+tax_jurisdictions,created_at,timestamp with time zone,YES,now()
+tax_jurisdictions,updated_at,timestamp with time zone,YES,now()
+tax_jurisdictions,created_by,uuid,YES,null
+taxes,id,uuid,NO,gen_random_uuid()
+taxes,company_id,uuid,YES,null
+taxes,name,text,NO,null
+taxes,tax_type,USER-DEFINED,YES,'sales_tax'::tax_type_enum
+taxes,rate,numeric,NO,null
+taxes,description,text,YES,null
+taxes,is_active,boolean,YES,true
+taxes,created_at,timestamp with time zone,YES,now()
+tools,id,uuid,NO,gen_random_uuid()
+tools,company_id,uuid,YES,null
+tools,tool_number,text,NO,null
+tools,name,text,NO,null
+tools,description,text,YES,null
+tools,category,text,YES,null
+tools,manufacturer,text,YES,null
+tools,model,text,YES,null
+tools,serial_number,text,YES,null
+tools,purchase_date,date,YES,null
+tools,purchase_price,numeric,YES,0.00
+tools,current_value,numeric,YES,0.00
+tools,status,USER-DEFINED,YES,'available'::tool_status_enum
+tools,assigned_to,uuid,YES,null
+tools,location,text,YES,null
+tools,maintenance_schedule,text,YES,null
+tools,last_maintenance,date,YES,null
+tools,next_maintenance,date,YES,null
+tools,warranty_expiry,date,YES,null
+tools,notes,text,YES,null
+tools,created_at,timestamp with time zone,YES,now()
+tools,updated_at,timestamp with time zone,YES,now()
+user_activity_log,id,uuid,NO,gen_random_uuid()
+user_activity_log,user_id,uuid,NO,null
+user_activity_log,company_id,uuid,NO,null
+user_activity_log,action_type,text,NO,null
+user_activity_log,description,text,YES,null
+user_activity_log,ip_address,inet,YES,null
+user_activity_log,user_agent,text,YES,null
+user_activity_log,metadata,jsonb,YES,null
+user_activity_log,created_at,timestamp with time zone,YES,now()
+user_dashboard_settings,id,uuid,NO,gen_random_uuid()
+user_dashboard_settings,user_id,uuid,NO,null
+user_dashboard_settings,dashboard_config,jsonb,YES,'{}'::jsonb
+user_dashboard_settings,widget_preferences,jsonb,YES,'{}'::jsonb
+user_dashboard_settings,layout_settings,jsonb,YES,'{}'::jsonb
+user_dashboard_settings,theme_settings,jsonb,YES,'{}'::jsonb
+user_dashboard_settings,notification_preferences,jsonb,YES,'{}'::jsonb
+user_dashboard_settings,created_at,timestamp with time zone,YES,now()
+user_dashboard_settings,updated_at,timestamp with time zone,YES,now()
+user_sessions,id,uuid,NO,gen_random_uuid()
+user_sessions,user_id,uuid,NO,null
+user_sessions,session_token,text,NO,null
+user_sessions,device_name,text,YES,null
+user_sessions,device_type,text,YES,null
+user_sessions,browser,text,YES,null
+user_sessions,os,text,YES,null
+user_sessions,ip_address,inet,YES,null
+user_sessions,user_agent,text,YES,null
+user_sessions,last_active_at,timestamp with time zone,YES,now()
+user_sessions,expires_at,timestamp with time zone,YES,null
+user_sessions,created_at,timestamp with time zone,YES,now()
+user_sessions,updated_at,timestamp with time zone,YES,now()
+users,id,uuid,NO,gen_random_uuid()
+users,auth_user_id,uuid,YES,null
+users,company_id,uuid,YES,null
+users,role,USER-DEFINED,NO,'technician'::user_role_enum
+users,status,USER-DEFINED,NO,'active'::employee_status_enum
+users,created_at,timestamp with time zone,YES,now()
+users,updated_at,timestamp with time zone,YES,now()
+users,login_count,integer,YES,0
+vendors,id,uuid,NO,gen_random_uuid()
+vendors,company_id,uuid,YES,null
+vendors,vendor_number,text,NO,null
+vendors,name,text,NO,null
+vendors,vendor_type,USER-DEFINED,YES,'supplier'::vendor_type_enum
+vendors,contact_name,text,YES,null
+vendors,email,text,YES,null
+vendors,phone,text,YES,null
+vendors,website,text,YES,null
+vendors,address_line1,text,YES,null
+vendors,address_line2,text,YES,null
+vendors,city,text,YES,null
+vendors,state_province,text,YES,null
+vendors,postal_code,text,YES,null
+vendors,country,text,YES,'US'::text
+vendors,tax_id,text,YES,null
+vendors,payment_terms,text,YES,'NET30'::text
+vendors,credit_limit,numeric,YES,0.00
+vendors,is_active,boolean,YES,true
+vendors,created_at,timestamp with time zone,YES,now()
+vendors,updated_at,timestamp with time zone,YES,now()
+work_order_attachments,id,uuid,NO,gen_random_uuid()
+work_order_attachments,work_order_id,uuid,YES,null
+work_order_attachments,file_name,text,NO,null
+work_order_attachments,file_url,text,NO,null
+work_order_attachments,file_type,text,YES,null
+work_order_attachments,file_size,integer,YES,null
+work_order_attachments,uploaded_by,uuid,YES,null
+work_order_attachments,created_at,timestamp with time zone,YES,now()
+work_order_line_items,id,uuid,NO,gen_random_uuid()
+work_order_line_items,work_order_id,uuid,YES,null
+work_order_line_items,line_type,USER-DEFINED,NO,null
+work_order_line_items,description,text,NO,null
+work_order_line_items,quantity,numeric,YES,1.000
+work_order_line_items,unit_price,numeric,NO,null
+work_order_line_items,total_price,numeric,YES,null
+work_order_line_items,tax_rate,numeric,YES,0.0000
+work_order_line_items,sort_order,integer,YES,0
+work_order_line_items,created_at,timestamp with time zone,YES,now()
+work_order_line_items,taxable,boolean,YES,true
+work_order_line_items,tax_amount,numeric,YES,null
+work_order_notes,id,uuid,NO,gen_random_uuid()
+work_order_notes,work_order_id,uuid,YES,null
+work_order_notes,user_id,uuid,YES,null
+work_order_notes,note_type,text,YES,'general'::text
+work_order_notes,content,text,NO,null
+work_order_notes,is_internal,boolean,YES,false
+work_order_notes,created_at,timestamp with time zone,YES,now()
+work_order_products,id,uuid,NO,gen_random_uuid()
+work_order_products,company_id,uuid,YES,null
+work_order_products,work_order_id,uuid,YES,null
+work_order_products,inventory_item_id,uuid,YES,null
+work_order_products,product_name,text,NO,null
+work_order_products,product_sku,text,YES,null
+work_order_products,quantity_planned,numeric,YES,null
+work_order_products,quantity_used,numeric,YES,null
+work_order_products,unit_of_measure,text,YES,null
+work_order_products,unit_cost,numeric,YES,null
+work_order_products,unit_price,numeric,YES,null
+work_order_products,total_cost,numeric,YES,null
+work_order_products,total_price,numeric,YES,null
+work_order_products,status,text,YES,'planned'::text
+work_order_products,notes,text,YES,null
+work_order_products,allocated_at,timestamp with time zone,YES,null
+work_order_products,used_at,timestamp with time zone,YES,null
+work_order_products,created_at,timestamp with time zone,YES,now()
+work_order_products,updated_at,timestamp with time zone,YES,now()
+work_order_services,id,uuid,NO,gen_random_uuid()
+work_order_services,company_id,uuid,YES,null
+work_order_services,work_order_id,uuid,YES,null
+work_order_services,service_name,text,NO,null
+work_order_services,service_type_id,uuid,YES,null
+work_order_services,description,text,YES,null
+work_order_services,employee_id,uuid,YES,null
+work_order_services,hours_estimated,numeric,YES,null
+work_order_services,hours_actual,numeric,YES,null
+work_order_services,hourly_rate,numeric,YES,null
+work_order_services,total_cost,numeric,YES,null
+work_order_services,total_price,numeric,YES,null
+work_order_services,status,text,YES,'planned'::text
+work_order_services,notes,text,YES,null
+work_order_services,started_at,timestamp with time zone,YES,null
+work_order_services,completed_at,timestamp with time zone,YES,null
+work_order_services,created_at,timestamp with time zone,YES,now()
+work_order_services,updated_at,timestamp with time zone,YES,now()
+work_order_tasks,id,uuid,NO,gen_random_uuid()
+work_order_tasks,company_id,uuid,YES,null
+work_order_tasks,work_order_id,uuid,YES,null
+work_order_tasks,task_name,text,NO,null
+work_order_tasks,description,text,YES,null
+work_order_tasks,instructions,text,YES,null
+work_order_tasks,assigned_to,uuid,YES,null
+work_order_tasks,status,text,YES,'pending'::text
+work_order_tasks,estimated_duration,integer,YES,null
+work_order_tasks,actual_duration,integer,YES,null
+work_order_tasks,started_at,timestamp with time zone,YES,null
+work_order_tasks,completed_at,timestamp with time zone,YES,null
+work_order_tasks,sort_order,integer,YES,0
+work_order_tasks,notes,text,YES,null
+work_order_tasks,photos,ARRAY,YES,null
+work_order_tasks,created_at,timestamp with time zone,YES,now()
+work_order_tasks,updated_at,timestamp with time zone,YES,now()
+work_orders,id,uuid,NO,gen_random_uuid()
+work_orders,company_id,uuid,YES,null
+work_orders,work_order_number,text,NO,null
+work_orders,customer_id,uuid,YES,null
+work_orders,customer_address_id,uuid,YES,null
+work_orders,service_category_id,uuid,YES,null
+work_orders,service_type_id,uuid,YES,null
+work_orders,status,USER-DEFINED,YES,'draft'::work_order_status_enum
+work_orders,priority,USER-DEFINED,YES,'normal'::work_order_priority_enum
+work_orders,title,text,NO,null
+work_orders,description,text,YES,null
+work_orders,scheduled_start,timestamp with time zone,YES,null
+work_orders,scheduled_end,timestamp with time zone,YES,null
+work_orders,actual_start,timestamp with time zone,YES,null
+work_orders,actual_end,timestamp with time zone,YES,null
+work_orders,assigned_to,uuid,YES,null
+work_orders,created_by,uuid,YES,null
+work_orders,subtotal,numeric,YES,0.00
+work_orders,tax_amount,numeric,YES,0.00
+work_orders,total_amount,numeric,YES,0.00
+work_orders,notes,text,YES,null
+work_orders,internal_notes,text,YES,null
+work_orders,requires_signature,boolean,YES,true
+work_orders,customer_signature_url,text,YES,null
+work_orders,technician_signature_url,text,YES,null
+work_orders,completion_photos,ARRAY,YES,null
+work_orders,created_at,timestamp with time zone,YES,now()
+work_orders,updated_at,timestamp with time zone,YES,now()
+work_orders,customer_feedback,text,YES,null
+work_orders,quote_sent_at,timestamp with time zone,YES,null
+work_orders,quote_viewed_at,timestamp with time zone,YES,null
+work_orders,quote_expires_at,timestamp with time zone,YES,null
+work_orders,quote_accepted_at,timestamp with time zone,YES,null
+work_orders,quote_rejected_at,timestamp with time zone,YES,null
+work_orders,quote_rejection_reason,text,YES,null
+work_orders,quote_terms,text,YES,'Net 30'::text
+work_orders,quote_notes,text,YES,null
+work_orders,quote_version,integer,YES,1
+work_orders,quote_parent_id,uuid,YES,null
+work_orders,deposit_amount,numeric,YES,0.00
+work_orders,deposit_percentage,numeric,YES,null
+work_orders,payment_schedule,jsonb,YES,null
+work_orders,discount_amount,numeric,YES,0.00
+work_orders,discount_percentage,numeric,YES,null
+work_orders,payment_terms,text,YES,'Net 30'::text
+work_orders,estimated_duration_hours,numeric,YES,null
+work_orders,requires_site_visit,boolean,YES,false
+work_orders,urgency_level,text,YES,'routine'::text
+work_orders,service_location_type,text,YES,'residential'::text
+work_orders,terms_and_conditions,text,YES,null
+work_orders,warranty_info,text,YES,null
+work_orders,cancellation_policy,text,YES,null
+work_orders,special_instructions,text,YES,null
+work_orders,preferred_start_date,date,YES,null
+work_orders,estimated_completion_date,date,YES,null
+work_orders,assigned_technician_id,uuid,YES,null
+work_orders,attachment_urls,ARRAY,YES,null
+work_orders,photo_urls,ARRAY,YES,null
+work_orders,document_urls,ARRAY,YES,null
+work_orders,customer_approved_at,timestamp with time zone,YES,null
+work_orders,customer_signature_data,text,YES,null
+work_orders,customer_ip_address,inet,YES,null
+work_orders,approval_method,text,YES,null
+work_orders,estimated_duration,integer,YES,null
+work_orders,actual_duration,integer,YES,null
+work_orders,service_location_lat,numeric,YES,null
+work_orders,service_location_lng,numeric,YES,null
+work_orders,time_window_start,time without time zone,YES,null
+work_orders,time_window_end,time without time zone,YES,null
+work_orders,customer_equipment_id,uuid,YES,null
+work_orders,pricing_model,USER-DEFINED,YES,'TIME_MATERIALS'::pricing_model_enum
+work_orders,labor_summary,jsonb,YES,null
+work_orders,flat_rate_amount,numeric,YES,null
+work_orders,unit_count,integer,YES,null
+work_orders,unit_price,numeric,YES,null
+work_orders,percentage,numeric,YES,null
+work_orders,percentage_base_amount,numeric,YES,null
+work_orders,recurring_interval,text,YES,null
+work_orders,service_address_line_1,text,YES,null
+work_orders,service_address_line_2,text,YES,null
+work_orders,service_city,text,YES,null
+work_orders,service_state,text,YES,null
+work_orders,service_zip_code,text,YES,null
+work_orders,tax_rate,numeric,YES,0.00
+work_orders,quote_number,text,YES,null
+work_orders,customer_notes,text,YES,null
+work_orders,has_change_orders,boolean,YES,false
+work_orders,change_orders_total,numeric,YES,0
+work_orders,invoice_sent_at,timestamp with time zone,YES,null
+work_orders,invoice_viewed_at,timestamp with time zone,YES,null
+work_orders,paid_at,timestamp with time zone,YES,null
+work_orders,closed_at,timestamp with time zone,YES,null
+work_orders,service_address_id,uuid,YES,null
+work_orders,tax_jurisdiction_ids,ARRAY,YES,null
+work_orders,tax_exempt,boolean,YES,false
+work_orders,tax_exemption_id,uuid,YES,null
+work_orders_dashboard,id,uuid,YES,null
+work_orders_dashboard,work_order_number,text,YES,null
+work_orders_dashboard,status,USER-DEFINED,YES,null
+work_orders_dashboard,priority,USER-DEFINED,YES,null
+work_orders_dashboard,title,text,YES,null
+work_orders_dashboard,scheduled_start,timestamp with time zone,YES,null
+work_orders_dashboard,scheduled_end,timestamp with time zone,YES,null
+work_orders_dashboard,actual_start,timestamp with time zone,YES,null
+work_orders_dashboard,actual_end,timestamp with time zone,YES,null
+work_orders_dashboard,total_amount,numeric,YES,null
+work_orders_dashboard,created_at,timestamp with time zone,YES,null
+work_orders_dashboard,updated_at,timestamp with time zone,YES,null
+work_orders_dashboard,customer_number,text,YES,null
+work_orders_dashboard,customer_name,text,YES,null
+work_orders_dashboard,customer_phone,text,YES,null
+work_orders_dashboard,customer_email,text,YES,null
+work_orders_dashboard,service_address,text,YES,null
+work_orders_dashboard,service_category,text,YES,null
+work_orders_dashboard,service_type,text,YES,null
+work_orders_dashboard,assigned_technician,text,YES,null
+work_orders_dashboard,technician_role,USER-DEFINED,YES,null
+work_orders_dashboard,is_overdue,boolean,YES,null
+work_orders_dashboard,is_due_soon,boolean,YES,null
+work_orders_dashboard,financial_status,text,YES,null
+work_orders_summary,id,uuid,YES,null
+work_orders_summary,work_order_number,text,YES,null
+work_orders_summary,status,USER-DEFINED,YES,null
+work_orders_summary,priority,USER-DEFINED,YES,null
+work_orders_summary,title,text,YES,null
+work_orders_summary,scheduled_start,timestamp with time zone,YES,null
+work_orders_summary,scheduled_end,timestamp with time zone,YES,null
+work_orders_summary,total_amount,numeric,YES,null
+work_orders_summary,customer_name,text,YES,null
+work_orders_summary,company_name,text,YES,null
+work_orders_summary,service_address,text,YES,null
+work_orders_summary,service_category,text,YES,null
+work_orders_summary,service_type,text,YES,null
+work_orders_summary,assigned_technician,text,YES,null
+work_orders_summary,created_at,timestamp with time zone,YES,null
+work_orders_summary,updated_at,timestamp with time zone,YES,null
+work_settings,id,uuid,NO,gen_random_uuid()
+work_settings,company_id,uuid,NO,null
+work_settings,business_hours,jsonb,YES,null
+work_settings,default_tax_rate,numeric,YES,0.00
+work_settings,invoice_terms,text,YES,'NET30'::text
+work_settings,auto_invoice,boolean,YES,false
+work_settings,require_signatures,boolean,YES,false
+work_settings,cancellation_fee,numeric,YES,0.00
+work_settings,travel_charge_per_mile,numeric,YES,0.00
+work_settings,minimum_travel_charge,numeric,YES,0.00
+work_settings,created_at,timestamp with time zone,YES,now()
+work_settings,updated_at,timestamp with time zone,YES,now()

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Console Capture</title>
+</head>
+<body>
+    <h1>Test Console Capture</h1>
+    <button onclick="testError()">Generate Test Error</button>
+    <button onclick="testLog()">Generate Test Log</button>
+    
+    <script src="console-error-capture.js"></script>
+    <script>
+        function testError() {
+            console.error('TEST ERROR: This is a test error message');
+            throw new Error('TEST UNCAUGHT ERROR: This is a test uncaught error');
+        }
+        
+        function testLog() {
+            console.log('TEST LOG: This is a test log message');
+        }
+        
+        // Auto-generate some test errors after page loads
+        setTimeout(() => {
+            console.log('🧪 Auto-generating test errors...');
+            console.error('AUTO TEST ERROR: Page loaded error');
+            console.warn('AUTO TEST WARNING: Page loaded warning');
+        }, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+{
+  "startTime": "2025-10-05T01:30:58.287Z",
+  "testSuites": [
+    {
+      "name": "Employee Management",
+      "tests": [
+        {
+          "name": "Navigate to page",
+          "status": "passed"
+        },
+        {
+          "name": "Add employee",
+          "status": "passed",
+          "details": "Employee added successfully"
+        },
+        {
+          "name": "Employee in list",
+          "status": "partial",
+          "details": "Employee not found (may not have been added)"
+        },
+        {
+          "name": "Edit employee form opens",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Customer Management",
+      "tests": [
+        {
+          "name": "Navigate to page",
+          "status": "passed"
+        },
+        {
+          "name": "Add customer",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Timesheet Management",
+      "tests": [
+        {
+          "name": "Navigate to page",
+          "status": "passed"
+        },
+        {
+          "name": "Create timesheet",
+          "status": "passed"
+        },
+        {
+          "name": "Approval functionality exists",
+          "status": "partial",
+          "details": "Bulk: false, Individual: false"
+        }
+      ]
+    },
+    {
+      "name": "Job Scheduling",
+      "tests": [
+        {
+          "name": "Navigate to page",
+          "status": "passed"
+        },
+        {
+          "name": "Calendar view exists",
+          "status": "failed",
+          "details": "FC: false, Header: false, Grid: false, Any: false, HTML: true"
+        },
+        {
+          "name": "Schedule job form opens",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Vendor Management",
+      "tests": [
+        {
+          "name": "Add vendor form opens",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Purchase Orders",
+      "tests": [
+        {
+          "name": "Create PO form opens",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "tests": [
+        {
+          "name": "Add expense form opens",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "tests": [
+        {
+          "name": "Add inventory form opens",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Payroll",
+      "tests": [
+        {
+          "name": "Payroll processing available",
+          "status": "partial"
+        }
+      ]
+    },
+    {
+      "name": "PTO Management",
+      "tests": [
+        {
+          "name": "Request PTO form opens",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total": 18,
+    "passed": 14,
+    "failed": 1,
+    "partial": 3,
+    "skipped": 0
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:161085:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:133486:32)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:133381:7)",
+    "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:161085:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:133486:32)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:133381:7)",
+    "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:268:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:135654:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:161085:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:133483:33)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:133381:7)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 400 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 401 ()",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "endTime": "2025-10-05T01:31:53.892Z"
+}

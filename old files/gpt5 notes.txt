@@ -1,0 +1,76 @@
+Good catch sharing the log. You’ve got two separate problems:
+
+Auth client duplication — you’re creating Supabase multiple times
+Fix: export a singleton and never call createClient in components. Also, don’t instantiate the admin client in the browser. 
+
+ts
+Copy
+Edit
+// src/utils/supabaseClient.ts
+import { createClient } from '@supabase/supabase-js';
+
+let _client: ReturnType<typeof createClient>;
+export function getSupabaseClient() {
+  if (!_client) {
+    _client = createClient(import.meta.env.VITE_SUPABASE_URL!, import.meta.env.VITE_SUPABASE_ANON_KEY!, {
+      auth: { persistSession: true, storageKey: 'tmp-web' },
+    });
+  }
+  return _client;
+}
+
+// ❌ never call createClient() anywhere else
+// ❌ don't build an admin client on the client (server-only)
+Infinite render loop in WorkOrderBuilder — a useEffect is calling setState in a way that re-triggers itself on every render (missing/too-broad deps). That’s the “Maximum update depth exceeded” spam at line ~178. 
+ 
+
+Typical cause (example of the bug):
+
+ts
+Copy
+Edit
+// runs on every render because deps change or are omitted
+useEffect(() => {
+  setForm({ ...form, total: calc(form) }); // <-- sets form, which re-triggers effect
+}, [form]); // or [] missing entirely
+Safe patterns to stop the loop:
+
+Derive values with useMemo, not by writing back into state.
+
+If you must write, depend on stable inputs (props/ids), and guard against no-op updates.
+
+ts
+Copy
+Edit
+// 1) derive instead of writing
+const total = useMemo(() => calc(form), [form.items, form.laborHours, form.rate]);
+
+// 2) only initialize once or when the record changes
+useEffect(() => {
+  if (!workOrder) return;
+  setForm(prev => (prev.id === workOrder.id ? prev : mapWOtoForm(workOrder)));
+}, [workOrder?.id]); // not [form]
+
+// 3) guard setState to avoid no-op churn
+setForm(prev => {
+  const next = { ...prev, customerId };
+  return shallowEqual(prev, next) ? prev : next;
+});
+Double fetching / logs twice
+You’re loading work orders twice (likely StrictMode mount + missing guard). Add a did-mount ref. 
+
+ts
+Copy
+Edit
+const didRun = useRef(false);
+useEffect(() => {
+  if (didRun.current) return;
+  didRun.current = true;
+  loadWorkOrders();
+}, []);
+Quick checklist to apply now
+ Make supabaseClient a singleton (and remove any other createClient calls). 
+
+ In WorkOrderBuilder, remove any effect that sets state based on that same state; switch to useMemo or guard on stable deps. 
+
+ Add a mount guard to the initial data load so it only fires once. 

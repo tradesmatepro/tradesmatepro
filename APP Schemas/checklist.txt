@@ -1,0 +1,140 @@
+🔑 Schema Hardening Checklist (What Goes Into the DB Beyond Tables/Columns)
+1. Enums (Domain Constraints)
+
+Standardize status/priority fields across tables.
+
+Examples:
+
+work_order_status_enum → draft, quote, scheduled, in_progress, completed, invoiced, cancelled
+
+invoice_status_enum → draft, sent, paid, overdue, cancelled
+
+payment_status_enum → pending, completed, failed, refunded
+
+marketplace_request_status_enum → draft, open, awarded, closed, expired
+
+priority_enum → low, normal, high, urgent
+
+✅ Goal: Prevent free-text chaos (no “completed”, “done”, “finished” variants).
+
+2. Constraints
+
+Primary Keys → all UUID PKs enforced.
+
+Unique Constraints → reference numbers (work_order_number, invoice_number, request_number) must be unique per company.
+
+Foreign Keys → cascade deletes only where safe (e.g. cascade work_order_line_items when work order is deleted, but not invoices/payments).
+
+Check Constraints →
+
+numeric ranges (rating between 1–5)
+
+percentages (risk_score 0–100)
+
+money ≥ 0
+
+✅ Goal: Enforce business logic at DB level, not just in app code.
+
+3. Triggers
+
+Audit Logging Trigger
+
+Before/after insert/update/delete → log to audit_logs.
+
+Reference Number Auto-Generators
+
+On insert → generate WO-2025-001, INV-2025-001, etc.
+
+Payment → Invoice Status Update
+
+If total payments ≥ invoice total → mark invoice as paid.
+
+Work Order → Invoice Auto-Create
+
+When work order status flips to completed, auto-generate draft invoice.
+
+Inventory Movements
+
+On movement insert → update stock balances.
+
+✅ Goal: Keep critical workflows automatic & consistent.
+
+4. Indexes
+
+Add indexes on:
+
+company_id (multi-tenant filter everywhere)
+
+Foreign keys (customer_id, work_order_id)
+
+Frequently queried enums (status, priority)
+
+Full-text (Postgres GIN) on customers.name, work_orders.title/description, marketplace_requests.description.
+
+✅ Goal: Fast queries at scale.
+
+5. Row-Level Security (RLS)
+
+Each company only sees its own records → enforce with policies.
+
+Typical pattern:
+
+create policy "company_isolation"
+on work_orders
+for all
+using (company_id = auth.uid()); -- or mapped company_id
+
+
+✅ Goal: Hard-isolate tenants.
+
+6. Views & Materialized Views
+
+Convenience queries for app. Examples:
+
+active_work_orders_view → WHERE status IN (‘scheduled’, ‘in_progress’)
+
+job_profitability_view → revenue – expenses
+
+marketplace_performance_view → responses, win rate, avg job value
+
+✅ Goal: Simplify app queries & reporting.
+
+7. Functions (Stored Procedures)
+
+Helpers for business logic:
+
+get_customer_balance(customer_id)
+
+apply_payment(invoice_id, payment_id)
+
+create_invoice_from_work_order(work_order_id)
+
+✅ Goal: Encapsulate repeatable server logic.
+
+8. Seeds & Defaults
+
+Insert default enums, service categories (Plumbing, HVAC, Electrical).
+
+Seed with default company settings, tax rates.
+
+✅ Goal: New tenants can onboard without manual setup.
+
+🎯 Recap
+
+After tables + columns, the schema must define:
+
+Enums (status/priority fields)
+
+Constraints (PKs, FKs, uniqueness, check rules)
+
+Triggers (audit logs, reference numbers, automation)
+
+Indexes (performance)
+
+RLS (multi-tenancy security)
+
+Views (reporting, dashboards)
+
+Functions (business logic)
+
+Seeds/defaults (bootstrapping data)

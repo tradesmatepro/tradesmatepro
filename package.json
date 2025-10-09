@@ -1,0 +1,81 @@
+{
+  "name": "trademate-pro-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.18",
+    "@fullcalendar/interaction": "^6.1.18",
+    "@fullcalendar/react": "^6.1.18",
+    "@fullcalendar/resource-timegrid": "^6.1.19",
+    "@fullcalendar/timegrid": "^6.1.18",
+    "@heroicons/react": "^2.0.18",
+    "@supabase/supabase-js": "^2.58.0",
+    "dotenv": "^17.2.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.3",
+    "node-cron": "^4.2.1",
+    "pg": "^8.16.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
+    "react-scripts": "5.0.1",
+    "recharts": "^3.2.1",
+    "tesseract.js": "^6.0.1",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@craco/craco": "^7.1.0",
+    "@playwright/test": "^1.55.1",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "autoprefixer": "^10.4.14",
+    "axios": "^1.12.2",
+    "concurrently": "^9.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "set PORT=3004 && craco start",
+    "dev-main": "set PORT=3004 && craco start",
+    "dev-error-server": "node server.js",
+    "dev-all": "concurrently \"npm run dev-main\" \"npm run dev-error-server\"",
+    "kill-main": "npx kill-port 3004",
+    "kill-admin": "npx kill-port 3003",
+    "kill-customer": "npx kill-port 3001",
+    "kill-devtools": "npx kill-port 3002",
+    "kill-all": "npx kill-port 3001 3002 3003 3004 3005 3006 3007 3008 3009 4000",
+    "build": "craco build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "main": "create-test-user.js",
+  "directories": {
+    "test": "tests",
+    "doc": "docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

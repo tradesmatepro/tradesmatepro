@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#339e63" />
+    <meta name="description" content="TradeMate Pro - Field Service Management Dashboard" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>TradeMate Pro Dashboard</title>
+    <script>
+      (function(){
+        try{
+          var stored = localStorage.getItem('theme');
+          var legacy = localStorage.getItem('darkMode');
+          var mode = stored || (legacy!==null ? (JSON.parse(legacy)?'dark':'light') : 'system');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var isDark = mode === 'dark' ? true : (mode === 'light' ? false : prefersDark);
+          if(isDark){ document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
+          try { document.documentElement.style.colorScheme = isDark ? 'dark' : 'light'; } catch(e){}
+        }catch(e){}
+      })();
+    </script>
+
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- Console Error Capture Script - Load early to catch all errors -->
+    <!-- Configure local logger server (auto-detected if running) -->
+    <script>
+      window.DEBUG_LOG_EXPORT_URL = 'http://localhost:4322/ingest';
+      window.DEBUG_LOG_HEALTH_URL = 'http://localhost:4322/health';
+    </script>
+
+    <script src="%PUBLIC_URL%/console-error-capture.js"></script>
+    <script src="%PUBLIC_URL%/network-capture.js"></script>
+    <script src="%PUBLIC_URL%/check-captured-errors.js"></script>
+    <script src="%PUBLIC_URL%/export-errors-client.js"></script>
+    <!-- <script src="%PUBLIC_URL%/auto-login-and-debug.js"></script> -->
+  </body>
+</html>
