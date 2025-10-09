@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { supaFetch } from '../../utils/supaFetch';
+import { quoteSendingService } from '../../services/QuoteSendingService';
 
 
 export default function SendQuoteModal({ isOpen, onClose, quote, customer, companyId, userEmail, userName, onSent, initialSubject, initialMessage, handleExportPDF }){
@@ -53,64 +54,43 @@ export default function SendQuoteModal({ isOpen, onClose, quote, customer, compa
     try {
       setSending(true);
 
-      // 1) Update work order status and timestamp
-      console.log('📤 Updating quote status to "sent" for quote:', quote.id);
-      const updateResponse = await supaFetch(`work_orders?id=eq.${quote.id}`, {
-        method: 'PATCH',
-        body: {
-          status: 'sent',  // ✅ Lowercase to match enum
-          quote_sent_at: new Date().toISOString()
-        }
-      }, companyId);
-
-      if (!updateResponse.ok) {
-        console.error('❌ Failed to update quote status:', await updateResponse.text());
-        throw new Error('Failed to update quote status');
-      }
-      console.log('✅ Quote status updated to "sent"');
-
-      // 2) Create delivery tracking record
-      const deliveryData = {
-        company_id: companyId,
-        work_order_id: quote.id,
-        delivery_method: 'email',
-        recipient_email: toEmail,
-        email_subject: subject,
-        email_body: message,
-        delivery_status: 'sent',
-        sent_at: new Date().toISOString()
-      };
-
-      try {
-        await supaFetch('quote_deliveries', {
-          method: 'POST',
-          body: deliveryData
-        }, companyId);
-      } catch (deliveryError) {
-        console.warn('Failed to create delivery record:', deliveryError);
-        // Continue even if delivery tracking fails
-      }
-
-      // 3) Open PDF in a new tab if requested (user can download)
-      if (includePdf && handleExportPDF) {
-        try {
-          await handleExportPDF(quote);
-        } catch (pdfError) {
-          console.error('PDF generation failed:', pdfError);
-        }
-      }
-
-      // 4) TODO: Actually send email via SendGrid/Mailgun
-      // await IntegrationService.sendEmail(deliveryData);
-
-      await new Promise(r => setTimeout(r, 500));
-      window?.toast?.success?.('Quote sent successfully!');
-      onSent && onSent();
+      // Close modal immediately and show "sending" toast
+      window?.toast?.info?.('Sending quote email...');
       onClose();
+
+      // Send email in background using QuoteSendingService
+      quoteSendingService.sendQuoteEmail(
+        companyId,
+        quote.id,
+        {
+          subject: subject,
+          customMessage: message,
+          fromEmail: fromEmail,
+          includePDF: includePdf
+        }
+      ).then((result) => {
+        console.log('✅ Quote email sent successfully:', result);
+        window?.toast?.success?.(`Quote sent to ${toEmail}!`);
+
+        // Update quote status to 'sent'
+        return supaFetch(`work_orders?id=eq.${quote.id}`, {
+          method: 'PATCH',
+          body: {
+            status: 'sent',
+            quote_sent_at: new Date().toISOString()
+          }
+        }, companyId);
+      }).then(() => {
+        // Trigger refresh callback
+        onSent && onSent();
+      }).catch((error) => {
+        console.error('❌ Failed to send quote email:', error);
+        window?.toast?.error?.(`Failed to send quote: ${error.message}`);
+      });
+
     } catch (e) {
       console.error('send quote error', e);
       window?.toast?.error?.('Failed to send quote');
-    } finally {
       setSending(false);
     }
   };
