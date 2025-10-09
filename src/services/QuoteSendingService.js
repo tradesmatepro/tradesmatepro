@@ -366,6 +366,8 @@ class QuoteSendingService {
 
   /**
    * Generate PDF as base64 string for email attachment
+   * Uses jsPDF's .html() method for proper text-based PDFs (not image-based)
+   * This creates small PDFs (~50-100KB) instead of huge image-based PDFs (12MB+)
    */
   async generatePDFBase64(company, quote, customer) {
     return new Promise((resolve, reject) => {
@@ -374,62 +376,52 @@ class QuoteSendingService {
         const container = document.createElement('div');
         container.style.position = 'absolute';
         container.style.left = '-9999px';
-        container.style.width = '800px';
+        container.style.width = '210mm';  // A4 width
         container.style.background = 'white';
-        container.style.padding = '40px';
+        container.style.padding = '20mm';
+        container.style.fontFamily = 'Arial, sans-serif';
+        container.style.fontSize = '12px';
+        container.style.lineHeight = '1.5';
 
         // Get HTML content from QuotePDFService
         const htmlContent = QuotePDFService.exportHtml(company, quote, [], customer);
         container.innerHTML = htmlContent;
         document.body.appendChild(container);
 
-        // Use html2canvas to render HTML to canvas
-        html2canvas(container, {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: '#ffffff'
-        }).then(canvas => {
-          // Remove temporary container
-          document.body.removeChild(container);
+        // Create PDF using jsPDF's .html() method for text-based PDFs
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+          compress: true  // Enable compression for smaller file size
+        });
 
-          // Create PDF from canvas
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
-          });
-
-          const imgWidth = 210; // A4 width in mm
-          const pageHeight = 297; // A4 height in mm
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-          let heightLeft = imgHeight;
-          let position = 0;
-
-          // Add first page
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-
-          // Add additional pages if content is longer than one page
-          while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-          }
-
-          // Get PDF as base64 string (remove data:application/pdf;base64, prefix)
-          const pdfBase64 = pdf.output('datauristring').split(',')[1];
-          resolve(pdfBase64);
-        }).catch(error => {
-          // Clean up on error
-          if (document.body.contains(container)) {
+        // Use jsPDF's .html() method to convert HTML to text-based PDF
+        pdf.html(container, {
+          callback: function(doc) {
+            // Remove temporary container
             document.body.removeChild(container);
+
+            // Get PDF as base64 string (remove data:application/pdf;base64, prefix)
+            const pdfBase64 = doc.output('datauristring').split(',')[1];
+            resolve(pdfBase64);
+          },
+          x: 10,
+          y: 10,
+          width: 190,  // A4 width (210mm) - margins (20mm)
+          windowWidth: 800,  // Virtual window width for HTML rendering
+          html2canvas: {
+            scale: 0.25,  // Low scale for text-based rendering (not image quality)
+            logging: false,
+            letterRendering: true
           }
-          reject(error);
         });
       } catch (error) {
+        // Clean up on error
+        const container = document.querySelector('div[style*="-9999px"]');
+        if (container && document.body.contains(container)) {
+          document.body.removeChild(container);
+        }
         reject(error);
       }
     });
