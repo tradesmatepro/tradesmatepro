@@ -141,7 +141,38 @@
       color: #667eea;
       margin-left: 20px;
     }
-    
+
+    .quote-summary {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row.discount .summary-value {
+      color: #10b981;
+    }
+
+    .summary-label {
+      color: #666;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      color: #333;
+    }
+
     .total {
       background: #667eea;
       color: white;
@@ -273,11 +304,11 @@
 
       try {
         // Fetch quote from Supabase - use array response to avoid 406 error
+        // First try to get the quote without status filter to see what's there
         const { data: quotes, error: fetchError } = await supabase
           .from('work_orders')
           .select('*, customers(*), companies(*)')
           .eq('id', quoteId)
-          .eq('status', 'sent')
           .limit(1);
 
         if (fetchError) {
@@ -286,10 +317,32 @@
         }
 
         if (!quotes || quotes.length === 0) {
-          throw new Error('Quote not found or already processed');
+          throw new Error('Quote not found. Please check the link from your email.');
         }
 
         const quote = quotes[0];
+        console.log('Quote loaded:', quote);
+
+        // Check if quote has already been processed
+        if (quote.status === 'approved') {
+          loading.style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          document.getElementById('success').innerHTML = `
+            <h2>✅ Quote Already Approved</h2>
+            <p style="margin-top: 15px;">This quote was approved on ${new Date(quote.quote_approved_at).toLocaleDateString()}. We'll be in touch soon!</p>
+          `;
+          return;
+        }
+
+        if (quote.status === 'rejected') {
+          loading.style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          document.getElementById('success').innerHTML = `
+            <h2>Quote Declined</h2>
+            <p style="margin-top: 15px;">This quote was declined on ${new Date(quote.quote_rejected_at).toLocaleDateString()}.</p>
+          `;
+          return;
+        }
 
         // Fetch line items
         const { data: lineItems, error: itemsError } = await supabase
@@ -349,25 +402,59 @@
           <div class="line-items">
             <h3>Items & Services</h3>
         `;
-        
+
         lineItems.forEach(item => {
           const price = parseFloat(item.total_price || 0).toFixed(2);
-          const qty = item.quantity || 1;
+          const qty = parseFloat(item.quantity || 1);
+          const unitPrice = parseFloat(item.unit_price || 0).toFixed(2);
           html += `
             <div class="line-item">
               <div class="line-item-desc">
                 <strong>${item.description || 'Service'}</strong>
-                ${qty > 1 ? `<br><small>Quantity: ${qty}</small>` : ''}
+                ${qty > 1 ? `<br><small>Quantity: ${qty} × $${unitPrice}</small>` : ''}
               </div>
               <div class="line-item-price">$${price}</div>
             </div>
           `;
         });
-        
+
         html += `</div>`;
       }
 
+      // Show subtotal, tax, and total breakdown
+      const subtotal = parseFloat(quote.subtotal || 0).toFixed(2);
+      const taxAmount = parseFloat(quote.tax_amount || 0).toFixed(2);
+      const discountAmount = parseFloat(quote.discount_amount || 0).toFixed(2);
+
       html += `
+        <div class="quote-summary">
+          <div class="summary-row">
+            <span class="summary-label">Subtotal:</span>
+            <span class="summary-value">$${subtotal}</span>
+          </div>
+      `;
+
+      if (parseFloat(discountAmount) > 0) {
+        html += `
+          <div class="summary-row discount">
+            <span class="summary-label">Discount:</span>
+            <span class="summary-value">-$${discountAmount}</span>
+          </div>
+        `;
+      }
+
+      if (parseFloat(taxAmount) > 0) {
+        html += `
+          <div class="summary-row">
+            <span class="summary-label">Tax:</span>
+            <span class="summary-value">$${taxAmount}</span>
+          </div>
+        `;
+      }
+
+      html += `
+        </div>
+
         <div class="total">
           <div class="total-label">Total Amount</div>
           <div class="total-amount">$${totalAmount}</div>
