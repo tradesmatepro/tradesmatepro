@@ -327,9 +327,10 @@
         if (quote.status === 'approved') {
           loading.style.display = 'none';
           document.getElementById('success').style.display = 'block';
+          const approvedDate = quote.approved_at || quote.customer_approved_at;
           document.getElementById('success').innerHTML = `
             <h2>✅ Quote Already Approved</h2>
-            <p style="margin-top: 15px;">This quote was approved on ${new Date(quote.quote_approved_at).toLocaleDateString()}. We'll be in touch soon!</p>
+            <p style="margin-top: 15px;">This quote was approved${approvedDate ? ' on ' + new Date(approvedDate).toLocaleDateString() : ''}. We'll be in touch soon!</p>
           `;
           return;
         }
@@ -337,9 +338,10 @@
         if (quote.status === 'rejected') {
           loading.style.display = 'none';
           document.getElementById('success').style.display = 'block';
+          const rejectedDate = quote.rejected_at || quote.quote_rejected_at;
           document.getElementById('success').innerHTML = `
             <h2>Quote Declined</h2>
-            <p style="margin-top: 15px;">This quote was declined on ${new Date(quote.quote_rejected_at).toLocaleDateString()}.</p>
+            <p style="margin-top: 15px;">This quote was declined${rejectedDate ? ' on ' + new Date(rejectedDate).toLocaleDateString() : ''}.</p>
           `;
           return;
         }
@@ -484,7 +486,8 @@
           .from('work_orders')
           .update({
             status: 'approved',
-            quote_approved_at: new Date().toISOString()
+            approved_at: new Date().toISOString(),
+            customer_approved_at: new Date().toISOString()
           })
           .eq('id', quoteId);
 
@@ -515,6 +518,7 @@
           .from('work_orders')
           .update({
             status: 'rejected',
+            rejected_at: new Date().toISOString(),
             quote_rejected_at: new Date().toISOString()
           })
           .eq('id', quoteId);
