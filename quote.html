@@ -272,16 +272,24 @@
       }
 
       try {
-        // Fetch quote from Supabase
-        const { data: quote, error: fetchError } = await supabase
+        // Fetch quote from Supabase - use array response to avoid 406 error
+        const { data: quotes, error: fetchError } = await supabase
           .from('work_orders')
           .select('*, customers(*), companies(*)')
           .eq('id', quoteId)
           .eq('status', 'sent')
-          .single();
+          .limit(1);
 
-        if (fetchError) throw fetchError;
-        if (!quote) throw new Error('Quote not found or already processed');
+        if (fetchError) {
+          console.error('Fetch error:', fetchError);
+          throw fetchError;
+        }
+
+        if (!quotes || quotes.length === 0) {
+          throw new Error('Quote not found or already processed');
+        }
+
+        const quote = quotes[0];
 
         // Fetch line items
         const { data: lineItems, error: itemsError } = await supabase
