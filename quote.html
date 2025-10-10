@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Your Quote - TradeMate Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+    
+    .content {
+      padding: 40px;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .error {
+      background: #fee;
+      border: 2px solid #f88;
+      color: #c33;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .success {
+      background: #efe;
+      border: 2px solid #8f8;
+      color: #3c3;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    
+    .quote-details {
+      margin: 30px 0;
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: #666;
+    }
+    
+    .detail-value {
+      color: #333;
+      text-align: right;
+    }
+    
+    .line-items {
+      margin: 30px 0;
+    }
+    
+    .line-items h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+    
+    .line-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f9f9f9;
+      margin-bottom: 8px;
+      border-radius: 6px;
+    }
+    
+    .line-item-desc {
+      flex: 1;
+    }
+    
+    .line-item-price {
+      font-weight: 600;
+      color: #667eea;
+      margin-left: 20px;
+    }
+    
+    .total {
+      background: #667eea;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 30px 0;
+      text-align: center;
+    }
+    
+    .total-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+    
+    .total-amount {
+      font-size: 36px;
+      font-weight: bold;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .btn-approve {
+      background: #10b981;
+      color: white;
+    }
+    
+    .btn-approve:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+    
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+    }
+    
+    .btn-reject:hover:not(:disabled) {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    
+    .status-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 Your Quote</h1>
+      <p>Review and respond to your quote below</p>
+    </div>
+    
+    <div class="content">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your quote...</p>
+      </div>
+      
+      <div id="error" class="error" style="display: none;"></div>
+      <div id="success" class="success" style="display: none;"></div>
+      <div id="quote-content" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_62eAoe6DcrOweYtnzfhHmQ_aYY4JZSG';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Get quote ID from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+
+    async function loadQuote() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const quoteContent = document.getElementById('quote-content');
+
+      if (!quoteId) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = '❌ No quote ID provided. Please use the link from your email.';
+        return;
+      }
+
+      try {
+        // Fetch quote from Supabase
+        const { data: quote, error: fetchError } = await supabase
+          .from('work_orders')
+          .select('*, customers(*), companies(*)')
+          .eq('id', quoteId)
+          .eq('status', 'sent')
+          .single();
+
+        if (fetchError) throw fetchError;
+        if (!quote) throw new Error('Quote not found or already processed');
+
+        // Fetch line items
+        const { data: lineItems, error: itemsError } = await supabase
+          .from('work_order_line_items')
+          .select('*')
+          .eq('work_order_id', quoteId)
+          .order('sort_order');
+
+        if (itemsError) throw itemsError;
+
+        // Display quote
+        displayQuote(quote, lineItems || []);
+        
+        loading.style.display = 'none';
+        quoteContent.style.display = 'block';
+
+      } catch (err) {
+        console.error('Error loading quote:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `❌ Error: ${err.message}`;
+      }
+    }
+
+    function displayQuote(quote, lineItems) {
+      const quoteContent = document.getElementById('quote-content');
+      
+      const quoteNumber = quote.work_order_number || quote.quote_number || 'N/A';
+      const customerName = quote.customers?.name || 'Valued Customer';
+      const companyName = quote.companies?.name || 'TradeMate Pro';
+      const totalAmount = parseFloat(quote.total_amount || 0).toFixed(2);
+      const createdDate = new Date(quote.created_at).toLocaleDateString();
+
+      let html = `
+        <div class="quote-details">
+          <div class="detail-row">
+            <span class="detail-label">Quote Number:</span>
+            <span class="detail-value"><strong>${quoteNumber}</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">From:</span>
+            <span class="detail-value">${companyName}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">To:</span>
+            <span class="detail-value">${customerName}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date:</span>
+            <span class="detail-value">${createdDate}</span>
+          </div>
+        </div>
+      `;
+
+      if (lineItems.length > 0) {
+        html += `
+          <div class="line-items">
+            <h3>Items & Services</h3>
+        `;
+        
+        lineItems.forEach(item => {
+          const price = parseFloat(item.total_price || 0).toFixed(2);
+          const qty = item.quantity || 1;
+          html += `
+            <div class="line-item">
+              <div class="line-item-desc">
+                <strong>${item.description || 'Service'}</strong>
+                ${qty > 1 ? `<br><small>Quantity: ${qty}</small>` : ''}
+              </div>
+              <div class="line-item-price">$${price}</div>
+            </div>
+          `;
+        });
+        
+        html += `</div>`;
+      }
+
+      html += `
+        <div class="total">
+          <div class="total-label">Total Amount</div>
+          <div class="total-amount">$${totalAmount}</div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-approve" onclick="approveQuote()">
+            ✅ Approve Quote
+          </button>
+          <button class="btn btn-reject" onclick="rejectQuote()">
+            ❌ Decline Quote
+          </button>
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+    }
+
+    async function approveQuote() {
+      if (!confirm('Are you sure you want to approve this quote?')) return;
+
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => btn.disabled = true);
+
+      try {
+        const { error } = await supabase
+          .from('work_orders')
+          .update({
+            status: 'approved',
+            quote_approved_at: new Date().toISOString()
+          })
+          .eq('id', quoteId);
+
+        if (error) throw error;
+
+        document.getElementById('quote-content').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('success').innerHTML = `
+          <h2>✅ Quote Approved!</h2>
+          <p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>
+        `;
+
+      } catch (err) {
+        console.error('Error approving quote:', err);
+        alert('Error approving quote: ' + err.message);
+        buttons.forEach(btn => btn.disabled = false);
+      }
+    }
+
+    async function rejectQuote() {
+      if (!confirm('Are you sure you want to decline this quote?')) return;
+
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => btn.disabled = true);
+
+      try {
+        const { error } = await supabase
+          .from('work_orders')
+          .update({
+            status: 'rejected',
+            quote_rejected_at: new Date().toISOString()
+          })
+          .eq('id', quoteId);
+
+        if (error) throw error;
+
+        document.getElementById('quote-content').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('success').innerHTML = `
+          <h2>Quote Declined</h2>
+          <p style="margin-top: 15px;">We've received your response. If you have any questions, please contact us.</p>
+        `;
+
+      } catch (err) {
+        console.error('Error rejecting quote:', err);
+        alert('Error declining quote: ' + err.message);
+        buttons.forEach(btn => btn.disabled = false);
+      }
+    }
+
+    // Load quote on page load
+    loadQuote();
+  </script>
+</body>
+</html>
+
