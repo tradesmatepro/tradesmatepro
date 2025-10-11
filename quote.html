@@ -259,6 +259,110 @@
       background: #fef3c7;
       color: #92400e;
     }
+
+    /* Wizard Styles */
+    .wizard {
+      padding: 20px 0;
+    }
+
+    .wizard-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .wizard-steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e5e7eb;
+      z-index: 0;
+    }
+
+    .wizard-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .wizard-step.active .step-number {
+      background: #667eea;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .wizard-step.completed .step-number {
+      background: #10b981;
+      color: white;
+    }
+
+    .step-name {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .wizard-step.active .step-name {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .wizard-step.completed .step-name {
+      color: #10b981;
+    }
+
+    .wizard-content {
+      background: #f9fafb;
+      padding: 30px;
+      border-radius: 8px;
+      min-height: 300px;
+    }
+
+    .wizard-content h2 {
+      margin-bottom: 20px;
+      color: #1f2937;
+    }
+
+    .wizard-actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #4b5563;
+    }
+
+    #signature-canvas {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      background: white;
+    }
   </style>
 </head>
 <body>
@@ -290,6 +394,17 @@
     const urlParams = new URLSearchParams(window.location.search);
     const quoteId = urlParams.get('id');
 
+    // Global state
+    let quoteData = null;
+    let companySettings = null;
+    let currentStep = 'review'; // review, signature, terms, deposit, schedule, confirmation
+    let approvalData = {
+      signature: null,
+      termsAccepted: false,
+      depositPaid: false,
+      scheduledTime: null
+    };
+
     async function loadQuote() {
       const loading = document.getElementById('loading');
       const error = document.getElementById('error');
@@ -303,8 +418,7 @@
       }
 
       try {
-        // Fetch quote from Supabase - use array response to avoid 406 error
-        // First try to get the quote without status filter to see what's there
+        // Fetch quote from Supabase
         const { data: quotes, error: fetchError } = await supabase
           .from('work_orders')
           .select('*, customers(*), companies(*)')
@@ -321,7 +435,30 @@
         }
 
         const quote = quotes[0];
+        quoteData = quote;
         console.log('Quote loaded:', quote);
+
+        // Load company settings for approval workflow
+        const { data: settings, error: settingsError } = await supabase
+          .from('settings')
+          .select('*')
+          .eq('company_id', quote.company_id)
+          .single();
+
+        if (settingsError) {
+          console.warn('Could not load company settings:', settingsError);
+          // Use defaults if settings not found
+          companySettings = {
+            require_signature_on_approval: false,
+            require_terms_acceptance: false,
+            require_deposit_on_approval: false,
+            allow_customer_scheduling: false
+          };
+        } else {
+          companySettings = settings;
+        }
+
+        console.log('Company settings:', companySettings);
 
         // Check if quote has already been processed
         if (quote.status === 'approved') {
@@ -357,7 +494,7 @@
 
         // Display quote
         displayQuote(quote, lineItems || []);
-        
+
         loading.style.display = 'none';
         quoteContent.style.display = 'block';
 
@@ -476,35 +613,248 @@
     }
 
     async function approveQuote() {
-      if (!confirm('Are you sure you want to approve this quote?')) return;
+      // Start the multi-step approval wizard
+      currentStep = 'review';
 
-      const buttons = document.querySelectorAll('.btn');
-      buttons.forEach(btn => btn.disabled = true);
+      console.log('=== APPROVAL WIZARD DEBUG ===');
+      console.log('Company Settings:', companySettings);
 
-      try {
-        const { error } = await supabase
-          .from('work_orders')
-          .update({
-            status: 'approved',
-            approved_at: new Date().toISOString(),
-            customer_approved_at: new Date().toISOString()
-          })
-          .eq('id', quoteId);
-
-        if (error) throw error;
-
-        document.getElementById('quote-content').style.display = 'none';
-        document.getElementById('success').style.display = 'block';
-        document.getElementById('success').innerHTML = `
-          <h2>✅ Quote Approved!</h2>
-          <p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>
-        `;
-
-      } catch (err) {
-        console.error('Error approving quote:', err);
-        alert('Error approving quote: ' + err.message);
-        buttons.forEach(btn => btn.disabled = false);
+      // Determine which steps are needed based on company settings
+      const steps = ['review'];
+      if (companySettings && companySettings.require_signature_on_approval) {
+        console.log('Adding signature step');
+        steps.push('signature');
       }
+      if (companySettings && companySettings.require_terms_acceptance) {
+        console.log('Adding terms step');
+        steps.push('terms');
+      }
+      if (companySettings && companySettings.require_deposit_on_approval) {
+        console.log('Adding deposit step');
+        steps.push('deposit');
+      }
+      if (companySettings && companySettings.allow_customer_scheduling) {
+        console.log('Adding schedule step');
+        steps.push('schedule');
+      }
+      steps.push('confirmation');
+
+      console.log('Total steps:', steps);
+
+      // If no additional steps, just approve immediately
+      if (steps.length === 2) { // Only 'review' and 'confirmation'
+        console.log('No additional steps - showing simple confirm');
+        if (!confirm('Are you sure you want to approve this quote?')) return;
+        await finalizeApproval();
+        return;
+      }
+
+      // Show the wizard
+      console.log('Showing wizard with steps:', steps);
+      showApprovalWizard(steps);
+    }
+
+    function showApprovalWizard(steps) {
+      const quoteContent = document.getElementById('quote-content');
+
+      let html = `
+        <div class="wizard">
+          <div class="wizard-steps">
+            ${steps.map((step, index) => `
+              <div class="wizard-step ${index === 0 ? 'active' : ''}">
+                <div class="step-number">${index + 1}</div>
+                <div class="step-name">${getStepName(step)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div id="wizard-content" class="wizard-content">
+            ${getStepContent(steps[0], steps)}
+          </div>
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+    }
+
+    function getStepName(step) {
+      const names = {
+        'review': 'Review',
+        'signature': 'Signature',
+        'terms': 'Terms',
+        'deposit': 'Deposit',
+        'schedule': 'Schedule',
+        'confirmation': 'Complete'
+      };
+      return names[step] || step;
+    }
+
+    function getStepContent(step, allSteps) {
+      switch(step) {
+        case 'review':
+          return getReviewStepContent(allSteps);
+        case 'signature':
+          return getSignatureStepContent();
+        case 'terms':
+          return getTermsStepContent();
+        case 'deposit':
+          return getDepositStepContent();
+        case 'schedule':
+          return getScheduleStepContent();
+        case 'confirmation':
+          return getConfirmationStepContent();
+        default:
+          return '<p>Unknown step</p>';
+      }
+    }
+
+    function getReviewStepContent(allSteps) {
+      const nextSteps = allSteps.filter(s => s !== 'review' && s !== 'confirmation');
+      return `
+        <h2>📋 Review & Approve Quote</h2>
+        <p style="margin: 20px 0;">You're about to approve this quote for <strong>$${quoteData.total_amount.toFixed(2)}</strong></p>
+
+        ${nextSteps.length > 0 ? `
+          <div style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin: 20px 0;">
+            <strong>Next steps:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+              ${nextSteps.map(step => `<li>${getStepDescription(step)}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="nextWizardStep(${JSON.stringify(allSteps)}, 0)">
+            Continue to Approve
+          </button>
+          <button class="btn btn-secondary" onclick="location.reload()">
+            Cancel
+          </button>
+        </div>
+      `;
+    }
+
+    function getStepDescription(step) {
+      const descriptions = {
+        'signature': 'Sign the quote digitally',
+        'terms': 'Accept terms and conditions',
+        'deposit': 'Pay deposit',
+        'schedule': 'Schedule your service',
+      };
+      return descriptions[step] || step;
+    }
+
+    function getSignatureStepContent() {
+      return `
+        <h2>✍️ Digital Signature</h2>
+        <p style="margin: 20px 0;">Please sign below to approve this quote:</p>
+
+        <div style="border: 2px solid #ddd; border-radius: 8px; background: white; margin: 20px 0;">
+          <canvas id="signature-canvas" width="700" height="200" style="display: block; cursor: crosshair;"></canvas>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-secondary" onclick="clearSignature()">Clear</button>
+          <button class="btn btn-approve" onclick="saveSignature()">Continue</button>
+        </div>
+      `;
+    }
+
+    function getTermsStepContent() {
+      const terms = companySettings.terms_and_conditions_text || 'By accepting this quote, you agree to the terms and conditions.';
+      return `
+        <h2>📄 Terms & Conditions</h2>
+        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 20px; margin: 20px 0; background: #f9f9f9;">
+          ${terms.replace(/\n/g, '<br>')}
+        </div>
+
+        <label style="display: flex; align-items: center; margin: 20px 0; cursor: pointer;">
+          <input type="checkbox" id="terms-checkbox" style="margin-right: 10px; width: 20px; height: 20px;">
+          <span>I have read and agree to the terms and conditions</span>
+        </label>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="acceptTerms()" id="accept-terms-btn" disabled>Continue</button>
+        </div>
+      `;
+    }
+
+    function getDepositStepContent() {
+      const depositAmount = companySettings.deposit_type === 'percentage'
+        ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
+        : companySettings.default_deposit_amount;
+
+      return `
+        <h2>💳 Deposit Payment</h2>
+        <p style="margin: 20px 0;">A deposit of <strong>$${depositAmount.toFixed(2)}</strong> is required to proceed.</p>
+
+        <div id="stripe-payment-element" style="margin: 20px 0;"></div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="processDeposit()">Pay Deposit</button>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+          <em>Note: This is a placeholder. Stripe integration coming soon.</em>
+        </p>
+      `;
+    }
+
+    function getScheduleStepContent() {
+      return `
+        <h2>📅 Schedule Your Service</h2>
+        <p style="margin: 20px 0;">Select a date and time for your service:</p>
+
+        <div style="margin: 20px 0;">
+          <label style="display: block; margin-bottom: 10px;">
+            <strong>Preferred Date:</strong>
+            <input type="date" id="schedule-date" style="display: block; width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+          </label>
+
+          <label style="display: block; margin-top: 20px;">
+            <strong>Preferred Time:</strong>
+            <select id="schedule-time" style="display: block; width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
+              <option value="">Select a time...</option>
+              <option value="08:00">8:00 AM</option>
+              <option value="09:00">9:00 AM</option>
+              <option value="10:00">10:00 AM</option>
+              <option value="11:00">11:00 AM</option>
+              <option value="12:00">12:00 PM</option>
+              <option value="13:00">1:00 PM</option>
+              <option value="14:00">2:00 PM</option>
+              <option value="15:00">3:00 PM</option>
+              <option value="16:00">4:00 PM</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="saveSchedule()">Continue</button>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+          <em>Note: This is a placeholder. Full scheduling integration coming soon.</em>
+        </p>
+      `;
+    }
+
+    function getConfirmationStepContent() {
+      return `
+        <h2>🎉 All Set!</h2>
+        <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
+
+        <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
+          <strong>What happens next?</strong>
+          <ul style="margin: 10px 0 0 20px;">
+            <li>We'll send you a confirmation email</li>
+            <li>Our team will contact you to finalize details</li>
+            <li>We'll get started on your project!</li>
+          </ul>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="location.reload()">Done</button>
+        </div>
+      `;
     }
 
     async function rejectQuote() {
@@ -514,14 +864,12 @@
       buttons.forEach(btn => btn.disabled = true);
 
       try {
-        const { error } = await supabase
-          .from('work_orders')
-          .update({
-            status: 'rejected',
-            rejected_at: new Date().toISOString(),
-            quote_rejected_at: new Date().toISOString()
-          })
-          .eq('id', quoteId);
+        // Use RPC function to reject quote (bypasses RLS issues)
+        const { data, error } = await supabase
+          .rpc('approve_quote', {
+            quote_id: quoteId,
+            new_status: 'rejected'
+          });
 
         if (error) throw error;
 
@@ -536,6 +884,190 @@
         console.error('Error rejecting quote:', err);
         alert('Error declining quote: ' + err.message);
         buttons.forEach(btn => btn.disabled = false);
+      }
+    }
+
+    // Wizard navigation
+    function nextWizardStep(allSteps, currentIndex) {
+      const nextIndex = currentIndex + 1;
+      if (nextIndex >= allSteps.length) {
+        finalizeApproval();
+        return;
+      }
+
+      const nextStep = allSteps[nextIndex];
+      currentStep = nextStep;
+
+      // Update wizard UI
+      const wizardContent = document.getElementById('wizard-content');
+      wizardContent.innerHTML = getStepContent(nextStep, allSteps);
+
+      // Update step indicators
+      const stepElements = document.querySelectorAll('.wizard-step');
+      stepElements.forEach((el, index) => {
+        el.classList.remove('active', 'completed');
+        if (index < nextIndex) el.classList.add('completed');
+        if (index === nextIndex) el.classList.add('active');
+      });
+
+      // Initialize step-specific functionality
+      initializeStep(nextStep);
+    }
+
+    function initializeStep(step) {
+      if (step === 'signature') {
+        initializeSignaturePad();
+      } else if (step === 'terms') {
+        const checkbox = document.getElementById('terms-checkbox');
+        const btn = document.getElementById('accept-terms-btn');
+        checkbox.addEventListener('change', () => {
+          btn.disabled = !checkbox.checked;
+        });
+      }
+    }
+
+    // Signature handling
+    let signaturePad = null;
+    let canvas = null;
+    let ctx = null;
+    let isDrawing = false;
+
+    function initializeSignaturePad() {
+      canvas = document.getElementById('signature-canvas');
+      ctx = canvas.getContext('2d');
+
+      canvas.addEventListener('mousedown', startDrawing);
+      canvas.addEventListener('mousemove', draw);
+      canvas.addEventListener('mouseup', stopDrawing);
+      canvas.addEventListener('mouseout', stopDrawing);
+
+      // Touch events for mobile
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        isDrawing = true;
+      });
+
+      canvas.addEventListener('touchmove', (e) => {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      });
+
+      canvas.addEventListener('touchend', () => {
+        isDrawing = false;
+      });
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function saveSignature() {
+      const signatureData = canvas.toDataURL();
+      approvalData.signature = signatureData;
+
+      // Find current step index and move to next
+      const steps = getCurrentSteps();
+      const currentIndex = steps.indexOf('signature');
+      nextWizardStep(steps, currentIndex);
+    }
+
+    function acceptTerms() {
+      approvalData.termsAccepted = true;
+      const steps = getCurrentSteps();
+      const currentIndex = steps.indexOf('terms');
+      nextWizardStep(steps, currentIndex);
+    }
+
+    function processDeposit() {
+      // Placeholder for Stripe integration
+      alert('Deposit payment integration coming soon. For now, we\'ll proceed without payment.');
+      approvalData.depositPaid = true;
+      const steps = getCurrentSteps();
+      const currentIndex = steps.indexOf('deposit');
+      nextWizardStep(steps, currentIndex);
+    }
+
+    function saveSchedule() {
+      const date = document.getElementById('schedule-date').value;
+      const time = document.getElementById('schedule-time').value;
+
+      if (!date || !time) {
+        alert('Please select both a date and time');
+        return;
+      }
+
+      approvalData.scheduledTime = `${date} ${time}`;
+      const steps = getCurrentSteps();
+      const currentIndex = steps.indexOf('schedule');
+      nextWizardStep(steps, currentIndex);
+    }
+
+    function getCurrentSteps() {
+      const steps = ['review'];
+      if (companySettings.require_signature_on_approval) steps.push('signature');
+      if (companySettings.require_terms_acceptance) steps.push('terms');
+      if (companySettings.require_deposit_on_approval) steps.push('deposit');
+      if (companySettings.allow_customer_scheduling) steps.push('schedule');
+      steps.push('confirmation');
+      return steps;
+    }
+
+    async function finalizeApproval() {
+      try {
+        // Use RPC function to approve quote
+        const { data, error } = await supabase
+          .rpc('approve_quote', {
+            quote_id: quoteId,
+            new_status: 'approved'
+          });
+
+        if (error) throw error;
+
+        // Show confirmation step
+        const steps = getCurrentSteps();
+        const wizardContent = document.getElementById('wizard-content');
+        wizardContent.innerHTML = getConfirmationStepContent();
+
+        // Update all steps to completed
+        const stepElements = document.querySelectorAll('.wizard-step');
+        stepElements.forEach(el => el.classList.add('completed'));
+
+      } catch (err) {
+        console.error('Error approving quote:', err);
+        alert('Error approving quote: ' + err.message);
       }
     }
 
