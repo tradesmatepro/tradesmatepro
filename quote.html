@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>View Your Quote - TradeMate Pro</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Version: 2.0 - Multi-step approval wizard -->
   <style>
     * {
       margin: 0;
@@ -385,6 +389,10 @@
   </div>
 
   <script>
+    // Version check
+    console.log('🚀 Quote Portal v2.0 - Multi-step Approval Wizard');
+    console.log('📅 Loaded at:', new Date().toISOString());
+
     // Supabase configuration
     const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_62eAoe6DcrOweYtnzfhHmQ_aYY4JZSG';
@@ -439,26 +447,46 @@
         console.log('Quote loaded:', quote);
 
         // Load company settings for approval workflow
-        const { data: settings, error: settingsError } = await supabase
-          .from('settings')
-          .select('*')
-          .eq('company_id', quote.company_id)
-          .single();
+        // Use direct fetch to avoid 406 error
+        try {
+          const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/settings?company_id=eq.${quote.company_id}&select=*`,
+            {
+              headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+            }
+          );
 
-        if (settingsError) {
-          console.warn('Could not load company settings:', settingsError);
+          if (response.ok) {
+            const settingsArray = await response.json();
+            if (settingsArray && settingsArray.length > 0) {
+              companySettings = settingsArray[0];
+              console.log('✅ Company settings loaded:', companySettings);
+            } else {
+              throw new Error('No settings found');
+            }
+          } else {
+            throw new Error(`Settings fetch failed: ${response.status}`);
+          }
+        } catch (settingsError) {
+          console.warn('⚠️ Could not load company settings:', settingsError);
           // Use defaults if settings not found
           companySettings = {
-            require_signature_on_approval: false,
-            require_terms_acceptance: false,
-            require_deposit_on_approval: false,
-            allow_customer_scheduling: false
+            require_signature_on_approval: true,  // Enable by default for testing
+            require_terms_acceptance: true,
+            require_deposit_on_approval: true,
+            allow_customer_scheduling: true,
+            terms_and_conditions_text: 'TERMS AND CONDITIONS\n\n1. Payment: Full payment is due upon completion.\n2. Warranty: All work guaranteed for 90 days.\n3. Cancellation: 48 hours notice required.\n\nBy accepting this quote, you agree to these terms.',
+            deposit_type: 'percentage',
+            default_deposit_percentage: 25,
+            default_deposit_amount: 0
           };
-        } else {
-          companySettings = settings;
+          console.log('📋 Using default settings:', companySettings);
         }
-
-        console.log('Company settings:', companySettings);
 
         // Check if quote has already been processed
         if (quote.status === 'approved') {
@@ -1046,27 +1074,62 @@
     }
 
     async function finalizeApproval() {
+      console.log('🎯 finalizeApproval called');
+
       try {
         // Use RPC function to approve quote
+        console.log('📞 Calling approve_quote RPC...');
         const { data, error } = await supabase
           .rpc('approve_quote', {
             quote_id: quoteId,
             new_status: 'approved'
           });
 
-        if (error) throw error;
+        if (error) {
+          console.error('❌ RPC error:', error);
+          throw error;
+        }
 
-        // Show confirmation step
-        const steps = getCurrentSteps();
+        console.log('✅ Quote approved successfully');
+
+        // Check if we're in wizard mode or simple mode
         const wizardContent = document.getElementById('wizard-content');
-        wizardContent.innerHTML = getConfirmationStepContent();
+        const quoteContent = document.getElementById('quote-content');
+        const successDiv = document.getElementById('success');
 
-        // Update all steps to completed
-        const stepElements = document.querySelectorAll('.wizard-step');
-        stepElements.forEach(el => el.classList.add('completed'));
+        console.log('🔍 DOM elements:', {
+          wizardContent: !!wizardContent,
+          quoteContent: !!quoteContent,
+          successDiv: !!successDiv
+        });
+
+        if (wizardContent) {
+          // Wizard mode - show confirmation step
+          console.log('📋 Wizard mode - showing confirmation');
+          wizardContent.innerHTML = getConfirmationStepContent();
+
+          // Update all steps to completed
+          const stepElements = document.querySelectorAll('.wizard-step');
+          stepElements.forEach(el => el.classList.add('completed'));
+        } else {
+          // Simple mode - show success message
+          console.log('📋 Simple mode - showing success message');
+
+          if (quoteContent) quoteContent.style.display = 'none';
+          if (successDiv) {
+            successDiv.style.display = 'block';
+            successDiv.innerHTML = `
+              <h2>✅ Quote Approved!</h2>
+              <p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>
+            `;
+          } else {
+            console.error('❌ Success div not found!');
+            alert('Quote approved successfully!');
+          }
+        }
 
       } catch (err) {
-        console.error('Error approving quote:', err);
+        console.error('❌ Error approving quote:', err);
         alert('Error approving quote: ' + err.message);
       }
     }
