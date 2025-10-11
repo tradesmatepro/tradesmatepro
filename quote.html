@@ -711,7 +711,7 @@
     function getStepName(step) {
       const names = {
         'review': 'Review',
-        'signature': 'Signature',
+        'signature': 'Consent',
         'terms': 'Terms',
         'deposit': 'Deposit',
         'schedule': 'Schedule',
@@ -767,7 +767,7 @@
 
     function getStepDescription(step) {
       const descriptions = {
-        'signature': 'Sign the quote digitally',
+        'signature': 'Acknowledge and approve the quote',
         'terms': 'Accept terms and conditions',
         'deposit': 'Pay deposit',
         'schedule': 'Schedule your service',
@@ -777,16 +777,32 @@
 
     function getSignatureStepContent() {
       return `
-        <h2>✍️ Digital Signature</h2>
-        <p style="margin: 20px 0;">Please sign below to approve this quote:</p>
+        <h2>✅ Acknowledgement & Consent</h2>
+        <p style="margin: 20px 0;">Please review and acknowledge the following:</p>
 
-        <div style="border: 2px solid #ddd; border-radius: 8px; background: white; margin: 20px 0;">
-          <canvas id="signature-canvas" width="700" height="200" style="display: block; cursor: crosshair;"></canvas>
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <div style="margin-bottom: 15px;">
+            <strong>Quote Details:</strong>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Total Amount: <strong>$${quoteData.total_amount.toFixed(2)}</strong></li>
+              <li>Work Order: ${quoteData.work_order_number}</li>
+              <li>Customer: ${quoteData.customer?.name || 'N/A'}</li>
+            </ul>
+          </div>
+
+          <label style="display: flex; align-items: start; margin: 20px 0; cursor: pointer; padding: 15px; background: white; border-radius: 6px; border: 2px solid #e5e7eb;">
+            <input type="checkbox" id="consent-checkbox" style="margin-right: 12px; margin-top: 4px; width: 20px; height: 20px; cursor: pointer;">
+            <span style="flex: 1;">
+              <strong>I acknowledge and approve this quote.</strong><br>
+              <span style="font-size: 14px; color: #6b7280; margin-top: 5px; display: block;">
+                By checking this box, I confirm that I have reviewed the quote details and authorize the work to proceed as described.
+              </span>
+            </span>
+          </label>
         </div>
 
         <div class="wizard-actions">
-          <button class="btn btn-secondary" onclick="clearSignature()">Clear</button>
-          <button class="btn btn-approve" onclick="saveSignature()">Continue</button>
+          <button class="btn btn-approve" onclick="saveConsent()" id="consent-btn" disabled>Continue</button>
         </div>
       `;
     }
@@ -834,38 +850,22 @@
     function getScheduleStepContent() {
       return `
         <h2>📅 Schedule Your Service</h2>
-        <p style="margin: 20px 0;">Select a date and time for your service:</p>
+        <p style="margin: 20px 0;">Choose from our available time slots:</p>
 
-        <div style="margin: 20px 0;">
-          <label style="display: block; margin-bottom: 10px;">
-            <strong>Preferred Date:</strong>
-            <input type="date" id="schedule-date" style="display: block; width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
-          </label>
-
-          <label style="display: block; margin-top: 20px;">
-            <strong>Preferred Time:</strong>
-            <select id="schedule-time" style="display: block; width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
-              <option value="">Select a time...</option>
-              <option value="08:00">8:00 AM</option>
-              <option value="09:00">9:00 AM</option>
-              <option value="10:00">10:00 AM</option>
-              <option value="11:00">11:00 AM</option>
-              <option value="12:00">12:00 PM</option>
-              <option value="13:00">1:00 PM</option>
-              <option value="14:00">2:00 PM</option>
-              <option value="15:00">3:00 PM</option>
-              <option value="16:00">4:00 PM</option>
-            </select>
-          </label>
+        <div id="schedule-loading" style="text-align: center; padding: 40px;">
+          <div class="spinner" style="margin: 0 auto 15px;"></div>
+          <p>Loading available times...</p>
         </div>
 
-        <div class="wizard-actions">
-          <button class="btn btn-approve" onclick="saveSchedule()">Continue</button>
+        <div id="schedule-slots" style="display: none;">
+          <!-- Slots will be populated here -->
         </div>
 
-        <p style="margin-top: 20px; font-size: 14px; color: #666;">
-          <em>Note: This is a placeholder. Full scheduling integration coming soon.</em>
-        </p>
+        <div class="wizard-actions" id="schedule-actions" style="display: none;">
+          <button class="btn btn-approve" onclick="confirmSchedule()" id="confirm-schedule-btn" disabled>
+            Confirm Schedule
+          </button>
+        </div>
       `;
     }
 
@@ -953,88 +953,41 @@
 
     function initializeStep(step) {
       if (step === 'signature') {
-        initializeSignaturePad();
+        // Initialize consent checkbox
+        const checkbox = document.getElementById('consent-checkbox');
+        const btn = document.getElementById('consent-btn');
+        if (checkbox && btn) {
+          checkbox.addEventListener('change', () => {
+            btn.disabled = !checkbox.checked;
+          });
+        }
       } else if (step === 'terms') {
         const checkbox = document.getElementById('terms-checkbox');
         const btn = document.getElementById('accept-terms-btn');
-        checkbox.addEventListener('change', () => {
-          btn.disabled = !checkbox.checked;
-        });
+        if (checkbox && btn) {
+          checkbox.addEventListener('change', () => {
+            btn.disabled = !checkbox.checked;
+          });
+        }
+      } else if (step === 'schedule') {
+        // Load available scheduling slots
+        loadAvailableSlots();
       }
     }
 
-    // Signature handling
-    let signaturePad = null;
-    let canvas = null;
-    let ctx = null;
-    let isDrawing = false;
+    function saveConsent() {
+      const checkbox = document.getElementById('consent-checkbox');
+      if (!checkbox || !checkbox.checked) {
+        alert('Please check the consent box to continue');
+        return;
+      }
 
-    function initializeSignaturePad() {
-      canvas = document.getElementById('signature-canvas');
-      ctx = canvas.getContext('2d');
-
-      canvas.addEventListener('mousedown', startDrawing);
-      canvas.addEventListener('mousemove', draw);
-      canvas.addEventListener('mouseup', stopDrawing);
-      canvas.addEventListener('mouseout', stopDrawing);
-
-      // Touch events for mobile
-      canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        isDrawing = true;
-      });
-
-      canvas.addEventListener('touchmove', (e) => {
-        if (!isDrawing) return;
-        e.preventDefault();
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        const x = touch.clientX - rect.left;
-        const y = touch.clientY - rect.top;
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      });
-
-      canvas.addEventListener('touchend', () => {
-        isDrawing = false;
-      });
-    }
-
-    function startDrawing(e) {
-      isDrawing = true;
-      const rect = canvas.getBoundingClientRect();
-      ctx.beginPath();
-      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-    }
-
-    function draw(e) {
-      if (!isDrawing) return;
-      const rect = canvas.getBoundingClientRect();
-      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-    }
-
-    function stopDrawing() {
-      isDrawing = false;
-    }
-
-    function clearSignature() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    function saveSignature() {
-      const signatureData = canvas.toDataURL();
-      approvalData.signature = signatureData;
-      console.log('✍️ Signature saved');
+      approvalData.signature = {
+        consented: true,
+        timestamp: new Date().toISOString(),
+        ip: 'customer-portal' // Could capture real IP if needed
+      };
+      console.log('✅ Consent acknowledged');
 
       // Find current step index and move to next
       const currentIndex = wizardSteps.indexOf('signature');
@@ -1059,20 +1012,226 @@
       nextWizardStep(currentIndex);
     }
 
-    function saveSchedule() {
-      const date = document.getElementById('schedule-date').value;
-      const time = document.getElementById('schedule-time').value;
+    // Scheduling functions
+    let selectedSlot = null;
+    let availableSlots = [];
 
-      if (!date || !time) {
-        alert('Please select both a date and time');
+    async function loadAvailableSlots() {
+      console.log('📅 Loading available scheduling slots...');
+
+      try {
+        // Get employees for this company
+        const employeesResponse = await fetch(
+          `${SUPABASE_URL}/rest/v1/employees?company_id=eq.${quoteData.company_id}&select=id`,
+          {
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        if (!employeesResponse.ok) {
+          throw new Error('Failed to load employees');
+        }
+
+        const employees = await employeesResponse.json();
+        const employeeIds = employees.map(e => e.id);
+
+        if (employeeIds.length === 0) {
+          showScheduleError('No technicians available. Please contact us to schedule.');
+          return;
+        }
+
+        // Call smart scheduling API
+        const duration = 120; // Default 2 hours in minutes
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 14); // Next 2 weeks
+
+        const schedulingResponse = await fetch(
+          `${SUPABASE_URL}/functions/v1/smart-scheduling`,
+          {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              employeeIds,
+              durationMinutes: duration,
+              companyId: quoteData.company_id,
+              startDate: startDate.toISOString(),
+              endDate: endDate.toISOString()
+            })
+          }
+        );
+
+        if (!schedulingResponse.ok) {
+          throw new Error('Failed to get available slots');
+        }
+
+        const suggestions = await schedulingResponse.json();
+
+        // Flatten all available slots from all employees
+        availableSlots = [];
+        Object.values(suggestions.suggestions || {}).forEach(employeeData => {
+          (employeeData.available_slots || []).forEach(slot => {
+            availableSlots.push({
+              ...slot,
+              employee_id: employeeData.employee_id,
+              start_time: new Date(slot.start_time),
+              end_time: new Date(slot.end_time)
+            });
+          });
+        });
+
+        // Sort by date and time
+        availableSlots.sort((a, b) => a.start_time - b.start_time);
+
+        // Limit to 20 slots
+        availableSlots = availableSlots.slice(0, 20);
+
+        displayAvailableSlots();
+
+      } catch (error) {
+        console.error('❌ Error loading slots:', error);
+        showScheduleError('Unable to load available times. Please contact us to schedule.');
+      }
+    }
+
+    function displayAvailableSlots() {
+      const loadingDiv = document.getElementById('schedule-loading');
+      const slotsDiv = document.getElementById('schedule-slots');
+      const actionsDiv = document.getElementById('schedule-actions');
+
+      loadingDiv.style.display = 'none';
+
+      if (availableSlots.length === 0) {
+        slotsDiv.innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fef3c7; border-radius: 8px;">
+            <p style="color: #92400e; margin-bottom: 10px;"><strong>No available slots found</strong></p>
+            <p style="color: #78350f; font-size: 14px;">Please contact us directly to schedule your service.</p>
+          </div>
+        `;
+        slotsDiv.style.display = 'block';
         return;
       }
 
-      approvalData.scheduledTime = `${date} ${time}`;
-      console.log('📅 Schedule saved:', approvalData.scheduledTime);
+      let html = '<div style="max-height: 400px; overflow-y: auto;">';
+
+      availableSlots.forEach((slot, index) => {
+        const dateStr = slot.start_time.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric'
+        });
+        const timeStr = slot.start_time.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+        const endTimeStr = slot.end_time.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+
+        html += `
+          <div class="slot-option" data-slot-index="${index}" style="
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+          " onclick="selectSlot(${index})">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-weight: 600; color: #111827;">${dateStr}</div>
+                <div style="color: #6b7280; font-size: 14px; margin-top: 4px;">${timeStr} - ${endTimeStr}</div>
+              </div>
+              <div class="slot-check" style="
+                width: 24px;
+                height: 24px;
+                border: 2px solid #d1d5db;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              ">
+                <span style="display: none; color: white; font-size: 14px;">✓</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      slotsDiv.innerHTML = html;
+      slotsDiv.style.display = 'block';
+      actionsDiv.style.display = 'block';
+    }
+
+    function selectSlot(index) {
+      selectedSlot = availableSlots[index];
+
+      // Update UI
+      document.querySelectorAll('.slot-option').forEach((el, i) => {
+        const check = el.querySelector('.slot-check');
+        const checkmark = check.querySelector('span');
+
+        if (i === index) {
+          el.style.borderColor = '#667eea';
+          el.style.background = '#f0f4ff';
+          check.style.borderColor = '#667eea';
+          check.style.background = '#667eea';
+          checkmark.style.display = 'block';
+        } else {
+          el.style.borderColor = '#e5e7eb';
+          el.style.background = 'white';
+          check.style.borderColor = '#d1d5db';
+          check.style.background = 'transparent';
+          checkmark.style.display = 'none';
+        }
+      });
+
+      // Enable confirm button
+      document.getElementById('confirm-schedule-btn').disabled = false;
+    }
+
+    function confirmSchedule() {
+      if (!selectedSlot) {
+        alert('Please select a time slot');
+        return;
+      }
+
+      approvalData.scheduledTime = {
+        start_time: selectedSlot.start_time.toISOString(),
+        end_time: selectedSlot.end_time.toISOString(),
+        employee_id: selectedSlot.employee_id
+      };
+
+      console.log('📅 Schedule confirmed:', approvalData.scheduledTime);
 
       const currentIndex = wizardSteps.indexOf('schedule');
       nextWizardStep(currentIndex);
+    }
+
+    function showScheduleError(message) {
+      const loadingDiv = document.getElementById('schedule-loading');
+      const slotsDiv = document.getElementById('schedule-slots');
+
+      loadingDiv.style.display = 'none';
+      slotsDiv.innerHTML = `
+        <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+          <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+          <p style="color: #7f1d1d; font-size: 14px;">${message}</p>
+        </div>
+      `;
+      slotsDiv.style.display = 'block';
     }
 
     async function finalizeApproval() {
