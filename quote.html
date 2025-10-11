@@ -406,6 +406,7 @@
     let quoteData = null;
     let companySettings = null;
     let currentStep = 'review'; // review, signature, terms, deposit, schedule, confirmation
+    let wizardSteps = []; // Store wizard steps globally
     let approvalData = {
       signature: null,
       termsAccepted: false,
@@ -648,29 +649,29 @@
       console.log('Company Settings:', companySettings);
 
       // Determine which steps are needed based on company settings
-      const steps = ['review'];
+      wizardSteps = ['review']; // Store globally
       if (companySettings && companySettings.require_signature_on_approval) {
         console.log('Adding signature step');
-        steps.push('signature');
+        wizardSteps.push('signature');
       }
       if (companySettings && companySettings.require_terms_acceptance) {
         console.log('Adding terms step');
-        steps.push('terms');
+        wizardSteps.push('terms');
       }
       if (companySettings && companySettings.require_deposit_on_approval) {
         console.log('Adding deposit step');
-        steps.push('deposit');
+        wizardSteps.push('deposit');
       }
       if (companySettings && companySettings.allow_customer_scheduling) {
         console.log('Adding schedule step');
-        steps.push('schedule');
+        wizardSteps.push('schedule');
       }
-      steps.push('confirmation');
+      wizardSteps.push('confirmation');
 
-      console.log('Total steps:', steps);
+      console.log('Total steps:', wizardSteps);
 
       // If no additional steps, just approve immediately
-      if (steps.length === 2) { // Only 'review' and 'confirmation'
+      if (wizardSteps.length === 2) { // Only 'review' and 'confirmation'
         console.log('No additional steps - showing simple confirm');
         if (!confirm('Are you sure you want to approve this quote?')) return;
         await finalizeApproval();
@@ -678,17 +679,17 @@
       }
 
       // Show the wizard
-      console.log('Showing wizard with steps:', steps);
-      showApprovalWizard(steps);
+      console.log('Showing wizard with steps:', wizardSteps);
+      showApprovalWizard();
     }
 
-    function showApprovalWizard(steps) {
+    function showApprovalWizard() {
       const quoteContent = document.getElementById('quote-content');
 
       let html = `
         <div class="wizard">
           <div class="wizard-steps">
-            ${steps.map((step, index) => `
+            ${wizardSteps.map((step, index) => `
               <div class="wizard-step ${index === 0 ? 'active' : ''}">
                 <div class="step-number">${index + 1}</div>
                 <div class="step-name">${getStepName(step)}</div>
@@ -696,12 +697,15 @@
             `).join('')}
           </div>
           <div id="wizard-content" class="wizard-content">
-            ${getStepContent(steps[0], steps)}
+            ${getStepContent(wizardSteps[0])}
           </div>
         </div>
       `;
 
       quoteContent.innerHTML = html;
+
+      // Initialize the first step
+      initializeStep(wizardSteps[0]);
     }
 
     function getStepName(step) {
@@ -716,10 +720,10 @@
       return names[step] || step;
     }
 
-    function getStepContent(step, allSteps) {
+    function getStepContent(step) {
       switch(step) {
         case 'review':
-          return getReviewStepContent(allSteps);
+          return getReviewStepContent();
         case 'signature':
           return getSignatureStepContent();
         case 'terms':
@@ -735,8 +739,8 @@
       }
     }
 
-    function getReviewStepContent(allSteps) {
-      const nextSteps = allSteps.filter(s => s !== 'review' && s !== 'confirmation');
+    function getReviewStepContent() {
+      const nextSteps = wizardSteps.filter(s => s !== 'review' && s !== 'confirmation');
       return `
         <h2>📋 Review & Approve Quote</h2>
         <p style="margin: 20px 0;">You're about to approve this quote for <strong>$${quoteData.total_amount.toFixed(2)}</strong></p>
@@ -751,7 +755,7 @@
         ` : ''}
 
         <div class="wizard-actions">
-          <button class="btn btn-approve" onclick="nextWizardStep(${JSON.stringify(allSteps)}, 0)">
+          <button class="btn btn-approve" onclick="nextWizardStep(0)">
             Continue to Approve
           </button>
           <button class="btn btn-secondary" onclick="location.reload()">
@@ -916,19 +920,24 @@
     }
 
     // Wizard navigation
-    function nextWizardStep(allSteps, currentIndex) {
+    function nextWizardStep(currentIndex) {
+      console.log('🔄 nextWizardStep called, currentIndex:', currentIndex);
+
       const nextIndex = currentIndex + 1;
-      if (nextIndex >= allSteps.length) {
+      if (nextIndex >= wizardSteps.length) {
+        console.log('✅ All steps complete, finalizing approval');
         finalizeApproval();
         return;
       }
 
-      const nextStep = allSteps[nextIndex];
+      const nextStep = wizardSteps[nextIndex];
       currentStep = nextStep;
+
+      console.log('➡️ Moving to step:', nextStep, 'index:', nextIndex);
 
       // Update wizard UI
       const wizardContent = document.getElementById('wizard-content');
-      wizardContent.innerHTML = getStepContent(nextStep, allSteps);
+      wizardContent.innerHTML = getStepContent(nextStep);
 
       // Update step indicators
       const stepElements = document.querySelectorAll('.wizard-step');
@@ -1025,27 +1034,29 @@
     function saveSignature() {
       const signatureData = canvas.toDataURL();
       approvalData.signature = signatureData;
+      console.log('✍️ Signature saved');
 
       // Find current step index and move to next
-      const steps = getCurrentSteps();
-      const currentIndex = steps.indexOf('signature');
-      nextWizardStep(steps, currentIndex);
+      const currentIndex = wizardSteps.indexOf('signature');
+      nextWizardStep(currentIndex);
     }
 
     function acceptTerms() {
       approvalData.termsAccepted = true;
-      const steps = getCurrentSteps();
-      const currentIndex = steps.indexOf('terms');
-      nextWizardStep(steps, currentIndex);
+      console.log('📄 Terms accepted');
+
+      const currentIndex = wizardSteps.indexOf('terms');
+      nextWizardStep(currentIndex);
     }
 
     function processDeposit() {
       // Placeholder for Stripe integration
       alert('Deposit payment integration coming soon. For now, we\'ll proceed without payment.');
       approvalData.depositPaid = true;
-      const steps = getCurrentSteps();
-      const currentIndex = steps.indexOf('deposit');
-      nextWizardStep(steps, currentIndex);
+      console.log('💳 Deposit processed (mock)');
+
+      const currentIndex = wizardSteps.indexOf('deposit');
+      nextWizardStep(currentIndex);
     }
 
     function saveSchedule() {
@@ -1058,19 +1069,10 @@
       }
 
       approvalData.scheduledTime = `${date} ${time}`;
-      const steps = getCurrentSteps();
-      const currentIndex = steps.indexOf('schedule');
-      nextWizardStep(steps, currentIndex);
-    }
+      console.log('📅 Schedule saved:', approvalData.scheduledTime);
 
-    function getCurrentSteps() {
-      const steps = ['review'];
-      if (companySettings.require_signature_on_approval) steps.push('signature');
-      if (companySettings.require_terms_acceptance) steps.push('terms');
-      if (companySettings.require_deposit_on_approval) steps.push('deposit');
-      if (companySettings.allow_customer_scheduling) steps.push('schedule');
-      steps.push('confirmation');
-      return steps;
+      const currentIndex = wizardSteps.indexOf('schedule');
+      nextWizardStep(currentIndex);
     }
 
     async function finalizeApproval() {
