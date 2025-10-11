@@ -575,10 +575,10 @@ export const QuoteBuilder = ({
         console.log(`🔧 Auto-setting rate for ${quantity}h labor: $${rate} ${isOvertime ? '(OT)' : ''}`);
         newItems[index].rate = rate;
         newItems[index].is_overtime = isOvertime;
-      } else if (item.item_type === 'material' || item.item_type === 'part') {
-        // For materials/parts, use a base rate if not already set
+      } else if (item.item_type === 'material' || item.item_type === 'equipment') {
+        // For materials/equipment, use a base rate if not already set
         if (!newItems[index].rate || newItems[index].rate === (rates?.hourly || 0)) {
-          newItems[index].rate = 0; // Let user set material/part costs
+          newItems[index].rate = 0; // Let user set material/equipment costs
         }
       }
     }
@@ -589,8 +589,8 @@ export const QuoteBuilder = ({
   const calculateItemTotal = (item) => {
     let baseTotal = (item.quantity || 0) * (item.rate || 0);
 
-    // Apply markup for parts/materials
-    if (item.item_type === 'part' || item.item_type === 'material') {
+    // Apply markup for materials/equipment
+    if (item.item_type === 'material' || item.item_type === 'equipment') {
       baseTotal = baseTotal * (1 + rates.markup / 100);
     }
 
@@ -599,16 +599,27 @@ export const QuoteBuilder = ({
 
   // Convert labor rows back to quote_items format for saving
   const convertLaborRowsToQuoteItems = () => {
-    return laborRows.map((row, index) => ({
-      item_name: `Labor ${index + 1}`,
-      quantity: row.total_hours || 0,
-      rate: row.total_hours <= 8 ? (rates?.hourly || 0) :
-            ((row.regular_hours * (rates?.hourly || 0)) + (row.overtime_hours * (rates?.overtime || 0))) / row.total_hours,
-      item_type: 'labor',
-      is_overtime: (row.overtime_hours || 0) > 0,
-      description: `${row.employees} employee(s) × ${row.hours_per_day} hours/day × ${row.days} day(s)`,
-      photo_url: ''
-    }));
+    console.log('🔧 convertLaborRowsToQuoteItems called');
+    console.log('🔧 laborRows to convert:', laborRows);
+    console.log('🔧 rates:', rates);
+
+    const converted = laborRows.map((row, index) => {
+      const item = {
+        item_name: `Labor ${index + 1}`,
+        quantity: row.total_hours || 0,
+        rate: row.total_hours <= 8 ? (rates?.hourly || 0) :
+              ((row.regular_hours * (rates?.hourly || 0)) + (row.overtime_hours * (rates?.overtime || 0))) / row.total_hours,
+        item_type: 'labor',
+        is_overtime: (row.overtime_hours || 0) > 0,
+        description: `${row.employees} employee(s) × ${row.hours_per_day} hours/day × ${row.days} day(s)`,
+        photo_url: ''
+      };
+      console.log(`🔧 Converted labor row ${index}:`, item);
+      return item;
+    });
+
+    console.log('🔧 Total converted labor items:', converted.length);
+    return converted;
   };
 
   const calculateSubtotal = () => {
@@ -728,9 +739,21 @@ export const QuoteBuilder = ({
     console.log('🎯 HANDLESUBMIT: formData.status at submit time:', formData.status);
 
     // Convert labor rows to quote_items format and combine with existing items
+    console.log('🔧 LABOR CONVERSION DEBUG:');
+    console.log('🔧 laborRows:', laborRows);
+    console.log('🔧 laborRows.length:', laborRows.length);
+
     const laborQuoteItems = convertLaborRowsToQuoteItems();
+    console.log('🔧 laborQuoteItems after conversion:', laborQuoteItems);
+    console.log('🔧 laborQuoteItems.length:', laborQuoteItems.length);
+
     const nonLaborItems = formData.quote_items.filter(item => item.item_type !== 'labor');
+    console.log('🔧 nonLaborItems:', nonLaborItems);
+    console.log('🔧 nonLaborItems.length:', nonLaborItems.length);
+
     const combinedQuoteItems = [...laborQuoteItems, ...nonLaborItems];
+    console.log('🔧 combinedQuoteItems:', combinedQuoteItems);
+    console.log('🔧 combinedQuoteItems.length:', combinedQuoteItems.length);
 
     // Create updated form data with combined quote items
     const labor_summary = laborRows.length > 0 ? {
@@ -1385,9 +1408,10 @@ export const QuoteBuilder = ({
                         onChange={(e) => updateQuoteItem(index, 'item_type', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       >
-                        <option value="material">Materials</option>
-                        <option value="part">Parts</option>
+                        <option value="material">Materials/Parts</option>
+                        <option value="equipment">Equipment</option>
                         <option value="service">Other Service</option>
+                        <option value="permit">Permit/Fee</option>
                       </select>
                     </div>
 
@@ -1448,7 +1472,7 @@ export const QuoteBuilder = ({
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Total
-                        {(item.item_type === 'part' || item.item_type === 'material') && ` (+${rates.markup}%)`}
+                        {(item.item_type === 'material' || item.item_type === 'equipment') && ` (+${rates.markup}%)`}
                       </label>
                       <div className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-sm font-medium">
                         ${calculateItemTotal(item).toFixed(2)}
@@ -1546,7 +1570,7 @@ export const QuoteBuilder = ({
         <div className="sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg mt-6 -mx-6 px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="text-sm text-gray-500">
-              Labor Entries: {laborRows.length} • Materials/Parts: {formData.quote_items.filter(item => item.item_name.trim() && item.item_type !== 'labor').length}
+              Labor Entries: {laborRows.length} • Other Items: {formData.quote_items.filter(item => item.item_name.trim() && item.item_type !== 'labor').length}
             </div>
             <div className="flex items-center gap-3">
               <button
