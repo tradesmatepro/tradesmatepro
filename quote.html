@@ -1182,9 +1182,11 @@
 
     async function loadAvailableSlots() {
       console.log('📅 Loading available scheduling slots...');
+      console.log('🔍 Company ID:', quoteData.company_id);
 
       try {
         // Get employees for this company
+        console.log('🔍 Step 1: Fetching employees...');
         const employeesResponse = await fetch(
           `${SUPABASE_URL}/rest/v1/employees?company_id=eq.${quoteData.company_id}&select=id`,
           {
@@ -1196,14 +1198,21 @@
           }
         );
 
+        console.log('🔍 Employees response status:', employeesResponse.status);
+
         if (!employeesResponse.ok) {
+          const errorText = await employeesResponse.text();
+          console.error('❌ Employees fetch failed:', errorText);
           throw new Error('Failed to load employees');
         }
 
         const employees = await employeesResponse.json();
+        console.log('✅ Employees loaded:', employees);
         const employeeIds = employees.map(e => e.id);
+        console.log('✅ Employee IDs:', employeeIds);
 
         if (employeeIds.length === 0) {
+          console.error('❌ No employees found for company');
           showScheduleError('No technicians available. Please contact us to schedule.');
           return;
         }
@@ -1214,6 +1223,17 @@
         const endDate = new Date();
         endDate.setDate(endDate.getDate() + 90); // Next 90 days (industry standard max)
 
+        const requestBody = {
+          employeeIds,
+          durationMinutes: duration,
+          companyId: quoteData.company_id,
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString()
+        };
+
+        console.log('🔍 Step 2: Calling smart-scheduling edge function...');
+        console.log('📤 Request body:', JSON.stringify(requestBody, null, 2));
+
         const schedulingResponse = await fetch(
           `${SUPABASE_URL}/functions/v1/smart-scheduling?v=${Date.now()}`,
           {
@@ -1223,25 +1243,28 @@
               'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-              employeeIds,
-              durationMinutes: duration,
-              companyId: quoteData.company_id,
-              startDate: startDate.toISOString(),
-              endDate: endDate.toISOString()
-            })
+            body: JSON.stringify(requestBody)
           }
         );
 
+        console.log('🔍 Smart-scheduling response status:', schedulingResponse.status);
+        console.log('🔍 Smart-scheduling response headers:', Object.fromEntries(schedulingResponse.headers.entries()));
+
         if (!schedulingResponse.ok) {
-          throw new Error('Failed to get available slots');
+          const errorText = await schedulingResponse.text();
+          console.error('❌ Smart-scheduling fetch failed:', errorText);
+          throw new Error(`Failed to get available slots: ${schedulingResponse.status} ${errorText}`);
         }
 
         const suggestions = await schedulingResponse.json();
+        console.log('✅ Smart-scheduling response:', suggestions);
+        console.log('✅ Settings from response:', suggestions.settings);
 
         // Flatten all available slots from all employees
+        console.log('🔍 Step 3: Processing slots from response...');
         availableSlots = [];
         Object.values(suggestions.suggestions || {}).forEach(employeeData => {
+          console.log(`🔍 Employee ${employeeData.employee_id}: ${employeeData.available_slots?.length || 0} slots`);
           (employeeData.available_slots || []).forEach(slot => {
             availableSlots.push({
               ...slot,
@@ -1252,18 +1275,38 @@
           });
         });
 
+        console.log(`✅ Total slots before sorting: ${availableSlots.length}`);
+
         // Sort by date and time
         availableSlots.sort((a, b) => a.start_time - b.start_time);
 
+        console.log(`✅ Total slots after sorting: ${availableSlots.length}`);
+
         if (availableSlots.length === 0) {
+          console.error('❌ No slots available after processing');
           showScheduleError('No available time slots found. Please contact us to schedule.');
           return;
         }
 
         // Show earliest slot in auto-schedule section
         const earliestSlot = availableSlots[0];
+        console.log('🔍 Earliest slot:', {
+          start_time: earliestSlot.start_time.toISOString(),
+          end_time: earliestSlot.end_time.toISOString(),
+          employee_id: earliestSlot.employee_id
+        });
+        console.log('🔍 Earliest slot LOCAL time:', earliestSlot.start_time.toString());
+
         const earliestText = formatSlotDateTime(earliestSlot.start_time);
+        console.log('🔍 Formatted earliest slot:', earliestText);
+
         document.getElementById('earliest-slot-text').textContent = `Next available: ${earliestText}`;
+
+        // Log first 5 slots for debugging
+        console.log('🔍 First 5 slots:');
+        availableSlots.slice(0, 5).forEach((slot, i) => {
+          console.log(`  ${i + 1}. ${slot.start_time.toISOString()} (${formatSlotDateTime(slot.start_time)})`);
+        });
 
         // Hide loading, show content
         document.getElementById('schedule-loading').style.display = 'none';
@@ -1274,6 +1317,7 @@
 
       } catch (error) {
         console.error('❌ Error loading slots:', error);
+        console.error('❌ Error stack:', error.stack);
         showScheduleError('Unable to load available times. Please contact us to schedule.');
       }
     }
