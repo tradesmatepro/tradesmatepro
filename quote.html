@@ -393,9 +393,9 @@
     console.log('🚀 Quote Portal v2.0 - Multi-step Approval Wizard');
     console.log('📅 Loaded at:', new Date().toISOString());
 
-    // Supabase configuration
+    // Supabase configuration - Using legacy JWT format (required for edge functions)
     const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_62eAoe6DcrOweYtnzfhHmQ_aYY4JZSG';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // Get quote ID from URL parameter
