@@ -850,35 +850,178 @@
     function getScheduleStepContent() {
       return `
         <h2>📅 Schedule Your Service</h2>
-        <p style="margin: 20px 0;">Choose from our available time slots:</p>
 
         <div id="schedule-loading" style="text-align: center; padding: 40px;">
           <div class="spinner" style="margin: 0 auto 15px;"></div>
           <p>Loading available times...</p>
         </div>
 
-        <div id="schedule-slots" style="display: none;">
-          <!-- Slots will be populated here -->
+        <div id="schedule-content" style="display: none;">
+          <!-- Auto-schedule option -->
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <div style="font-size: 32px;">⚡</div>
+              <div style="flex: 1;">
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 5px;">Auto-Schedule ASAP</div>
+                <div id="earliest-slot-text" style="opacity: 0.9; font-size: 14px;">Next available: Loading...</div>
+              </div>
+              <button
+                onclick="autoSchedule()"
+                class="btn btn-approve"
+                style="background: white; color: #667eea; border: none; padding: 12px 24px; font-weight: 600;">
+                Schedule Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Manual selection option -->
+          <div style="text-align: center; margin: 20px 0; color: #666;">
+            <span>Or choose a specific time:</span>
+          </div>
+
+          <!-- Week filters -->
+          <div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
+            <button onclick="filterByWeek(0)" class="week-filter-btn active" data-week="0">This Week</button>
+            <button onclick="filterByWeek(1)" class="week-filter-btn" data-week="1">Next Week</button>
+            <button onclick="filterByWeek(2)" class="week-filter-btn" data-week="2">Week After</button>
+          </div>
+
+          <!-- Time slots grouped by day -->
+          <div id="schedule-slots" style="max-height: 400px; overflow-y: auto;">
+            <!-- Slots will be populated here -->
+          </div>
+
+          <div class="wizard-actions" id="schedule-actions" style="display: none; margin-top: 20px;">
+            <button class="btn btn-approve" onclick="confirmSchedule()" id="confirm-schedule-btn" disabled>
+              Confirm Selected Time
+            </button>
+          </div>
         </div>
 
-        <div class="wizard-actions" id="schedule-actions" style="display: none;">
-          <button class="btn btn-approve" onclick="confirmSchedule()" id="confirm-schedule-btn" disabled>
-            Confirm Schedule
-          </button>
+        <div id="schedule-error" style="display: none;">
+          <!-- Error message will be shown here -->
         </div>
+
+        <style>
+          .week-filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+          }
+          .week-filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+          }
+          .week-filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+          }
+          .day-group {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+          }
+          .day-header {
+            background: #f5f5f5;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #e0e0e0;
+          }
+          .time-slots {
+            padding: 10px;
+          }
+          .time-slot {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin: 5px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+          }
+          .time-slot:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+          }
+          .time-slot.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+          }
+          .time-slot-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            margin-right: 12px;
+            position: relative;
+          }
+          .time-slot.selected .time-slot-radio {
+            border-color: white;
+            background: white;
+          }
+          .time-slot.selected .time-slot-radio::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            border-radius: 50%;
+          }
+          .time-slot-info {
+            flex: 1;
+          }
+          .time-slot-time {
+            font-weight: 600;
+            font-size: 15px;
+          }
+          .time-slot-period {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-top: 2px;
+          }
+        </style>
       `;
     }
 
     function getConfirmationStepContent() {
+      let scheduleInfo = '';
+
+      if (approvalData.scheduledTime) {
+        const scheduledDate = new Date(approvalData.scheduledTime.start_time);
+        const dateTimeStr = formatSlotDateTime(scheduledDate);
+        const autoScheduled = approvalData.scheduledTime.auto_scheduled ? ' (Auto-scheduled)' : '';
+
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">📅 Your Service is Scheduled</div>
+            <div style="font-size: 24px; font-weight: 700;">${dateTimeStr}${autoScheduled}</div>
+          </div>
+        `;
+      }
+
       return `
         <h2>🎉 All Set!</h2>
         <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
+
+        ${scheduleInfo}
 
         <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
           <strong>What happens next?</strong>
           <ul style="margin: 10px 0 0 20px;">
             <li>We'll send you a confirmation email</li>
-            <li>Our team will contact you to finalize details</li>
+            ${approvalData.scheduledTime ? '<li>Our technician will arrive at the scheduled time</li>' : '<li>Our team will contact you to schedule your service</li>'}
             <li>We'll get started on your project!</li>
           </ul>
         </div>
@@ -1015,6 +1158,7 @@
     // Scheduling functions
     let selectedSlot = null;
     let availableSlots = [];
+    let currentWeekFilter = 0;
 
     async function loadAvailableSlots() {
       console.log('📅 Loading available scheduling slots...');
@@ -1044,11 +1188,11 @@
           return;
         }
 
-        // Call smart scheduling API
+        // Call smart scheduling API - get 30 days of slots
         const duration = 120; // Default 2 hours in minutes
         const startDate = new Date();
         const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 14); // Next 2 weeks
+        endDate.setDate(endDate.getDate() + 30); // Next 30 days
 
         const schedulingResponse = await fetch(
           `${SUPABASE_URL}/functions/v1/smart-scheduling`,
@@ -1091,10 +1235,22 @@
         // Sort by date and time
         availableSlots.sort((a, b) => a.start_time - b.start_time);
 
-        // Limit to 20 slots
-        availableSlots = availableSlots.slice(0, 20);
+        if (availableSlots.length === 0) {
+          showScheduleError('No available time slots found. Please contact us to schedule.');
+          return;
+        }
 
-        displayAvailableSlots();
+        // Show earliest slot in auto-schedule section
+        const earliestSlot = availableSlots[0];
+        const earliestText = formatSlotDateTime(earliestSlot.start_time);
+        document.getElementById('earliest-slot-text').textContent = `Next available: ${earliestText}`;
+
+        // Hide loading, show content
+        document.getElementById('schedule-loading').style.display = 'none';
+        document.getElementById('schedule-content').style.display = 'block';
+
+        // Display slots for current week (default)
+        filterByWeek(0);
 
       } catch (error) {
         console.error('❌ Error loading slots:', error);
@@ -1102,104 +1258,183 @@
       }
     }
 
-    function displayAvailableSlots() {
-      const loadingDiv = document.getElementById('schedule-loading');
-      const slotsDiv = document.getElementById('schedule-slots');
-      const actionsDiv = document.getElementById('schedule-actions');
-
-      loadingDiv.style.display = 'none';
-
-      if (availableSlots.length === 0) {
-        slotsDiv.innerHTML = `
-          <div style="text-align: center; padding: 40px; background: #fef3c7; border-radius: 8px;">
-            <p style="color: #92400e; margin-bottom: 10px;"><strong>No available slots found</strong></p>
-            <p style="color: #78350f; font-size: 14px;">Please contact us directly to schedule your service.</p>
-          </div>
-        `;
-        slotsDiv.style.display = 'block';
-        return;
-      }
-
-      let html = '<div style="max-height: 400px; overflow-y: auto;">';
-
-      availableSlots.forEach((slot, index) => {
-        const dateStr = slot.start_time.toLocaleDateString('en-US', {
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric'
-        });
-        const timeStr = slot.start_time.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-        const endTimeStr = slot.end_time.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-
-        html += `
-          <div class="slot-option" data-slot-index="${index}" style="
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-          " onclick="selectSlot(${index})">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <div style="font-weight: 600; color: #111827;">${dateStr}</div>
-                <div style="color: #6b7280; font-size: 14px; margin-top: 4px;">${timeStr} - ${endTimeStr}</div>
-              </div>
-              <div class="slot-check" style="
-                width: 24px;
-                height: 24px;
-                border: 2px solid #d1d5db;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              ">
-                <span style="display: none; color: white; font-size: 14px;">✓</span>
-              </div>
-            </div>
-          </div>
-        `;
+    // Helper function to format date/time for display
+    function formatSlotDateTime(date) {
+      const dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
       });
-
-      html += '</div>';
-      slotsDiv.innerHTML = html;
-      slotsDiv.style.display = 'block';
-      actionsDiv.style.display = 'block';
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      return `${dateStr} at ${timeStr}`;
     }
 
-    function selectSlot(index) {
-      selectedSlot = availableSlots[index];
+    // Filter slots by week offset (0 = this week, 1 = next week, etc.)
+    function filterByWeek(weekOffset) {
+      currentWeekFilter = weekOffset;
 
-      // Update UI
-      document.querySelectorAll('.slot-option').forEach((el, i) => {
-        const check = el.querySelector('.slot-check');
-        const checkmark = check.querySelector('span');
-
-        if (i === index) {
-          el.style.borderColor = '#667eea';
-          el.style.background = '#f0f4ff';
-          check.style.borderColor = '#667eea';
-          check.style.background = '#667eea';
-          checkmark.style.display = 'block';
-        } else {
-          el.style.borderColor = '#e5e7eb';
-          el.style.background = 'white';
-          check.style.borderColor = '#d1d5db';
-          check.style.background = 'transparent';
-          checkmark.style.display = 'none';
+      // Update button states
+      document.querySelectorAll('.week-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (parseInt(btn.dataset.week) === weekOffset) {
+          btn.classList.add('active');
         }
       });
 
-      // Enable confirm button
+      // Calculate week range
+      const now = new Date();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() + (weekOffset * 7));
+      startOfWeek.setHours(0, 0, 0, 0);
+
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 7);
+
+      // Filter slots
+      const filteredSlots = availableSlots.filter(slot => {
+        return slot.start_time >= startOfWeek && slot.start_time < endOfWeek;
+      });
+
+      displayAvailableSlots(filteredSlots);
+    }
+
+    // Group slots by day
+    function groupSlotsByDay(slots) {
+      const grouped = {};
+
+      slots.forEach(slot => {
+        const dateKey = slot.start_time.toISOString().split('T')[0];
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = {
+            date: slot.start_time,
+            slots: []
+          };
+        }
+        grouped[dateKey].slots.push(slot);
+      });
+
+      return Object.values(grouped);
+    }
+
+    // Get time period (Morning/Afternoon/Evening)
+    function getTimePeriod(date) {
+      const hour = date.getHours();
+      if (hour < 12) return 'Morning';
+      if (hour < 17) return 'Afternoon';
+      return 'Evening';
+    }
+
+    function displayAvailableSlots(slotsToDisplay) {
+      const slotsDiv = document.getElementById('schedule-slots');
+
+      if (!slotsToDisplay || slotsToDisplay.length === 0) {
+        slotsDiv.innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fef3c7; border-radius: 8px;">
+            <p style="color: #92400e; margin-bottom: 10px;"><strong>No slots available for this week</strong></p>
+            <p style="color: #78350f; font-size: 14px;">Try selecting a different week or use Auto-Schedule.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by day
+      const dayGroups = groupSlotsByDay(slotsToDisplay);
+
+      let html = '';
+
+      dayGroups.forEach(dayGroup => {
+        const dateStr = dayGroup.date.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric'
+        });
+
+        html += `<div class="day-group">`;
+        html += `<div class="day-header">${dateStr}</div>`;
+        html += `<div class="time-slots">`;
+
+        // Show max 5 slots per day
+        const slotsToShow = dayGroup.slots.slice(0, 5);
+
+        slotsToShow.forEach(slot => {
+          const slotIndex = availableSlots.indexOf(slot);
+          const startTime = slot.start_time.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          });
+          const endTime = slot.end_time.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          });
+          const period = getTimePeriod(slot.start_time);
+
+          html += `
+            <div class="time-slot" onclick="selectTimeSlot(${slotIndex})" id="slot-${slotIndex}">
+              <div class="time-slot-radio"></div>
+              <div class="time-slot-info">
+                <div class="time-slot-time">${period} (${startTime} - ${endTime})</div>
+                <div class="time-slot-period">${Math.round((slot.end_time - slot.start_time) / 60000)} minutes</div>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div></div>`;
+      });
+
+      slotsDiv.innerHTML = html;
+    }
+
+    function selectTimeSlot(index) {
+      selectedSlot = availableSlots[index];
+
+      // Update UI - remove selection from all slots
+      document.querySelectorAll('.time-slot').forEach(el => {
+        el.classList.remove('selected');
+      });
+
+      // Add selection to clicked slot
+      const slotEl = document.getElementById(`slot-${index}`);
+      if (slotEl) {
+        slotEl.classList.add('selected');
+      }
+
+      // Enable confirm button and show actions
       document.getElementById('confirm-schedule-btn').disabled = false;
+      document.getElementById('schedule-actions').style.display = 'block';
+    }
+
+    // Auto-schedule function - picks earliest available slot
+    function autoSchedule() {
+      if (!availableSlots || availableSlots.length === 0) {
+        alert('No available time slots found');
+        return;
+      }
+
+      // Pick the earliest slot (first in sorted array)
+      const earliestSlot = availableSlots[0];
+
+      approvalData.scheduledTime = {
+        start_time: earliestSlot.start_time.toISOString(),
+        end_time: earliestSlot.end_time.toISOString(),
+        employee_id: earliestSlot.employee_id,
+        auto_scheduled: true
+      };
+
+      console.log('⚡ Auto-scheduled at earliest slot:', approvalData.scheduledTime);
+
+      // Show confirmation and proceed
+      const dateTime = formatSlotDateTime(earliestSlot.start_time);
+      alert(`✅ Scheduled for ${dateTime}`);
+
+      const currentIndex = wizardSteps.indexOf('schedule');
+      nextWizardStep(currentIndex);
     }
 
     function confirmSchedule() {
@@ -1211,7 +1446,8 @@
       approvalData.scheduledTime = {
         start_time: selectedSlot.start_time.toISOString(),
         end_time: selectedSlot.end_time.toISOString(),
-        employee_id: selectedSlot.employee_id
+        employee_id: selectedSlot.employee_id,
+        auto_scheduled: false
       };
 
       console.log('📅 Schedule confirmed:', approvalData.scheduledTime);
@@ -1253,6 +1489,34 @@
 
         console.log('✅ Quote approved successfully');
 
+        // If customer scheduled a time, create schedule event
+        if (approvalData.scheduledTime) {
+          console.log('📅 Creating schedule event...');
+
+          const scheduleData = {
+            work_order_id: quoteId,
+            employee_id: approvalData.scheduledTime.employee_id,
+            start_time: approvalData.scheduledTime.start_time,
+            end_time: approvalData.scheduledTime.end_time,
+            title: `Customer Scheduled: Work Order #${quoteData.work_order_number || quoteId.slice(0, 8)}`,
+            company_id: quoteData.company_id,
+            created_by_customer: true,
+            auto_scheduled: approvalData.scheduledTime.auto_scheduled || false
+          };
+
+          const { error: scheduleError } = await supabase
+            .from('schedule_events')
+            .insert(scheduleData);
+
+          if (scheduleError) {
+            console.error('❌ Error creating schedule event:', scheduleError);
+            // Don't fail the whole approval if scheduling fails
+            alert('Quote approved, but there was an issue creating the schedule. We\'ll contact you to confirm the time.');
+          } else {
+            console.log('✅ Schedule event created successfully');
+          }
+        }
+
         // Check if we're in wizard mode or simple mode
         const wizardContent = document.getElementById('wizard-content');
         const quoteContent = document.getElementById('quote-content');
@@ -1279,10 +1543,18 @@
           if (quoteContent) quoteContent.style.display = 'none';
           if (successDiv) {
             successDiv.style.display = 'block';
-            successDiv.innerHTML = `
-              <h2>✅ Quote Approved!</h2>
-              <p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>
-            `;
+
+            let successMessage = '<h2>✅ Quote Approved!</h2>';
+            if (approvalData.scheduledTime) {
+              const scheduledDate = new Date(approvalData.scheduledTime.start_time);
+              const dateTimeStr = formatSlotDateTime(scheduledDate);
+              successMessage += `<p style="margin-top: 15px;">Your service is scheduled for <strong>${dateTimeStr}</strong>.</p>`;
+              successMessage += `<p>We'll send you a confirmation email shortly.</p>`;
+            } else {
+              successMessage += `<p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>`;
+            }
+
+            successDiv.innerHTML = successMessage;
           } else {
             console.error('❌ Success div not found!');
             alert('Quote approved successfully!');
