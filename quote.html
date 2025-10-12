@@ -1215,13 +1215,15 @@
         endDate.setDate(endDate.getDate() + 90); // Next 90 days (industry standard max)
 
         const schedulingResponse = await fetch(
-          `${SUPABASE_URL}/functions/v1/smart-scheduling`,
+          `${SUPABASE_URL}/functions/v1/smart-scheduling?v=${Date.now()}`,
           {
             method: 'POST',
             headers: {
               'apikey': SUPABASE_ANON_KEY,
               'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache'
             },
             body: JSON.stringify({
               employeeIds,
