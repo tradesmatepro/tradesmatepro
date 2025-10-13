@@ -1206,13 +1206,8 @@
       console.log('Company Settings:', companySettings);
 
       // Determine which steps are needed based on company settings
-      // Condense Review + Consent + Terms into a single Review step for minimal friction
+      // Condensed flow: Review (with consent+terms) → Schedule → Confirmation (shows deposit info if required)
       wizardSteps = ['review'];
-
-      if (companySettings && companySettings.require_deposit_on_approval) {
-        console.log('Adding deposit step');
-        wizardSteps.push('deposit');
-      }
       if (companySettings && companySettings.allow_customer_scheduling) {
         console.log('Adding schedule step');
         wizardSteps.push('schedule');
@@ -1414,32 +1409,53 @@
     }
 
     function getScheduleStepContent() {
-      // Get labor summary info to display to customer
-      let jobInfoHtml = '';
-      if (quoteData.labor_summary) {
-        const ls = quoteData.labor_summary;
-        const crewSize = ls.crew_size || 1;
-        const hoursPerDay = ls.hours_per_day || 8;
-        const totalHours = ls.regular_hours + (ls.overtime_hours || 0);
-        const hoursPerEmployee = totalHours / crewSize;
+      // Compute labor summary reliably (fallback if missing)
+      function computeLaborSummaryFallback() {
+        try {
+          const laborItems = (quoteData.line_items || []).filter(i => (i.line_type || '').toLowerCase() === 'labor');
+          const totalLaborHours = laborItems.reduce((sum, item) => sum + (parseFloat(item.quantity) || 0), 0);
+          const hoursPerDay = 8;
+          const crewSize = Math.max(1, Math.ceil(totalLaborHours / hoursPerDay)) || 1;
+          const totalHours = totalLaborHours || hoursPerDay;
+          const hoursPerEmployee = totalHours / crewSize;
+          return { crew_size: crewSize, hours_per_day: hoursPerDay, regular_hours: totalHours, overtime_hours: 0, hoursPerEmployee, totalHours };
+        } catch { return { crew_size: 1, hours_per_day: 8, regular_hours: 8, overtime_hours: 0, hoursPerEmployee: 8, totalHours: 8 }; }
+      }
 
-        jobInfoHtml = `
-          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
-              <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-              </svg>
-              <div>
-                <div style="font-size: 1.25rem; font-weight: 700;">${crewSize} Technician${crewSize > 1 ? 's' : ''} for ${Math.round(hoursPerEmployee)} Hour${Math.round(hoursPerEmployee) > 1 ? 's' : ''}</div>
-                <div style="font-size: 0.875rem; opacity: 0.9;">Total project time: ${totalHours} hours</div>
-              </div>
-            </div>
-            <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
-              Select a time when our team can arrive to start your service.
+      const ls = quoteData.labor_summary || computeLaborSummaryFallback();
+      const crewSize = ls.crew_size || 1;
+      const hoursPerDay = ls.hours_per_day || 8;
+      const totalHours = (ls.regular_hours || 0) + (ls.overtime_hours || 0) || hoursPerDay;
+      const hoursPerEmployee = totalHours / crewSize;
+
+      const jobInfoHtml = `
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 700;">${crewSize} Technician${crewSize > 1 ? 's' : ''} for ${Math.round(hoursPerEmployee)} Hour${Math.round(hoursPerEmployee) > 1 ? 's' : ''}</div>
+              <div style="font-size: 0.875rem; opacity: 0.9;">Total project time: ${totalHours} hours</div>
             </div>
           </div>
-        `;
-      }
+          <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
+            Select a time when our team can arrive to start your service.
+          </div>
+        </div>
+      `;
+
+      const chip = (companySettings && companySettings.timezone) ? `
+        <div style=\"margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 9999px; background: #f3f4f6; color: #374151; font-size: 12px;\">
+          <span>Showing times in <strong>${companySettings.timezone}</strong></span>
+          <span>•</span>
+          <span>Hours ${companySettings.business_hours_start || '08:00'}–${companySettings.business_hours_end || '17:00'}</span>
+          <span>•</span>
+          <span>Buffers ${companySettings.default_buffer_before_minutes || 0}/${companySettings.default_buffer_after_minutes || 0} min</span>
+          <span>•</span>
+          <span>15-min intervals</span>
+        </div>
+      ` : '';
 
       return `
         <h2>📅 Schedule Your Service</h2>
@@ -1448,6 +1464,7 @@
 
         <!-- Scheduling Widget Container -->
         <div id="scheduling-widget-container"></div>
+        ${chip}
 
         <div class="wizard-actions" id="schedule-actions" style="display: none; margin-top: 20px;">
           <button class="btn btn-approve" onclick="confirmSchedule()" id="confirm-schedule-btn" disabled>
@@ -1461,8 +1478,6 @@
             Confirm Selected Time
           </button>
         </div>
-
-
       `;
     }
 
@@ -1482,11 +1497,27 @@
         `;
       }
 
+      // Deposit summary (condensed into final step)
+      let depositHtml = '';
+      if (companySettings && companySettings.require_deposit_on_approval) {
+        const depositAmount = companySettings.deposit_type === 'percentage'
+          ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
+          : companySettings.default_deposit_amount;
+        depositHtml = `
+          <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;">
+            <div style="font-weight: 600; color: #92400e;">Deposit Required</div>
+            <div style="color: #92400e;">Amount due now: <strong>$${depositAmount.toFixed(2)}</strong></div>
+            <div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">We will send a secure payment link to complete the deposit.</div>
+          </div>
+        `;
+      }
+
       return `
         <h2>🎉 All Set!</h2>
         <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
 
         ${scheduleInfo}
+        ${depositHtml}
 
         <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
           <strong>What happens next?</strong>
