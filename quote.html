@@ -410,6 +410,7 @@
         this.durationMinutes = options.durationMinutes || 120;
         this.supabaseUrl = options.supabaseUrl;
         this.supabaseAnonKey = options.supabaseAnonKey;
+        this.companySettings = options.companySettings || null;
         this.onSlotSelected = options.onSlotSelected || (() => {});
         this.onAutoSchedule = options.onAutoSchedule || (() => {});
         this.showAutoSchedule = options.showAutoSchedule !== false;
@@ -452,6 +453,8 @@
             endDate: endDate.toISOString()
           };
 
+          console.log('🔍 DEBUG - Requesting slots:', requestBody);
+
           const response = await fetch(
             `${this.supabaseUrl}/functions/v1/smart-scheduling`,
             {
@@ -485,7 +488,58 @@
 
           allSlots.sort((a, b) => a.start_time - b.start_time);
 
-          this.availableSlots = allSlots;
+          console.log('🔍 DEBUG - Raw slots returned (first 10):', allSlots.slice(0, 10).map(s => ({
+            start_iso: s.start_time.toISOString(),
+            end_iso: s.end_time.toISOString()
+          })));
+
+          // Client-side guard: prune any slots that extend beyond business hours in company timezone
+          let prunedSlots = allSlots;
+          if (this.companySettings && this.companySettings.business_hours_start && this.companySettings.business_hours_end && this.companySettings.timezone) {
+            const tz = this.companySettings.timezone;
+            const [bhStartH, bhStartM] = this.companySettings.business_hours_start.split(':').map(Number);
+            const [bhEndH, bhEndM] = this.companySettings.business_hours_end.split(':').map(Number);
+            const dayStartMinutes = bhStartH * 60 + bhStartM;
+            const dayEndMinutes = bhEndH * 60 + bhEndM;
+
+            const toMinutesInTz = (d) => {
+              const str = d.toLocaleTimeString('en-US', { hour12: false, timeZone: tz }); // HH:MM:SS
+              const [h, m] = str.split(':').map(Number);
+              return h * 60 + m;
+            };
+
+            prunedSlots = allSlots.filter(s => {
+              const startMin = toMinutesInTz(s.start_time);
+              const endMin = startMin + this.durationMinutes;
+              const within = startMin >= dayStartMinutes && endMin <= dayEndMinutes;
+              if (!within) {
+                console.log('⛔ Prune slot (outside biz hours):', {
+                  start_local: s.start_time.toLocaleTimeString('en-US', { timeZone: tz }),
+                  end_local: s.end_time.toLocaleTimeString('en-US', { timeZone: tz }),
+                  startMin, endMin, dayStartMinutes, dayEndMinutes
+                });
+              } else {
+                console.log('✅ Keep slot (within biz hours):', {
+                  start_local: s.start_time.toLocaleTimeString('en-US', { timeZone: tz }),
+                  end_estimated_local: new Date(s.start_time.getTime() + this.durationMinutes * 60000).toLocaleTimeString('en-US', { timeZone: tz })
+                });
+              }
+              return within;
+            });
+
+            // Log summary for the first day in view
+            if (prunedSlots.length > 0) {
+              const firstDay = prunedSlots[0].start_time.toLocaleDateString('en-US', { timeZone: tz });
+              const daySlots = prunedSlots.filter(s => s.start_time.toLocaleDateString('en-US', { timeZone: tz }) === firstDay);
+              const firstLocal = daySlots[0].start_time.toLocaleTimeString('en-US', { timeZone: tz });
+              const lastLocal = daySlots[daySlots.length - 1].start_time.toLocaleTimeString('en-US', { timeZone: tz });
+              console.log('📊 After pruning - First day summary:', { firstDay, count: daySlots.length, firstLocal, lastLocal });
+            }
+          } else {
+            console.warn('⚠️ Skipping business-hours pruning: missing companySettings/timezone');
+          }
+
+          this.availableSlots = prunedSlots;
 
           if (allSlots.length > 0) {
             this.earliestSlot = allSlots[0];
@@ -1660,6 +1714,7 @@
           durationMinutes: durationMinutes,  // ← Dynamic based on quote labor!
           supabaseUrl: SUPABASE_URL,
           supabaseAnonKey: SUPABASE_ANON_KEY,
+          companySettings: companySettings,
           onSlotSelected: (slot) => {
             selectedSlot = slot;
             console.log('📅 Slot selected:', slot);
