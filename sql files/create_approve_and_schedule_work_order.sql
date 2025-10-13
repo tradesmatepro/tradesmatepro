@@ -79,7 +79,8 @@ begin
       select 1 from schedule_events se
       where se.company_id = v_company_id
         and se.employee_id = v_employee_id
-        and tstzrange(se.start_time, se.end_time, '[)') && tstzrange(p_start, p_end, '[)')
+        and se.start_time < p_end
+        and se.end_time   > p_start
     ) then
       raise exception 'Selected employee % is not available for the requested time window', v_employee_id;
     end if;
@@ -100,7 +101,8 @@ begin
           select 1 from schedule_events se
           where se.company_id = v_company_id
             and se.employee_id = e.id
-            and tstzrange(se.start_time, se.end_time, '[)') && tstzrange(p_start, p_end, '[)')
+            and se.start_time < p_end
+            and se.end_time   > p_start
         )
       limit v_missing
     )
