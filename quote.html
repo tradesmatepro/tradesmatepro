@@ -1470,6 +1470,30 @@
           return;
         }
 
+        // Calculate duration from quote labor summary
+        let durationMinutes = 480; // Default to 8 hours
+
+        if (quoteData.labor_summary) {
+          const laborSummary = quoteData.labor_summary;
+          const crewSize = laborSummary.crew_size || 1;
+          const hoursPerDay = laborSummary.hours_per_day || 8;
+          const totalHours = laborSummary.regular_hours + laborSummary.overtime_hours || hoursPerDay;
+
+          // Calculate hours per employee
+          const hoursPerEmployee = totalHours / crewSize;
+          durationMinutes = Math.ceil(hoursPerEmployee * 60);
+
+          console.log('📊 Labor calculation:', {
+            crewSize,
+            hoursPerDay,
+            totalHours,
+            hoursPerEmployee,
+            durationMinutes
+          });
+        } else {
+          console.warn('⚠️ No labor_summary found in quote, using default 8 hours');
+        }
+
         // Initialize the scheduling widget
         console.log('🔍 About to create SchedulingWidget...');
         console.log('🔍 SchedulingWidget available?', typeof SchedulingWidget);
@@ -1479,7 +1503,7 @@
           containerId: 'scheduling-widget-container',
           companyId: quoteData.company_id,
           employeeIds: employeeIds,
-          durationMinutes: 120,
+          durationMinutes: durationMinutes,  // ← Dynamic based on quote labor!
           supabaseUrl: SUPABASE_URL,
           supabaseAnonKey: SUPABASE_ANON_KEY,
           onSlotSelected: (slot) => {
