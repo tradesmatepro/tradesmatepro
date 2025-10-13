@@ -1,22 +1,22 @@
 {
   "commands": [
     {
-      "id": "check_quote_labor_summary",
+      "id": "check_companies_table_scheduling_settings",
       "command": "sql_query",
       "params": {
-        "query": "SELECT id, work_order_number, status, total_amount, labor_summary FROM work_orders WHERE id = 'eeaa326b-0feb-464a-9bb3-1e63ad96e285'",
-        "reason": "Check if this specific quote has labor_summary data in the database - logs show it's missing"
+        "query": "SELECT id, name, business_hours_start, business_hours_end, working_days, timezone, job_buffer_minutes, default_buffer_before_minutes, default_buffer_after_minutes, min_advance_booking_hours, max_advance_booking_days FROM companies WHERE id = 'cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e'",
+        "reason": "Edge function needs scheduling settings from companies table - check if they exist"
       },
-      "timestamp": "2025-10-13T18:00:00.000Z"
+      "timestamp": "2025-10-13T18:30:00.000Z"
     },
     {
-      "id": "check_company_settings_table",
+      "id": "check_work_order_line_items",
       "command": "sql_query",
       "params": {
-        "query": "SELECT * FROM settings WHERE company_id = 'cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e' LIMIT 1",
-        "reason": "Check if company has settings in the settings table - logs show 'No settings found' error"
+        "query": "SELECT id, work_order_id, line_type, item_type, description, quantity, unit_price, total_price FROM work_order_line_items WHERE work_order_id = 'eeaa326b-0feb-464a-9bb3-1e63ad96e285' ORDER BY sort_order",
+        "reason": "Check the actual line items to calculate labor_summary (16 hours labor shown in UI)"
       },
-      "timestamp": "2025-10-13T18:00:00.000Z"
+      "timestamp": "2025-10-13T18:30:00.000Z"
     }
   ]
 }
