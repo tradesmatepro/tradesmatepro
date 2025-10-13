@@ -1206,15 +1206,9 @@
       console.log('Company Settings:', companySettings);
 
       // Determine which steps are needed based on company settings
-      wizardSteps = ['review']; // Store globally
-      if (companySettings && companySettings.require_signature_on_approval) {
-        console.log('Adding signature step');
-        wizardSteps.push('signature');
-      }
-      if (companySettings && companySettings.require_terms_acceptance) {
-        console.log('Adding terms step');
-        wizardSteps.push('terms');
-      }
+      // Condense Review + Consent + Terms into a single Review step for minimal friction
+      wizardSteps = ['review'];
+
       if (companySettings && companySettings.require_deposit_on_approval) {
         console.log('Adding deposit step');
         wizardSteps.push('deposit');
@@ -1304,16 +1298,31 @@
 
         ${nextSteps.length > 0 ? `
           <div style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin: 20px 0;">
-            <strong>Next steps:</strong>
+            <strong>What you'll do next:</strong>
             <ul style="margin: 10px 0 0 20px;">
               ${nextSteps.map(step => `<li>${getStepDescription(step)}</li>`).join('')}
             </ul>
           </div>
         ` : ''}
 
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <div style="margin-bottom: 12px; font-weight: 600;">Consent & Terms</div>
+          <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer;">
+            <input type="checkbox" id="review-consent" style="margin-right: 10px; width: 18px; height: 18px;">
+            <span>I approve this quote and authorize the work.</span>
+          </label>
+          <div style="max-height: 240px; overflow-y: auto; border: 1px solid #ddd; padding: 14px; margin: 12px 0; background: #fff; border-radius: 6px;">
+            ${(companySettings.terms_and_conditions_text || '').replace(/\n/g, '<br>')}
+          </div>
+          <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer;">
+            <input type="checkbox" id="review-terms" style="margin-right: 10px; width: 18px; height: 18px;">
+            <span>I have read and agree to the terms and conditions.</span>
+          </label>
+        </div>
+
         <div class="wizard-actions">
-          <button class="btn btn-approve" onclick="nextWizardStep(0)">
-            Continue to Approve
+          <button class="btn btn-approve" id="review-continue-btn" onclick="nextWizardStep(0)" disabled>
+            Continue
           </button>
           <button class="btn btn-secondary" onclick="location.reload()">
             Cancel
@@ -1557,23 +1566,15 @@
     }
 
     function initializeStep(step) {
-      if (step === 'signature') {
-        // Initialize consent checkbox
-        const checkbox = document.getElementById('consent-checkbox');
-        const btn = document.getElementById('consent-btn');
-        if (checkbox && btn) {
-          checkbox.addEventListener('change', () => {
-            btn.disabled = !checkbox.checked;
-          });
-        }
-      } else if (step === 'terms') {
-        const checkbox = document.getElementById('terms-checkbox');
-        const btn = document.getElementById('accept-terms-btn');
-        if (checkbox && btn) {
-          checkbox.addEventListener('change', () => {
-            btn.disabled = !checkbox.checked;
-          });
-        }
+      if (step === 'review') {
+        // Enable continue when both consent and terms are checked
+        const consent = document.getElementById('review-consent');
+        const terms = document.getElementById('review-terms');
+        const btn = document.getElementById('review-continue-btn');
+        const update = () => { if (btn) btn.disabled = !(consent?.checked && terms?.checked); };
+        if (consent) consent.addEventListener('change', update);
+        if (terms) terms.addEventListener('change', update);
+        update();
       } else if (step === 'schedule') {
         // Load available scheduling slots
         loadAvailableSlots();
@@ -1818,49 +1819,51 @@
       console.log('🎯 finalizeApproval called');
 
       try {
-        // Use RPC function to approve quote
-        console.log('📞 Calling approve_quote RPC...');
-        const { data, error } = await supabase
-          .rpc('approve_quote', {
-            quote_id: quoteId,
-            new_status: 'approved'
-          });
-
-        if (error) {
-          console.error('❌ RPC error:', error);
-          throw error;
-        }
-
-        console.log('✅ Quote approved successfully');
-
-        // If customer scheduled a time, create schedule events for assigned crew
+        // Try atomic server-side approval + scheduling
         if (approvalData.scheduledTime) {
-          console.log('📅 Creating schedule events for crew...', approvalData.scheduledTime);
+          try {
+            console.log('📞 Calling approve_and_schedule_work_order RPC...');
+            const { data, error } = await supabase.rpc('approve_and_schedule_work_order', {
+              p_quote_id: quoteId,
+              p_start: approvalData.scheduledTime.start_time,
+              p_end: approvalData.scheduledTime.end_time,
+              p_employee_ids: approvalData.scheduledTime.employee_ids || [],
+              p_crew_size: approvalData.scheduledTime.crew_size || 1
+            });
+            if (error) throw error;
+            console.log('✅ Approved & scheduled via RPC:', data);
+          } catch (rpcErr) {
+            console.warn('⚠️ approve_and_schedule_work_order failed or missing, falling back...', rpcErr);
+            // Fallback: approve then client-side insert of schedule_events
+            const { error: approveErr } = await supabase.rpc('approve_quote', { quote_id: quoteId, new_status: 'approved' });
+            if (approveErr) throw approveErr;
+            console.log('✅ Quote approved via fallback');
 
-          const crewIds = approvalData.scheduledTime.employee_ids || [];
-          const base = {
-            work_order_id: quoteId,
-            start_time: approvalData.scheduledTime.start_time,
-            end_time: approvalData.scheduledTime.end_time,
-            title: `Customer Scheduled: Work Order #${quoteData.work_order_number || quoteId.slice(0, 8)}`,
-            company_id: quoteData.company_id,
-            created_by_customer: true,
-            auto_scheduled: approvalData.scheduledTime.auto_scheduled || false
-          };
-
-          const rows = crewIds.map(empId => ({ ...base, employee_id: empId }));
-
-          const { error: scheduleError } = await supabase
-            .from('schedule_events')
-            .insert(rows);
-
-          if (scheduleError) {
-            console.error('❌ Error creating schedule events:', scheduleError);
-            // Don't fail the whole approval if scheduling fails
-            alert('Quote approved, but there was an issue creating the schedule. We\'ll contact you to confirm the time.');
-          } else {
-            console.log(`✅ Created ${rows.length} schedule event(s) for crew`, crewIds);
+            const crewIds = approvalData.scheduledTime.employee_ids || [];
+            const base = {
+              work_order_id: quoteId,
+              start_time: approvalData.scheduledTime.start_time,
+              end_time: approvalData.scheduledTime.end_time,
+              title: `Customer Scheduled: Work Order #${quoteData.work_order_number || quoteId.slice(0, 8)}`,
+              company_id: quoteData.company_id,
+              created_by_customer: true,
+              auto_scheduled: approvalData.scheduledTime.auto_scheduled || false
+            };
+            const rows = crewIds.map(empId => ({ ...base, employee_id: empId }));
+            const { error: scheduleError } = await supabase.from('schedule_events').insert(rows);
+            if (scheduleError) {
+              console.error('❌ Error creating schedule events:', scheduleError);
+              alert('Quote approved, but there was an issue creating the schedule. We\'ll contact you to confirm the time.');
+            } else {
+              console.log(`✅ Created ${rows.length} schedule event(s) for crew`, crewIds);
+            }
           }
+        } else {
+          // No scheduling selected -> just approve
+          console.log('📞 Calling approve_quote RPC...');
+          const { data, error } = await supabase.rpc('approve_quote', { quote_id: quoteId, new_status: 'approved' });
+          if (error) throw error;
+          console.log('✅ Quote approved successfully');
         }
 
         // Check if we're in wizard mode or simple mode
