@@ -1196,12 +1196,10 @@ const Employees = () => {
 
       // ✅ REMOVED: user_permissions table doesn't exist yet
       // Permissions are managed through role-based access control in the users table
-      // Future: Implement granular permissions system when needed else {
-        console.log(`✅ User permissions updated successfully`);
-      }
+      // Future: Implement granular permissions system when needed
 
       // Success!
-      showAlert('success', `✅ Employee and permissions updated successfully!`);
+      showAlert('success', `✅ Employee updated successfully!`);
       setFormData({ email: '', full_name: '', phone_number: '', role: 'employee' });
       setEditingPermissions({
         can_view_quotes: false,
