@@ -1253,7 +1253,6 @@ const Employees = () => {
       } catch (e) {
         console.warn('⚠️ Failed to save employee skills', e);
       }
-
     }
   };
 
