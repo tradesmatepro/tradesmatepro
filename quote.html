@@ -1497,11 +1497,27 @@
         `;
       }
 
+      // Deposit summary (condensed into final step)
+      let depositHtml = '';
+      if (companySettings && companySettings.require_deposit_on_approval) {
+        const depositAmount = companySettings.deposit_type === 'percentage'
+          ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
+          : companySettings.default_deposit_amount;
+        depositHtml = `
+          <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;">
+            <div style="font-weight: 600; color: #92400e;">Deposit Required</div>
+            <div style="color: #92400e;">Amount due now: <strong>$${depositAmount.toFixed(2)}</strong></div>
+            <div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">We will send a secure payment link to complete the deposit.</div>
+          </div>
+        `;
+      }
+
       return `
         <h2>🎉 All Set!</h2>
         <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
 
         ${scheduleInfo}
+        ${depositHtml}
 
         <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
           <strong>What happens next?</strong>
