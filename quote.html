@@ -954,6 +954,43 @@
 
         if (itemsError) throw itemsError;
 
+        // Calculate labor_summary from line items if not already in quote
+        if (!quote.labor_summary && lineItems && lineItems.length > 0) {
+          const laborItems = lineItems.filter(item =>
+            item.line_type === 'labor' || item.item_type === 'labor'
+          );
+
+          if (laborItems.length > 0) {
+            const totalLaborHours = laborItems.reduce((sum, item) =>
+              sum + (parseFloat(item.quantity) || 0), 0
+            );
+
+            // Smart crew size calculation
+            // If total hours > 8, assume multiple people working same day
+            // Example: 16 hours = 2 people × 8 hours each
+            const hoursPerDay = 8; // Standard workday
+            const crewSize = Math.max(1, Math.ceil(totalLaborHours / hoursPerDay));
+            const hoursPerEmployee = totalLaborHours / crewSize;
+
+            quote.labor_summary = {
+              crew_size: crewSize,
+              hours_per_day: hoursPerDay,
+              regular_hours: totalLaborHours,
+              overtime_hours: 0,
+              labor_subtotal: laborItems.reduce((sum, item) =>
+                sum + (parseFloat(item.total_price) || 0), 0
+              )
+            };
+
+            console.log('✅ Calculated labor_summary from line items:', {
+              totalLaborHours,
+              crewSize,
+              hoursPerEmployee,
+              labor_summary: quote.labor_summary
+            });
+          }
+        }
+
         // Display quote
         displayQuote(quote, lineItems || []);
 
