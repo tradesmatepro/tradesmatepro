@@ -1393,17 +1393,53 @@
         : companySettings.default_deposit_amount;
 
       return `
-        <h2>💳 Deposit Payment</h2>
+        <h2>💳 Deposit Required</h2>
         <p style="margin: 20px 0;">A deposit of <strong>$${depositAmount.toFixed(2)}</strong> is required to proceed.</p>
 
-        <div id="stripe-payment-element" style="margin: 20px 0;"></div>
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <div style="font-weight: 600; margin-bottom: 12px;">How will you pay the deposit?</div>
+
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="online" checked style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">💳 Pay Online Now</div>
+              <div style="font-size: 12px; color: #6b7280;">Secure payment via credit/debit card</div>
+            </div>
+          </label>
+
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="cash" style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">💵 Cash (Pay on arrival)</div>
+              <div style="font-size: 12px; color: #6b7280;">Pay cash when technician arrives</div>
+            </div>
+          </label>
+
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="check" style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">🏦 Check (Pay on arrival)</div>
+              <div style="font-size: 12px; color: #6b7280;">Pay by check when technician arrives</div>
+            </div>
+          </label>
+
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="prepaid" style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">✅ Already Paid</div>
+              <div style="font-size: 12px; color: #6b7280;">I've already paid the deposit</div>
+            </div>
+          </label>
+        </div>
+
+        <div id="stripe-payment-element" style="margin: 20px 0; display: none;"></div>
 
         <div class="wizard-actions">
-          <button class="btn btn-approve" onclick="processDeposit()">Pay Deposit</button>
+          <button class="btn btn-approve" onclick="processDeposit()" id="deposit-continue-btn">Continue</button>
         </div>
 
         <p style="margin-top: 20px; font-size: 14px; color: #666;">
-          <em>Note: This is a placeholder. Stripe integration coming soon.</em>
+          <em>Note: Online payment processing coming soon. For now, select your preferred payment method and continue.</em>
         </p>
       `;
     }
@@ -1478,7 +1514,31 @@
             Confirm Selected Time
           </button>
         </div>
+
+        <!-- Skip Scheduling Option -->
+        <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
+          <p style="margin-bottom: 12px; color: #6b7280;">Don't have a preferred time?</p>
+          <button onclick="skipScheduling()" class="btn btn-secondary" style="background: #6b7280; color: white;">
+            Skip - Let Company Schedule
+          </button>
+          <p style="margin-top: 8px; font-size: 12px; color: #9ca3af;">We'll call you to schedule a convenient time</p>
+        </div>
       `;
+    }
+
+    // Helper function to format date/time for display (outside of SchedulingWidget class)
+    function formatSlotDateTime(date) {
+      const dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      });
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      return `${dateStr} at ${timeStr}`;
     }
 
     function getConfirmationStepContent() {
@@ -1495,19 +1555,39 @@
             <div style="font-size: 24px; font-weight: 700;">${dateTimeStr}${autoScheduled}</div>
           </div>
         `;
+      } else if (approvalData.skipScheduling) {
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">📞 We'll Contact You</div>
+            <div style="font-size: 16px;">Our team will call you within 1 business day to schedule a convenient time.</div>
+          </div>
+        `;
       }
 
       // Deposit summary (condensed into final step)
       let depositHtml = '';
-      if (companySettings && companySettings.require_deposit_on_approval) {
+      if (companySettings && companySettings.require_deposit_on_approval && approvalData.depositMethod) {
         const depositAmount = companySettings.deposit_type === 'percentage'
           ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
           : companySettings.default_deposit_amount;
+
+        const methodLabels = {
+          'online': '💳 Online Payment',
+          'cash': '💵 Cash (on arrival)',
+          'check': '🏦 Check (on arrival)',
+          'prepaid': '✅ Already Paid'
+        };
+
         depositHtml = `
           <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;">
-            <div style="font-weight: 600; color: #92400e;">Deposit Required</div>
-            <div style="color: #92400e;">Amount due now: <strong>$${depositAmount.toFixed(2)}</strong></div>
-            <div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">We will send a secure payment link to complete the deposit.</div>
+            <div style="font-weight: 600; color: #92400e;">Deposit: $${depositAmount.toFixed(2)}</div>
+            <div style="color: #92400e; font-size: 14px; margin-top: 4px;">Payment method: ${methodLabels[approvalData.depositMethod] || approvalData.depositMethod}</div>
+            ${approvalData.depositMethod === 'cash' || approvalData.depositMethod === 'check' ?
+              '<div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">Please have payment ready when the technician arrives.</div>' :
+              approvalData.depositMethod === 'prepaid' ?
+              '<div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">Thank you for your payment!</div>' :
+              '<div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">We will send a secure payment link to complete the deposit.</div>'
+            }
           </div>
         `;
       }
@@ -1640,10 +1720,23 @@
     }
 
     function processDeposit() {
-      // Placeholder for Stripe integration
-      alert('Deposit payment integration coming soon. For now, we\'ll proceed without payment.');
-      approvalData.depositPaid = true;
-      console.log('💳 Deposit processed (mock)');
+      // Capture selected payment method
+      const selectedMethod = document.querySelector('input[name="deposit-method"]:checked');
+      if (!selectedMethod) {
+        alert('Please select a payment method');
+        return;
+      }
+
+      approvalData.depositMethod = selectedMethod.value;
+      approvalData.depositPaid = (selectedMethod.value === 'prepaid' || selectedMethod.value === 'online');
+
+      console.log('💳 Deposit method selected:', selectedMethod.value);
+
+      // If online payment selected, show Stripe element (future enhancement)
+      if (selectedMethod.value === 'online') {
+        // TODO: Initialize Stripe payment element
+        alert('Online payment processing coming soon. For now, we\'ll proceed and you can pay when the technician arrives.');
+      }
 
       const currentIndex = wizardSteps.indexOf('deposit');
       nextWizardStep(currentIndex);
@@ -1652,6 +1745,15 @@
     // Scheduling functions
     let selectedSlot = null;
     let schedulingWidget = null;
+
+    function skipScheduling() {
+      console.log('⏭️ Customer chose to skip scheduling');
+      approvalData.scheduledTime = null;
+      approvalData.skipScheduling = true;
+
+      const currentIndex = wizardSteps.indexOf('schedule');
+      nextWizardStep(currentIndex);
+    }
 
     async function loadAvailableSlots() {
       console.log('📅 Initializing scheduling widget...');
