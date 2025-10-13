@@ -55,6 +55,7 @@ export default function QuotesPro(){
   const [savedViews, setSavedViews] = useState([]);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [companySettings, setCompanySettings] = useState(null);
 
   const [showManageViews, setShowManageViews] = useState(false);
   const [selectedViewName, setSelectedViewName] = useState('');
@@ -320,6 +321,28 @@ export default function QuotesPro(){
       setApprovalWorkflows([]);
     }
   };
+
+  // Load company settings for quote overrides
+  useEffect(() => {
+    const loadCompanySettings = async () => {
+      if (!user?.company_id) return;
+      try {
+        const response = await supaFetch(`companies?id=eq.${user.company_id}&select=*`, {
+          method: 'GET'
+        }, user.company_id);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            setCompanySettings(data[0]);
+            console.log('✅ Loaded company settings for quote overrides');
+          }
+        }
+      } catch (error) {
+        console.error('Error loading company settings:', error);
+      }
+    };
+    loadCompanySettings();
+  }, [user?.company_id]);
 
   // Load competitive data on mount (now with proper database tables)
   useEffect(() => {
@@ -653,16 +676,33 @@ export default function QuotesPro(){
         }
       }
 
-      // Update quote status if at least one method succeeded
+      // Update quote status AND save overrides if at least one method succeeded
       if (emailSuccess || smsSuccess) {
         try {
+          const updateBody = {
+            status: 'sent',
+            quote_sent_at: new Date().toISOString(),
+
+            // Save scheduling overrides
+            scheduling_mode: sendData.schedulingMode || 'customer_choice',
+            custom_availability_days: sendData.customAvailabilityDays || null,
+            custom_availability_hours_start: sendData.customAvailabilityHoursStart || null,
+            custom_availability_hours_end: sendData.customAvailabilityHoursEnd || null,
+
+            // Save deposit overrides
+            deposit_required: sendData.depositRequired || false,
+            deposit_required_before_scheduling: sendData.depositRequiredBeforeScheduling || false,
+            allowed_payment_methods: sendData.allowedPaymentMethods || ['online', 'cash', 'check']
+          };
+
+          console.log('💾 Saving quote with overrides:', updateBody);
+
           await supaFetch(`work_orders?id=eq.${activeQuote.id}`, {
             method: 'PATCH',
-            body: {
-              status: 'sent',
-              quote_sent_at: new Date().toISOString()
-            }
+            body: updateBody
           }, user.company_id);
+
+          console.log('✅ Quote overrides saved to database');
         } catch (updateError) {
           console.error('❌ Failed to update quote status:', updateError);
         }
@@ -876,6 +916,7 @@ export default function QuotesPro(){
           customerPhone={customers.find(c=>c.id===activeQuote?.customer_id)?.phone}
           quoteAmount={activeQuote?.total_amount || activeQuote?.grand_total || 0}
           portalLink={`${window.location.origin}/portal/quote/${activeQuote?.id}`}
+          companySettings={companySettings}
         />
       )}
 

@@ -40,16 +40,29 @@ const SendQuoteModal = ({
   customerEmail,
   customerPhone,
   quoteAmount,
-  portalLink
+  portalLink,
+  companySettings // NEW: Pass company settings for defaults
 }) => {
   const [formData, setFormData] = useState({
     deliveryMethod: 'email', // 'email', 'sms', 'both'
     customMessage: '',
     includeAttachment: true,
-    sendCopyToSelf: false
+    sendCopyToSelf: false,
+
+    // NEW: Scheduling overrides
+    schedulingMode: 'customer_choice', // 'customer_choice', 'company_schedules', 'auto_schedule'
+    customAvailabilityDays: [], // e.g., ['saturday', 'sunday'] for emergency/weekend work
+    customAvailabilityHoursStart: '', // e.g., '07:00'
+    customAvailabilityHoursEnd: '', // e.g., '20:00'
+
+    // NEW: Deposit overrides
+    depositRequired: companySettings?.require_deposit_on_approval || false,
+    depositRequiredBeforeScheduling: false,
+    allowedPaymentMethods: ['online', 'cash', 'check'] // Default: all methods
   });
 
   const [errors, setErrors] = useState({});
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
 
   if (!isOpen) return null;
 
@@ -82,23 +95,39 @@ const SendQuoteModal = ({
 
   const handleConfirm = () => {
     if (!validate()) return;
-    
+
     const sendData = {
       deliveryMethod: formData.deliveryMethod,
       customMessage: formData.customMessage.trim(),
       includeAttachment: formData.includeAttachment,
       sendCopyToSelf: formData.sendCopyToSelf,
-      sentAt: new Date().toISOString()
+      sentAt: new Date().toISOString(),
+
+      // NEW: Include scheduling and deposit overrides
+      schedulingMode: formData.schedulingMode,
+      customAvailabilityDays: formData.customAvailabilityDays.length > 0 ? formData.customAvailabilityDays : null,
+      customAvailabilityHoursStart: formData.customAvailabilityHoursStart || null,
+      customAvailabilityHoursEnd: formData.customAvailabilityHoursEnd || null,
+      depositRequired: formData.depositRequired,
+      depositRequiredBeforeScheduling: formData.depositRequiredBeforeScheduling,
+      allowedPaymentMethods: formData.allowedPaymentMethods
     };
-    
+
     onConfirm(sendData);
-    
+
     // Reset form
     setFormData({
       deliveryMethod: 'email',
       customMessage: '',
       includeAttachment: true,
-      sendCopyToSelf: false
+      sendCopyToSelf: false,
+      schedulingMode: 'customer_choice',
+      customAvailabilityDays: [],
+      customAvailabilityHoursStart: '',
+      customAvailabilityHoursEnd: '',
+      depositRequired: companySettings?.require_deposit_on_approval || false,
+      depositRequiredBeforeScheduling: false,
+      allowedPaymentMethods: ['online', 'cash', 'check']
     });
     setErrors({});
   };
@@ -329,6 +358,202 @@ Your Company Team`;
               <span className="text-sm text-gray-900">Send a copy to myself</span>
             </label>
           </div>
+
+          {/* Advanced Options Toggle */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={() => setShowAdvancedOptions(!showAdvancedOptions)}
+              className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
+            >
+              <svg className={`w-4 h-4 transition-transform ${showAdvancedOptions ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              Advanced Options (Scheduling & Deposit Overrides)
+            </button>
+            <p className="text-xs text-gray-500 mt-1 ml-6">
+              Customize scheduling and deposit requirements for this quote only
+            </p>
+          </div>
+
+          {/* Advanced Options Panel */}
+          {showAdvancedOptions && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-6">
+              {/* Scheduling Mode */}
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-3">
+                  📅 Scheduling Options
+                </label>
+                <div className="space-y-2">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="scheduling-mode"
+                      value="customer_choice"
+                      checked={formData.schedulingMode === 'customer_choice'}
+                      onChange={(e) => handleChange('schedulingMode', e.target.value)}
+                      className="mt-0.5"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Use Default Settings</div>
+                      <div className="text-xs text-gray-600">Customer picks from your normal business hours</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="scheduling-mode"
+                      value="custom_schedule"
+                      checked={formData.schedulingMode === 'custom_schedule'}
+                      onChange={(e) => handleChange('schedulingMode', e.target.value)}
+                      className="mt-0.5"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Custom Schedule for This Quote</div>
+                      <div className="text-xs text-gray-600">Override days/hours for emergency or weekend work</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="scheduling-mode"
+                      value="company_schedules"
+                      checked={formData.schedulingMode === 'company_schedules'}
+                      onChange={(e) => handleChange('schedulingMode', e.target.value)}
+                      className="mt-0.5"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Company Will Schedule</div>
+                      <div className="text-xs text-gray-600">Customer can't pick time - you'll call them</div>
+                    </div>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="scheduling-mode"
+                      value="auto_schedule"
+                      checked={formData.schedulingMode === 'auto_schedule'}
+                      onChange={(e) => handleChange('schedulingMode', e.target.value)}
+                      className="mt-0.5"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">Auto-Schedule ASAP</div>
+                      <div className="text-xs text-gray-600">Automatically book earliest available slot</div>
+                    </div>
+                  </label>
+                </div>
+
+                {/* Custom Schedule Options */}
+                {formData.schedulingMode === 'custom_schedule' && (
+                  <div className="mt-4 p-3 bg-white border border-blue-300 rounded space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-700 mb-2">Available Days</label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].map(day => (
+                          <label key={day} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={formData.customAvailabilityDays.includes(day)}
+                              onChange={(e) => {
+                                const newDays = e.target.checked
+                                  ? [...formData.customAvailabilityDays, day]
+                                  : formData.customAvailabilityDays.filter(d => d !== day);
+                                handleChange('customAvailabilityDays', newDays);
+                              }}
+                              className="rounded"
+                            />
+                            <span className="text-xs capitalize">{day.slice(0, 3)}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Start Time</label>
+                        <input
+                          type="time"
+                          value={formData.customAvailabilityHoursStart}
+                          onChange={(e) => handleChange('customAvailabilityHoursStart', e.target.value)}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">End Time</label>
+                        <input
+                          type="time"
+                          value={formData.customAvailabilityHoursEnd}
+                          onChange={(e) => handleChange('customAvailabilityHoursEnd', e.target.value)}
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Deposit Options */}
+              <div className="pt-4 border-t border-blue-300">
+                <label className="block text-sm font-medium text-gray-900 mb-3">
+                  💳 Deposit Options
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.depositRequired}
+                      onChange={(e) => handleChange('depositRequired', e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm text-gray-900">Require Deposit for This Quote</span>
+                  </label>
+
+                  {formData.depositRequired && (
+                    <div className="ml-6 space-y-3">
+                      <label className="flex items-center gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.depositRequiredBeforeScheduling}
+                          onChange={(e) => handleChange('depositRequiredBeforeScheduling', e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm text-gray-900">Deposit Required BEFORE Scheduling</span>
+                      </label>
+
+                      <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-2">Allowed Payment Methods</label>
+                        <div className="space-y-2">
+                          {[
+                            { value: 'online', label: '💳 Pay Online' },
+                            { value: 'cash', label: '💵 Cash' },
+                            { value: 'check', label: '🏦 Check' }
+                          ].map(method => (
+                            <label key={method.value} className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={formData.allowedPaymentMethods.includes(method.value)}
+                                onChange={(e) => {
+                                  const newMethods = e.target.checked
+                                    ? [...formData.allowedPaymentMethods, method.value]
+                                    : formData.allowedPaymentMethods.filter(m => m !== method.value);
+                                  handleChange('allowedPaymentMethods', newMethods);
+                                }}
+                                className="rounded"
+                              />
+                              <span className="text-sm">{method.label}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}

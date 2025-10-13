@@ -1204,14 +1204,37 @@
 
       console.log('=== APPROVAL WIZARD DEBUG ===');
       console.log('Company Settings:', companySettings);
+      console.log('Quote Overrides:', {
+        scheduling_mode: quoteData.scheduling_mode,
+        deposit_required: quoteData.deposit_required,
+        deposit_required_before_scheduling: quoteData.deposit_required_before_scheduling
+      });
 
-      // Determine which steps are needed based on company settings
-      // Condensed flow: Review (with consent+terms) → Schedule → Confirmation (shows deposit info if required)
+      // Determine which steps are needed based on quote overrides OR company settings
+      // Quote-level overrides take precedence over company defaults
+      const schedulingMode = quoteData.scheduling_mode || 'customer_choice';
+      const allowScheduling = schedulingMode !== 'company_schedules'; // Company will call them
+      const depositRequired = quoteData.deposit_required !== undefined
+        ? quoteData.deposit_required
+        : (companySettings?.require_deposit_on_approval || false);
+
+      // Condensed flow: Review (with consent+terms) → Deposit (if required) → Schedule (if allowed) → Confirmation
       wizardSteps = ['review'];
-      if (companySettings && companySettings.allow_customer_scheduling) {
-        console.log('Adding schedule step');
-        wizardSteps.push('schedule');
+
+      if (depositRequired) {
+        console.log('Adding deposit step (required by quote or company)');
+        wizardSteps.push('deposit');
       }
+
+      if (allowScheduling && (companySettings?.allow_customer_scheduling || schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule')) {
+        console.log('Adding schedule step (mode:', schedulingMode, ')');
+        wizardSteps.push('schedule');
+      } else if (schedulingMode === 'company_schedules') {
+        console.log('Skipping schedule step - company will call customer');
+      } else if (schedulingMode === 'auto_schedule') {
+        console.log('Auto-schedule mode - will book earliest slot automatically');
+      }
+
       wizardSteps.push('confirmation');
 
       console.log('Total steps:', wizardSteps);
@@ -1392,44 +1415,42 @@
         ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
         : companySettings.default_deposit_amount;
 
+      // Get allowed payment methods from quote overrides or default to all
+      const allowedMethods = quoteData.allowed_payment_methods || ['online', 'cash', 'check'];
+      console.log('Allowed payment methods:', allowedMethods);
+
+      // Payment method options
+      const paymentMethods = [
+        { value: 'online', icon: '💳', label: 'Pay Online Now', desc: 'Secure payment via credit/debit card' },
+        { value: 'cash', icon: '💵', label: 'Cash (Pay on arrival)', desc: 'Pay cash when technician arrives' },
+        { value: 'check', icon: '🏦', label: 'Check (Pay on arrival)', desc: 'Pay by check when technician arrives' },
+        { value: 'prepaid', icon: '✅', label: 'Already Paid', desc: "I've already paid the deposit" }
+      ];
+
+      // Filter to only allowed methods
+      const availableMethods = paymentMethods.filter(m => allowedMethods.includes(m.value) || m.value === 'prepaid');
+      const firstMethod = availableMethods[0]?.value || 'online';
+
+      let methodsHtml = '';
+      availableMethods.forEach((method, index) => {
+        methodsHtml += `
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="${method.value}" ${index === 0 ? 'checked' : ''} style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">${method.icon} ${method.label}</div>
+              <div style="font-size: 12px; color: #6b7280;">${method.desc}</div>
+            </div>
+          </label>
+        `;
+      });
+
       return `
         <h2>💳 Deposit Required</h2>
         <p style="margin: 20px 0;">A deposit of <strong>$${depositAmount.toFixed(2)}</strong> is required to proceed.</p>
 
         <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
           <div style="font-weight: 600; margin-bottom: 12px;">How will you pay the deposit?</div>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="online" checked style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">💳 Pay Online Now</div>
-              <div style="font-size: 12px; color: #6b7280;">Secure payment via credit/debit card</div>
-            </div>
-          </label>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="cash" style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">💵 Cash (Pay on arrival)</div>
-              <div style="font-size: 12px; color: #6b7280;">Pay cash when technician arrives</div>
-            </div>
-          </label>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="check" style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">🏦 Check (Pay on arrival)</div>
-              <div style="font-size: 12px; color: #6b7280;">Pay by check when technician arrives</div>
-            </div>
-          </label>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="prepaid" style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">✅ Already Paid</div>
-              <div style="font-size: 12px; color: #6b7280;">I've already paid the deposit</div>
-            </div>
-          </label>
+          ${methodsHtml}
         </div>
 
         <div id="stripe-payment-element" style="margin: 20px 0; display: none;"></div>
@@ -1851,6 +1872,25 @@
           console.log('  📊 Expected LAST slot:', `${String(lastSlotHour).padStart(2, '0')}:${String(lastSlotMin).padStart(2, '0')}`);
         }
 
+        // Apply quote-level overrides for custom availability
+        const effectiveSettings = { ...companySettings };
+
+        // Override business days if custom days specified
+        if (quoteData.custom_availability_days && quoteData.custom_availability_days.length > 0) {
+          console.log('🔧 Applying custom availability days:', quoteData.custom_availability_days);
+          effectiveSettings.business_days = quoteData.custom_availability_days;
+        }
+
+        // Override business hours if custom hours specified
+        if (quoteData.custom_availability_hours_start) {
+          console.log('🔧 Applying custom start hour:', quoteData.custom_availability_hours_start);
+          effectiveSettings.business_hours_start = quoteData.custom_availability_hours_start;
+        }
+        if (quoteData.custom_availability_hours_end) {
+          console.log('🔧 Applying custom end hour:', quoteData.custom_availability_hours_end);
+          effectiveSettings.business_hours_end = quoteData.custom_availability_hours_end;
+        }
+
         schedulingWidget = new SchedulingWidget({
           containerId: 'scheduling-widget-container',
           companyId: quoteData.company_id,
@@ -1858,7 +1898,7 @@
           durationMinutes: durationMinutes,  // ← Dynamic based on quote labor!
           supabaseUrl: SUPABASE_URL,
           supabaseAnonKey: SUPABASE_ANON_KEY,
-          companySettings: companySettings,
+          companySettings: effectiveSettings,  // ← Use effective settings with overrides!
           onSlotSelected: (slot) => {
             selectedSlot = slot;
             console.log('📅 Slot selected:', slot);
