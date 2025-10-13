@@ -587,7 +587,27 @@
 
       groupSlotsByDay() {
         const grouped = {};
+
+        // Deduplicate slots by start time (for crew jobs, multiple employees have same time)
+        const uniqueSlots = new Map();
         this.filteredSlots.forEach(slot => {
+          const timeKey = slot.start_time.getTime();
+          if (!uniqueSlots.has(timeKey)) {
+            uniqueSlots.set(timeKey, {
+              ...slot,
+              employee_ids: [slot.employee_id],
+              crew_size: 1
+            });
+          } else {
+            // Add this employee to the crew
+            const existing = uniqueSlots.get(timeKey);
+            existing.employee_ids.push(slot.employee_id);
+            existing.crew_size++;
+          }
+        });
+
+        // Group deduplicated slots by day
+        uniqueSlots.forEach(slot => {
           const dayKey = slot.start_time.toLocaleDateString('en-US', {
             weekday: 'long',
             month: 'long',
@@ -598,6 +618,7 @@
           }
           grouped[dayKey].push(slot);
         });
+
         return grouped;
       }
 
@@ -1251,8 +1272,37 @@
     }
 
     function getScheduleStepContent() {
+      // Get labor summary info to display to customer
+      let jobInfoHtml = '';
+      if (quoteData.labor_summary) {
+        const ls = quoteData.labor_summary;
+        const crewSize = ls.crew_size || 1;
+        const hoursPerDay = ls.hours_per_day || 8;
+        const totalHours = ls.regular_hours + (ls.overtime_hours || 0);
+        const hoursPerEmployee = totalHours / crewSize;
+
+        jobInfoHtml = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+              <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <div>
+                <div style="font-size: 1.25rem; font-weight: 700;">${crewSize} Technician${crewSize > 1 ? 's' : ''} for ${Math.round(hoursPerEmployee)} Hour${Math.round(hoursPerEmployee) > 1 ? 's' : ''}</div>
+                <div style="font-size: 0.875rem; opacity: 0.9;">Total project time: ${totalHours} hours</div>
+              </div>
+            </div>
+            <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
+              Select a time when our team can arrive to start your service.
+            </div>
+          </div>
+        `;
+      }
+
       return `
         <h2>📅 Schedule Your Service</h2>
+
+        ${jobInfoHtml}
 
         <!-- Scheduling Widget Container -->
         <div id="scheduling-widget-container"></div>
