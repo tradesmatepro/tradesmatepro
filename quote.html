@@ -393,10 +393,434 @@
     console.log('🚀 Quote Portal v2.0 - Multi-step Approval Wizard');
     console.log('📅 Loaded at:', new Date().toISOString());
 
-    // Supabase configuration
+    // Supabase configuration - Using legacy JWT format (required for edge functions)
     const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_62eAoe6DcrOweYtnzfhHmQ_aYY4JZSG';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ========================================
+    // SCHEDULING WIDGET - Inline for standalone deployment
+    // ========================================
+    console.log('🔧 Defining SchedulingWidget class...');
+    class SchedulingWidget {
+      constructor(options) {
+        this.containerId = options.containerId;
+        this.companyId = options.companyId;
+        this.employeeIds = options.employeeIds || [];
+        this.durationMinutes = options.durationMinutes || 120;
+        this.supabaseUrl = options.supabaseUrl;
+        this.supabaseAnonKey = options.supabaseAnonKey;
+        this.onSlotSelected = options.onSlotSelected || (() => {});
+        this.onAutoSchedule = options.onAutoSchedule || (() => {});
+        this.showAutoSchedule = options.showAutoSchedule !== false;
+        this.maxDaysAhead = options.maxDaysAhead || 90;
+
+        this.availableSlots = [];
+        this.filteredSlots = [];
+        this.selectedSlot = null;
+        this.weekFilter = 0;
+        this.showCustomRange = false;
+        this.loading = true;
+        this.error = null;
+        this.earliestSlot = null;
+
+        this.container = document.getElementById(this.containerId);
+        if (!this.container) {
+          console.error(`Container #${this.containerId} not found`);
+          return;
+        }
+
+        this.render();
+        this.loadAvailableSlots();
+      }
+
+      async loadAvailableSlots() {
+        this.loading = true;
+        this.error = null;
+        this.render();
+
+        try {
+          const startDate = new Date();
+          const endDate = new Date();
+          endDate.setDate(endDate.getDate() + this.maxDaysAhead);
+
+          const requestBody = {
+            employeeIds: this.employeeIds,
+            durationMinutes: this.durationMinutes,
+            companyId: this.companyId,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString()
+          };
+
+          const response = await fetch(
+            `${this.supabaseUrl}/functions/v1/smart-scheduling`,
+            {
+              method: 'POST',
+              headers: {
+                'apikey': this.supabaseAnonKey,
+                'Authorization': `Bearer ${this.supabaseAnonKey}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestBody)
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Failed to load slots: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          const allSlots = [];
+          Object.values(data.suggestions || {}).forEach(employeeData => {
+            (employeeData.available_slots || []).forEach(slot => {
+              allSlots.push({
+                ...slot,
+                employee_id: employeeData.employee_id,
+                start_time: new Date(slot.start_time),
+                end_time: new Date(slot.end_time)
+              });
+            });
+          });
+
+          allSlots.sort((a, b) => a.start_time - b.start_time);
+
+          this.availableSlots = allSlots;
+
+          if (allSlots.length > 0) {
+            this.earliestSlot = allSlots[0];
+          } else {
+            this.error = 'No available time slots found. Please contact us to schedule.';
+          }
+
+          this.filterSlotsByWeek(this.weekFilter);
+        } catch (err) {
+          console.error('Error loading slots:', err);
+          this.error = 'Unable to load available times. Please try again or contact us.';
+        } finally {
+          this.loading = false;
+          this.render();
+        }
+      }
+
+      filterSlotsByWeek(offset) {
+        this.weekFilter = offset;
+        this.showCustomRange = false;
+
+        const now = new Date();
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() + (offset * 7));
+        startOfWeek.setHours(0, 0, 0, 0);
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 7);
+
+        this.filteredSlots = this.availableSlots.filter(slot => {
+          return slot.start_time >= startOfWeek && slot.start_time < endOfWeek;
+        });
+
+        this.render();
+      }
+
+      filterByCustomRange(startDateStr, endDateStr) {
+        if (!startDateStr || !endDateStr) {
+          alert('Please select both start and end dates');
+          return;
+        }
+
+        const start = new Date(startDateStr);
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date(endDateStr);
+        end.setHours(23, 59, 59, 999);
+
+        this.filteredSlots = this.availableSlots.filter(slot => {
+          return slot.start_time >= start && slot.start_time <= end;
+        });
+
+        this.showCustomRange = false;
+        this.render();
+      }
+
+      selectSlot(slot) {
+        this.selectedSlot = slot;
+        this.onSlotSelected(slot);
+        this.render();
+      }
+
+      selectSlotById(slotId) {
+        const slot = this[slotId];
+        if (slot) {
+          this.selectSlot(slot);
+        }
+      }
+
+      autoSchedule() {
+        if (this.earliestSlot) {
+          this.selectedSlot = this.earliestSlot;
+          this.onAutoSchedule(this.earliestSlot);
+          this.render();
+        }
+      }
+
+      formatSlotDateTime(date) {
+        const dateStr = date.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric'
+        });
+        const timeStr = date.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+        return `${dateStr} at ${timeStr}`;
+      }
+
+      formatSlotTime(date) {
+        return date.toLocaleTimeString('en-US', {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        });
+      }
+
+      groupSlotsByDay() {
+        const grouped = {};
+
+        // Deduplicate slots by start time (for crew jobs, multiple employees have same time)
+        const uniqueSlots = new Map();
+        this.filteredSlots.forEach(slot => {
+          const timeKey = slot.start_time.getTime();
+          if (!uniqueSlots.has(timeKey)) {
+            uniqueSlots.set(timeKey, {
+              ...slot,
+              employee_ids: [slot.employee_id],
+              crew_size: 1
+            });
+          } else {
+            // Add this employee to the crew
+            const existing = uniqueSlots.get(timeKey);
+            existing.employee_ids.push(slot.employee_id);
+            existing.crew_size++;
+          }
+        });
+
+        // Group deduplicated slots by day
+        uniqueSlots.forEach(slot => {
+          const dayKey = slot.start_time.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+          });
+          if (!grouped[dayKey]) {
+            grouped[dayKey] = [];
+          }
+          grouped[dayKey].push(slot);
+        });
+
+        return grouped;
+      }
+
+      render() {
+        if (!this.container) return;
+
+        if (this.loading) {
+          this.container.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+              <div style="border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 3rem; height: 3rem; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+              <p style="color: #666;">Loading available times...</p>
+            </div>
+            <style>
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            </style>
+          `;
+          return;
+        }
+
+        if (this.error) {
+          this.container.innerHTML = `
+            <div style="background: #fee; border: 2px solid #f88; color: #c33; padding: 1.5rem; border-radius: 0.5rem;">
+              ${this.error}
+            </div>
+          `;
+          return;
+        }
+
+        const groupedSlots = this.groupSlotsByDay();
+
+        let html = '<div class="scheduling-widget">';
+
+        // Auto-Schedule ASAP Button
+        if (this.showAutoSchedule && this.earliestSlot) {
+          html += `
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: linear-gradient(to right, #ede9fe, #ddd6fe); border-radius: 0.5rem; border: 1px solid #c4b5fd;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <svg style="width: 1.5rem; height: 1.5rem; color: #7c3aed;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                  </svg>
+                  <div>
+                    <p style="font-weight: 600; color: #111; margin: 0;">Auto-Schedule ASAP</p>
+                    <p style="font-size: 0.875rem; color: #666; margin: 0;">Next available: ${this.formatSlotDateTime(this.earliestSlot.start_time)}</p>
+                  </div>
+                </div>
+                <button
+                  onclick="window.schedulingWidget.autoSchedule()"
+                  style="padding: 0.5rem 1rem; background: #7c3aed; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; transition: background 0.2s;"
+                  onmouseover="this.style.background='#6d28d9'"
+                  onmouseout="this.style.background='#7c3aed'"
+                >
+                  Schedule Now
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        // Week Filters
+        html += `
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+              <button
+                onclick="window.schedulingWidget.filterSlotsByWeek(0)"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.weekFilter === 0 && !this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                This Week
+              </button>
+              <button
+                onclick="window.schedulingWidget.filterSlotsByWeek(1)"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.weekFilter === 1 && !this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                Next Week
+              </button>
+              <button
+                onclick="window.schedulingWidget.filterSlotsByWeek(2)"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.weekFilter === 2 && !this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                2 Weeks Out
+              </button>
+              <button
+                onclick="window.schedulingWidget.showCustomRange = true; window.schedulingWidget.render();"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                Custom Range
+              </button>
+            </div>
+        `;
+
+        // Custom Date Range Picker
+        if (this.showCustomRange) {
+          const today = new Date().toISOString().split('T')[0];
+          const thirtyDays = new Date();
+          thirtyDays.setDate(thirtyDays.getDate() + 30);
+          const thirtyDaysStr = thirtyDays.toISOString().split('T')[0];
+
+          html += `
+            <div style="background: #f9fafb; border-radius: 0.5rem; padding: 1rem; border: 1px solid #e5e7eb;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Start Date</label>
+                  <input type="date" id="custom-start-date" value="${today}" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">End Date</label>
+                  <input type="date" id="custom-end-date" value="${thirtyDaysStr}" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button
+                  onclick="window.schedulingWidget.filterByCustomRange(document.getElementById('custom-start-date').value, document.getElementById('custom-end-date').value)"
+                  style="padding: 0.5rem 1rem; background: #7c3aed; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;"
+                >
+                  Apply Range
+                </button>
+                <button
+                  onclick="window.schedulingWidget.filterSlotsByWeek(0)"
+                  style="padding: 0.5rem 1rem; background: #e5e7eb; color: #374151; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        html += '</div>'; // Close week filters div
+
+        // Available Slots Grouped by Day
+        html += '<div style="display: flex; flex-direction: column; gap: 1.5rem;">';
+
+        if (Object.keys(groupedSlots).length === 0) {
+          html += `
+            <div style="text-align: center; padding: 2rem; color: #6b7280;">
+              No available slots for this time period. Try a different week.
+            </div>
+          `;
+        } else {
+          Object.entries(groupedSlots).forEach(([day, slots]) => {
+            html += `
+              <div style="border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden;">
+                <div style="background: #f9fafb; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb;">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg style="width: 1.25rem; height: 1.25rem; color: #6b7280;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3 style="font-weight: 600; color: #111; margin: 0;">${day}</h3>
+                    <span style="font-size: 0.875rem; color: #6b7280;">(${slots.length} available)</span>
+                  </div>
+                </div>
+                <div style="padding: 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem;">
+            `;
+
+            slots.forEach((slot, idx) => {
+              const isSelected = this.selectedSlot &&
+                this.selectedSlot.start_time.getTime() === slot.start_time.getTime() &&
+                this.selectedSlot.employee_id === slot.employee_id;
+
+              const slotId = `slot-${slot.start_time.getTime()}-${slot.employee_id}`;
+              this[slotId] = slot;
+
+              html += `
+                <button
+                  onclick="window.schedulingWidget.selectSlotById('${slotId}')"
+                  style="padding: 0.75rem 1rem; border-radius: 0.5rem; border: 2px solid ${isSelected ? '#7c3aed' : '#e5e7eb'}; background: ${isSelected ? '#ede9fe' : 'white'}; color: ${isSelected ? '#5b21b6' : '#374151'}; cursor: pointer; transition: all 0.2s; font-weight: ${isSelected ? '600' : '400'};"
+                  onmouseover="if (!${isSelected}) { this.style.borderColor='#c4b5fd'; this.style.background='#faf5ff'; }"
+                  onmouseout="if (!${isSelected}) { this.style.borderColor='#e5e7eb'; this.style.background='white'; }"
+                >
+                  <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                    <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span style="font-size: 0.875rem;">${this.formatSlotTime(slot.start_time)}</span>
+                  </div>
+                </button>
+              `;
+            });
+
+            html += `
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        html += '</div>'; // Close slots container
+        html += '</div>'; // Close widget
+
+        this.container.innerHTML = html;
+
+        window.schedulingWidget = this;
+      }
+    }
+    // ========================================
+    // END SCHEDULING WIDGET
+    // ========================================
+    console.log('✅ SchedulingWidget class defined successfully');
+    console.log('🔍 SchedulingWidget type:', typeof SchedulingWidget);
 
     // Get quote ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -848,37 +1272,78 @@
     }
 
     function getScheduleStepContent() {
+      // Get labor summary info to display to customer
+      let jobInfoHtml = '';
+      if (quoteData.labor_summary) {
+        const ls = quoteData.labor_summary;
+        const crewSize = ls.crew_size || 1;
+        const hoursPerDay = ls.hours_per_day || 8;
+        const totalHours = ls.regular_hours + (ls.overtime_hours || 0);
+        const hoursPerEmployee = totalHours / crewSize;
+
+        jobInfoHtml = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+              <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <div>
+                <div style="font-size: 1.25rem; font-weight: 700;">${crewSize} Technician${crewSize > 1 ? 's' : ''} for ${Math.round(hoursPerEmployee)} Hour${Math.round(hoursPerEmployee) > 1 ? 's' : ''}</div>
+                <div style="font-size: 0.875rem; opacity: 0.9;">Total project time: ${totalHours} hours</div>
+              </div>
+            </div>
+            <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
+              Select a time when our team can arrive to start your service.
+            </div>
+          </div>
+        `;
+      }
+
       return `
         <h2>📅 Schedule Your Service</h2>
-        <p style="margin: 20px 0;">Choose from our available time slots:</p>
 
-        <div id="schedule-loading" style="text-align: center; padding: 40px;">
-          <div class="spinner" style="margin: 0 auto 15px;"></div>
-          <p>Loading available times...</p>
-        </div>
+        ${jobInfoHtml}
 
-        <div id="schedule-slots" style="display: none;">
-          <!-- Slots will be populated here -->
-        </div>
+        <!-- Scheduling Widget Container -->
+        <div id="scheduling-widget-container"></div>
 
-        <div class="wizard-actions" id="schedule-actions" style="display: none;">
+        <div class="wizard-actions" id="schedule-actions" style="display: none; margin-top: 20px;">
           <button class="btn btn-approve" onclick="confirmSchedule()" id="confirm-schedule-btn" disabled>
-            Confirm Schedule
+            Confirm Selected Time
           </button>
         </div>
+
+
       `;
     }
 
     function getConfirmationStepContent() {
+      let scheduleInfo = '';
+
+      if (approvalData.scheduledTime) {
+        const scheduledDate = new Date(approvalData.scheduledTime.start_time);
+        const dateTimeStr = formatSlotDateTime(scheduledDate);
+        const autoScheduled = approvalData.scheduledTime.auto_scheduled ? ' (Auto-scheduled)' : '';
+
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">📅 Your Service is Scheduled</div>
+            <div style="font-size: 24px; font-weight: 700;">${dateTimeStr}${autoScheduled}</div>
+          </div>
+        `;
+      }
+
       return `
         <h2>🎉 All Set!</h2>
         <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
+
+        ${scheduleInfo}
 
         <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
           <strong>What happens next?</strong>
           <ul style="margin: 10px 0 0 20px;">
             <li>We'll send you a confirmation email</li>
-            <li>Our team will contact you to finalize details</li>
+            ${approvalData.scheduledTime ? '<li>Our technician will arrive at the scheduled time</li>' : '<li>Our team will contact you to schedule your service</li>'}
             <li>We'll get started on your project!</li>
           </ul>
         </div>
@@ -1014,13 +1479,15 @@
 
     // Scheduling functions
     let selectedSlot = null;
-    let availableSlots = [];
+    let schedulingWidget = null;
 
     async function loadAvailableSlots() {
-      console.log('📅 Loading available scheduling slots...');
+      console.log('📅 Initializing scheduling widget...');
+      console.log('🔍 Company ID:', quoteData.company_id);
 
       try {
         // Get employees for this company
+        console.log('🔍 Fetching employees...');
         const employeesResponse = await fetch(
           `${SUPABASE_URL}/rest/v1/employees?company_id=eq.${quoteData.company_id}&select=id`,
           {
@@ -1033,174 +1500,113 @@
         );
 
         if (!employeesResponse.ok) {
+          const errorText = await employeesResponse.text();
+          console.error('❌ Employees fetch failed:', errorText);
           throw new Error('Failed to load employees');
         }
 
         const employees = await employeesResponse.json();
+        console.log('✅ Employees loaded:', employees);
         const employeeIds = employees.map(e => e.id);
 
         if (employeeIds.length === 0) {
-          showScheduleError('No technicians available. Please contact us to schedule.');
+          console.error('❌ No employees found for company');
+          document.getElementById('scheduling-widget-container').innerHTML = `
+            <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+              <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+              <p style="color: #7f1d1d; font-size: 14px;">No technicians available. Please contact us to schedule.</p>
+            </div>
+          `;
           return;
         }
 
-        // Call smart scheduling API
-        const duration = 120; // Default 2 hours in minutes
-        const startDate = new Date();
-        const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 14); // Next 2 weeks
+        // Calculate duration from quote labor summary
+        let durationMinutes = 480; // Default to 8 hours
 
-        const schedulingResponse = await fetch(
-          `${SUPABASE_URL}/functions/v1/smart-scheduling`,
-          {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              employeeIds,
-              durationMinutes: duration,
-              companyId: quoteData.company_id,
-              startDate: startDate.toISOString(),
-              endDate: endDate.toISOString()
-            })
-          }
-        );
+        if (quoteData.labor_summary) {
+          const laborSummary = quoteData.labor_summary;
+          const crewSize = laborSummary.crew_size || 1;
+          const hoursPerDay = laborSummary.hours_per_day || 8;
+          const totalHours = laborSummary.regular_hours + laborSummary.overtime_hours || hoursPerDay;
 
-        if (!schedulingResponse.ok) {
-          throw new Error('Failed to get available slots');
+          // Calculate hours per employee
+          const hoursPerEmployee = totalHours / crewSize;
+          durationMinutes = Math.ceil(hoursPerEmployee * 60);
+
+          console.log('📊 Labor calculation:', {
+            crewSize,
+            hoursPerDay,
+            totalHours,
+            hoursPerEmployee,
+            durationMinutes
+          });
+        } else {
+          console.warn('⚠️ No labor_summary found in quote, using default 8 hours');
         }
 
-        const suggestions = await schedulingResponse.json();
+        // Initialize the scheduling widget
+        console.log('🔍 About to create SchedulingWidget...');
+        console.log('🔍 SchedulingWidget available?', typeof SchedulingWidget);
+        console.log('🔍 window.SchedulingWidget available?', typeof window.SchedulingWidget);
 
-        // Flatten all available slots from all employees
-        availableSlots = [];
-        Object.values(suggestions.suggestions || {}).forEach(employeeData => {
-          (employeeData.available_slots || []).forEach(slot => {
-            availableSlots.push({
-              ...slot,
-              employee_id: employeeData.employee_id,
-              start_time: new Date(slot.start_time),
-              end_time: new Date(slot.end_time)
+        schedulingWidget = new SchedulingWidget({
+          containerId: 'scheduling-widget-container',
+          companyId: quoteData.company_id,
+          employeeIds: employeeIds,
+          durationMinutes: durationMinutes,  // ← Dynamic based on quote labor!
+          supabaseUrl: SUPABASE_URL,
+          supabaseAnonKey: SUPABASE_ANON_KEY,
+          onSlotSelected: (slot) => {
+            selectedSlot = slot;
+            console.log('📅 Slot selected:', slot);
+            // Enable confirm button
+            document.getElementById('confirm-schedule-btn').disabled = false;
+            document.getElementById('schedule-actions').style.display = 'block';
+          },
+          onAutoSchedule: (slot) => {
+            selectedSlot = slot;
+            approvalData.scheduledTime = {
+              start_time: slot.start_time.toISOString(),
+              end_time: slot.end_time.toISOString(),
+              employee_id: slot.employee_id,
+              auto_scheduled: true
+            };
+            console.log('⚡ Auto-scheduled:', approvalData.scheduledTime);
+
+            // Format and show confirmation
+            const dateTime = slot.start_time.toLocaleDateString('en-US', {
+              weekday: 'short',
+              month: 'short',
+              day: 'numeric'
+            }) + ' at ' + slot.start_time.toLocaleTimeString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true
             });
-          });
+            alert(`✅ Scheduled for ${dateTime}`);
+
+            // Proceed to next step
+            const currentIndex = wizardSteps.indexOf('schedule');
+            nextWizardStep(currentIndex);
+          },
+          showAutoSchedule: true,
+          maxDaysAhead: 90
         });
 
-        // Sort by date and time
-        availableSlots.sort((a, b) => a.start_time - b.start_time);
-
-        // Limit to 20 slots
-        availableSlots = availableSlots.slice(0, 20);
-
-        displayAvailableSlots();
+        console.log('✅ Scheduling widget initialized');
 
       } catch (error) {
-        console.error('❌ Error loading slots:', error);
-        showScheduleError('Unable to load available times. Please contact us to schedule.');
+        console.error('❌ Error initializing scheduling widget:', error);
+        document.getElementById('scheduling-widget-container').innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+            <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+            <p style="color: #7f1d1d; font-size: 14px;">Unable to load available times. Please contact us to schedule.</p>
+          </div>
+        `;
       }
     }
 
-    function displayAvailableSlots() {
-      const loadingDiv = document.getElementById('schedule-loading');
-      const slotsDiv = document.getElementById('schedule-slots');
-      const actionsDiv = document.getElementById('schedule-actions');
 
-      loadingDiv.style.display = 'none';
-
-      if (availableSlots.length === 0) {
-        slotsDiv.innerHTML = `
-          <div style="text-align: center; padding: 40px; background: #fef3c7; border-radius: 8px;">
-            <p style="color: #92400e; margin-bottom: 10px;"><strong>No available slots found</strong></p>
-            <p style="color: #78350f; font-size: 14px;">Please contact us directly to schedule your service.</p>
-          </div>
-        `;
-        slotsDiv.style.display = 'block';
-        return;
-      }
-
-      let html = '<div style="max-height: 400px; overflow-y: auto;">';
-
-      availableSlots.forEach((slot, index) => {
-        const dateStr = slot.start_time.toLocaleDateString('en-US', {
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric'
-        });
-        const timeStr = slot.start_time.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-        const endTimeStr = slot.end_time.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-
-        html += `
-          <div class="slot-option" data-slot-index="${index}" style="
-            padding: 15px;
-            margin-bottom: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-          " onclick="selectSlot(${index})">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <div style="font-weight: 600; color: #111827;">${dateStr}</div>
-                <div style="color: #6b7280; font-size: 14px; margin-top: 4px;">${timeStr} - ${endTimeStr}</div>
-              </div>
-              <div class="slot-check" style="
-                width: 24px;
-                height: 24px;
-                border: 2px solid #d1d5db;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-              ">
-                <span style="display: none; color: white; font-size: 14px;">✓</span>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      html += '</div>';
-      slotsDiv.innerHTML = html;
-      slotsDiv.style.display = 'block';
-      actionsDiv.style.display = 'block';
-    }
-
-    function selectSlot(index) {
-      selectedSlot = availableSlots[index];
-
-      // Update UI
-      document.querySelectorAll('.slot-option').forEach((el, i) => {
-        const check = el.querySelector('.slot-check');
-        const checkmark = check.querySelector('span');
-
-        if (i === index) {
-          el.style.borderColor = '#667eea';
-          el.style.background = '#f0f4ff';
-          check.style.borderColor = '#667eea';
-          check.style.background = '#667eea';
-          checkmark.style.display = 'block';
-        } else {
-          el.style.borderColor = '#e5e7eb';
-          el.style.background = 'white';
-          check.style.borderColor = '#d1d5db';
-          check.style.background = 'transparent';
-          checkmark.style.display = 'none';
-        }
-      });
-
-      // Enable confirm button
-      document.getElementById('confirm-schedule-btn').disabled = false;
-    }
 
     function confirmSchedule() {
       if (!selectedSlot) {
@@ -1211,7 +1617,8 @@
       approvalData.scheduledTime = {
         start_time: selectedSlot.start_time.toISOString(),
         end_time: selectedSlot.end_time.toISOString(),
-        employee_id: selectedSlot.employee_id
+        employee_id: selectedSlot.employee_id,
+        auto_scheduled: false
       };
 
       console.log('📅 Schedule confirmed:', approvalData.scheduledTime);
@@ -1220,19 +1627,7 @@
       nextWizardStep(currentIndex);
     }
 
-    function showScheduleError(message) {
-      const loadingDiv = document.getElementById('schedule-loading');
-      const slotsDiv = document.getElementById('schedule-slots');
 
-      loadingDiv.style.display = 'none';
-      slotsDiv.innerHTML = `
-        <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
-          <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
-          <p style="color: #7f1d1d; font-size: 14px;">${message}</p>
-        </div>
-      `;
-      slotsDiv.style.display = 'block';
-    }
 
     async function finalizeApproval() {
       console.log('🎯 finalizeApproval called');
@@ -1252,6 +1647,34 @@
         }
 
         console.log('✅ Quote approved successfully');
+
+        // If customer scheduled a time, create schedule event
+        if (approvalData.scheduledTime) {
+          console.log('📅 Creating schedule event...');
+
+          const scheduleData = {
+            work_order_id: quoteId,
+            employee_id: approvalData.scheduledTime.employee_id,
+            start_time: approvalData.scheduledTime.start_time,
+            end_time: approvalData.scheduledTime.end_time,
+            title: `Customer Scheduled: Work Order #${quoteData.work_order_number || quoteId.slice(0, 8)}`,
+            company_id: quoteData.company_id,
+            created_by_customer: true,
+            auto_scheduled: approvalData.scheduledTime.auto_scheduled || false
+          };
+
+          const { error: scheduleError } = await supabase
+            .from('schedule_events')
+            .insert(scheduleData);
+
+          if (scheduleError) {
+            console.error('❌ Error creating schedule event:', scheduleError);
+            // Don't fail the whole approval if scheduling fails
+            alert('Quote approved, but there was an issue creating the schedule. We\'ll contact you to confirm the time.');
+          } else {
+            console.log('✅ Schedule event created successfully');
+          }
+        }
 
         // Check if we're in wizard mode or simple mode
         const wizardContent = document.getElementById('wizard-content');
@@ -1279,10 +1702,18 @@
           if (quoteContent) quoteContent.style.display = 'none';
           if (successDiv) {
             successDiv.style.display = 'block';
-            successDiv.innerHTML = `
-              <h2>✅ Quote Approved!</h2>
-              <p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>
-            `;
+
+            let successMessage = '<h2>✅ Quote Approved!</h2>';
+            if (approvalData.scheduledTime) {
+              const scheduledDate = new Date(approvalData.scheduledTime.start_time);
+              const dateTimeStr = formatSlotDateTime(scheduledDate);
+              successMessage += `<p style="margin-top: 15px;">Your service is scheduled for <strong>${dateTimeStr}</strong>.</p>`;
+              successMessage += `<p>We'll send you a confirmation email shortly.</p>`;
+            } else {
+              successMessage += `<p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>`;
+            }
+
+            successDiv.innerHTML = successMessage;
           } else {
             console.error('❌ Success div not found!');
             alert('Quote approved successfully!');
