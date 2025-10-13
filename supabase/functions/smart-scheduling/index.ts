@@ -30,6 +30,41 @@ function getTimezoneOffset(timezone: string): number {
   return timezoneOffsets[timezone] || -8
 }
 
+// DST-safe timezone helpers
+function getTZParts(date: Date, timeZone: string) {
+  const dtf = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  })
+  const parts = dtf.formatToParts(date).reduce((acc: any, p: any) => {
+    acc[p.type] = p.value
+    return acc
+  }, {} as any)
+  return parts
+}
+
+function getOffsetMinutes(date: Date, timeZone: string): number {
+  const p = getTZParts(date, timeZone)
+  const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second)
+  return (asUTC - date.getTime()) / 60000
+}
+
+function zonedDateToUtc(year: number, month1: number, day: number, hour: number, minute: number, timeZone: string): Date {
+  // month1 is 1-based
+  const guess = Date.UTC(year, month1 - 1, day, hour, minute, 0)
+  const guessDate = new Date(guess)
+  const offsetMin = getOffsetMinutes(guessDate, timeZone)
+  return new Date(guess - offsetMin * 60000)
+}
+
+function getZonedYMD(date: Date, timeZone: string): { year: number, month: number, day: number } {
+  const p = getTZParts(date, timeZone)
+  return { year: +p.year, month: +p.month, day: +p.day }
+}
+
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -181,10 +216,10 @@ function roundToNext15Minutes(date: Date): Date {
   const minutes = date.getMinutes()
   const remainder = minutes % 15
   const roundedMinutes = remainder === 0 ? minutes : minutes + (15 - remainder)
-  
+
   const rounded = new Date(date)
   rounded.setMinutes(roundedMinutes, 0, 0)
-  
+
   return rounded
 }
 
@@ -312,9 +347,7 @@ async function findAvailableTimeSlots(
   const [startHour, startMinute] = settings.business_hours_start.split(':').map(Number)
   const [endHour, endMinute] = settings.business_hours_end.split(':').map(Number)
 
-  // Get timezone offset from IANA timezone name
-  // This converts company's local time to UTC
-  const timezoneOffset = getTimezoneOffset(settings.timezone || 'America/Los_Angeles')
+  const tz = settings.timezone || 'America/Los_Angeles'
 
   // Calculate booked minutes for a day
   const calcBookedMinutesForDay = (dayStart: Date) => {
@@ -355,13 +388,10 @@ async function findAvailableTimeSlots(
 
     // Check if it's a working day
     if (settings.working_days.includes(dayOfWeek)) {
-      // Set business hours for this day in company's local time
-      // Convert local business hours to UTC by subtracting timezone offset
-      const dayStart = new Date(currentDay)
-      dayStart.setUTCHours(startHour - timezoneOffset, startMinute, 0, 0)
-
-      const dayEnd = new Date(currentDay)
-      dayEnd.setUTCHours(endHour - timezoneOffset, endMinute, 0, 0)
+      // Set business hours for this local day using DST-safe conversion
+      const { year, month, day } = getZonedYMD(currentDay, tz)
+      const dayStart = zonedDateToUtc(year, month, day, startHour, startMinute, tz)
+      const dayEnd = zonedDateToUtc(year, month, day, endHour, endMinute, tz)
 
       // Apply buffer relative to business open so earliest slot respects prep/travel
       const bufferBeforeMs = ((settings.default_buffer_before_minutes ?? settings.job_buffer_minutes ?? 0) * 60 * 1000)
@@ -432,8 +462,9 @@ async function findAvailableTimeSlots(
       }
     }
 
-    // Move to next day
-    currentDay.setDate(currentDay.getDate() + 1)
+    // Move to next local day (midnight in company timezone)
+    const { year, month, day } = getZonedYMD(currentDay, tz)
+    currentDay = zonedDateToUtc(year, month, day + 1, 0, 0, tz)
   }
 
   return availableSlots
