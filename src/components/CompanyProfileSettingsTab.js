@@ -282,10 +282,8 @@ const CompanyProfileSettingsTab = () => {
         city: updatedData.city,
         state: updatedData.state,
         postal_code: updatedData.postal_code,
-        license_number: (() => {
-          const serialized = serializeLicenseData(updatedData.license_numbers);
-          return serialized;
-        })(),
+        // ✅ FIX: Use 'licenses' (JSONB) - will be added by schema migration
+        licenses: updatedData.license_numbers || [],
         tax_id: updatedData.tax_id,
         website: updatedData.website,
         // Persist asset URL in schema columns (banner column not present in schema.csv)

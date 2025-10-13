@@ -20,7 +20,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 // Integration data that matches our toggle system
 const INTEGRATIONS = [
@@ -203,15 +203,12 @@ export const IntegrationsTab = () => {
     if (!user?.company_id) return;
 
     try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/integration_tokens?company_id=eq.${user.company_id}`,
-        {
-          headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-            'Accept': 'application/json'
-          }
-        }
+      // ✅ FIX: Use supaFetch instead of direct fetch to avoid RLS issues
+      const { supaFetch } = await import('../utils/supaFetch');
+      const response = await supaFetch(
+        `integration_tokens?company_id=eq.${user.company_id}`,
+        { method: 'GET' },
+        user.company_id
       );
 
       if (response.ok) {

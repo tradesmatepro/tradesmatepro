@@ -1,0 +1,68 @@
+{
+  "timestamp": "2025-10-11T22:02:48.936Z",
+  "summary": {
+    "critical": 0,
+    "warnings": 8,
+    "passed": 0
+  },
+  "issues": [],
+  "warnings": [
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\components\\SimplePermissionManager.js",
+      "matches": 1,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\components\\UserPermissionManager.js",
+      "matches": 5,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\components\\PTO\\PTOHistoryView.js",
+      "matches": 3,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\components\\Marketplace\\ResponseManagementModal.js",
+      "matches": 1,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\pages\\CustomerScheduling.js",
+      "matches": 3,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\services\\DatabaseSetupService.js",
+      "matches": 1,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\services\\GoogleCalendarService.js",
+      "matches": 1,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    },
+    {
+      "severity": "WARNING",
+      "type": "Supabase URL Hardcoded",
+      "file": "src\\services\\permissionService.js",
+      "matches": 1,
+      "message": "Supabase URL hardcoded. Should use environment variable."
+    }
+  ],
+  "passed": []
+}

@@ -42,6 +42,7 @@ import { useUser } from '../contexts/UserContext';
 import { supaFetch } from '../utils/supaFetch';
 import IntegrationService from '../services/IntegrationService';
 import { quoteSendingService } from '../services/QuoteSendingService';
+import twilioService from '../services/TwilioService';
 
 export default function QuotesPro(){
   const routerLocation = useRouterLocation();
@@ -595,20 +596,76 @@ export default function QuotesPro(){
       if (!activeQuote) throw new Error('No active quote');
       console.log('📨 Send modal confirm:', sendData);
 
+      let emailSuccess = false;
+      let smsSuccess = false;
+
+      // Send via Email
       if (sendData.deliveryMethod === 'email' || sendData.deliveryMethod === 'both') {
-        const result = await quoteSendingService.sendQuoteEmail(
-          user.company_id,
-          activeQuote.id,
-          {
-            customMessage: sendData.customMessage,
-            includePDF: sendData.includeAttachment
-          }
-        );
-        console.log('✅ Quote sent via email:', result);
-        window?.toast?.success?.(`Quote sent to ${result.sentTo}!`);
+        try {
+          const result = await quoteSendingService.sendQuoteEmail(
+            user.company_id,
+            activeQuote.id,
+            {
+              customMessage: sendData.customMessage,
+              includePDF: sendData.includeAttachment
+            }
+          );
+          console.log('✅ Quote sent via email:', result);
+          emailSuccess = true;
+          window?.toast?.success?.(`Quote sent via email to ${result.sentTo}!`);
+        } catch (emailError) {
+          console.error('❌ Email sending failed:', emailError);
+          window?.toast?.error?.(`Email failed: ${emailError.message}`);
+        }
       }
+
+      // Send via SMS (Twilio)
       if (sendData.deliveryMethod === 'sms' || sendData.deliveryMethod === 'both') {
-        window?.toast?.info?.('SMS sending coming soon.');
+        try {
+          // Get customer phone from activeQuote
+          const customer = customers.find(c => c.id === activeQuote?.customer_id);
+          const customerPhone = customer?.phone;
+
+          if (!customerPhone) {
+            throw new Error('Customer phone number not found');
+          }
+
+          // Prepare quote data for SMS
+          const quoteForSMS = {
+            ...activeQuote,
+            customer_phone: customerPhone,
+            customers: customer
+          };
+
+          // Send SMS via Twilio
+          const smsResult = await twilioService.sendQuoteNotification(quoteForSMS, user.company_id);
+
+          if (smsResult.success) {
+            console.log('✅ Quote sent via SMS:', smsResult.messageSid);
+            smsSuccess = true;
+            window?.toast?.success?.(`Quote sent via SMS to ${customerPhone}!`);
+          } else {
+            throw new Error(smsResult.error || 'SMS sending failed');
+          }
+        } catch (smsError) {
+          console.error('❌ SMS sending failed:', smsError);
+          window?.toast?.error?.(`SMS failed: ${smsError.message}`);
+        }
+      }
+
+      // Update quote status if at least one method succeeded
+      if (emailSuccess || smsSuccess) {
+        try {
+          await supaFetch(`work_orders?id=eq.${activeQuote.id}`, {
+            method: 'PATCH',
+            body: {
+              status: 'sent',
+              quote_sent_at: new Date().toISOString()
+            }
+          }, user.company_id);
+        } catch (updateError) {
+          console.error('❌ Failed to update quote status:', updateError);
+        }
       }
 
       // Reload quotes to show updated status

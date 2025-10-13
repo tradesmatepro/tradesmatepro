@@ -460,9 +460,10 @@ const Invoices = () => {
   const loadInvoices = async () => {
     try {
       const supabase = getSupabaseClient();
+      // ✅ FIX: Specify FK relationship to avoid "multiple relationships" error
       const { data, error } = await supabase
         .from('invoices')
-        .select('*,customers(name,email,phone),work_orders:work_orders(id,title)')
+        .select('*,customers(name,email,phone),work_orders!work_order_id(id,title)')
         .eq('company_id', user.company_id)
         .order('created_at', { ascending: false });
 
@@ -1950,7 +1951,8 @@ const Invoices = () => {
       setLoadingDetail(true);
       (async () => {
         try {
-          const invRes = await supaFetch(`invoices?id=eq.${selectedInvoice.id}&select=*,customers(*),work_orders:work_orders(*)`, { method: 'GET' }, user.company_id);
+          // ✅ FIX: Specify FK relationship to avoid "multiple relationships" error
+          const invRes = await supaFetch(`invoices?id=eq.${selectedInvoice.id}&select=*,customers(*),work_orders!work_order_id(*)`, { method: 'GET' }, user.company_id);
           let [inv] = invRes.ok ? await invRes.json() : [];
 
           // Fallback: if embed didn't resolve (FK missing), fetch job by job_id

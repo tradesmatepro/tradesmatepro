@@ -23,9 +23,10 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 const RESEND_API_KEY = process.env.REACT_APP_RESEND_API_KEY || 're_a7hbhZUG_8hQoDfPGZsHmgDHUjmgEvt1t';
 const RESEND_API_URL = 'https://api.resend.com/emails';
 // Use production URL if available, otherwise fall back to localhost for development
+// UPDATED: Use standalone quote.html page instead of full app portal
 const PORTAL_BASE_URL = process.env.REACT_APP_PUBLIC_URL
-  ? `${process.env.REACT_APP_PUBLIC_URL}/portal/quote/view`
-  : process.env.REACT_APP_PORTAL_URL || 'http://localhost:3000/portal/quote/view';
+  ? `${process.env.REACT_APP_PUBLIC_URL}/quote.html`
+  : process.env.REACT_APP_PORTAL_URL || 'http://localhost:3000/quote.html';
 
 class QuoteSendingService {
   /**
@@ -40,32 +41,16 @@ class QuoteSendingService {
 
   /**
    * Generate portal link for customer to view/approve quote
+   * UPDATED: Use simple query parameter format for standalone HTML page
    */
   async generatePortalLink(companyId, quoteId) {
     try {
-      // Generate secure token
-      const token = this.generatePortalToken();
+      // For standalone HTML page, we just use the quote ID as a query parameter
+      // No need for tokens since the HTML page will check quote status
+      // and only allow actions on quotes with status='sent'
 
-      // Set expiration to 24 hours from now (Jobber standard)
-      const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + 24);
-
-      // Update quote with portal token
-      await supaFetch(
-        `work_orders?id=eq.${quoteId}`,
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            portal_token: token,
-            portal_link_expires_at: expiresAt.toISOString()
-          })
-        },
-        companyId
-      );
-
-      // Return portal URL
-      return `${PORTAL_BASE_URL}/${token}`;
+      // Return portal URL with quote ID
+      return `${PORTAL_BASE_URL}?id=${quoteId}`;
     } catch (error) {
       console.error('Failed to generate portal link:', error);
       throw new Error('Failed to generate portal link');
@@ -118,9 +103,13 @@ class QuoteSendingService {
       const customerName = customer.company_name || `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 'Valued Customer';
 
       // Get company settings
+      console.log('🔄 Fetching company settings...');
       const companyProfile = await settingsService.getCompanyProfile(companyId);
+      console.log('✅ Company profile:', companyProfile);
       const businessSettings = await settingsService.getBusinessSettings(companyId);
+      console.log('✅ Business settings:', businessSettings);
       const company = { ...(businessSettings || {}), ...(companyProfile || {}) };
+      console.log('✅ Combined company data:', company);
 
       // Generate portal link
       const portalLink = await this.generatePortalLink(companyId, quoteId);
@@ -195,10 +184,21 @@ class QuoteSendingService {
         body: JSON.stringify(emailPayload)
       });
 
-      const fnData = await fnRes.json().catch(() => ({}));
+      console.log('📥 Edge function response status:', fnRes.status, fnRes.statusText);
+
+      let fnData;
+      try {
+        const responseText = await fnRes.text();
+        console.log('📥 Edge function raw response:', responseText);
+        fnData = responseText ? JSON.parse(responseText) : {};
+      } catch (parseError) {
+        console.error('❌ Failed to parse Edge function response:', parseError);
+        fnData = {};
+      }
+
       if (!fnRes.ok || fnData?.success === false) {
-        console.error('Edge function error:', fnData);
-        throw new Error(fnData?.error?.message || fnData?.error || `Email send failed (${fnRes.status})`);
+        console.error('❌ Edge function error:', fnData);
+        throw new Error(fnData?.error?.message || fnData?.error || fnData?.message || `Email send failed (${fnRes.status})`);
       }
 
       console.log('✅ Email sent via Edge Function/Resend:', fnData);

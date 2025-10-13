@@ -1,7 +1,7 @@
 import { supaFetch } from '../utils/supaFetch';
 
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.REACT_APP_SUPABASE_SERVICE_KEY;
+const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 class MessagingService {
   /**
@@ -12,8 +12,8 @@ class MessagingService {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/messages?or=(sender_id.eq.${userId},recipient_id.eq.${userId})&order=created_at.desc`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -97,8 +97,8 @@ class MessagingService {
 
       const response = await fetch(url, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -119,8 +119,8 @@ class MessagingService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -150,8 +150,8 @@ class MessagingService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/messages`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -179,8 +179,8 @@ class MessagingService {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/marketplace_requests?id=eq.${requestId}&select=*,customers(id,name,email)`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -207,8 +207,8 @@ class MessagingService {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/work_orders?id=eq.${workOrderId}&select=*,customers(id,name,email)`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -235,8 +235,8 @@ class MessagingService {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/marketplace_requests?id=eq.${requestId}&select=*,customers(name)`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -263,8 +263,8 @@ class MessagingService {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/work_orders?id=eq.${workOrderId}&select=*,customers(name)`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -293,8 +293,8 @@ class MessagingService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/messages?id=in.(${messageIds.join(',')})&recipient_id=eq.${userId}&read_at=is.null`, {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

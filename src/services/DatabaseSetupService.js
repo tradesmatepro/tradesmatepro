@@ -1,12 +1,12 @@
 // Database Setup Service for TradeMate Pro
 // Creates all necessary Supabase tables based on the comprehensive schema
 
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 /* legacy hardcoded SUPABASE consts disabled
 
 const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
-const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+// SECURITY: Service key removed - use Edge Functions instead
 */
 
 // TODO: remove legacy hardcoded SUPABASE_* lines below; use env import only
@@ -22,8 +22,8 @@ class DatabaseSetupService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ sql })

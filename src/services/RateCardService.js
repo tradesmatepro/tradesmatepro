@@ -17,7 +17,7 @@ export class RateCardService {
         .eq('company_id', companyId)
         .eq('is_active', true)
         .order('category', { ascending: true })
-        .order('sort_order', { ascending: true })
+        // ✅ FIX: Removed sort_order (column doesn't exist in database)
         .order('service_name', { ascending: true });
 
       // Filter by category if specified
@@ -84,8 +84,8 @@ export class RateCardService {
           min_quantity: rateCardData.min_quantity || 1,
           max_quantity: rateCardData.max_quantity || null,
           is_active: rateCardData.is_active !== false,
-          is_default: rateCardData.is_default || false,
-          sort_order: rateCardData.sort_order || 0
+          is_default: rateCardData.is_default || false
+          // ✅ FIX: Removed sort_order (column doesn't exist in database)
         }])
         .select()
         .single();
@@ -120,7 +120,7 @@ export class RateCardService {
           max_quantity: updates.max_quantity,
           is_active: updates.is_active,
           is_default: updates.is_default,
-          sort_order: updates.sort_order,
+          // ✅ FIX: Removed sort_order (column doesn't exist in database)
           updated_at: new Date().toISOString()
         })
         .eq('id', rateCardId)

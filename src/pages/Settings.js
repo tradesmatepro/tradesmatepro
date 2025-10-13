@@ -18,6 +18,7 @@ import ServiceTags from './Settings/ServiceTags';
 import ApprovalsSettingsTab from '../components/Settings/ApprovalsSettingsTab';
 import RateCards from './Settings/RateCards';
 import MarketplaceSettings from '../components/Settings/MarketplaceSettings';
+import QuoteAcceptanceSettingsTab from '../components/Settings/QuoteAcceptanceSettingsTab';
 import {
   BuildingOfficeIcon,
   CurrencyDollarIcon,
@@ -231,6 +232,7 @@ const Settings = () => {
       tabs: [
         { id: 'scheduling', name: 'Smart Scheduling', icon: CalendarDaysIcon, description: 'Automated scheduling preferences' },
         { id: 'marketplace', name: 'Marketplace Settings', icon: ShoppingBagIcon, description: 'Emergency jobs and auto-accept rules' },
+        { id: 'quote-acceptance', name: 'Quote Acceptance', icon: CheckCircleIcon, description: 'Signature, deposits, scheduling workflow' },
         { id: 'invoicing', name: 'Invoicing', icon: CurrencyDollarIcon, description: 'Invoice templates and billing settings' },
         { id: 'documents', name: 'Document Templates', icon: DocumentTextIcon, description: 'Customize document templates' },
         { id: 'approvals', name: 'Org & Approvals', icon: UserGroupIcon, description: 'Org tree, amount thresholds, escalation' }
@@ -277,6 +279,8 @@ const Settings = () => {
         return <SchedulingSettingsTab />;
       case 'marketplace':
         return <MarketplaceSettings />;
+      case 'quote-acceptance':
+        return <QuoteAcceptanceSettingsTab />;
       case 'invoicing':
         return <InvoicingSettingsTab />;
       case 'documents':

@@ -1,0 +1,329 @@
+{
+  "laborLogs": [
+    {
+      "type": "log",
+      "text": "🔧 Real-Time Error Fixer activated",
+      "timestamp": "2025-10-11T19:37:14.155Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Real-Time Error Fixer activated",
+      "timestamp": "2025-10-11T19:37:33.127Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 QuoteBuilder useEffect triggered, user: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+      "timestamp": "2025-10-11T19:37:50.511Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Company ID from user: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-11T19:37:50.513Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-11T19:37:50.514Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+      "timestamp": "2025-10-11T19:37:50.514Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from standardized pricing schema...",
+      "timestamp": "2025-10-11T19:37:50.514Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+      "timestamp": "2025-10-11T19:37:50.515Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-11T19:37:50.515Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+      "timestamp": "2025-10-11T19:37:50.515Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from standardized pricing schema...",
+      "timestamp": "2025-10-11T19:37:50.515Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+      "timestamp": "2025-10-11T19:37:50.516Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 QuoteBuilder useEffect triggered, user: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+      "timestamp": "2025-10-11T19:37:50.516Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Company ID from user: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-11T19:37:50.516Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-11T19:37:50.516Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+      "timestamp": "2025-10-11T19:37:50.516Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from standardized pricing schema...",
+      "timestamp": "2025-10-11T19:37:50.516Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+      "timestamp": "2025-10-11T19:37:50.517Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-11T19:37:50.517Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+      "timestamp": "2025-10-11T19:37:50.517Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from standardized pricing schema...",
+      "timestamp": "2025-10-11T19:37:50.517Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+      "timestamp": "2025-10-11T19:37:50.518Z"
+    },
+    {
+      "type": "log",
+      "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+      "timestamp": "2025-10-11T19:37:50.802Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+      "timestamp": "2025-10-11T19:37:50.802Z"
+    },
+    {
+      "type": "log",
+      "text": "🎯 Auto-adding first labor row with loaded rates...",
+      "timestamp": "2025-10-11T19:37:50.819Z"
+    },
+    {
+      "type": "log",
+      "text": "🎯 First labor row with correct rates: {\n  \"id\": null,\n  \"employees\": 1,\n  \"hours_per_day\": 8,\n  \"days\": 1,\n  \"total_hours\": 8,\n  \"regular_hours\": 8,\n  \"overtime_hours\": 0,\n  \"line_total\": 600\n}",
+      "timestamp": "2025-10-11T19:37:50.820Z"
+    },
+    {
+      "type": "log",
+      "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+      "timestamp": "2025-10-11T19:37:50.891Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+      "timestamp": "2025-10-11T19:37:50.891Z"
+    },
+    {
+      "type": "log",
+      "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+      "timestamp": "2025-10-11T19:37:50.992Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+      "timestamp": "2025-10-11T19:37:50.993Z"
+    },
+    {
+      "type": "log",
+      "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+      "timestamp": "2025-10-11T19:37:51.067Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+      "timestamp": "2025-10-11T19:37:51.067Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 LABOR CONVERSION DEBUG:",
+      "timestamp": "2025-10-11T19:38:27.942Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborRows: [Object, Object]",
+      "timestamp": "2025-10-11T19:38:27.943Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborRows.length: 2",
+      "timestamp": "2025-10-11T19:38:27.943Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 convertLaborRowsToQuoteItems called",
+      "timestamp": "2025-10-11T19:38:27.944Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborRows to convert: [Object, Object]",
+      "timestamp": "2025-10-11T19:38:27.944Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 rates: {hourly: 75, overtime: 112.5, emergency: 112.5, markup: 25, tax: 8.25}",
+      "timestamp": "2025-10-11T19:38:27.945Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Converted labor row 0: {item_name: Labor 1, quantity: 8, rate: 75, item_type: labor, is_overtime: false}",
+      "timestamp": "2025-10-11T19:38:27.945Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Converted labor row 1: {item_name: Labor 2, quantity: 8, rate: 75, item_type: labor, is_overtime: false}",
+      "timestamp": "2025-10-11T19:38:27.945Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 Total converted labor items: 2",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborQuoteItems after conversion: [Object, Object]",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborQuoteItems.length: 2",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 nonLaborItems: []",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 nonLaborItems.length: 0",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 combinedQuoteItems: [Object, Object]",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 combinedQuoteItems.length: 2",
+      "timestamp": "2025-10-11T19:38:27.946Z"
+    },
+    {
+      "type": "log",
+      "text": "🔄 Submitting quote with financial breakdown: {title: AUTO TEST - Labor Line Items, description: , customer_id: , status: draft, notes: }",
+      "timestamp": "2025-10-11T19:38:27.947Z"
+    }
+  ],
+  "errors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-11T19:37:20.561Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-11T19:37:20.645Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-11T19:37:20.737Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-11T19:37:20.900Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-11T19:37:33.676Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-11T19:37:33.789Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-11T19:37:33.876Z"
+    },
+    {
+      "type": "error",
+      "text": "❌ Error loading theme from database: {code: PGRST116, details: The result contains 0 rows, hint: null, message: Cannot coerce the result to a single JSON object}",
+      "timestamp": "2025-10-11T19:37:33.877Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-11T19:37:33.917Z"
+    },
+    {
+      "type": "error",
+      "text": "❌ Failed to save theme to database: {code: PGRST116, details: The result contains 0 rows, hint: null, message: Cannot coerce the result to a single JSON object}",
+      "timestamp": "2025-10-11T19:37:33.918Z"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-11T19:37:34.013Z"
+    },
+    {
+      "type": "error",
+      "text": "❌ Failed to save theme to database: {code: PGRST116, details: The result contains 0 rows, hint: null, message: Cannot coerce the result to a single JSON object}",
+      "timestamp": "2025-10-11T19:37:34.017Z"
+    }
+  ],
+  "laborRowsLogs": [
+    {
+      "type": "log",
+      "text": "🔧 laborRows: [Object, Object]",
+      "timestamp": "2025-10-11T19:38:27.943Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborRows.length: 2",
+      "timestamp": "2025-10-11T19:38:27.943Z"
+    },
+    {
+      "type": "log",
+      "text": "🔧 laborRows to convert: [Object, Object]",
+      "timestamp": "2025-10-11T19:38:27.944Z"
+    }
+  ],
+  "totalLogs": 339,
+  "diagnosis": {
+    "issue": "UNKNOWN",
+    "description": "Labor logs exist but issue unclear",
+    "confidence": "LOW"
+  }
+}

@@ -3,7 +3,7 @@
 //   supaFetch('quotes?select=*', { method: 'GET' }, companyId)
 //   supaFetch('jobs', { method: 'POST', body: { title: 'A' } }, companyId)
 
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY, SUPABASE_ANON_KEY } from './env.js';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './env.js';
 import { getSupabaseClient } from './supabaseClient.js';
 
 const SCOPE_TABLES = new Set([
@@ -168,5 +168,5 @@ export async function supaFetch(path, options = {}, companyId = null) {
   return fetch(url, { ...options, method, headers, body });
 }
 
-export { SUPABASE_URL, SUPABASE_SERVICE_KEY };
+export { SUPABASE_URL, SUPABASE_ANON_KEY };
 

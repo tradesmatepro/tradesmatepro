@@ -1,0 +1,2108 @@
+{
+  "rls": [],
+  "network": [
+    {
+      "page": "Login",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Login",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Login",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Login",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Customers",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Customers",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Customers",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Customers",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Customers",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Customers",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Customers",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Customers",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Customers",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Customers",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Quotes",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Quotes",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Quotes",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Quotes",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Quotes",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Quotes",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Quotes",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Quotes",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Quotes",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Quotes",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Jobs",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Jobs",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Jobs",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Jobs",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Jobs",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs History",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Jobs History",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs History",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Jobs History",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs History",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Jobs History",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs History",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Jobs History",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Jobs History",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Jobs History",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Scheduling",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Scheduling",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Scheduling",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Scheduling",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Scheduling",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Scheduling",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Scheduling",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Scheduling",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Scheduling",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Scheduling",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Invoices",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Invoices",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Invoices",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Invoices",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Invoices",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Invoices",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Invoices",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Invoices",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Invoices",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Invoices",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employee_timesheets?select=*,employees:employee_id(id,employee_number,company_id,users(first_name,last_name,email)),work_orders:work_order_id(id,title)&order=date.desc,created_at.desc"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load timesheets: JSHandle@object"
+    },
+    {
+      "page": "Timesheets",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=id,title,customer_id&order=title"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employee_time_off?employee_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea&select=*&order=created_at.desc"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load jobs: 401 "
+    },
+    {
+      "page": "Timesheets",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=id,title,customer_id&order=title"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employee_timesheets?select=*,employees:employee_id(id,employee_number,company_id,users(first_name,last_name,email)),work_orders:work_order_id(id,title)&order=date.desc,created_at.desc"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load jobs: 401 "
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load timesheets: JSHandle@object"
+    },
+    {
+      "page": "Timesheets",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employee_time_off?employee_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea&select=*&order=created_at.desc"
+    },
+    {
+      "page": "Timesheets",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Payroll",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Payroll",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Payroll",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Payroll",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Payroll",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Payroll",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Payroll",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Payroll",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Payroll",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Payroll",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Inventory",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Inventory",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Inventory",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Inventory",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Inventory",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Inventory",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Inventory",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Inventory",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Inventory",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Inventory",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Vendors",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Vendors",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Vendors",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Vendors",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Vendors",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Vendors",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Vendors",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Vendors",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Vendors",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Vendors",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Expenses",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Expenses",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Expenses",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Expenses",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Expenses",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Expenses",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Expenses",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Expenses",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Expenses",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Expenses",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employee_timesheets?company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&work_date=gte.2025-10-01&work_date=lte.2025-10-10&order=work_date.desc,employee_id.asc"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=id,full_name&order=full_name"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employee_timesheets?company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&work_date=gte.2025-10-01&work_date=lte.2025-10-10&order=work_date.desc,employee_id.asc"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=id,full_name&order=full_name"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Reports",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/messages?or=(sender_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea,recipient_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea)&order=created_at.desc"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "Error fetching message threads: JSHandle@error"
+    },
+    {
+      "page": "Messages",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/messages?or=(sender_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea,recipient_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea)&order=created_at.desc"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "Error fetching message threads: JSHandle@error"
+    },
+    {
+      "page": "Messages",
+      "error": "401 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/messages?or=(sender_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea,recipient_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea)&order=created_at.desc"
+    },
+    {
+      "page": "Messages",
+      "error": "Failed to load resource: the server responded with a status of 401 ()"
+    },
+    {
+      "page": "Messages",
+      "error": "Error fetching message threads: JSHandle@error"
+    },
+    {
+      "page": "Settings",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Settings",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Settings",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Settings",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Settings",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Settings",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Settings",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Settings",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Settings",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Settings",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Employees",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Employees",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Employees",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Employees",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Employees",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Employees",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Employees",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Employees",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Employees",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Employees",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 404 ()"
+    },
+    {
+      "page": "Tools",
+      "error": "Failed to load resource: the server responded with a status of 404 ()"
+    },
+    {
+      "page": "Marketplace",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Marketplace",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Marketplace",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Marketplace",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Marketplace",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Marketplace",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Marketplace",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Marketplace",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Marketplace",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Marketplace",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 404 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 400 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 404 ()"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "Failed to load resource: the server responded with a status of 404 ()"
+    },
+    {
+      "page": "My Profile",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "My Profile",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Profile",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "My Profile",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Profile",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "My Profile",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Profile",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*"
+    },
+    {
+      "page": "My Profile",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    },
+    {
+      "page": "My Profile",
+      "error": "406 error on https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a"
+    },
+    {
+      "page": "My Profile",
+      "error": "Failed to load resource: the server responded with a status of 406 ()"
+    }
+  ],
+  "javascript": [
+    {
+      "page": "Login",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Login",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Login",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Login",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Login",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Login",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Login",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Login",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Login",
+      "error": "❌ No authenticated session, skipping settings load"
+    },
+    {
+      "page": "Login",
+      "error": "❌ No valid Supabase session found - user must log in"
+    },
+    {
+      "page": "Login",
+      "error": "❌ No authenticated session, skipping settings load"
+    },
+    {
+      "page": "Login",
+      "error": "❌ No valid Supabase session found - user must log in"
+    },
+    {
+      "page": "Login",
+      "error": "❌ Session ended - user logged out"
+    },
+    {
+      "page": "Login",
+      "error": "2025-10-10T16:25:43.934Z: ❌ Session ended - user logged out"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Error loading advanced KPIs: JSHandle@error"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Error loading advanced KPIs: JSHandle@error"
+    },
+    {
+      "page": "Dashboard",
+      "error": "Error loading advanced KPIs: JSHandle@error"
+    },
+    {
+      "page": "Dashboard",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Dashboard",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Dashboard",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Dashboard",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Dashboard",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Dashboard",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Dashboard",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Dashboard",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Dashboard",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Dashboard",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Dashboard",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "My Dashboard",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Customers",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Customers",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Customers",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Customers",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Customers",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Customers",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Customers",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Customers",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Customers",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Customers",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Customers",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Quotes",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Quotes",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Quotes",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Quotes",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Quotes",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Quotes",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Quotes",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Quotes",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Quotes",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Quotes",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Quotes",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Jobs",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Jobs",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Jobs",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Jobs",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Jobs",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Jobs",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Jobs",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Jobs",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Jobs",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Jobs",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Jobs",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Jobs History",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Jobs History",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Jobs History",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Jobs History",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Jobs History",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Jobs History",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Jobs History",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Jobs History",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Jobs History",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Jobs History",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Jobs History",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Scheduling",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Scheduling",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Scheduling",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Scheduling",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Scheduling",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Scheduling",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Scheduling",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Scheduling",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Scheduling",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Scheduling",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Scheduling",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Invoices",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Invoices",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Invoices",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Invoices",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Invoices",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Invoices",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Invoices",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Invoices",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Invoices",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Invoices",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Invoices",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Invoices",
+      "error": "Error loading invoices: JSHandle@error"
+    },
+    {
+      "page": "Invoices",
+      "error": "Error loading invoices: JSHandle@error"
+    },
+    {
+      "page": "Timesheets",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Timesheets",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Timesheets",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Timesheets",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Timesheets",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Timesheets",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Timesheets",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Timesheets",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Timesheets",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Timesheets",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Timesheets",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Payroll",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Payroll",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Payroll",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Payroll",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Payroll",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Payroll",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Payroll",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Payroll",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Payroll",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Payroll",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Payroll",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Payroll",
+      "error": "Error loading pay rates: JSHandle@error"
+    },
+    {
+      "page": "Payroll",
+      "error": "Error loading timesheet data: JSHandle@error"
+    },
+    {
+      "page": "Payroll",
+      "error": "Error loading pay rates: JSHandle@error"
+    },
+    {
+      "page": "Payroll",
+      "error": "Error loading timesheet data: JSHandle@error"
+    },
+    {
+      "page": "Inventory",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Inventory",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Inventory",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Inventory",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Inventory",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Inventory",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Inventory",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Inventory",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Inventory",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Inventory",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Inventory",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Vendors",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Vendors",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Vendors",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Vendors",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Vendors",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Vendors",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Vendors",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Vendors",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Vendors",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Vendors",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Vendors",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Expenses",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Expenses",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Expenses",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Expenses",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Expenses",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Expenses",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Expenses",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Expenses",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Expenses",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Expenses",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Expenses",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Reports",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Reports",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Reports",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Reports",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Reports",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Reports",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Reports",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Reports",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Reports",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Reports",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Reports",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Messages",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Messages",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Messages",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Messages",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Messages",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Messages",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Messages",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Messages",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Messages",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Messages",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Messages",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Messages",
+      "error": "Error loading message threads: JSHandle@error"
+    },
+    {
+      "page": "Messages",
+      "error": "Error loading message threads: JSHandle@error"
+    },
+    {
+      "page": "Messages",
+      "error": "Error loading message threads: JSHandle@error"
+    },
+    {
+      "page": "Settings",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Settings",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Settings",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Settings",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Settings",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Settings",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Settings",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Settings",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Settings",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Settings",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Settings",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Employees",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Employees",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Employees",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Employees",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Employees",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Employees",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Employees",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Employees",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Employees",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Employees",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Employees",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Tools",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Tools",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Tools",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Tools",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Tools",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Tools",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Tools",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Tools",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Tools",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Tools",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Tools",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Marketplace",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Marketplace",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Marketplace",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Marketplace",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Marketplace",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Marketplace",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Marketplace",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Marketplace",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Marketplace",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Marketplace",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Marketplace",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    },
+    {
+      "page": "Purchase Orders",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "My Profile",
+      "error": "🔍 Console Error Capture initialized"
+    },
+    {
+      "page": "My Profile",
+      "error": "📊 Use getAllCapturedErrors() to see captured errors"
+    },
+    {
+      "page": "My Profile",
+      "error": "📁 Use exportCapturedErrors() to download error report"
+    },
+    {
+      "page": "My Profile",
+      "error": "🔬 Use analyzeErrors() to get error analysis and fixes"
+    },
+    {
+      "page": "My Profile",
+      "error": "📋 Error export functions loaded:"
+    },
+    {
+      "page": "My Profile",
+      "error": "  - exportAllErrors() - Export all errors to file"
+    },
+    {
+      "page": "My Profile",
+      "error": "🔧 Real-Time Error Fixer activated"
+    },
+    {
+      "page": "My Profile",
+      "error": "- testConsoleErrorDetector() - Test error detection"
+    },
+    {
+      "page": "My Profile",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "My Profile",
+      "error": "❌ Failed to save theme to database: JSHandle@object"
+    },
+    {
+      "page": "My Profile",
+      "error": "❌ Error loading theme from database: JSHandle@object"
+    }
+  ],
+  "other": []
+}

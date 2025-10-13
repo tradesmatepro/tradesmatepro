@@ -3,7 +3,7 @@
 
 // Supabase configuration
 const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
-const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+// SECURITY: Service key removed - use Edge Functions instead
 
 /**
  * Fetch user permissions from Supabase
@@ -17,8 +17,8 @@ export const fetchUserPermissions = async (userId, companyId) => {
       `${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${userId}&company_id=eq.${companyId}&select=*`,
       {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       }
@@ -57,8 +57,8 @@ export const updateUserPermissions = async (userId, companyId, permissions, upda
       {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -93,8 +93,8 @@ export const createUserPermissions = async (userId, companyId, role, createdBy) 
       {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -116,8 +116,8 @@ export const createUserPermissions = async (userId, companyId, role, createdBy) 
         {
           method: 'PATCH',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -146,8 +146,8 @@ export const fetchCompanyUsersWithPermissions = async (companyId) => {
       `${SUPABASE_URL}/rest/v1/profiles?company_id=eq.${companyId}&select=id,email,full_name,role,status,created_at,user_permissions(*)`,
       {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       }

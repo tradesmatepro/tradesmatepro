@@ -1,5 +1,5 @@
 // Integration Service for managing OAuth flows and API connections
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 class IntegrationService {
   // Save integration tokens to database
@@ -10,8 +10,8 @@ class IntegrationService {
         `${SUPABASE_URL}/rest/v1/integration_tokens?company_id=eq.${companyId}&provider=eq.${provider}`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Accept': 'application/json'
           }
         }
@@ -33,8 +33,8 @@ class IntegrationService {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/integration_tokens?id=eq.${existingTokens[0].id}`, {
           method: 'PATCH',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
@@ -46,8 +46,8 @@ class IntegrationService {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/integration_tokens`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json',
             'Prefer': 'return=representation'
           },
@@ -74,8 +74,8 @@ class IntegrationService {
 
       const response = await fetch(url, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -332,8 +332,8 @@ class IntegrationService {
         {
           method: 'DELETE',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );

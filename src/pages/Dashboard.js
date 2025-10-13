@@ -450,10 +450,11 @@ const Dashboard = () => {
       // Resolve technician names for leaderboard using industry standard pattern
       if (leaderboard.length) {
         const techIds = leaderboard.map(t => t.techId).join(',');
-        const usersRes = await supaFetch(`user_profiles?select=user_id,full_name,first_name,last_name&user_id=in.(${techIds})`, { method: 'GET' }, user.company_id);
+        // ✅ FIX: Use users table instead of user_profiles
+        const usersRes = await supaFetch(`users?select=id,full_name&id=in.(${techIds})`, { method: 'GET' }, user.company_id);
         if (usersRes.ok) {
           const users = await usersRes.json();
-          const nameById = new Map(users.map(u => [u.user_id, u.full_name || [u.first_name, u.last_name].filter(Boolean).join(' ') || 'Technician']));
+          const nameById = new Map(users.map(u => [u.id, u.full_name || 'Technician']));
           leaderboard = leaderboard.map(t => ({ ...t, name: nameById.get(t.techId) || t.techId }));
         }
       }
@@ -461,8 +462,9 @@ const Dashboard = () => {
       const overdueJobs = overdueResponse.ok ? (await overdueResponse.json()).length : 0;
 
       // 9) Technician Utilization: use estimated_duration since start_time/end_time don't exist
+      // ✅ FIX: Use lowercase status values (enum cleanup)
       const woDurRes = await supaFetch(
-        `work_orders?select=estimated_duration&status=in.(SCHEDULED,IN_PROGRESS,COMPLETED)&created_at=gte.${formatDate(start)}&created_at=lte.${formatDate(end)}`,
+        `work_orders?select=estimated_duration&status=in.(scheduled,in_progress,completed)&created_at=gte.${formatDate(start)}&created_at=lte.${formatDate(end)}`,
         { method: 'GET' }, user.company_id
       );
       let scheduledHours = 0;

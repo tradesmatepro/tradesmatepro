@@ -11,9 +11,9 @@ import {
 import { getRoleDisplayName, getRoleBadgeColor } from '../utils/roleUtils';
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
-const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+// SECURITY: Service key removed - use Edge Functions instead
 // TODO: remove legacy hardcoded SUPABASE_* lines below; use env import only
 
 
@@ -51,8 +51,8 @@ const SimplePermissionManager = ({ isOpen, onClose, targetUserId }) => {
         `${SUPABASE_URL}/rest/v1/user_profiles?company_id=eq.${user.company_id}&select=user_id,email,full_name,role,settings,status,created_at`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json'
           }
         }
@@ -109,8 +109,8 @@ const SimplePermissionManager = ({ isOpen, onClose, targetUserId }) => {
         {
           method: 'PATCH',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json',
             'Prefer': 'return=representation'
           },

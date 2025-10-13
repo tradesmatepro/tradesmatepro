@@ -18,7 +18,7 @@ if (!fs.existsSync(SQL_LOGS_DIR)) {
 
 // Database connection details
 const DB_CONFIG = {
-  host: 'aws-0-us-west-1.pooler.supabase.com',
+  host: 'aws-1-us-west-1.pooler.supabase.com',
   port: 5432,
   database: 'postgres',
   user: 'postgres.cxlqzejzraczumqmsrcx',

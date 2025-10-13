@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
-  getSmartSchedulingSuggestions,
   createScheduleEvent,
   formatTimeSlot,
   getSchedulingSettings
 } from '../utils/smartScheduling';
 import {
-  CalendarDaysIcon,
-  ClockIcon,
   CheckIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { supaFetch } from '../utils/supaFetch';
 import { formatCurrency } from '../utils/formatters';
+import SchedulingWidget from '../components/SchedulingWidget';
 
 const CustomerScheduling = () => {
   const [searchParams] = useSearchParams();
   const [quote, setQuote] = useState(null);
   const [customer, setCustomer] = useState(null);
-  const [availableSlots, setAvailableSlots] = useState([]);
+  const [employeeIds, setEmployeeIds] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -30,10 +28,13 @@ const CustomerScheduling = () => {
   const customerId = searchParams.get('customer_id');
   const duration = parseInt(searchParams.get('duration')) || 120;
 
+  // Get Supabase config from environment
+  const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || 'https://cxlqzejzraczumqmsrcx.supabase.co';
+  const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
+
   useEffect(() => {
     if (quoteId && customerId) {
       loadQuoteAndCustomer();
-      loadAvailableSlots();
     } else {
       setError('Invalid scheduling link');
       setLoading(false);
@@ -43,115 +44,58 @@ const CustomerScheduling = () => {
   const loadQuoteAndCustomer = async () => {
     try {
       // Unified pipeline using work_orders as quotes
-      {
-        const quoteRes = await supaFetch(`work_orders?id=eq.${quoteId}&select=*`, { method: 'GET' }, null);
-        if (!quoteRes.ok) throw new Error('Failed to load quote');
-        const [q] = await quoteRes.json();
-        if (!q) { setError('Quote not found'); return; }
-        setQuote(q);
-        const custRes = await supaFetch(`customers?id=eq.${customerId}`, { method: 'GET' }, q.company_id);
-        if (!custRes.ok) throw new Error('Failed to load customer');
-        const customers = await custRes.json();
-        if (customers.length > 0) { setCustomer(customers[0]); } else { setError('Customer not found'); }
+      const quoteRes = await supaFetch(`work_orders?id=eq.${quoteId}&select=*`, { method: 'GET' }, null);
+      if (!quoteRes.ok) throw new Error('Failed to load quote');
+      const quotes = await quoteRes.json();
+      const q = quotes[0];
+      if (!q) {
+        setError('Quote not found');
+        setLoading(false);
+        return;
+      }
+      setQuote(q);
+
+      const custRes = await supaFetch(`customers?id=eq.${customerId}`, { method: 'GET' }, q.company_id);
+      if (!custRes.ok) throw new Error('Failed to load customer');
+      const customers = await custRes.json();
+      if (customers.length > 0) {
+        setCustomer(customers[0]);
+      } else {
+        setError('Customer not found');
+        setLoading(false);
         return;
       }
 
-      // Load quote
-      const quoteResponse = await fetch(
-        `https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/quotes?id=eq.${quoteId}&select=*`,
-        {
-          headers: {
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSIsInNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64'
-          }
-        }
-      );
-
-      // Load customer
-      const customerResponse = await fetch(
-        `https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/customers?id=eq.${customerId}&company_id=eq.${quote.company_id}&select=*`,
-        {
-          headers: {
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64'
-          }
-        }
-      );
-
-      if (quoteResponse.ok && customerResponse.ok) {
-        const quotes = await quoteResponse.json();
-        const customers = await customerResponse.json();
-
-        if (quotes.length > 0 && customers.length > 0) {
-          setQuote(quotes[0]);
-          setCustomer(customers[0]);
-        } else {
-          setError('Quote or customer not found');
-        }
-      } else {
-        setError('Failed to load quote or customer information');
+      // Load employees for scheduling widget
+      const empRes = await supaFetch(`employees?company_id=eq.${q.company_id}&is_schedulable=eq.true&select=id`, { method: 'GET' }, q.company_id);
+      if (empRes.ok) {
+        const employees = await empRes.json();
+        setEmployeeIds(employees.map(e => e.id));
       }
+
+      setLoading(false);
     } catch (error) {
+      console.error('Error loading quote/customer:', error);
       setError('Error loading information');
-    }
-  };
-
-  const loadAvailableSlots = async () => {
-    try {
-      if (!quote?.company_id) return;
-
-      // Get all employees for the company - use status field instead of active
-      const employeesResponse = await fetch(
-        `https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/profiles?company_id=eq.${quote.company_id}&status=eq.ACTIVE&select=id`,
-        {
-          headers: {
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64'
-          }
-        }
-      );
-
-      if (employeesResponse.ok) {
-        const employees = await employeesResponse.json();
-        const employeeIds = employees.map(e => e.id);
-
-        if (employeeIds.length > 0) {
-          const suggestions = await getSmartSchedulingSuggestions(
-            employeeIds,
-            duration,
-            quote.company_id
-          );
-
-          // Flatten all available slots from all employees
-          const allSlots = [];
-          Object.values(suggestions.suggestions).forEach(employeeData => {
-            employeeData.available_slots.forEach(slot => {
-              allSlots.push({
-                ...slot,
-                employee_id: employeeData.employee_id
-              });
-            });
-          });
-
-          // Sort by date and time
-          allSlots.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-
-          setAvailableSlots(allSlots.slice(0, 20)); // Limit to 20 slots
-        }
-      }
-    } catch (error) {
-      setError('Error loading available time slots');
-    } finally {
       setLoading(false);
     }
   };
 
-  const handleSlotSelection = (slot) => {
+
+
+  const handleSlotSelected = (slot) => {
     setSelectedSlot(slot);
   };
 
-  const submitAppointment = async () => {
-    if (!selectedSlot || !quote || !customer) return;
+  const handleAutoSchedule = async (slot) => {
+    setSelectedSlot(slot);
+    // Auto-submit when auto-schedule is clicked
+    await submitAppointment(slot);
+  };
+
+  const submitAppointment = async (slotToSubmit = null) => {
+    const slot = slotToSubmit || selectedSlot;
+    if (!slot || !quote || !customer) return;
 
     setSubmitting(true);
     try {
@@ -159,14 +103,14 @@ const CustomerScheduling = () => {
       const settings = await getSchedulingSettings(quote.company_id);
 
       const eventData = {
-        employee_id: selectedSlot.employee_id,
+        employee_id: slot.employee_id,
         company_id: quote.company_id,
         customer_id: customer.id,
         quote_id: quote.id,
         title: `${quote.title || 'Service'} - ${customer.name}`,
         description: `Customer self-scheduled appointment\nQuote: ${quote.title}\nCustomer: ${customer.name}`,
-        start_time: selectedSlot.start_time.toISOString(),
-        end_time: selectedSlot.end_time.toISOString(),
+        start_time: slot.start_time.toISOString(),
+        end_time: slot.end_time.toISOString(),
         event_type: 'customer_appointment',
         status: settings.auto_approve_customer_selections ? 'confirmed' : 'pending_approval',
         created_by: null, // Customer created
@@ -181,6 +125,7 @@ const CustomerScheduling = () => {
         setError(`Failed to schedule appointment: ${result.error}`);
       }
     } catch (error) {
+      console.error('Error submitting appointment:', error);
       setError('Error submitting appointment request');
     } finally {
       setSubmitting(false);
@@ -264,62 +209,50 @@ const CustomerScheduling = () => {
             </div>
           )}
 
-          {/* Available Time Slots */}
+          {/* Scheduling Widget */}
           <div className="p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              <CalendarDaysIcon className="w-5 h-5 inline mr-2" />
-              Available Time Slots
-            </h3>
+            {employeeIds.length > 0 ? (
+              <>
+                <SchedulingWidget
+                  companyId={quote.company_id}
+                  employeeIds={employeeIds}
+                  durationMinutes={duration}
+                  onSlotSelected={handleSlotSelected}
+                  onAutoSchedule={handleAutoSchedule}
+                  selectedSlot={selectedSlot}
+                  showAutoSchedule={true}
+                  maxDaysAhead={90}
+                  supabaseUrl={SUPABASE_URL}
+                  supabaseAnonKey={SUPABASE_ANON_KEY}
+                />
 
-            {availableSlots.length === 0 ? (
-              <div className="text-center py-8">
-                <ClockIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No available slots</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Please contact us directly to schedule your appointment.
-                </p>
-              </div>
+                {/* Submit Button */}
+                {selectedSlot && !submitting && (
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <button
+                      onClick={() => submitAppointment()}
+                      disabled={submitting}
+                      className="w-full btn-primary flex items-center justify-center gap-2"
+                    >
+                      <CheckIcon className="w-4 h-4" />
+                      Confirm Appointment
+                    </button>
+                  </div>
+                )}
+
+                {submitting && (
+                  <div className="mt-6 text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto mb-2"></div>
+                    <p className="text-gray-600">Submitting your appointment...</p>
+                  </div>
+                )}
+              </>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {availableSlots.map((slot, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSlotSelection(slot)}
-                    className={`p-4 border rounded-lg text-left transition-colors ${
-                      selectedSlot === slot
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="font-medium text-gray-900">
-                      {formatTimeSlot(slot)}
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {slot.duration_minutes} minutes
-                    </div>
-                  </button>
-                ))}
-              </div>
+              <p className="text-gray-500 text-center py-8">
+                Loading available times...
+              </p>
             )}
           </div>
-
-          {/* Submit Button */}
-          {selectedSlot && (
-            <div className="p-6 border-t border-gray-200">
-              <button
-                onClick={submitAppointment}
-                disabled={submitting}
-                className="w-full btn-primary flex items-center justify-center gap-2"
-              >
-                {submitting ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                ) : (
-                  <CheckIcon className="w-4 h-4" />
-                )}
-                {submitting ? 'Submitting...' : 'Request Appointment'}
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>

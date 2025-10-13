@@ -1,6 +1,6 @@
 // Document Service for file uploads and management
 import { supabaseAdmin as supabase } from '../utils/supabaseClient';
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 class DocumentService {
   // Upload file to Supabase Storage
@@ -44,8 +44,8 @@ class DocumentService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/documents`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -89,8 +89,8 @@ class DocumentService {
 
       const response = await fetch(url, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -114,8 +114,8 @@ class DocumentService {
         `${SUPABASE_URL}/rest/v1/documents?id=eq.${documentId}&company_id=eq.${companyId}`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Accept': 'application/json'
           }
         }
@@ -152,8 +152,8 @@ class DocumentService {
         {
           method: 'DELETE',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );

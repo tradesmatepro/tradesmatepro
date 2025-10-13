@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Twilio Edge Function</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-top: 0;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .success {
+      background: #d1fae5;
+      border: 2px solid #10b981;
+      color: #065f46;
+    }
+    .error {
+      background: #fee2e2;
+      border: 2px solid #ef4444;
+      color: #991b1b;
+    }
+    .loading {
+      background: #dbeafe;
+      border: 2px solid #3b82f6;
+      color: #1e40af;
+    }
+    .info {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Test Twilio Edge Function</h1>
+    
+    <div class="info">
+      <strong>⚠️ Before testing:</strong><br>
+      1. Make sure you've deployed the Edge Function: <span class="code">DEPLOY_TWILIO.bat</span><br>
+      2. Enter YOUR phone number (you'll receive an SMS)<br>
+      3. Use E.164 format: <span class="code">+15551234567</span>
+    </div>
+    
+    <label for="phone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">
+      Your Phone Number:
+    </label>
+    <input 
+      type="tel" 
+      id="phone" 
+      placeholder="+15551234567" 
+      value="+1"
+    />
+    
+    <button onclick="sendTestSMS()" id="sendBtn">
+      📱 Send Test SMS
+    </button>
+    
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://cxlqzejzraczumqmsrcx.supabase.co',
+      'sb_publishable_62eAoe6DcrOweYtnzfhHmQ_aYY4JZSG'
+    );
+
+    async function sendTestSMS() {
+      const phone = document.getElementById('phone').value.trim();
+      const result = document.getElementById('result');
+      const sendBtn = document.getElementById('sendBtn');
+      
+      // Validate phone number
+      if (!phone || phone === '+1') {
+        result.className = 'error';
+        result.innerHTML = '❌ Please enter a phone number';
+        return;
+      }
+      
+      // Basic E.164 validation
+      if (!phone.match(/^\+[1-9]\d{1,14}$/)) {
+        result.className = 'error';
+        result.innerHTML = '❌ Invalid phone format. Use E.164 format: +15551234567';
+        return;
+      }
+      
+      // Disable button and show loading
+      sendBtn.disabled = true;
+      sendBtn.textContent = '⏳ Sending...';
+      result.className = 'loading';
+      result.innerHTML = '⏳ Sending SMS via Twilio Edge Function...\n\nThis may take a few seconds...';
+      
+      try {
+        console.log('📤 Calling Edge Function with:', { to: phone });
+        
+        const { data, error } = await supabase.functions.invoke('send-sms', {
+          body: {
+            to: phone,
+            message: 'Test SMS from TradeMate Pro! 🚀 Your Twilio integration is working perfectly!',
+            companyId: 'test-company-id'
+          }
+        });
+        
+        console.log('📥 Edge Function response:', { data, error });
+        
+        if (error) {
+          result.className = 'error';
+          result.innerHTML = `❌ Edge Function Error:\n\n${JSON.stringify(error, null, 2)}\n\n`;
+          
+          if (error.message && error.message.includes('CORS')) {
+            result.innerHTML += '\n⚠️ CORS ERROR DETECTED!\n\n';
+            result.innerHTML += 'This means the Edge Function is NOT deployed yet.\n\n';
+            result.innerHTML += 'FIX: Run DEPLOY_TWILIO.bat to deploy the Edge Function.';
+          } else if (error.message && error.message.includes('Failed to send')) {
+            result.innerHTML += '\n⚠️ EDGE FUNCTION NOT FOUND!\n\n';
+            result.innerHTML += 'This means the Edge Function is NOT deployed yet.\n\n';
+            result.innerHTML += 'FIX: Run DEPLOY_TWILIO.bat to deploy the Edge Function.';
+          }
+          
+          console.error('❌ Error:', error);
+        } else if (data && data.success) {
+          result.className = 'success';
+          result.innerHTML = `✅ SMS SENT SUCCESSFULLY!\n\n`;
+          result.innerHTML += `📱 Message SID: ${data.messageSid}\n`;
+          result.innerHTML += `📊 Status: ${data.status}\n`;
+          result.innerHTML += `💰 Cost: ${data.cost || 'N/A'}\n\n`;
+          result.innerHTML += `🎉 Check your phone (${phone}) for the SMS!\n\n`;
+          result.innerHTML += `📋 The message should say:\n`;
+          result.innerHTML += `"Test SMS from TradeMate Pro! 🚀 Your Twilio integration is working perfectly!"`;
+          
+          console.log('✅ Success:', data);
+        } else if (data && !data.success) {
+          result.className = 'error';
+          result.innerHTML = `❌ SMS FAILED:\n\n${data.error || 'Unknown error'}\n\n`;
+          
+          if (data.error && data.error.includes('credentials not configured')) {
+            result.innerHTML += '\n⚠️ CREDENTIALS NOT SET!\n\n';
+            result.innerHTML += 'FIX: Run DEPLOY_TWILIO.bat to set Supabase secrets.';
+          } else if (data.error && data.error.includes('Rate limit')) {
+            result.innerHTML += '\n⚠️ RATE LIMIT EXCEEDED!\n\n';
+            result.innerHTML += 'FIX: Wait 1 minute and try again (max 10 SMS/minute).';
+          }
+          
+          console.error('❌ Failed:', data);
+        } else {
+          result.className = 'error';
+          result.innerHTML = `❌ Unexpected response:\n\n${JSON.stringify(data, null, 2)}`;
+          console.error('❌ Unexpected:', data);
+        }
+      } catch (err) {
+        result.className = 'error';
+        result.innerHTML = `❌ Exception:\n\n${err.message}\n\n${err.stack}`;
+        console.error('❌ Exception:', err);
+      } finally {
+        // Re-enable button
+        sendBtn.disabled = false;
+        sendBtn.textContent = '📱 Send Test SMS';
+      }
+    }
+    
+    // Auto-focus phone input
+    document.getElementById('phone').focus();
+    
+    // Allow Enter key to send
+    document.getElementById('phone').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendTestSMS();
+      }
+    });
+  </script>
+</body>
+</html>
+

@@ -6,7 +6,7 @@ import { isStatusTransitionAllowed } from '../utils/statusHelpers';
 
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 const QuotesDatabasePanel = () => {
   const { user } = useUser();
@@ -572,10 +572,63 @@ const QuotesDatabasePanel = () => {
           work_order_id: newWO.id
         });
 
-        // ✅ FIX: Remove strict first-item check - filter happens inside saveQuoteItems
-        if (dataToUse.quote_items && dataToUse.quote_items.length > 0) {
-          console.log('Saving work order items...');
-          await saveQuoteItems(newWO.id, dataToUse.quote_items);
+        // ✅ FIX: Create appropriate line items based on pricing model
+        if (dataToUse.pricing_model === 'TIME_MATERIALS') {
+          // For Time & Materials, save the actual quote items
+          if (dataToUse.quote_items && dataToUse.quote_items.length > 0) {
+            console.log('Saving work order items (TIME_MATERIALS)...');
+            await saveQuoteItems(newWO.id, dataToUse.quote_items);
+          }
+        } else if (dataToUse.pricing_model === 'PERCENTAGE') {
+          // For Percentage pricing, create a single line item describing the percentage
+          const percentageLineItem = [{
+            item_name: `${dataToUse.percentage}% of Base Amount`,
+            description: `${dataToUse.percentage}% of $${(dataToUse.percentage_base_amount || 0).toFixed(2)}`,
+            item_type: 'service',
+            quantity: 1,
+            rate: totals.subtotal,
+            total: totals.subtotal
+          }];
+          console.log('Saving percentage line item:', percentageLineItem);
+          await saveQuoteItems(newWO.id, percentageLineItem);
+        } else if (dataToUse.pricing_model === 'FLAT_RATE') {
+          // For Flat Rate, create a single line item
+          const flatRateLineItem = [{
+            item_name: dataToUse.title || 'Flat Rate Service',
+            description: 'Flat rate for entire job',
+            item_type: 'service',
+            quantity: 1,
+            rate: dataToUse.flat_rate_amount || 0,
+            total: dataToUse.flat_rate_amount || 0
+          }];
+          console.log('Saving flat rate line item:', flatRateLineItem);
+          await saveQuoteItems(newWO.id, flatRateLineItem);
+        } else if (dataToUse.pricing_model === 'UNIT') {
+          // For Unit pricing, create a single line item
+          const unitLineItem = [{
+            item_name: dataToUse.title || 'Unit-Based Service',
+            description: `${dataToUse.unit_count} units @ $${(dataToUse.unit_price || 0).toFixed(2)} each`,
+            item_type: 'service',
+            quantity: dataToUse.unit_count || 1,
+            rate: dataToUse.unit_price || 0,
+            total: totals.subtotal
+          }];
+          console.log('Saving unit line item:', unitLineItem);
+          await saveQuoteItems(newWO.id, unitLineItem);
+        } else if (dataToUse.pricing_model === 'RECURRING') {
+          // For Recurring, create a single line item
+          const recurringLineItem = [{
+            item_name: dataToUse.title || 'Recurring Service',
+            description: `${dataToUse.recurring_interval} recurring service`,
+            item_type: 'service',
+            quantity: 1,
+            rate: dataToUse.recurring_rate || 0,
+            total: dataToUse.recurring_rate || 0
+          }];
+          console.log('Saving recurring line item:', recurringLineItem);
+          await saveQuoteItems(newWO.id, recurringLineItem);
+        }
+
         // After work order is created, save milestones if applicable
         if (dataToUse.pricing_model === 'MILESTONE' && newWO.id) {
           try {
@@ -583,8 +636,6 @@ const QuotesDatabasePanel = () => {
           } catch (e) {
             console.warn('Saving milestones failed (non-fatal):', e);
           }
-        }
-
         }
 
         console.log('Quote creation complete, closing modal...');
@@ -904,14 +955,66 @@ const QuotesDatabasePanel = () => {
         }
       }
 
-      // Persist items - ✅ FIXED: Remove strict first-item check
+      // Persist items - ✅ FIXED: Create appropriate line items based on pricing model
       console.log('🗑️ Deleting old quote items...');
       await deleteQuoteItems(selectedQuote.id);
-      if (dataToUse.quote_items && dataToUse.quote_items.length > 0) {
-        console.log('💾 Saving line items:', dataToUse.quote_items.length);
-        await saveQuoteItems(selectedQuote.id, dataToUse.quote_items);
+
+      if (dataToUse.pricing_model === 'TIME_MATERIALS') {
+        // For Time & Materials, save the actual quote items
+        if (dataToUse.quote_items && dataToUse.quote_items.length > 0) {
+          console.log('💾 Saving line items (TIME_MATERIALS):', dataToUse.quote_items.length);
+          await saveQuoteItems(selectedQuote.id, dataToUse.quote_items);
+        }
+      } else if (dataToUse.pricing_model === 'PERCENTAGE') {
+        // For Percentage pricing, create a single line item describing the percentage
+        const percentageLineItem = [{
+          item_name: `${dataToUse.percentage}% of Base Amount`,
+          description: `${dataToUse.percentage}% of $${(dataToUse.percentage_base_amount || 0).toFixed(2)}`,
+          item_type: 'service',
+          quantity: 1,
+          rate: totals.subtotal,
+          total: totals.subtotal
+        }];
+        console.log('💾 Saving percentage line item:', percentageLineItem);
+        await saveQuoteItems(selectedQuote.id, percentageLineItem);
+      } else if (dataToUse.pricing_model === 'FLAT_RATE') {
+        // For Flat Rate, create a single line item
+        const flatRateLineItem = [{
+          item_name: dataToUse.title || 'Flat Rate Service',
+          description: 'Flat rate for entire job',
+          item_type: 'service',
+          quantity: 1,
+          rate: dataToUse.flat_rate_amount || 0,
+          total: dataToUse.flat_rate_amount || 0
+        }];
+        console.log('💾 Saving flat rate line item:', flatRateLineItem);
+        await saveQuoteItems(selectedQuote.id, flatRateLineItem);
+      } else if (dataToUse.pricing_model === 'UNIT') {
+        // For Unit pricing, create a single line item
+        const unitLineItem = [{
+          item_name: dataToUse.title || 'Unit-Based Service',
+          description: `${dataToUse.unit_count} units @ $${(dataToUse.unit_price || 0).toFixed(2)} each`,
+          item_type: 'service',
+          quantity: dataToUse.unit_count || 1,
+          rate: dataToUse.unit_price || 0,
+          total: totals.subtotal
+        }];
+        console.log('💾 Saving unit line item:', unitLineItem);
+        await saveQuoteItems(selectedQuote.id, unitLineItem);
+      } else if (dataToUse.pricing_model === 'RECURRING') {
+        // For Recurring, create a single line item
+        const recurringLineItem = [{
+          item_name: dataToUse.title || 'Recurring Service',
+          description: `${dataToUse.recurring_interval} recurring service`,
+          item_type: 'service',
+          quantity: 1,
+          rate: dataToUse.recurring_rate || 0,
+          total: dataToUse.recurring_rate || 0
+        }];
+        console.log('💾 Saving recurring line item:', recurringLineItem);
+        await saveQuoteItems(selectedQuote.id, recurringLineItem);
       } else {
-        console.log('⚠️ No line items to save');
+        console.log('⚠️ No line items to save for pricing model:', dataToUse.pricing_model);
       }
 
       // Get updated row so we can navigate based on NEW.stage (auto trigger handles stage/status)

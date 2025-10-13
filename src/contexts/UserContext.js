@@ -5,7 +5,7 @@ import { supabase } from '../utils/supabaseClient';
 
 // Legacy environment variables for beta (will be removed after full Supabase client migration)
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.REACT_APP_SUPABASE_SERVICE_KEY;
+const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 // Map database roles to permission system roles
 // Database: lowercase enums (technician) -> Frontend: uppercase constants (TECHNICIAN)

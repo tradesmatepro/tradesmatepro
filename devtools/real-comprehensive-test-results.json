@@ -1,5 +1,5 @@
 {
-  "startTime": "2025-10-05T01:50:51.558Z",
+  "startTime": "2025-10-11T21:49:33.829Z",
   "pages": [
     {
       "name": "Dashboard",
@@ -30,10 +30,10 @@
         {
           "name": "Customer list",
           "selector": "table tbody tr",
-          "count": 2,
+          "count": 14,
           "hasData": true,
           "hasNoDataMessage": true,
-          "sampleText": "APabc plumbing0 jobs • Last: NeverNewResidentialCommercial+15098647357abc@tradesmate.comActive$0Avg:"
+          "sampleText": "TCTest Customer91 jobs • Last: 6 days agoResidentialResidential+15551111009test9@testpipeline.comAct"
         },
         {
           "name": "Customer cards",
@@ -55,7 +55,7 @@
           "count": 2,
           "hasData": true,
           "hasNoDataMessage": true,
-          "sampleText": "JSJerry Smithjeraldjsmith@gmail.comOwnerOffice Only+15417050524Active9/27/20257 days ago+15417050524"
+          "sampleText": "JSJerry Smithjeraldjsmith@gmail.comOwnerOffice Only+15417050524Active9/27/202514 days ago+1541705052"
         },
         {
           "name": "Employee cards",
@@ -250,17 +250,17 @@
         {
           "name": "Expense list",
           "selector": "table tbody tr",
-          "count": 0,
-          "hasData": false,
-          "hasNoDataMessage": true,
-          "sampleText": ""
+          "count": 1,
+          "hasData": true,
+          "hasNoDataMessage": false,
+          "sampleText": "10/7/2025Toolstool for jobhome depot$100.00NoEditDelete"
         },
         {
           "name": "Expense cards",
           "selector": "[class*=\"expense\"]",
           "count": 0,
           "hasData": false,
-          "hasNoDataMessage": true,
+          "hasNoDataMessage": false,
           "sampleText": ""
         }
       ]
@@ -280,7 +280,7 @@
         {
           "name": "Inventory items",
           "selector": "[class*=\"inventory\"], [class*=\"item\"]",
-          "count": 39,
+          "count": 40,
           "hasData": true,
           "hasNoDataMessage": false,
           "sampleText": "TTradeMate Pro"
@@ -312,9 +312,9 @@
   ],
   "summary": {
     "total": 14,
-    "hasData": 8,
-    "noData": 6,
+    "hasData": 9,
+    "noData": 5,
     "error": 0
   },
-  "endTime": "2025-10-05T01:51:43.566Z"
+  "endTime": "2025-10-11T21:50:22.808Z"
 }

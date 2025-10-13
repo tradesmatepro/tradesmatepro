@@ -1,0 +1,300 @@
+{
+  "timestamp": "2025-10-11T22:18:48.379Z",
+  "pages": [
+    {
+      "page": "Dashboard",
+      "url": "/dashboard",
+      "currentFeatures": [
+        "Revenue metrics (today, week, month, year)",
+        "Recent activity feed",
+        "Quick actions (create quote, schedule job)",
+        "Upcoming jobs calendar view",
+        "Technician status (available, on job, off)",
+        "Outstanding invoices total"
+      ],
+      "missingFeatures": [
+        "Job status breakdown (scheduled, in progress, completed)",
+        "Dispatch board",
+        "Revenue goals",
+        "Booking rate",
+        "Client requests",
+        "Revenue chart",
+        "Estimates pending",
+        "Revenue graph"
+      ],
+      "painPoints": [
+        "Too many clicks to see important info",
+        "No real-time updates",
+        "Cant customize dashboard",
+        "Mobile view is cluttered"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Work Orders",
+      "url": "/work-orders",
+      "currentFeatures": [],
+      "missingFeatures": [
+        "Filter by status (all, scheduled, in progress, completed)",
+        "Search by customer, job number, address",
+        "Bulk actions (assign, reschedule, cancel)",
+        "Quick view details without opening",
+        "Drag to reschedule",
+        "Color coding by priority/status",
+        "Export to CSV/PDF",
+        "Dispatch board view",
+        "Map view",
+        "Technician assignment",
+        "Kanban board",
+        "Timeline view",
+        "Client portal link",
+        "Calendar integration",
+        "Route optimization",
+        "Job templates"
+      ],
+      "painPoints": [
+        "Cant see job location on map",
+        "No bulk rescheduling",
+        "Cant assign multiple techs easily",
+        "No job templates",
+        "Slow to load with many jobs"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Scheduling",
+      "url": "/scheduling",
+      "currentFeatures": [],
+      "missingFeatures": [
+        "Calendar view (day, week, month)",
+        "Drag and drop to schedule/reschedule",
+        "Technician availability view",
+        "Color coding by job type/status",
+        "Conflict detection",
+        "Travel time calculation",
+        "Recurring jobs support",
+        "Unscheduled jobs sidebar",
+        "Dispatch board",
+        "Route optimization",
+        "Real-time GPS",
+        "Client booking",
+        "Buffer time",
+        "Online booking",
+        "Smart scheduling",
+        "Availability blocks"
+      ],
+      "painPoints": [
+        "Calendar doesnt show all jobs",
+        "Cant drag to reschedule",
+        "No technician availability",
+        "Double booking happens",
+        "No travel time buffer",
+        "Cant see job details on hover"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Quotes",
+      "url": "/quotes",
+      "currentFeatures": [
+        "Quote templates",
+        "Convert to job with one click"
+      ],
+      "missingFeatures": [
+        "Quick quote creation",
+        "Line items (labor, materials, equipment)",
+        "Pricing tiers (good, better, best)",
+        "Photo attachments",
+        "Email/SMS sending",
+        "E-signature capture",
+        "Approval workflow",
+        "Pricebook integration",
+        "Financing options",
+        "Membership pricing",
+        "Online approval",
+        "Payment on approval",
+        "Instant estimates",
+        "Photo markup",
+        "Video estimates"
+      ],
+      "painPoints": [
+        "Labor line items disappear (FIXED!)",
+        "Too many steps to create quote",
+        "Cant duplicate quotes easily",
+        "No pricing tiers",
+        "Email sending is clunky",
+        "No e-signature"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Invoices",
+      "url": "/invoices",
+      "currentFeatures": [
+        "Payment reminders"
+      ],
+      "missingFeatures": [
+        "Auto-create from completed jobs",
+        "Payment tracking (unpaid, partial, paid)",
+        "Payment methods (cash, check, card, ACH)",
+        "Email/SMS invoice",
+        "Late fees",
+        "Batch invoicing",
+        "Export to QuickBooks/Xero",
+        "Payment processing",
+        "Recurring billing",
+        "Membership invoicing",
+        "Online payments",
+        "Auto-reminders",
+        "Deposit requests",
+        "Instant invoicing",
+        "Text-to-pay",
+        "Subscription billing"
+      ],
+      "painPoints": [
+        "Invoices not showing (NEEDS FIX)",
+        "Cant send payment reminders",
+        "No online payment link",
+        "Manual invoice creation is slow",
+        "No recurring invoices"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Customers",
+      "url": "/customers",
+      "currentFeatures": [],
+      "missingFeatures": [
+        "Contact info (name, phone, email, address)",
+        "Job history",
+        "Communication log",
+        "Tags/categories",
+        "Custom fields",
+        "Billing info",
+        "Service location(s)",
+        "Equipment/property details",
+        "Quick actions (call, text, email, create job)",
+        "Customer portal",
+        "Membership management",
+        "Equipment tracking",
+        "Client hub",
+        "Property details",
+        "Request portal",
+        "Customer app",
+        "Review requests",
+        "Referral tracking"
+      ],
+      "painPoints": [
+        "Cant see all jobs at a glance",
+        "No communication history",
+        "Cant track equipment",
+        "No customer portal",
+        "Search is slow"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Employees",
+      "url": "/employees",
+      "currentFeatures": [
+        "Time off requests"
+      ],
+      "missingFeatures": [
+        "Contact info",
+        "Role/permissions",
+        "Schedule/availability",
+        "Skills/certifications",
+        "Pay rate",
+        "Commission tracking",
+        "Performance metrics",
+        "Mobile app access",
+        "Technician scorecard",
+        "Commission rules",
+        "GPS tracking",
+        "Team scheduling",
+        "Time tracking",
+        "Performance reports",
+        "Tech app",
+        "Job assignment",
+        "Payroll integration"
+      ],
+      "painPoints": [
+        "Cant see technician location",
+        "No performance tracking",
+        "Commission calculation is manual",
+        "Cant manage availability easily"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "Timesheets",
+      "url": "/timesheets",
+      "currentFeatures": [
+        "Job time tracking"
+      ],
+      "missingFeatures": [
+        "Clock in/out",
+        "Break tracking",
+        "Overtime calculation",
+        "Approval workflow",
+        "Export to payroll",
+        "Mobile time entry",
+        "GPS verification",
+        "Job costing",
+        "Payroll export",
+        "Job profitability",
+        "QuickBooks sync",
+        "Job timer",
+        "Payroll integration"
+      ],
+      "painPoints": [
+        "No timesheets showing (NEEDS DATA)",
+        "Manual entry is tedious",
+        "No mobile clock in",
+        "Approval process is unclear"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    },
+    {
+      "page": "PTO",
+      "url": "/my-time-off",
+      "currentFeatures": [
+        "Team calendar view"
+      ],
+      "missingFeatures": [
+        "PTO balance display",
+        "Request submission",
+        "Approval workflow",
+        "Calendar integration",
+        "Accrual tracking",
+        "Policy management",
+        "Conflict detection",
+        "Time off calendar",
+        "Approval routing",
+        "Balance tracking",
+        "Time off requests",
+        "Team availability",
+        "Auto-decline conflicts",
+        "PTO calendar",
+        "Request approval",
+        "Availability blocking"
+      ],
+      "painPoints": [
+        "PTO page not working (NEEDS FIX)",
+        "No balance shown",
+        "Approval process unclear",
+        "Doesnt block calendar"
+      ],
+      "fixes": [],
+      "competitorComparison": {}
+    }
+  ]
+}

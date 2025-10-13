@@ -1,0 +1,2087 @@
+{
+  "timestamp": "2025-10-12T17:25:18.470Z",
+  "summary": {
+    "totalPages": 15,
+    "pagesWithErrors": 15,
+    "pagesWithoutErrors": 0,
+    "totalErrors": 180
+  },
+  "pages": [
+    {
+      "name": "Company Profile",
+      "path": "/settings?tab=company",
+      "totalErrors": 17,
+      "consoleErrors": 11,
+      "pageErrors": 0,
+      "networkErrors": 6,
+      "errors": [
+        {
+          "type": "console",
+          "message": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136619:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162687:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134422:38)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134346:7)",
+          "timestamp": "2025-10-12T17:24:31.126Z"
+        },
+        {
+          "type": "console",
+          "message": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136619:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162687:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134419:34)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134346:7)",
+          "timestamp": "2025-10-12T17:24:31.126Z"
+        },
+        {
+          "type": "console",
+          "message": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136619:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162687:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134388:26)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134346:7)",
+          "timestamp": "2025-10-12T17:24:31.126Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:31.588Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:31.588Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:31.702Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:31.702Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:31.740Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:31.740Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:31.896Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:31.896Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:31.897Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:31.897Z"
+        },
+        {
+          "type": "network",
+          "status": 400,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+          "timestamp": "2025-10-12T17:24:33.412Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 400 ()",
+          "timestamp": "2025-10-12T17:24:33.412Z"
+        },
+        {
+          "type": "console",
+          "message": "💥 saveCompanyData: error body {\"code\":\"PGRST204\",\"details\":null,\"hint\":null,\"message\":\"Could not find the 'license_number' column of 'companies' in the schema cache\"}",
+          "timestamp": "2025-10-12T17:24:33.413Z"
+        },
+        {
+          "type": "console",
+          "message": "💥 Error saving company data: Error: Failed to update company profile: {\"code\":\"PGRST204\",\"details\":null,\"hint\":null,\"message\":\"Could not find the 'license_number' column of 'companies' in the schema cache\"}\n    at saveCompanyData (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:4197:15)",
+          "timestamp": "2025-10-12T17:24:33.413Z"
+        }
+      ]
+    },
+    {
+      "name": "Business Settings",
+      "path": "/settings?tab=business",
+      "totalErrors": 11,
+      "consoleErrors": 6,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:34.655Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:34.655Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:34.737Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:34.737Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:34.752Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:34.752Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:34.835Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:34.835Z"
+        },
+        {
+          "type": "console",
+          "message": "Warning: `value` prop on `%s` should not be null. Consider using an empty string to clear the component or `undefined` for uncontrolled components.%s select \n    at select\n    at div\n    at Dropdown (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:114:3)\n    at div\n    at div\n    at div\n    at div\n    at BusinessSettingsTab (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:306:69)\n    at div\n    at div\n    at div\n    at div\n    at div\n    at Settings (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:20220:81)\n    at SimplePermissionRoute (http://localhost:3004/static/js/bundle.js:130206:3)\n    at RenderedRoute (http://localhost:3004/static/js/bundle.js:66737:5)\n    at Routes (http://localhost:3004/static/js/bundle.js:67471:5)\n    at div\n    at main\n    at div\n    at Layout (http://localhost:3004/static/js/bundle.js:116147:3)\n    at StrictAuthGuard (http://localhost:3004/static/js/bundle.js:130749:3)\n    at ProtectedRoute (http://localhost:3004/static/js/bundle.js:129714:3)\n    at RenderedRoute (http://localhost:3004/static/js/bundle.js:66737:5)\n    at Routes (http://localhost:3004/static/js/bundle.js:67471:5)\n    at Suspense\n    at Router (http://localhost:3004/static/js/bundle.js:67405:15)\n    at BrowserRouter (http://localhost:3004/static/js/bundle.js:60217:5)\n    at ThemeProvider (http://localhost:3004/static/js/bundle.js:132092:3)\n    at IntegrationsProvider (http://localhost:3004/static/js/bundle.js:131896:3)\n    at UserProvider (http://localhost:3004/static/js/bundle.js:132436:3)\n    at DevToolsErrorBoundary (http://localhost:3004/static/js/bundle.js:115200:5)\n    at App (http://localhost:3004/static/js/bundle.js:106883:51)",
+          "timestamp": "2025-10-12T17:24:35.011Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:35.046Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:35.046Z"
+        }
+      ]
+    },
+    {
+      "name": "Service Tags",
+      "path": "/settings?tab=tags",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:37.766Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:37.766Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:37.847Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:37.848Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:37.854Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:37.854Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:38.017Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:38.017Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:38.240Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:38.240Z"
+        }
+      ]
+    },
+    {
+      "name": "Rate Cards",
+      "path": "/settings?tab=rate-cards",
+      "totalErrors": 20,
+      "consoleErrors": 13,
+      "pageErrors": 0,
+      "networkErrors": 7,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:40.936Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:40.936Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:41.019Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:41.020Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:41.043Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:41.043Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:41.115Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:41.115Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:41.363Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:41.363Z"
+        },
+        {
+          "type": "network",
+          "status": 400,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&order=category.asc%2Csort_order.asc%2Cservice_name.asc",
+          "timestamp": "2025-10-12T17:24:41.417Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 400 ()",
+          "timestamp": "2025-10-12T17:24:41.417Z"
+        },
+        {
+          "type": "console",
+          "message": "❌ Error fetching rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+          "timestamp": "2025-10-12T17:24:41.418Z"
+        },
+        {
+          "type": "console",
+          "message": "❌ RateCardService.getRateCards error: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+          "timestamp": "2025-10-12T17:24:41.418Z"
+        },
+        {
+          "type": "console",
+          "message": "Error loading rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+          "timestamp": "2025-10-12T17:24:41.418Z"
+        },
+        {
+          "type": "network",
+          "status": 400,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&order=category.asc%2Csort_order.asc%2Cservice_name.asc",
+          "timestamp": "2025-10-12T17:24:41.506Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 400 ()",
+          "timestamp": "2025-10-12T17:24:41.506Z"
+        },
+        {
+          "type": "console",
+          "message": "❌ Error fetching rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+          "timestamp": "2025-10-12T17:24:41.507Z"
+        },
+        {
+          "type": "console",
+          "message": "❌ RateCardService.getRateCards error: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+          "timestamp": "2025-10-12T17:24:41.507Z"
+        },
+        {
+          "type": "console",
+          "message": "Error loading rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+          "timestamp": "2025-10-12T17:24:41.507Z"
+        }
+      ]
+    },
+    {
+      "name": "Rates & Pricing",
+      "path": "/settings?tab=rates",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:44.176Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:44.176Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:44.279Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:44.279Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:44.283Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:44.283Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:44.460Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:44.460Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:44.690Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:44.690Z"
+        }
+      ]
+    },
+    {
+      "name": "Smart Scheduling",
+      "path": "/settings?tab=scheduling",
+      "totalErrors": 14,
+      "consoleErrors": 7,
+      "pageErrors": 0,
+      "networkErrors": 7,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:47.323Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:47.323Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:47.425Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:47.425Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:47.429Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:47.429Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:47.528Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:47.528Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:47.716Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:47.716Z"
+        },
+        {
+          "type": "network",
+          "status": 401,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=job_buffer_minutes,default_buffer_before_minutes,default_buffer_after_minutes,enable_customer_self_scheduling,auto_approve_customer_selections,business_hours_start,business_hours_end,working_days,min_advance_booking_hours,max_advance_booking_days",
+          "timestamp": "2025-10-12T17:24:47.823Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 401 ()",
+          "timestamp": "2025-10-12T17:24:47.823Z"
+        },
+        {
+          "type": "network",
+          "status": 401,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=job_buffer_minutes,default_buffer_before_minutes,default_buffer_after_minutes,enable_customer_self_scheduling,auto_approve_customer_selections,business_hours_start,business_hours_end,working_days,min_advance_booking_hours,max_advance_booking_days",
+          "timestamp": "2025-10-12T17:24:47.859Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 401 ()",
+          "timestamp": "2025-10-12T17:24:47.859Z"
+        }
+      ]
+    },
+    {
+      "name": "Marketplace Settings",
+      "path": "/settings?tab=marketplace",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:50.666Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:50.666Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:50.751Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:50.751Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:50.935Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:50.935Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:50.936Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:50.936Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:50.936Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:50.936Z"
+        }
+      ]
+    },
+    {
+      "name": "Quote Acceptance",
+      "path": "/settings?tab=quote-acceptance",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:53.619Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:53.619Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:53.726Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:53.726Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:53.734Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:53.734Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:53.824Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:53.824Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:54.014Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:54.014Z"
+        }
+      ]
+    },
+    {
+      "name": "Invoicing",
+      "path": "/settings?tab=invoicing",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:56.740Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:56.740Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:56.832Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:56.832Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:56.859Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:56.859Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:24:56.914Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:56.914Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:57.131Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:57.131Z"
+        }
+      ]
+    },
+    {
+      "name": "Document Templates",
+      "path": "/settings?tab=documents",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:59.871Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:59.871Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:24:59.963Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:24:59.963Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:00.022Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:00.022Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:00.110Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:00.110Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:00.324Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:00.324Z"
+        }
+      ]
+    },
+    {
+      "name": "Org & Approvals",
+      "path": "/settings?tab=approvals",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:03.044Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:03.044Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:03.129Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:03.129Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:03.133Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:03.133Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:03.223Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:03.223Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:03.449Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:03.449Z"
+        }
+      ]
+    },
+    {
+      "name": "Appearance",
+      "path": "/settings?tab=appearance",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:06.296Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:06.296Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:06.402Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:06.402Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:06.404Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:06.404Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:06.603Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:06.603Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:06.605Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:06.605Z"
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "path": "/settings?tab=notifications",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:09.340Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:09.340Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:09.425Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:09.425Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:09.449Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:09.449Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:09.540Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:09.540Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:09.744Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:09.744Z"
+        }
+      ]
+    },
+    {
+      "name": "Security",
+      "path": "/settings?tab=security",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:12.656Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:12.656Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:12.763Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:12.763Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:12.768Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:12.768Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:12.906Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:12.906Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:12.917Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:12.917Z"
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "path": "/settings?tab=integrations",
+      "totalErrors": 10,
+      "consoleErrors": 5,
+      "pageErrors": 0,
+      "networkErrors": 5,
+      "errors": [
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:15.647Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:15.647Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:15.733Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:15.733Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:15.740Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:15.740Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+          "timestamp": "2025-10-12T17:25:15.884Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:15.884Z"
+        },
+        {
+          "type": "network",
+          "status": 406,
+          "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+          "timestamp": "2025-10-12T17:25:16.065Z"
+        },
+        {
+          "type": "console",
+          "message": "Failed to load resource: the server responded with a status of 406 ()",
+          "timestamp": "2025-10-12T17:25:16.065Z"
+        }
+      ]
+    }
+  ],
+  "allErrors": [
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-12T17:24:29.892Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:29.898Z"
+    },
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-12T17:24:29.991Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:29.991Z"
+    },
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-12T17:24:30.081Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:30.081Z"
+    },
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-12T17:24:30.175Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:30.175Z"
+    },
+    {
+      "type": "console",
+      "message": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136619:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162687:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134422:38)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134346:7)",
+      "timestamp": "2025-10-12T17:24:31.126Z"
+    },
+    {
+      "type": "console",
+      "message": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136619:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162687:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134419:34)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134346:7)",
+      "timestamp": "2025-10-12T17:24:31.126Z"
+    },
+    {
+      "type": "console",
+      "message": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136619:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162687:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134388:26)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134346:7)",
+      "timestamp": "2025-10-12T17:24:31.126Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:31.588Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:31.588Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:31.702Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:31.702Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:31.740Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:31.740Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:31.896Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:31.896Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:31.897Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:31.897Z"
+    },
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+      "timestamp": "2025-10-12T17:24:33.412Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:33.412Z"
+    },
+    {
+      "type": "console",
+      "message": "💥 saveCompanyData: error body {\"code\":\"PGRST204\",\"details\":null,\"hint\":null,\"message\":\"Could not find the 'license_number' column of 'companies' in the schema cache\"}",
+      "timestamp": "2025-10-12T17:24:33.413Z"
+    },
+    {
+      "type": "console",
+      "message": "💥 Error saving company data: Error: Failed to update company profile: {\"code\":\"PGRST204\",\"details\":null,\"hint\":null,\"message\":\"Could not find the 'license_number' column of 'companies' in the schema cache\"}\n    at saveCompanyData (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:4197:15)",
+      "timestamp": "2025-10-12T17:24:33.413Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:34.655Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:34.655Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:34.737Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:34.737Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:34.752Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:34.752Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:34.835Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:34.835Z"
+    },
+    {
+      "type": "console",
+      "message": "Warning: `value` prop on `%s` should not be null. Consider using an empty string to clear the component or `undefined` for uncontrolled components.%s select \n    at select\n    at div\n    at Dropdown (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:114:3)\n    at div\n    at div\n    at div\n    at div\n    at BusinessSettingsTab (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:306:69)\n    at div\n    at div\n    at div\n    at div\n    at div\n    at Settings (http://localhost:3004/static/js/src_pages_Settings_js.chunk.js:20220:81)\n    at SimplePermissionRoute (http://localhost:3004/static/js/bundle.js:130206:3)\n    at RenderedRoute (http://localhost:3004/static/js/bundle.js:66737:5)\n    at Routes (http://localhost:3004/static/js/bundle.js:67471:5)\n    at div\n    at main\n    at div\n    at Layout (http://localhost:3004/static/js/bundle.js:116147:3)\n    at StrictAuthGuard (http://localhost:3004/static/js/bundle.js:130749:3)\n    at ProtectedRoute (http://localhost:3004/static/js/bundle.js:129714:3)\n    at RenderedRoute (http://localhost:3004/static/js/bundle.js:66737:5)\n    at Routes (http://localhost:3004/static/js/bundle.js:67471:5)\n    at Suspense\n    at Router (http://localhost:3004/static/js/bundle.js:67405:15)\n    at BrowserRouter (http://localhost:3004/static/js/bundle.js:60217:5)\n    at ThemeProvider (http://localhost:3004/static/js/bundle.js:132092:3)\n    at IntegrationsProvider (http://localhost:3004/static/js/bundle.js:131896:3)\n    at UserProvider (http://localhost:3004/static/js/bundle.js:132436:3)\n    at DevToolsErrorBoundary (http://localhost:3004/static/js/bundle.js:115200:5)\n    at App (http://localhost:3004/static/js/bundle.js:106883:51)",
+      "timestamp": "2025-10-12T17:24:35.011Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:35.046Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:35.046Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:37.766Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:37.766Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:37.847Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:37.848Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:37.854Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:37.854Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:38.017Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:38.017Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:38.240Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:38.240Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:40.936Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:40.936Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:41.019Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:41.020Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:41.043Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:41.043Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:41.115Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:41.115Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:41.363Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:41.363Z"
+    },
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&order=category.asc%2Csort_order.asc%2Cservice_name.asc",
+      "timestamp": "2025-10-12T17:24:41.417Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:41.417Z"
+    },
+    {
+      "type": "console",
+      "message": "❌ Error fetching rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+      "timestamp": "2025-10-12T17:24:41.418Z"
+    },
+    {
+      "type": "console",
+      "message": "❌ RateCardService.getRateCards error: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+      "timestamp": "2025-10-12T17:24:41.418Z"
+    },
+    {
+      "type": "console",
+      "message": "Error loading rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+      "timestamp": "2025-10-12T17:24:41.418Z"
+    },
+    {
+      "type": "network",
+      "status": 400,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&order=category.asc%2Csort_order.asc%2Cservice_name.asc",
+      "timestamp": "2025-10-12T17:24:41.506Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-12T17:24:41.506Z"
+    },
+    {
+      "type": "console",
+      "message": "❌ Error fetching rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+      "timestamp": "2025-10-12T17:24:41.507Z"
+    },
+    {
+      "type": "console",
+      "message": "❌ RateCardService.getRateCards error: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+      "timestamp": "2025-10-12T17:24:41.507Z"
+    },
+    {
+      "type": "console",
+      "message": "Error loading rate cards: {code: 42703, details: null, hint: null, message: column rate_cards.sort_order does not exist}",
+      "timestamp": "2025-10-12T17:24:41.507Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:44.176Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:44.176Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:44.279Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:44.279Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:44.283Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:44.283Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:44.460Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:44.460Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:44.690Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:44.690Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:47.323Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:47.323Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:47.425Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:47.425Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:47.429Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:47.429Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:47.528Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:47.528Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:47.716Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:47.716Z"
+    },
+    {
+      "type": "network",
+      "status": 401,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=job_buffer_minutes,default_buffer_before_minutes,default_buffer_after_minutes,enable_customer_self_scheduling,auto_approve_customer_selections,business_hours_start,business_hours_end,working_days,min_advance_booking_hours,max_advance_booking_days",
+      "timestamp": "2025-10-12T17:24:47.823Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 401 ()",
+      "timestamp": "2025-10-12T17:24:47.823Z"
+    },
+    {
+      "type": "network",
+      "status": 401,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&select=job_buffer_minutes,default_buffer_before_minutes,default_buffer_after_minutes,enable_customer_self_scheduling,auto_approve_customer_selections,business_hours_start,business_hours_end,working_days,min_advance_booking_hours,max_advance_booking_days",
+      "timestamp": "2025-10-12T17:24:47.859Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 401 ()",
+      "timestamp": "2025-10-12T17:24:47.859Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:50.666Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:50.666Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:50.751Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:50.751Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:50.935Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:50.935Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:50.936Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:50.936Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:50.936Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:50.936Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:53.619Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:53.619Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:53.726Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:53.726Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:53.734Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:53.734Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:53.824Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:53.824Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:54.014Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:54.014Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:56.740Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:56.740Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:56.832Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:56.832Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:56.859Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:56.859Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:24:56.914Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:56.914Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:57.131Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:57.131Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:59.871Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:59.871Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:24:59.963Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:24:59.963Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:00.022Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:00.022Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:00.110Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:00.110Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:00.324Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:00.324Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:03.044Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:03.044Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:03.129Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:03.129Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:03.133Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:03.133Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:03.223Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:03.223Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:03.449Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:03.449Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:06.296Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:06.296Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:06.402Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:06.402Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:06.404Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:06.404Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:06.603Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:06.603Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:06.605Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:06.605Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:09.340Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:09.340Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:09.425Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:09.425Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:09.449Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:09.449Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:09.540Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:09.540Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:09.744Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:09.744Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:12.656Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:12.656Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:12.763Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:12.763Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:12.768Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:12.768Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:12.906Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:12.906Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:12.917Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:12.917Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:15.647Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:15.647Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:15.733Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:15.733Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:15.740Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:15.740Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+      "timestamp": "2025-10-12T17:25:15.884Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:15.884Z"
+    },
+    {
+      "type": "network",
+      "status": 406,
+      "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+      "timestamp": "2025-10-12T17:25:16.065Z"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 406 ()",
+      "timestamp": "2025-10-12T17:25:16.065Z"
+    }
+  ]
+}

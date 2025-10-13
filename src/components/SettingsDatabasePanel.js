@@ -215,7 +215,8 @@ const SettingsDatabasePanel = () => {
         phone: companySettings.companyPhone || '',
         email: companySettings.companyEmail || '',
         website: companySettings.website || '',
-        license_number: companySettings.licenseNumber || '',
+        // ✅ FIX: Use 'licenses' (JSONB array) - will be added by schema migration
+        licenses: companySettings.licenses || [],
         tax_id: companySettings.taxId || '',
         // Branding (persist only known, safe columns)
         theme_color: companySettings.themeColor || null,

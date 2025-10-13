@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
 import IntegrationService from '../services/IntegrationService';
 import GoogleCalendarService from '../services/GoogleCalendarService';
-
-// Supabase configuration
-const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
-const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+import { supabase } from '../utils/supabaseClient';
 
 const IntegrationDrawer = ({ isOpen, onClose, integration, onSave }) => {
   const { user } = useUser();
@@ -22,27 +19,25 @@ const IntegrationDrawer = ({ isOpen, onClose, integration, onSave }) => {
 
   const loadExistingTokens = async () => {
     try {
-      const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/integration_tokens?company_id=eq.${user.company_id}&provider=eq.${integration.id}`,
-        {
-          headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-            'Accept': 'application/json'
-          }
-        }
-      );
+      // ✅ SECURE: Using supabase client with RLS protection
+      const { data: tokens, error } = await supabase
+        .from('integration_tokens')
+        .select('*')
+        .eq('company_id', user.company_id)
+        .eq('provider', integration.id);
 
-      if (response.ok) {
-        const tokens = await response.json();
-        if (tokens.length > 0) {
-          const token = tokens[0];
-          setFormData({
-            access_token: token.access_token || '',
-            refresh_token: token.refresh_token || '',
-            ...token.extra || {}
-          });
-        }
+      if (error) {
+        console.error('Error loading tokens:', error);
+        return;
+      }
+
+      if (tokens && tokens.length > 0) {
+        const token = tokens[0];
+        setFormData({
+          access_token: token.access_token || '',
+          refresh_token: token.refresh_token || '',
+          ...token.extra || {}
+        });
       }
     } catch (error) {
       console.error('Error loading tokens:', error);

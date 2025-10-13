@@ -180,8 +180,10 @@ const WorkOrders = () => {
       let query = `work_orders_v?select=*,customers(${customerFields}),users(full_name)&order=created_at.desc`;
       let response = await supaFetch(query, { method: 'GET' }, user.company_id);
       if (!response.ok) {
-        // ✅ FIXED: Added on_hold and needs_rescheduling to show all active work orders
-        query = `work_orders?select=*,customers(${customerFields}),users(full_name)&status=in.(scheduled,in_progress,completed,invoiced,on_hold,needs_rescheduling)&order=created_at.desc`;
+        // ✅ FIXED: Show all job-stage work orders (approved through paid)
+        // approved = unscheduled jobs, scheduled/in_progress/on_hold/needs_rescheduling = active jobs
+        // completed/invoiced/paid = finished jobs
+        query = `work_orders?select=*,customers(${customerFields}),users(full_name)&status=in.(approved,scheduled,in_progress,completed,invoiced,paid,on_hold,needs_rescheduling)&order=created_at.desc`;
         response = await supaFetch(query, { method: 'GET' }, user.company_id);
       }
 

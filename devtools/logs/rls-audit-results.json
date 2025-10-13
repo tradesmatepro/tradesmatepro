@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-10-11T22:04:11.606Z",
+  "summary": {
+    "enabled": 0,
+    "disabled": 13,
+    "errors": 2,
+    "missingCritical": 2
+  },
+  "results": {
+    "enabled": [],
+    "disabled": [
+      "work_orders",
+      "work_order_line_items",
+      "customers",
+      "employees",
+      "users",
+      "profiles",
+      "companies",
+      "invoices",
+      "expenses",
+      "vendors",
+      "purchase_orders",
+      "schedule_events",
+      "employee_time_off"
+    ],
+    "errors": [
+      {
+        "table": "timesheets",
+        "error": "Could not find the table 'public.timesheets' in the schema cache"
+      },
+      {
+        "table": "inventory",
+        "error": "Could not find the table 'public.inventory' in the schema cache"
+      }
+    ],
+    "policies": {}
+  },
+  "missingTables": [
+    "timesheets",
+    "inventory"
+  ]
+}

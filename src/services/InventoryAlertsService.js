@@ -1,29 +1,27 @@
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { getSupabaseClient } from '../utils/supabaseClient';
 
 class InventoryAlertsService {
   constructor() {
-    this.baseHeaders = {
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json'
-    };
+    this.supabase = getSupabaseClient();
   }
 
   // Get inventory alerts (low stock and out of stock items)
   async getInventoryAlerts(companyId) {
     try {
-      const url = `${SUPABASE_URL}/rest/v1/inventory_stock?select=*`;
-      
-      const response = await fetch(url, {
-        headers: this.baseHeaders
-      });
+      // ✅ SECURE: Use Supabase client with RLS protection
+      const { data: stockData, error } = await this.supabase
+        .from('inventory_stock')
+        .select('*, inventory_items(*), inventory_locations(*)')
+        .eq('company_id', companyId);
 
-      if (!response.ok) {
-        console.warn(`Inventory alerts temporarily unavailable (${response.status}): ${response.statusText}`);
-        return { outOfStock: [], lowStock: [], inStock: [] }; // Return empty structure instead of throwing
+      if (error) {
+        console.warn(`Inventory alerts temporarily unavailable: ${error.message}`);
+        return { outOfStock: [], lowStock: [], inStock: [] };
       }
 
-      const stockData = await response.json();
+      if (!stockData) {
+        return { outOfStock: [], lowStock: [], inStock: [] };
+      }
       
       // Process stock data to identify alerts
       const alerts = {
@@ -102,21 +100,18 @@ class InventoryAlertsService {
         status: 'pending'
       };
 
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/notifications`, {
-        method: 'POST',
-        headers: {
-          ...this.baseHeaders,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(notificationData)
-      });
+      // ✅ SECURE: Use Supabase client with RLS protection
+      const { data, error } = await this.supabase
+        .from('notifications')
+        .insert(notificationData)
+        .select()
+        .single();
 
-      if (!response.ok) {
-        throw new Error(`Failed to create notification: ${response.statusText}`);
+      if (error) {
+        throw new Error(`Failed to create notification: ${error.message}`);
       }
 
-      const text = await response.text();
-      return text ? JSON.parse(text) : null;
+      return data;
     } catch (error) {
       console.error('Error creating inventory notification:', error);
       throw error;
@@ -133,14 +128,21 @@ class InventoryAlertsService {
       const itemIds = alertItems.map(item => item.item_id);
       if (itemIds.length === 0) return;
 
-      const existingNotificationsUrl = `${SUPABASE_URL}/rest/v1/notifications?company_id=eq.${companyId}&type=eq.INVENTORY&related_id=in.(${itemIds.join(',')})&created_at=gte.${new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()}`;
-      
-      const existingResponse = await fetch(existingNotificationsUrl, {
-        headers: this.baseHeaders
-      });
+      // ✅ SECURE: Use Supabase client with RLS protection
+      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { data: existingNotifications, error } = await this.supabase
+        .from('notifications')
+        .select('*')
+        .eq('company_id', companyId)
+        .eq('type', 'INVENTORY')
+        .in('related_id', itemIds)
+        .gte('created_at', yesterday);
 
-      const existingNotifications = existingResponse.ok ? await existingResponse.json() : [];
-      const notifiedItemIds = new Set(existingNotifications.map(n => n.related_id));
+      if (error) {
+        console.error('Error fetching existing notifications:', error);
+        return;
+      }
+      const notifiedItemIds = new Set((existingNotifications || []).map(n => n.related_id));
 
       // Create notifications for items that haven't been notified in the last 24 hours
       const newNotifications = [];

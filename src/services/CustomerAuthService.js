@@ -2,7 +2,7 @@
 // Handles customer portal account creation and linking with Supabase Auth
 
 import { getSupabaseClient } from '../utils/supabaseClient';
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 const supabase = getSupabaseClient();
 
@@ -18,8 +18,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/find_or_create_global_customer`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -43,8 +43,8 @@ export class CustomerAuthService {
       // Get the full customer record
       const customerResponse = await fetch(`${SUPABASE_URL}/rest/v1/customers?id=eq.${customerId}&select=*`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -69,8 +69,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/company_customers`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -106,8 +106,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
         method: 'GET',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -132,8 +132,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -163,8 +163,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customer_portal_accounts`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -199,8 +199,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customers?id=eq.${customerId}`, {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -280,8 +280,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customer_portal_accounts?auth_user_id=eq.${authUserId}`, {
         method: 'GET',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -326,8 +326,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customers?id=eq.${customerId}&select=portal_account_id,email`, {
         method: 'GET',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });
@@ -361,8 +361,8 @@ export class CustomerAuthService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customer_portal_accounts?id=eq.${portalAccountId}`, {
         method: 'GET',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         }
       });

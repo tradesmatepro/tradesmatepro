@@ -116,7 +116,7 @@ Please review and let us know if you have any questions. We look forward to work
 Best regards,
 Your Company Team`;
 
-  const defaultSMSMessage = `Hi ${customerName}, your quote for ${quoteTitle} is ready! Amount: $${parseFloat(quoteAmount || 0).toFixed(2)}. Check your email for details or reply to this message.`;
+  const defaultSMSMessage = `Hi ${customerName}, your quote for ${quoteTitle} is ready! Amount: $${parseFloat(quoteAmount || 0).toFixed(2)}. View online: ${portalLink} Reply STOP to opt out.`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
@@ -277,23 +277,29 @@ Your Company Team`;
             </div>
           )}
 
-          {/* SMS Preview - Placeholder */}
+          {/* SMS Preview - Active via Twilio */}
           {(formData.deliveryMethod === 'sms' || formData.deliveryMethod === 'both') && (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-gray-700">
                   SMS Preview
                 </label>
-                <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
-                  Placeholder - Phase 5
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Active via Twilio
                 </span>
               </div>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-sm text-gray-700">{defaultSMSMessage}</p>
                 <p className="text-xs text-gray-500 mt-2">Character count: {defaultSMSMessage.length}/160</p>
               </div>
-              <p className="mt-2 text-xs text-gray-500">
-                📱 SMS integration coming in Phase 5
+              <p className="mt-2 text-xs text-green-600 flex items-center gap-1">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                SMS will be sent via Twilio with portal link
               </p>
             </div>
           )}

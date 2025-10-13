@@ -1,151 +1,521 @@
-You are a VS Code developer agent with access to this GitHub repo and Vercel project.
-
-Repository:
-https://github.com/tradesmatepro/tradesmatepro
-Branch: main
-
-Vercel Project: tradesmatepro-zczsgxdzm-jerald-smiths-projects.vercel.app
-Domain: www.tradesmatepro.com
-
----
-### 🔑 ENVIRONMENT (Beta Keys)
-Add or confirm these in `.env.local` and in Vercel → Settings → Environment Variables
-
-SUPABASE_URL=https://amgtktrwpdsigcomavlg.supabase.co
-SUPABASE_ANON_KEY=<CLAUDE_HAS_THIS>
-RESEND_API_KEY=re_a7hbhZUG_8hQoDfPGZsHmgDHUjmgEvt1t
-RESEND_FROM=updates@tradesmatepro.com
-VERCEL_PROJECT_ID=prj_zczsgxdzm
-NODE_ENV=production
-
----
-## 🎯 OBJECTIVE
-Implement and deploy the **TradesMatePro Customer Quote Portal** so customers can view and approve quotes instantly without logins — using the token link system already validated as industry best practice.
-
----
-## 🧱 REQUIRED IMPLEMENTATION
-
-### 1. Create file `/pages/portal/quote/[id].tsx`
-**Purpose:** public quote viewing + approval.
-
-Requirements:
-- Fetch quote details from Supabase (`quotes` table) using `id` from the URL.
-- Display:
-  - Company logo + name (dynamic)
-  - Quote title, description, itemized rows, and total
-  - Status badge (`PENDING`, `APPROVED`, `DECLINED`)
-- Buttons:
-  - ✅ Approve Quote → calls `/api/quote/approve?id=<id>`
-  - ✏️ Request Changes → opens `mailto:company_email`
-  - ⬇️ Download PDF → placeholder
-- After approval → show “Thank you! Quote Approved” message.
-- Include a subtle “🚀 Beta” banner top-right.
-- Fully responsive layout with TailwindCSS.
-
----
-
-### 2. Create file `/pages/api/quote/approve.ts`
-**Purpose:** update status + trigger Resend email.
-
-Logic:
-```ts
-import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!);
-const resend = new Resend(process.env.RESEND_API_KEY!);
-
-export default async function handler(req, res) {
-  const { id } = req.query;
-  const { data: quote } = await supabase.from("quotes").select("*").eq("id", id).single();
-  if (!quote) return res.status(404).json({ error: "Quote not found" });
-
-  await supabase.from("quotes").update({ status: "APPROVED", approved_at: new Date().toISOString() }).eq("id", id);
-
-  await resend.emails.send({
-    from: process.env.RESEND_FROM,
-    to: quote.company_email,
-    subject: `Quote Approved – ${quote.title || quote.id}`,
-    html: `<p>${quote.customer_name || "A customer"} has approved quote ${quote.title || quote.id}.</p>`
-  });
-
-  res.status(200).json({ success: true });
-}
-3. Test flow locally
-Run:
-
-bash
-Copy code
-npm run dev
-Then open:
-
-bash
-Copy code
-http://localhost:3000/portal/quote/test123
-Confirm:
-
-Quote loads correctly.
-
-Approve → updates Supabase.
-
-Resend logs email.
-
-4. Commit & Deploy
-bash
-Copy code
-git add pages/portal/quote pages/api/quote
-git commit -m "[BETA] Add public quote approval portal"
-git push origin main
-Deployment will trigger automatically via Vercel GitHub integration.
-
-Confirm live page:
-
-bash
-Copy code
-https://www.tradesmatepro.com/portal/quote/[id]
-5. Add Future Placeholder Comments
-At end of [id].tsx, add comments:
-
-ts
-Copy code
-// TODO: Integrate Twilio SMS notifications
-// TODO: Integrate Stripe payment link after approval
-// TODO: Integrate optional financing (Affirm API)
-// TODO: Integrate file attachments via Supabase Storage
-✅ DELIVERABLES
-Live /portal/quote/[id] route working on production.
-
-Resend confirmation emails functioning.
-
-Supabase quote status updates correctly.
-
-Beta banner visible.
-
-Deployment verified on www.tradesmatepro.com.
-
-🧠 Notes
-Do not store keys in Git commits; reference via process.env.
-
-This is for beta testing; production keys and secrets will be rotated.
-
-Claude may run git commands and trigger Vercel deploy via API if needed.
-
-🚀 Goal
-Once live, TradesMatePro customers can:
-
-Click quote links directly from emails
-
-Approve in one step
-
-Instantly notify company staff via Resend
-
-This should fully match Housecall Pro’s experience but cleaner and faster.
-
-yaml
-Copy code
-
----
-
-✅ **Next Step:**  
-Copy-paste that entire prompt into Claude in VS Code and tell him:  
-> “Run the full deployment process.”
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:393 🚀 Quote Portal v2.0 - Multi-step Approval Wizard
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:394 📅 Loaded at: 2025-10-13T20:45:16.021Z
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:404 🔧 Defining SchedulingWidget class...
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:879 ✅ SchedulingWidget class defined successfully
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:880 🔍 SchedulingWidget type: function
+/favicon.ico:1   GET https://www.tradesmatepro.com/favicon.ico 404 (Not Found)
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:929 Quote loaded: {id: 'eeaa326b-0feb-464a-9bb3-1e63ad96e285', company_id: 'cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e', work_order_number: 'Q20251011-184159874-1GM5', customer_id: 'daece991-2bc1-446f-bb48-d4eb6c429fc9', customer_address_id: null, …}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:930 🔍 DEBUG - Quote fields: {id: 'eeaa326b-0feb-464a-9bb3-1e63ad96e285', status: 'sent', total_amount: 1661.63, labor_summary: null, has_labor_summary: false, …}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:941 🔍 DEBUG - Loading company settings for: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:955 🔍 DEBUG - Companies fetch response: {ok: true, status: 200, statusText: ''}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:963 🔍 DEBUG - Companies data: [{…}]
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:990 ✅ Company settings loaded: {business_hours: '07:00 - 18:00', working_days: Array(5), timezone: 'America/Los_Angeles', buffers: {…}}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1072 ✅ Calculated labor_summary from line items: {totalLaborHours: 16, crewSize: 2, hoursPerEmployee: 8, labor_summary: {…}}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1205 === APPROVAL WIZARD DEBUG ===
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1206 Company Settings: {require_signature_on_approval: true, require_terms_acceptance: true, require_deposit_on_approval: true, allow_customer_scheduling: true, terms_and_conditions_text: 'TERMS AND CONDITIONS\n\n1. Payment: Full payment is …y accepting this quote, you agree to these terms.', …}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1212 Adding schedule step
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1217 Total steps: (3) ['review', 'schedule', 'confirmation']
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1228 Showing wizard with steps: (3) ['review', 'schedule', 'confirmation']
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1649 🔄 nextWizardStep called, currentIndex: 0
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1661 ➡️ Moving to step: schedule index: 1
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1759 📅 Initializing scheduling widget...
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1760 🔍 Company ID: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1764 🔍 Fetching employees...
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1783 ✅ Employees loaded: (2) [{…}, {…}]
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1800 🔍 DEBUG - Checking labor_summary: {has_labor_summary: true, labor_summary_value: {…}, labor_summary_type: 'object', quote_keys: Array(195)}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1817 ✅ Labor calculation: {crewSize: 2, hoursPerDay: 8, totalHours: 16, hoursPerEmployee: 8, durationMinutes: 480}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1830 🔍 DEBUG - About to create SchedulingWidget with:
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1831   Company ID: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1832   Employee IDs: (2) ['f0560435-6469-481e-94c8-a408cdd6a39d', 'c959e20e-f163-4684-8639-1dc741d7a1dd']
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1833   Duration (minutes): 480
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1834   Duration (hours): 8
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1835   Company Settings: {business_hours: '07:00 - 18:00', working_days: Array(5), timezone: 'America/Los_Angeles'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1848   📊 Business hours: 660 minutes
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1849   📊 Job duration: 480 minutes
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1850   📊 Available window: 180 minutes
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1851   📊 Expected LAST slot: 10:00
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:456 🔍 DEBUG - Requesting slots: {employeeIds: Array(2), durationMinutes: 480, companyId: 'cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e', startDate: '2025-10-13T20:45:25.589Z', endDate: '2026-01-11T21:45:25.589Z'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1903 ✅ Scheduling widget initialized
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:491 🔍 DEBUG - Raw slots returned (first 10): (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+ ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:30:00 AM', end_estimated_local: '3:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '7:45:00 AM', end_estimated_local: '3:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:00:00 AM', end_estimated_local: '4:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:15:00 AM', end_estimated_local: '4:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:30:00 AM', end_estimated_local: '4:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '8:45:00 AM', end_estimated_local: '4:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:00:00 AM', end_estimated_local: '5:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:15:00 AM', end_estimated_local: '5:15:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:30:00 AM', end_estimated_local: '5:30:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '9:45:00 AM', end_estimated_local: '5:45:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:522 ✅ Keep slot (within biz hours): {start_local: '10:00:00 AM', end_estimated_local: '6:00:00 PM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:536 📊 After pruning - First day summary: {firstDay: '10/14/2025', count: 22, firstLocal: '7:30:00 AM', lastLocal: '10:00:00 AM'}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1864 📅 Slot selected: {start_time: Tue Oct 14 2025 07:30:00 GMT-0700 (Pacific Daylight Time), end_time: Tue Oct 14 2025 15:30:00 GMT-0700 (Pacific Daylight Time), duration_minutes: 480, employee_id: 'f0560435-6469-481e-94c8-a408cdd6a39d', buffer_before: 30, …}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1943 📅 Schedule confirmed: {start_time: '2025-10-14T14:30:00.000Z', end_time: '2025-10-14T22:30:00.000Z', employee_ids: Array(2), crew_size: 2, auto_scheduled: false}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1649 🔄 nextWizardStep called, currentIndex: 1
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1661 ➡️ Moving to step: confirmation index: 2
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1952 🎯 finalizeApproval called
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1958 📞 Calling approve_and_schedule_work_order RPC...
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1967 ✅ Approved & scheduled via RPC: {error: 'column "created_by_customer" of relation "schedule_events" does not exist', success: false}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:2007 🔍 DOM elements: {wizardContent: true, quoteContent: true, successDiv: true}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:2015 📋 Wizard mode - showing confirmation
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1952 🎯 finalizeApproval called
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1958 📞 Calling approve_and_schedule_work_order RPC...
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:1967 ✅ Approved & scheduled via RPC: {error: 'column "created_by_customer" of relation "schedule_events" does not exist', success: false}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:2007 🔍 DOM elements: {wizardContent: true, quoteContent: true, successDiv: true}
+quote.html?id=eeaa326b-0feb-464a-9bb3-1e63ad96e285:2015 📋 Wizard mode - showing confirmation

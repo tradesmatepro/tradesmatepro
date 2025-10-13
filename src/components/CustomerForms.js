@@ -14,13 +14,13 @@ import {
 } from '@heroicons/react/24/outline';
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 
 
-const SUPABASE_SERVICE_KEY_HARD = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+// SECURITY: Service key removed - use Edge Functions instead
 
-// NOTE: SUPABASE_SERVICE_KEY_HARD is unused; using import from env above.
+// NOTE: SUPABASE_ANON_KEY_HARD is unused; using import from env above.
 
 export const CustomerForm = ({
   isEdit = false,
@@ -39,8 +39,8 @@ export const CustomerForm = ({
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/users?company_id=eq.${user.company_id}&active=eq.true&select=id,full_name,role`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -357,8 +357,8 @@ export const CustomerDetailsModal = ({ customer, onClose }) => {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/users?company_id=eq.${user.company_id}&active=eq.true&select=id,full_name,role`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });

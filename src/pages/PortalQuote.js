@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { supaFetch, SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/supaFetch';
+import { supaFetch, SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supaFetch';
 import settingsService from '../services/SettingsService';
 import { supabaseAdmin as supabase } from '../utils/supabaseClient';
 

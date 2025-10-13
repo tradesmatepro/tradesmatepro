@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../contexts/UserContext';
+import { supabase } from '../../utils/supabaseClient';
 import {
   CalendarDaysIcon,
   ClockIcon,
@@ -457,21 +458,18 @@ const PTOHistoryView = () => {
               onClick={async () => {
                 console.log('🔍 TESTING DATABASE CONNECTION...');
                 try {
-                  const response = await fetch(`https://amgtktrwpdsigcomavlg.supabase.co/rest/v1/employee_time_off?select=count&company_id=eq.${user.company_id}`, {
-                    headers: {
-                      'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64',
-                      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64'
-                    }
-                  });
+                  // ✅ SECURE: Use Supabase client with RLS protection
+                  const { count, error } = await supabase
+                    .from('employee_time_off')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('company_id', user.company_id);
 
-                  if (response.ok) {
-                    const data = await response.json();
-                    console.log('✅ Database connection OK. Record count:', data);
-                    alert(`Database connection OK. Found ${data.length} records for your company.`);
+                  if (error) {
+                    console.error('❌ Database connection failed:', error);
+                    alert(`Database connection failed: ${error.message}`);
                   } else {
-                    const errorText = await response.text();
-                    console.log('❌ Database error:', response.status, errorText);
-                    alert(`Database error: ${response.status} - ${errorText}`);
+                    console.log('✅ Database connection OK. Record count:', count);
+                    alert(`Database connection OK. Found ${count} records for your company.`);
                   }
                 } catch (error) {
                   console.log('❌ Connection error:', error);

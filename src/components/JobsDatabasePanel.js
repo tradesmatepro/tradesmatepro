@@ -15,7 +15,7 @@ import ResumeJobModal from './ResumeJobModal';
 
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 import settingsService from '../services/SettingsService';
 import { computeInvoiceTotals } from '../services/InvoicesService';
 import WorkOrderCompletionService from '../services/WorkOrderCompletionService';

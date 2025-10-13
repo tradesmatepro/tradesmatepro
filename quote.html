@@ -1952,6 +1952,24 @@
       console.log('🎯 finalizeApproval called');
 
       try {
+        // Save deposit payment method to work_orders table
+        if (approvalData.depositMethod) {
+          console.log('💳 Saving deposit payment method:', approvalData.depositMethod);
+          const { error: depositErr } = await supabase
+            .from('work_orders')
+            .update({
+              deposit_payment_method: approvalData.depositMethod,
+              deposit_paid_at: (approvalData.depositMethod === 'prepaid' || approvalData.depositMethod === 'online') ? new Date().toISOString() : null
+            })
+            .eq('id', quoteId);
+
+          if (depositErr) {
+            console.warn('⚠️ Could not save deposit method:', depositErr);
+          } else {
+            console.log('✅ Deposit method saved');
+          }
+        }
+
         // Try atomic server-side approval + scheduling
         if (approvalData.scheduledTime) {
           try {

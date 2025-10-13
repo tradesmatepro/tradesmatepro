@@ -414,6 +414,7 @@ class CalendarService {
       title: event.title || 'Untitled Event',
       start: event.start_time,
       end: event.end_time,
+      allDay: false, // ✅ FIX: Explicitly set to false to prevent all-day rendering
       backgroundColor: this.getEventColor(event.event_type, event.status),
       borderColor: this.getEventBorderColor(event.event_type, event.status),
       textColor: '#ffffff',
@@ -446,6 +447,7 @@ class CalendarService {
       title: event.title || 'Untitled Event',
       start: event.start_time,
       end: event.end_time,
+      allDay: false, // ✅ FIX: Explicitly set to false to prevent all-day rendering
       backgroundColor: this.getEventColor(event.event_type, event.status),
       borderColor: this.getEventBorderColor(event.event_type, event.status),
       textColor: '#ffffff',
@@ -474,6 +476,7 @@ class CalendarService {
       // ✅ FIX: Use scheduled_start/scheduled_end (actual column names)
       start: workOrder.scheduled_start || workOrder.start_time,
       end: workOrder.scheduled_end || workOrder.end_time,
+      allDay: false, // ✅ FIX: Explicitly set to false to prevent all-day rendering
       backgroundColor: this.getEventColor('work_order', workOrder.status),
       borderColor: this.getEventBorderColor('work_order', workOrder.status),
       textColor: '#ffffff',

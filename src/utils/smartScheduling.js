@@ -2,7 +2,7 @@
 // Uses existing schedule_events table to find optimal time slots
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from './env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './env';
 
 /**
  * Round time to next 15-minute interval for professional scheduling
@@ -79,15 +79,12 @@ export const DEFAULT_SCHEDULING_SETTINGS = {
  */
 export const getSchedulingSettings = async (companyId) => {
   try {
-    // Prefer companies table (source of truth) — aligns with SchedulingSettingsTab save path
-    const companyResp = await fetch(
-      `${SUPABASE_URL}/rest/v1/companies?id=eq.${companyId}&select=job_buffer_minutes,default_buffer_before_minutes,default_buffer_after_minutes,enable_customer_self_scheduling,auto_approve_customer_selections,business_hours_start,business_hours_end,working_days,min_advance_booking_hours,max_advance_booking_days`,
-      {
-        headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
-        }
-      }
+    // ✅ FIX: Use supaFetch instead of direct fetch to avoid RLS issues
+    const { supaFetch } = await import('./supaFetch');
+    const companyResp = await supaFetch(
+      `companies?id=eq.${companyId}&select=job_buffer_minutes,default_buffer_before_minutes,default_buffer_after_minutes,enable_customer_self_scheduling,auto_approve_customer_selections,business_hours_start,business_hours_end,working_days,min_advance_booking_hours,max_advance_booking_days`,
+      { method: 'GET' },
+      companyId
     );
 
     if (companyResp.ok) {
@@ -140,14 +137,14 @@ export const getEmployeeSchedule = async (employeeId, companyId, startDate, endD
 
     const scheduleRespUser = await fetch(scheduleEventsUrlUser, {
       headers: {
-        'apikey': SUPABASE_SERVICE_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       }
     });
     const scheduleRespEmp = await fetch(scheduleEventsUrlEmp, {
       headers: {
-        'apikey': SUPABASE_SERVICE_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       }
     });
 
@@ -172,8 +169,8 @@ export const getEmployeeSchedule = async (employeeId, companyId, startDate, endD
 
     const workOrdersResponse = await fetch(workOrdersUrl, {
       headers: {
-        'apikey': SUPABASE_SERVICE_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       }
     });
 
@@ -199,7 +196,7 @@ export const getEmployeeSchedule = async (employeeId, companyId, startDate, endD
     // PTO (APPROVED) as blocking events
     try {
       const ptoUrl = `${SUPABASE_URL}/rest/v1/employee_time_off?employee_id=eq.${employeeId}&company_id=eq.${companyId}&status=eq.APPROVED&starts_at=lt.${endDate.toISOString()}&ends_at=gt.${startDate.toISOString()}&select=kind,starts_at,ends_at`;
-      const ptoResp = await fetch(ptoUrl, { headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` } });
+      const ptoResp = await fetch(ptoUrl, { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } });
       if (ptoResp.ok) {
         const ptoRecs = await ptoResp.json();
         const ptoEvents = ptoRecs.map(r => ({ title: r.kind || 'PTO', start_time: r.starts_at, end_time: r.ends_at, employee_id: employeeId, event_type: 'pto' }));
@@ -317,7 +314,7 @@ export const findAvailableTimeSlots = async (employeeId, durationMinutes, search
     try {
       const empRes = await fetch(
         `${SUPABASE_URL}/rest/v1/employees?user_id=eq.${employeeId}&company_id=eq.${settings.company_id}&select=id,capacity_hours_per_day`,
-        { headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` } }
+        { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
       );
       if (empRes.ok) {
         const rows = await empRes.json();
@@ -482,8 +479,8 @@ export const createScheduleEvent = async (eventData) => {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/schedule_events`, {
       method: 'POST',
       headers: {
-        'apikey': SUPABASE_SERVICE_KEY,
-        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       },

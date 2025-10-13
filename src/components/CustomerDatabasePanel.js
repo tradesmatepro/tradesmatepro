@@ -3,7 +3,7 @@ import { useUser } from '../contexts/UserContext';
 // Icons are imported in UI components, not needed here
 
 // Supabase configuration
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 const CustomerDatabasePanel = () => {
   const { user } = useUser();
@@ -66,8 +66,8 @@ const CustomerDatabasePanel = () => {
       setLoading(true);
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customers?company_id=eq.${user.company_id}&select=*&order=created_at.desc`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -128,8 +128,8 @@ const CustomerDatabasePanel = () => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ sql: createTableSQL })
@@ -188,8 +188,8 @@ const CustomerDatabasePanel = () => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customers`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -254,8 +254,8 @@ const CustomerDatabasePanel = () => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customers?id=eq.${selectedCustomer.id}&company_id=eq.${user.company_id}`, {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(customerData)
@@ -289,8 +289,8 @@ const CustomerDatabasePanel = () => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/customers?id=eq.${customerId}&company_id=eq.${user.company_id}`, {
         method: 'DELETE',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
 

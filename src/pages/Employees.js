@@ -50,7 +50,7 @@ import SkillsPicker from '../components/SkillsPicker';
 
 // Legacy environment variables for beta (will be removed after full Supabase client migration)
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.REACT_APP_SUPABASE_SERVICE_KEY;
+const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
 
 const Employees = () => {
@@ -123,7 +123,7 @@ const Employees = () => {
 	    setShowDetailPanel(true);
 	    try {
 	      const res = await fetch(`${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${employee.id}&company_id=eq.${user.company_id}`, {
-	        headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` }
+	        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
 	      });
 	      if (res.ok) {
 	        const list = await res.json();
@@ -150,7 +150,7 @@ const Employees = () => {
 	      setSavingRole(true);
 	      const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${detailEmployee.id}`, {
 	        method: 'PATCH',
-	        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Prefer': 'return=representation' },
+	        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=representation' },
 	        body: JSON.stringify({ role: detailRole })
 	      });
 	      if (!res.ok) throw new Error('Failed to update role');
@@ -167,7 +167,7 @@ const Employees = () => {
 	  const handleActivateEmployee = async (employeeId) => {
 	    try {
 	      const res = await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${employeeId}` , {
-	        method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_SERVICE_KEY,'Authorization':`Bearer ${SUPABASE_SERVICE_KEY}`, 'Prefer': 'return=minimal' }, body: JSON.stringify({ status:'active', active:true })
+	        method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=minimal' }, body: JSON.stringify({ status:'active', active:true })
 	      });
 	      if (res.ok) { showAlert('success','Employee activated'); loadEmployees(); setDetailEmployee(prev=> prev? { ...prev, status:'active', active:true }:prev);} else { showAlert('error','Failed to activate'); }
 	    } catch(e){ console.error(e); showAlert('error','Failed to activate'); }
@@ -195,7 +195,7 @@ const Employees = () => {
 	    try {
 	      setSavingPhone(true);
 	      const res = await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${detailEmployee.id}`, {
-	        method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_SERVICE_KEY,'Authorization':`Bearer ${SUPABASE_SERVICE_KEY}`, 'Prefer': 'return=representation' },
+	        method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=representation' },
 	        body: JSON.stringify({ phone_number: detailPhone || null })
 	      });
 	      if (!res.ok) throw new Error('Failed to update phone');
@@ -371,8 +371,8 @@ const Employees = () => {
       const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -422,8 +422,8 @@ const Employees = () => {
       const userResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -457,8 +457,8 @@ const Employees = () => {
       const profileResponse = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -495,8 +495,8 @@ const Employees = () => {
         const employeeResponse = await fetch(`${SUPABASE_URL}/rest/v1/employees`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json',
             'Prefer': 'return=representation'
           },
@@ -539,8 +539,8 @@ const Employees = () => {
       const permResponse = await fetch(`${SUPABASE_URL}/rest/v1/user_permissions`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -576,8 +576,8 @@ const Employees = () => {
       // Check users table (not profiles - profiles doesn't have email column)
       const dbResponse = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${email}`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -593,8 +593,8 @@ const Employees = () => {
       // Check Auth users
       const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -656,8 +656,8 @@ const Employees = () => {
       const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -713,8 +713,8 @@ const Employees = () => {
       const userResponse = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -748,8 +748,8 @@ const Employees = () => {
       const profileResponse = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -787,8 +787,8 @@ const Employees = () => {
         const employeeResponse = await fetch(`${SUPABASE_URL}/rest/v1/employees`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json',
             'Prefer': 'return=representation'
           },
@@ -916,7 +916,7 @@ const Employees = () => {
 	    try {
 	      await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}` , {
 	        method: 'PATCH',
-	        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Prefer': 'return=minimal' },
+	        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=minimal' },
 	        body: JSON.stringify({ status: 'active', active: true })
 	      })));
 	      showAlert('success', `Activated ${ids.length} employee${ids.length>1?'s':''}`);
@@ -933,7 +933,7 @@ const Employees = () => {
 	    try {
 	      await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}` , {
 	        method: 'PATCH',
-	        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Prefer': 'return=minimal' },
+	        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Prefer': 'return=minimal' },
 	        body: JSON.stringify({ status: 'inactive', active: false })
 	      })));
 	      showAlert('success', `Deactivated ${ids.length} employee${ids.length>1?'s':''}`);
@@ -969,8 +969,8 @@ const Employees = () => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
@@ -1020,8 +1020,8 @@ const Employees = () => {
       console.log('🔍 Step 1: Getting auth_user_id...');
       const userResponse = await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${employeeId}&select=auth_user_id`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
 
@@ -1035,7 +1035,7 @@ const Employees = () => {
         console.log('🔐 Auth User ID:', authUserId);
 
         // Create admin client with service key for auth operations
-        const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
+        const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
           auth: {
             autoRefreshToken: false,
             persistSession: false
@@ -1065,8 +1065,8 @@ const Employees = () => {
       await fetch(`${SUPABASE_URL}/rest/v1/employees?user_id=eq.${employeeId}`, {
         method: 'DELETE',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
       console.log('✅ Step 3 Complete: Deleted from employees');
@@ -1076,8 +1076,8 @@ const Employees = () => {
       await fetch(`${SUPABASE_URL}/rest/v1/profiles?user_id=eq.${employeeId}`, {
         method: 'DELETE',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
       console.log('✅ Step 4 Complete: Deleted from profiles');
@@ -1087,8 +1087,8 @@ const Employees = () => {
       await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${employeeId}&company_id=eq.${user.company_id}`, {
         method: 'DELETE',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
       console.log('✅ Step 5 Complete: Deleted from users');
@@ -1126,8 +1126,8 @@ const Employees = () => {
         `${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${employee.id}&company_id=eq.${user.company_id}`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );
@@ -1193,7 +1193,7 @@ const Employees = () => {
     // Load employee row id and skills for editing (outside permissions try/catch)
     try {
       const empRowRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?user_id=eq.${employee.id}&company_id=eq.${user.company_id}&select=id`, {
-        headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` }
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
       });
       if (empRowRes.ok) {
         const rows = await empRowRes.json();
@@ -1201,7 +1201,7 @@ const Employees = () => {
         if (row?.id) {
           setEditingEmployeeRowId(row.id);
           const esRes = await fetch(`${SUPABASE_URL}/rest/v1/employee_skills?employee_id=eq.${row.id}&select=skill_id,level`, {
-            headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` }
+            headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
           });
           if (esRes.ok) {
             const list = await esRes.json();
@@ -1256,8 +1256,8 @@ const Employees = () => {
       const dbResponse = await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${editingEmployee.id}&company_id=eq.${user.company_id}`, {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -1279,8 +1279,8 @@ const Employees = () => {
       const employeeResponse = await fetch(`${SUPABASE_URL}/rest/v1/employees?user_id=eq.${editingEmployee.id}&company_id=eq.${user.company_id}`, {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -1309,8 +1309,8 @@ const Employees = () => {
         `${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${editingEmployee.id}&company_id=eq.${user.company_id}`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );
@@ -1325,8 +1325,8 @@ const Employees = () => {
           {
             method: 'PATCH',
             headers: {
-              'apikey': SUPABASE_SERVICE_KEY,
-              'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(permissionData)
@@ -1339,8 +1339,8 @@ const Employees = () => {
           {
             method: 'POST',
             headers: {
-              'apikey': SUPABASE_SERVICE_KEY,
-              'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
               'Content-Type': 'application/json',
               'Prefer': 'return=representation'
             },
@@ -1397,14 +1397,14 @@ const Employees = () => {
             const idsCsv = toDelete.join(',');
             await fetch(`${SUPABASE_URL}/rest/v1/employee_skills?employee_id=eq.${editingEmployeeRowId}&skill_id=in.(${idsCsv})`, {
               method: 'DELETE',
-              headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}` }
+              headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
             });
           }
 
           if (toUpsert.length > 0) {
             await fetch(`${SUPABASE_URL}/rest/v1/employee_skills`, {
               method: 'POST',
-              headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=representation' },
+              headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=representation' },
               body: JSON.stringify(toUpsert)
             });
           }
@@ -1431,8 +1431,8 @@ const Employees = () => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/pto_requests`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(ptoData)
@@ -1458,8 +1458,8 @@ const Employees = () => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/employee_time_off`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -2173,7 +2173,7 @@ const Employees = () => {
 	                const ids = Array.from(selectedIds);
 	                if (!ids.length) return showAlert('info','Select employees first');
 	                try {
-	                  await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}`, { method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_SERVICE_KEY,'Authorization':`Bearer ${SUPABASE_SERVICE_KEY}` }, body: JSON.stringify({ status:'active', active:true }) })));
+	                  await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}`, { method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ status:'active', active:true }) })));
 	                  showAlert('success', 'Activated selected employees');
 
 	            {/* Bulk role update */}
@@ -2191,7 +2191,7 @@ const Employees = () => {
 	                  if (!ids.length || !newRole) return;
 	                  try {
 	                    await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}`, {
-	                      method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_SERVICE_KEY,'Authorization':`Bearer ${SUPABASE_SERVICE_KEY}`, 'Prefer':'return=minimal' },
+	                      method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}`, 'Prefer':'return=minimal' },
 	                      body: JSON.stringify({ role: newRole })
 	                    })));
 	                    showAlert('success', `Updated role for ${ids.length} employee${ids.length>1?'s':''}`);
@@ -2214,7 +2214,7 @@ const Employees = () => {
 	                const ids = Array.from(selectedIds);
 	                if (!ids.length) return showAlert('info','Select employees first');
 	                try {
-	                  await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}`, { method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_SERVICE_KEY,'Authorization':`Bearer ${SUPABASE_SERVICE_KEY}` }, body: JSON.stringify({ status:'inactive', active:false }) })));
+	                  await Promise.all(ids.map(id => fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${id}`, { method: 'PATCH', headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':`Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ status:'inactive', active:false }) })));
 	                  showAlert('success', 'Deactivated selected employees');
 	                  setSelectedIds(new Set());
 	                  loadEmployees();

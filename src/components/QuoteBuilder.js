@@ -116,6 +116,58 @@ export const QuoteBuilder = ({
   const [showAddCustomer, setShowAddCustomer] = useState(false);
   const [actionAfterSave, setActionAfterSave] = useState(null); // 'pdf', 'send', or null
 
+  // Helper function to prepare quote data with labor conversion
+  const prepareQuoteDataWithLabor = () => {
+    console.log('🔧 prepareQuoteDataWithLabor called');
+    console.log('🔧 laborRows:', laborRows);
+    console.log('🔧 laborRows.length:', laborRows.length);
+
+    // Convert labor rows to quote_items format
+    const laborQuoteItems = convertLaborRowsToQuoteItems();
+    console.log('🔧 laborQuoteItems after conversion:', laborQuoteItems);
+    console.log('🔧 laborQuoteItems.length:', laborQuoteItems.length);
+
+    // Get non-labor items
+    const nonLaborItems = formData.quote_items.filter(item => item.item_type !== 'labor');
+    console.log('🔧 nonLaborItems:', nonLaborItems);
+    console.log('🔧 nonLaborItems.length:', nonLaborItems.length);
+
+    // Combine labor and non-labor items
+    const combinedQuoteItems = [...laborQuoteItems, ...nonLaborItems];
+    console.log('🔧 combinedQuoteItems:', combinedQuoteItems);
+    console.log('🔧 combinedQuoteItems.length:', combinedQuoteItems.length);
+
+    // Calculate labor summary (matching the format in handleSubmit)
+    const labor_summary = laborRows.length > 0 ? {
+      crew_size: laborRows[0].employees,
+      hours_per_day: laborRows[0].hours_per_day,
+      days: laborRows[0].days,
+      regular_hours: laborRows[0].regular_hours,
+      overtime_hours: laborRows[0].overtime_hours,
+      labor_subtotal: laborRows.reduce((sum, r) => sum + (r.line_total || 0), 0)
+    } : null;
+
+    console.log('🔧 labor_summary:', labor_summary);
+
+    // Include financial breakdown in submission
+    const financialBreakdown = calculateFinancialBreakdown();
+
+    return {
+      ...formData,
+      quote_items: combinedQuoteItems,
+      labor_summary,
+      // Add new financial fields to work_orders table
+      subtotal: financialBreakdown.subtotal,
+      discount_total: financialBreakdown.discount_total,
+      tax_total: financialBreakdown.tax_total,
+      grand_total: financialBreakdown.grand_total,
+      currency: 'USD', // Default currency
+      customer_notes: formData.customer_notes || '',
+      internal_notes: formData.internal_notes || '',
+      payment_terms: formData.payment_terms || rates?.default_payment_terms || 'Net 30'
+    };
+  };
+
   // Handle save and then perform additional action
   const handleSaveAndAction = async (e, action) => {
     console.log('🎯 handleSaveAndAction CALLED:', {
@@ -129,9 +181,14 @@ export const QuoteBuilder = ({
     e.preventDefault();
     setActionAfterSave(action);
 
-    // Call the original onSubmit - it will handle the save and return the new quote
-    console.log('🔄 Calling onSubmit...');
-    const newQuote = await onSubmit(e);
+    // ✅ FIX: Prepare quote data with labor conversion BEFORE calling onSubmit
+    console.log('🔄 Preparing quote data with labor conversion...');
+    const updatedFormData = prepareQuoteDataWithLabor();
+    console.log('🔄 Updated formData with labor:', updatedFormData);
+
+    // Call onSubmit with the updated data that includes labor items
+    console.log('🔄 Calling onSubmit with labor items...');
+    const newQuote = await onSubmit(e, updatedFormData);
     console.log('✅ onSubmit returned:', newQuote);
 
     // After successful save, perform the action
@@ -644,8 +701,14 @@ export const QuoteBuilder = ({
 	    switch (model) {
 	      case 'FLAT_RATE':
 	        return Number(formData.flat_rate_amount) || 0;
-	      case 'UNIT':
-	        return (Number(formData.unit_count) || 0) * ((Number(formData.unit_price) || 0));
+	      case 'UNIT': {
+	        // ✅ FIX: Unit pricing should include materials with markup
+	        const unitTotal = (Number(formData.unit_count) || 0) * ((Number(formData.unit_price) || 0));
+	        const materialsTotal = formData.quote_items
+	          .filter(item => item.item_type !== 'labor')
+	          .reduce((sum, item) => sum + calculateItemTotal(item), 0);
+	        return unitTotal + materialsTotal;
+	      }
 	      case 'PERCENTAGE': {
 	        const pct = Number(formData.percentage) || 0;
 	        const base = Number(formData.percentage_base_amount) || 0;
@@ -738,50 +801,8 @@ export const QuoteBuilder = ({
 
     console.log('🎯 HANDLESUBMIT: formData.status at submit time:', formData.status);
 
-    // Convert labor rows to quote_items format and combine with existing items
-    console.log('🔧 LABOR CONVERSION DEBUG:');
-    console.log('🔧 laborRows:', laborRows);
-    console.log('🔧 laborRows.length:', laborRows.length);
-
-    const laborQuoteItems = convertLaborRowsToQuoteItems();
-    console.log('🔧 laborQuoteItems after conversion:', laborQuoteItems);
-    console.log('🔧 laborQuoteItems.length:', laborQuoteItems.length);
-
-    const nonLaborItems = formData.quote_items.filter(item => item.item_type !== 'labor');
-    console.log('🔧 nonLaborItems:', nonLaborItems);
-    console.log('🔧 nonLaborItems.length:', nonLaborItems.length);
-
-    const combinedQuoteItems = [...laborQuoteItems, ...nonLaborItems];
-    console.log('🔧 combinedQuoteItems:', combinedQuoteItems);
-    console.log('🔧 combinedQuoteItems.length:', combinedQuoteItems.length);
-
-    // Create updated form data with combined quote items
-    const labor_summary = laborRows.length > 0 ? {
-      crew_size: laborRows[0].employees,
-      hours_per_day: laborRows[0].hours_per_day,
-      days: laborRows[0].days,
-      regular_hours: laborRows[0].regular_hours,
-      overtime_hours: laborRows[0].overtime_hours,
-      labor_subtotal: laborRows.reduce((sum, r) => sum + (r.line_total || 0), 0)
-    } : null;
-
-    // Include financial breakdown in submission
-    const financialBreakdown = calculateFinancialBreakdown();
-
-    const updatedFormData = {
-      ...formData,
-      quote_items: combinedQuoteItems,
-      labor_summary,
-      // Add new financial fields to work_orders table
-      subtotal: financialBreakdown.subtotal,
-      discount_total: financialBreakdown.discount_total,
-      tax_total: financialBreakdown.tax_total,
-      grand_total: financialBreakdown.grand_total,
-      currency: 'USD', // Default currency
-      customer_notes: formData.customer_notes || '',
-      internal_notes: formData.internal_notes || '',
-      payment_terms: formData.payment_terms || rates?.default_payment_terms || 'Net 30'
-    };
+    // ✅ FIX: Use the shared helper function to prepare data with labor conversion
+    const updatedFormData = prepareQuoteDataWithLabor();
 
     console.log('🔄 Submitting quote with financial breakdown:', updatedFormData);
     console.log('🎯 HANDLESUBMIT: updatedFormData.status:', updatedFormData.status);
@@ -1354,8 +1375,8 @@ export const QuoteBuilder = ({
             </div>
           )}
 
-          {/* Materials, Parts & Services - only for Time & Materials */}
-          {formData.pricing_model === 'TIME_MATERIALS' && (formData.quote_items.filter(item => item.item_type !== 'labor').length > 0 ? (
+          {/* Materials, Parts & Services - for Time & Materials and Unit-Based */}
+          {(formData.pricing_model === 'TIME_MATERIALS' || formData.pricing_model === 'UNIT') && (formData.quote_items.filter(item => item.item_type !== 'labor').length > 0 ? (
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-md font-medium text-gray-900">Materials, Parts & Services</h4>

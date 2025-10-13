@@ -1,6 +1,6 @@
 // Google Calendar OAuth and API Service
-const SUPABASE_URL = "https://amgtktrwpdsigcomavlg.supabase.co";
-const SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtZ3RrdHJ3cGRzaWdjb21hdmxnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDA4MTU4NywiZXhwIjoyMDY5NjU3NTg3fQ.6oSnaYhbZzoC0S52iAZBQi8D006yK9fIqrvSDdt5Y64";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
+// SECURITY: Service key removed - use Edge Functions instead
 
 // Google OAuth Configuration
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID"; // Replace with actual client ID
@@ -84,8 +84,8 @@ class GoogleCalendarService {
         `${SUPABASE_URL}/rest/v1/integration_tokens?company_id=eq.${companyId}&provider=eq.google_calendar`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Accept': 'application/json'
           }
         }
@@ -98,8 +98,8 @@ class GoogleCalendarService {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/integration_tokens?id=eq.${existingTokens[0].id}`, {
           method: 'PATCH',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(tokenData)
@@ -111,8 +111,8 @@ class GoogleCalendarService {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/integration_tokens`, {
           method: 'POST',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Content-Type': 'application/json',
             'Prefer': 'return=representation'
           },
@@ -193,8 +193,8 @@ class GoogleCalendarService {
         `${SUPABASE_URL}/rest/v1/integration_tokens?company_id=eq.${companyId}&provider=eq.google_calendar`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Accept': 'application/json'
           }
         }
@@ -232,8 +232,8 @@ class GoogleCalendarService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/integration_tokens?id=eq.${existingTokens.id}`, {
         method: 'PATCH',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedData)
@@ -370,8 +370,8 @@ class GoogleCalendarService {
         {
           method: 'DELETE',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );

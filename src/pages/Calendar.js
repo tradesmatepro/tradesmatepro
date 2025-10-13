@@ -871,10 +871,10 @@ const Calendar = () => {
           {showBacklog && (
             <div className="p-3 space-y-3">
               <div className="flex items-center gap-2">
-                <input value={backlogQuery} onChange={(e)=>setBacklogQuery(e.target.value)} placeholder="Search backlog..." className="w-full border rounded px-2 py-1 text-sm"/>
-                <input type="number" min="1" value={minCrew} onChange={(e)=>setMinCrew(parseInt(e.target.value)||1)} className="w-20 border rounded px-2 py-1 text-sm" title="Min crew"/>
+                <input value={backlogQuery} onChange={(e)=>setBacklogQuery(e.target.value)} placeholder="Search..." className="w-full border rounded px-2 py-1 text-xs"/>
+                <input type="number" min="1" value={minCrew} onChange={(e)=>setMinCrew(parseInt(e.target.value)||1)} className="w-16 border rounded px-2 py-1 text-xs" title="Min crew"/>
               </div>
-              <div ref={backlogRef} className="space-y-2">
+              <div ref={backlogRef} className="space-y-2 max-h-96 overflow-y-auto">
                 {backlog.filter(wo => {
                   const q = backlogQuery.toLowerCase();
                   const ls = wo.labor_summary || {}; const crew = ls.crew_size || 1;
@@ -889,22 +889,22 @@ const Calendar = () => {
                   const ls = wo.labor_summary || {}; const crew = ls.crew_size || 1; const hours = ls.hours_per_day || Math.round((wo.estimated_duration||120)/60);
                   const cust = customers.find(c=>c.id===wo.customer_id);
                   return (
-                    <div key={wo.id} className="border rounded p-2 hover:bg-gray-50">
+                    <div key={wo.id} className="border rounded p-2 hover:bg-gray-50 text-xs">
                       <div
-                        className="backlog-item cursor-move"
+                        className="backlog-item cursor-move mb-1"
                         data-wo-id={wo.id}
                         data-title={wo.title}
                         data-crew={crew}
                         data-hours={hours}
                         title="Drag onto the calendar to schedule"
                       >
-                        <div className="font-medium text-sm">{wo.title || 'Untitled'}</div>
-                        <div className="text-xs text-gray-600">{cust?.name || 'Customer'}</div>
+                        <div className="font-medium text-xs truncate">{wo.title || 'Untitled'}</div>
+                        <div className="text-xs text-gray-600 truncate">{cust?.name || 'Customer'}</div>
                         <div className="text-xs text-gray-500">Crew {crew} • {hours}h</div>
                       </div>
-                      <div className="mt-2 flex gap-2">
-                        <button className="btn-outline btn-2xs" onClick={(e)=>{ e.stopPropagation(); setAssistantJobData({ id: wo.id, job_title: wo.title, customer_id: wo.customer_id, labor_summary: wo.labor_summary, work_order_items: wo.work_order_items || [] }); setShowAssistant(true); }}>Open Assistant</button>
-                        <button className="btn-primary btn-2xs" onClick={(e)=>{ e.stopPropagation(); smartAssignWorkOrder(wo); }}>Smart Assign</button>
+                      <div className="mt-1 flex gap-1">
+                        <button className="text-xs px-2 py-0.5 border rounded hover:bg-gray-100" onClick={(e)=>{ e.stopPropagation(); setAssistantJobData({ id: wo.id, job_title: wo.title, customer_id: wo.customer_id, labor_summary: wo.labor_summary, work_order_items: wo.work_order_items || [] }); setShowAssistant(true); }}>Assistant</button>
+                        <button className="text-xs px-2 py-0.5 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={(e)=>{ e.stopPropagation(); smartAssignWorkOrder(wo); }}>Assign</button>
                       </div>
                     </div>
                   );
@@ -1255,8 +1255,8 @@ const Calendar = () => {
                         const woResponse = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/work_orders?id=eq.${workOrderId}`, {
                           method: 'DELETE',
                           headers: {
-                            'apikey': process.env.REACT_APP_SUPABASE_SERVICE_KEY,
-                            'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_SERVICE_KEY}`,
+                            'apikey': process.env.REACT_APP_SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`,
                           }
                         });
 
@@ -1268,8 +1268,8 @@ const Calendar = () => {
                         const seResponse = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/schedule_events?id=eq.${eventId}`, {
                           method: 'DELETE',
                           headers: {
-                            'apikey': process.env.REACT_APP_SUPABASE_SERVICE_KEY,
-                            'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_SERVICE_KEY}`,
+                            'apikey': process.env.REACT_APP_SUPABASE_ANON_KEY,
+                            'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`,
                           }
                         });
 

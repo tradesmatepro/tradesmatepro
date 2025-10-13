@@ -1,0 +1,1082 @@
+[
+  {
+    "type": "error",
+    "text": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136613:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162681:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134433:29)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134340:7)",
+    "timestamp": "2025-10-11T21:01:01.659Z"
+  },
+  {
+    "type": "error",
+    "text": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136613:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162681:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134439:32)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134340:7)",
+    "timestamp": "2025-10-11T21:01:01.662Z"
+  },
+  {
+    "type": "error",
+    "text": "Error loading advanced KPIs: TypeError: Failed to fetch\n    at window.fetch (http://localhost:3004/console-error-capture.js:270:26)\n    at window.fetch (http://localhost:3004/network-capture.js:20:30)\n    at window.fetch (http://localhost:3004/static/js/bundle.js:136613:46)\n    at supaFetch (http://localhost:3004/static/js/bundle.js:162681:10)\n    at async loadAdvancedKPIs (http://localhost:3004/static/js/bundle.js:134439:32)\n    at async loadDashboardData (http://localhost:3004/static/js/bundle.js:134340:7)",
+    "timestamp": "2025-10-11T21:01:01.662Z"
+  },
+  {
+    "type": "log",
+    "text": "ℹ️ Auto-send of errors disabled (no DEVTOOLS_API_BASE configured)",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Console Error Capture initialized",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "📊 Use getAllCapturedErrors() to see captured errors",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "📁 Use exportCapturedErrors() to download error report",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "🔬 Use analyzeErrors() to get error analysis and fixes",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "🧪 Run window.testConsoleCapture() to test capture functionality",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "🌐 Network capture initialized - all fetch/XHR requests will be logged",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "📋 Error export functions loaded:",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "  - exportAllErrors() - Export all errors to file",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "  - startAutoExport(30) - Start auto-export every 30 seconds",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "  - stopAutoExport() - Stop auto-export",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "log",
+    "text": "  - quickExport() - Quick export alias",
+    "timestamp": "2025-10-11T21:01:01.674Z"
+  },
+  {
+    "type": "info",
+    "text": "%cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold",
+    "timestamp": "2025-10-11T21:01:01.677Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Real-Time Error Fixer activated",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "🧪 Developer Tools Test Functions Available:",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "- runDeveloperToolsTests() - Run all tests",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "- testConsoleErrorDetector() - Test error detection",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "- testDeveloperToolsService() - Test dev tools service",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "- testRemoteDebugService() - Test remote debug service",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "- testDeveloperToolsPage() - Test page functionality",
+    "timestamp": "2025-10-11T21:01:01.695Z"
+  },
+  {
+    "type": "log",
+    "text": "📊 Smart Logging Service started - AI can now read console logs",
+    "timestamp": "2025-10-11T21:01:01.696Z"
+  },
+  {
+    "type": "log",
+    "text": "📊 Smart Logging Service started - AI can now read console logs",
+    "timestamp": "2025-10-11T21:01:01.696Z"
+  },
+  {
+    "type": "log",
+    "text": "💾 Attempting to save theme to database: {theme: light, attempt: 1}",
+    "timestamp": "2025-10-11T21:01:01.726Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 IntegrationsContext loading... {user: NO USER}",
+    "timestamp": "2025-10-11T21:01:01.726Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Checking authentication state...",
+    "timestamp": "2025-10-11T21:01:01.726Z"
+  },
+  {
+    "type": "log",
+    "text": "🔌 WebSocket debugging ready (simulated)",
+    "timestamp": "2025-10-11T21:01:01.726Z"
+  },
+  {
+    "type": "log",
+    "text": "🛠️ DevTools Service initialized {id: debug_1760216461726, startTime: 2025-10-11T21:01:01.726Z, userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36, url: http://localhost:3004/quotes, viewport: Object}",
+    "timestamp": "2025-10-11T21:01:01.727Z"
+  },
+  {
+    "type": "log",
+    "text": "💾 Attempting to save theme to database: {theme: light, attempt: 1}",
+    "timestamp": "2025-10-11T21:01:01.727Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 IntegrationsContext loading... {user: NO USER}",
+    "timestamp": "2025-10-11T21:01:01.727Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Checking authentication state...",
+    "timestamp": "2025-10-11T21:01:01.727Z"
+  },
+  {
+    "type": "log",
+    "text": "🔌 WebSocket debugging ready (simulated)",
+    "timestamp": "2025-10-11T21:01:01.727Z"
+  },
+  {
+    "type": "log",
+    "text": "🛠️ DevTools Service initialized {id: debug_1760216461727, startTime: 2025-10-11T21:01:01.727Z, userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb…KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36, url: http://localhost:3004/quotes, viewport: Object}",
+    "timestamp": "2025-10-11T21:01:01.728Z"
+  },
+  {
+    "type": "log",
+    "text": "🟡 Remote Debug Service disabled (set REACT_APP_DEBUG_WS_URL to enable)",
+    "timestamp": "2025-10-11T21:01:01.728Z"
+  },
+  {
+    "type": "log",
+    "text": "🛠️ Developer tools initialized successfully",
+    "timestamp": "2025-10-11T21:01:01.728Z"
+  },
+  {
+    "type": "log",
+    "text": "🟡 Remote Debug Service disabled (set REACT_APP_DEBUG_WS_URL to enable)",
+    "timestamp": "2025-10-11T21:01:01.728Z"
+  },
+  {
+    "type": "log",
+    "text": "🛠️ Developer tools initialized successfully",
+    "timestamp": "2025-10-11T21:01:01.728Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 UserContext: Auth state changed: SIGNED_IN",
+    "timestamp": "2025-10-11T21:01:01.730Z"
+  },
+  {
+    "type": "log",
+    "text": "🔄 Session updated, re-checking auth...",
+    "timestamp": "2025-10-11T21:01:01.730Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Checking authentication state...",
+    "timestamp": "2025-10-11T21:01:01.730Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 Auth state changed: SIGNED_IN",
+    "timestamp": "2025-10-11T21:01:01.730Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Session updated for user: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:01.730Z"
+  },
+  {
+    "type": "log",
+    "text": "👤 User ID: 268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T21:01:01.886Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 Auth Session: {hasSession: true, hasUser: true, userId: 268b99b5-907d-4b48-ad0e-92cdd4ac388a, accessToken: EXISTS}",
+    "timestamp": "2025-10-11T21:01:01.886Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Valid Supabase session found, loading user data...",
+    "timestamp": "2025-10-11T21:01:01.886Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Session loaded for user: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:01.886Z"
+  },
+  {
+    "type": "log",
+    "text": "👤 User ID: 268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T21:01:01.964Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 Auth Session: {hasSession: true, hasUser: true, userId: 268b99b5-907d-4b48-ad0e-92cdd4ac388a, accessToken: EXISTS}",
+    "timestamp": "2025-10-11T21:01:01.964Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Valid Supabase session found, loading user data...",
+    "timestamp": "2025-10-11T21:01:01.964Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 UserContext: Auth state changed: INITIAL_SESSION",
+    "timestamp": "2025-10-11T21:01:01.964Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Session loaded for user: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:01.965Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 Auth state changed: INITIAL_SESSION",
+    "timestamp": "2025-10-11T21:01:01.965Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Session updated for user: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:01.965Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Valid Supabase session found, loading user data...",
+    "timestamp": "2025-10-11T21:01:01.965Z"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 406 ()",
+    "timestamp": "2025-10-11T21:01:02.091Z"
+  },
+  {
+    "type": "log",
+    "text": "📝 Current preferences: {}",
+    "timestamp": "2025-10-11T21:01:02.092Z"
+  },
+  {
+    "type": "log",
+    "text": "📝 New preferences: {theme: light}",
+    "timestamp": "2025-10-11T21:01:02.092Z"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 406 ()",
+    "timestamp": "2025-10-11T21:01:02.171Z"
+  },
+  {
+    "type": "log",
+    "text": "📝 Current preferences: {}",
+    "timestamp": "2025-10-11T21:01:02.171Z"
+  },
+  {
+    "type": "log",
+    "text": "📝 New preferences: {theme: light}",
+    "timestamp": "2025-10-11T21:01:02.171Z"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 406 ()",
+    "timestamp": "2025-10-11T21:01:02.223Z"
+  },
+  {
+    "type": "error",
+    "text": "❌ Failed to save theme to database: {code: PGRST116, details: The result contains 0 rows, hint: null, message: Cannot coerce the result to a single JSON object}",
+    "timestamp": "2025-10-11T21:01:02.224Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Authentication successful for: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:02.251Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 IntegrationsContext loading... {user: Object}",
+    "timestamp": "2025-10-11T21:01:02.252Z"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 406 ()",
+    "timestamp": "2025-10-11T21:01:02.262Z"
+  },
+  {
+    "type": "error",
+    "text": "❌ Failed to save theme to database: {code: PGRST116, details: The result contains 0 rows, hint: null, message: Cannot coerce the result to a single JSON object}",
+    "timestamp": "2025-10-11T21:01:02.264Z"
+  },
+  {
+    "type": "log",
+    "text": "🔐 Auth Session: {hasSession: true, hasUser: true, userId: 268b99b5-907d-4b48-ad0e-92cdd4ac388a, accessToken: EXISTS}",
+    "timestamp": "2025-10-11T21:01:02.322Z"
+  },
+  {
+    "type": "log",
+    "text": "📡 Calling settingsService.getSettings with company_id: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:02.322Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Loading theme from database for user: 268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T21:01:02.322Z"
+  },
+  {
+    "type": "error",
+    "text": "Failed to load resource: the server responded with a status of 406 ()",
+    "timestamp": "2025-10-11T21:01:02.422Z"
+  },
+  {
+    "type": "error",
+    "text": "❌ Error loading theme from database: {code: PGRST116, details: The result contains 0 rows, hint: null, message: Cannot coerce the result to a single JSON object}",
+    "timestamp": "2025-10-11T21:01:02.423Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Session validation passed",
+    "timestamp": "2025-10-11T21:01:02.428Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Session validation passed",
+    "timestamp": "2025-10-11T21:01:02.436Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Authentication successful for: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:02.441Z"
+  },
+  {
+    "type": "log",
+    "text": "🎭 Modal State Changed: {showPresentedModal: false, showApprovalModal: false, showRejectionModal: false, quoteToPresent: undefined}",
+    "timestamp": "2025-10-11T21:01:02.508Z"
+  },
+  {
+    "type": "log",
+    "text": "=== LOADING CUSTOMERS FOR QUOTES ===",
+    "timestamp": "2025-10-11T21:01:02.508Z"
+  },
+  {
+    "type": "log",
+    "text": "Company ID: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:02.508Z"
+  },
+  {
+    "type": "log",
+    "text": "🚀 UPDATED CODE: Loading advanced quote features...",
+    "timestamp": "2025-10-11T21:01:02.508Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Loading quote follow-ups with proper joins...",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Loading quote approval workflows with proper joins...",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "🎭 Modal State Changed: {showPresentedModal: false, showApprovalModal: false, showRejectionModal: false, quoteToPresent: undefined}",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "=== LOADING CUSTOMERS FOR QUOTES ===",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "Company ID: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "🚀 UPDATED CODE: Loading advanced quote features...",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Loading quote follow-ups with proper joins...",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "🔍 Loading quote approval workflows with proper joins...",
+    "timestamp": "2025-10-11T21:01:02.509Z"
+  },
+  {
+    "type": "log",
+    "text": "⚠️ Integrations not implemented yet - returning empty array",
+    "timestamp": "2025-10-11T21:01:02.525Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Settings loaded: {businessSettings: Object, companyProfile: Object, integrations: Array(0), id: c0c40131-5dcb-44f4-b3c9-500277d428ca, company_id: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e}",
+    "timestamp": "2025-10-11T21:01:02.525Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Authentication successful for: jeraldjsmith@gmail.com",
+    "timestamp": "2025-10-11T21:01:02.530Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded approval workflows with joins: 0",
+    "timestamp": "2025-10-11T21:01:02.652Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded 0 quote follow-ups with joins",
+    "timestamp": "2025-10-11T21:01:02.665Z"
+  },
+  {
+    "type": "log",
+    "text": "📊 Loaded 1 quote analytics records",
+    "timestamp": "2025-10-11T21:01:02.669Z"
+  },
+  {
+    "type": "log",
+    "text": "Customer fetch response: Response",
+    "timestamp": "2025-10-11T21:01:02.708Z"
+  },
+  {
+    "type": "log",
+    "text": "Response ok: true",
+    "timestamp": "2025-10-11T21:01:02.708Z"
+  },
+  {
+    "type": "log",
+    "text": "Response status: 200",
+    "timestamp": "2025-10-11T21:01:02.708Z"
+  },
+  {
+    "type": "log",
+    "text": "Customer data received: [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object]",
+    "timestamp": "2025-10-11T21:01:02.709Z"
+  },
+  {
+    "type": "log",
+    "text": "Number of customers: 14",
+    "timestamp": "2025-10-11T21:01:02.709Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded approval workflows with joins: 0",
+    "timestamp": "2025-10-11T21:01:02.746Z"
+  },
+  {
+    "type": "log",
+    "text": "📊 Loaded 1 quote analytics records",
+    "timestamp": "2025-10-11T21:01:02.750Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded 0 quote follow-ups with joins",
+    "timestamp": "2025-10-11T21:01:02.756Z"
+  },
+  {
+    "type": "log",
+    "text": "Customer fetch response: Response",
+    "timestamp": "2025-10-11T21:01:02.792Z"
+  },
+  {
+    "type": "log",
+    "text": "Response ok: true",
+    "timestamp": "2025-10-11T21:01:02.792Z"
+  },
+  {
+    "type": "log",
+    "text": "Response status: 200",
+    "timestamp": "2025-10-11T21:01:02.792Z"
+  },
+  {
+    "type": "log",
+    "text": "Customer data received: [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object]",
+    "timestamp": "2025-10-11T21:01:02.793Z"
+  },
+  {
+    "type": "log",
+    "text": "Number of customers: 14",
+    "timestamp": "2025-10-11T21:01:02.793Z"
+  },
+  {
+    "type": "log",
+    "text": "=== CAPTURED ERRORS REPORT ===",
+    "timestamp": "2025-10-11T21:01:03.721Z"
+  },
+  {
+    "type": "log",
+    "text": "Found 5 captured errors:",
+    "timestamp": "2025-10-11T21:01:03.721Z"
+  },
+  {
+    "type": "log",
+    "text": "\n--- ERROR 1 ---",
+    "timestamp": "2025-10-11T21:01:03.721Z"
+  },
+  {
+    "type": "log",
+    "text": "Time: 2025-10-11T21:01:02.091Z",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Message: GET https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a 406 ()",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "\n--- ERROR 2 ---",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Time: 2025-10-11T21:01:02.171Z",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Message: GET https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a 406 ()",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "\n--- ERROR 3 ---",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Time: 2025-10-11T21:01:02.223Z",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Message: PATCH https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=* 406 ()",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "\n--- ERROR 4 ---",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Time: 2025-10-11T21:01:02.262Z",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Message: PATCH https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=* 406 ()",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "\n--- ERROR 5 ---",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Time: 2025-10-11T21:01:02.422Z",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Message: GET https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a 406 ()",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "No warnings captured yet",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "\nFound 121 captured logs (showing last 10):",
+    "timestamp": "2025-10-11T21:01:03.722Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: \n--- ERROR 4 ---",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: Time: 2025-10-11T21:01:02.262Z",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: Message: PATCH https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=* 406 ()",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: \n--- ERROR 5 ---",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: Time: 2025-10-11T21:01:02.422Z",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: Message: GET https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a 406 ()",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: Stack: undefined",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: No warnings captured yet",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "2025-10-11T21:01:03.721Z: \nFound 121 captured logs (showing last 10):",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "\n=== END REPORT ===",
+    "timestamp": "2025-10-11T21:01:03.723Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 QuoteBuilder useEffect triggered, user: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Company ID from user: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from standardized pricing schema...",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🚀🚀🚀 NEW CODE RUNNING - TIMESTAMP: 2025-10-11T21:01:03.806Z 🚀🚀🚀",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:03.806Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from standardized pricing schema...",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🚀🚀🚀 NEW CODE RUNNING - TIMESTAMP: 2025-10-11T21:01:03.807Z 🚀🚀🚀",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 QuoteBuilder useEffect triggered, user: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Company ID from user: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from standardized pricing schema...",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🚀🚀🚀 NEW CODE RUNNING - TIMESTAMP: 2025-10-11T21:01:03.807Z 🚀🚀🚀",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 QuoteBuilder loadRates called with companyId: cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 User object: {id: 44475f47-be87-45ef-b465-2ecbbc0616ea, user_id: 44475f47-be87-45ef-b465-2ecbbc0616ea, email: jeraldjsmith@gmail.com, full_name: jeraldjsmith, first_name: }",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from standardized pricing schema...",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🚀🚀🚀 NEW CODE RUNNING - TIMESTAMP: 2025-10-11T21:01:03.807Z 🚀🚀🚀",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Loading rates from rate_cards table (industry standard like Jobber/ServiceTitan)...",
+    "timestamp": "2025-10-11T21:01:03.807Z"
+  },
+  {
+    "type": "log",
+    "text": "📋 Loaded employees: [Object, Object]",
+    "timestamp": "2025-10-11T21:01:03.932Z"
+  },
+  {
+    "type": "log",
+    "text": "⚠️ No rate_cards found, falling back to settings",
+    "timestamp": "2025-10-11T21:01:03.941Z"
+  },
+  {
+    "type": "log",
+    "text": "📋 Loaded employees: [Object, Object]",
+    "timestamp": "2025-10-11T21:01:04.018Z"
+  },
+  {
+    "type": "log",
+    "text": "⚠️ No rate_cards found, falling back to settings",
+    "timestamp": "2025-10-11T21:01:04.026Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+    "timestamp": "2025-10-11T21:01:04.098Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+    "timestamp": "2025-10-11T21:01:04.098Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Final calculated rates: {\n  \"hourly\": 75,\n  \"overtime\": 112.5,\n  \"emergency\": 112.5,\n  \"markup\": 25,\n  \"tax\": 8.25,\n  \"serviceRates\": [],\n  \"pricingRules\": [],\n  \"ratesByType\": {}\n}",
+    "timestamp": "2025-10-11T21:01:04.098Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Previous rates were: null",
+    "timestamp": "2025-10-11T21:01:04.098Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Rates updated successfully",
+    "timestamp": "2025-10-11T21:01:04.098Z"
+  },
+  {
+    "type": "log",
+    "text": "🎯 Auto-adding first labor row with loaded rates...",
+    "timestamp": "2025-10-11T21:01:04.111Z"
+  },
+  {
+    "type": "log",
+    "text": "🎯 First labor row with correct rates: {\n  \"id\": null,\n  \"employees\": 1,\n  \"hours_per_day\": 8,\n  \"days\": 1,\n  \"total_hours\": 8,\n  \"regular_hours\": 8,\n  \"overtime_hours\": 0,\n  \"line_total\": 600\n}",
+    "timestamp": "2025-10-11T21:01:04.112Z"
+  },
+  {
+    "type": "log",
+    "text": "⚠️ No rate_cards found, falling back to settings",
+    "timestamp": "2025-10-11T21:01:04.125Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+    "timestamp": "2025-10-11T21:01:04.187Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+    "timestamp": "2025-10-11T21:01:04.187Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Final calculated rates: {\n  \"hourly\": 75,\n  \"overtime\": 112.5,\n  \"emergency\": 112.5,\n  \"markup\": 25,\n  \"tax\": 8.25,\n  \"serviceRates\": [],\n  \"pricingRules\": [],\n  \"ratesByType\": {}\n}",
+    "timestamp": "2025-10-11T21:01:04.187Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Previous rates were: null",
+    "timestamp": "2025-10-11T21:01:04.187Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Rates updated successfully",
+    "timestamp": "2025-10-11T21:01:04.187Z"
+  },
+  {
+    "type": "log",
+    "text": "⚠️ No rate_cards found, falling back to settings",
+    "timestamp": "2025-10-11T21:01:04.223Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+    "timestamp": "2025-10-11T21:01:04.276Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+    "timestamp": "2025-10-11T21:01:04.277Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Final calculated rates: {\n  \"hourly\": 75,\n  \"overtime\": 112.5,\n  \"emergency\": 112.5,\n  \"markup\": 25,\n  \"tax\": 8.25,\n  \"serviceRates\": [],\n  \"pricingRules\": [],\n  \"ratesByType\": {}\n}",
+    "timestamp": "2025-10-11T21:01:04.277Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Previous rates were: null",
+    "timestamp": "2025-10-11T21:01:04.277Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Rates updated successfully",
+    "timestamp": "2025-10-11T21:01:04.277Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Loaded rates from settings: {laborRate: 75, overtimeMultiplier: 1.5, partsMarkup: 25, taxRate: 8.25}",
+    "timestamp": "2025-10-11T21:01:04.357Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Raw pricing settings: {\n  \"rateCards\": [],\n  \"laborRates\": {\n    \"standard\": 75,\n    \"overtime\": 112.5,\n    \"emergency\": 112.5,\n    \"weekend\": 93.75,\n    \"holiday\": 112.5\n  },\n  \"markupPercentages\": {\n    \"materials\": 25,\n    \"subcontractor\": 15\n  },\n  \"taxRate\": 8.25,\n  \"travelChargePerMile\": 0.65,\n  \"minimumTravelCharge\": 25,\n  \"cancellationFee\": 50,\n  \"emergencyRateMultiplier\": 1.5\n}",
+    "timestamp": "2025-10-11T21:01:04.357Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Final calculated rates: {\n  \"hourly\": 75,\n  \"overtime\": 112.5,\n  \"emergency\": 112.5,\n  \"markup\": 25,\n  \"tax\": 8.25,\n  \"serviceRates\": [],\n  \"pricingRules\": [],\n  \"ratesByType\": {}\n}",
+    "timestamp": "2025-10-11T21:01:04.357Z"
+  },
+  {
+    "type": "log",
+    "text": "💰 Previous rates were: null",
+    "timestamp": "2025-10-11T21:01:04.357Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ Rates updated successfully",
+    "timestamp": "2025-10-11T21:01:04.357Z"
+  },
+  {
+    "type": "log",
+    "text": "🎯 handleSaveAndAction CALLED: {action: send, hasHandleSendToCustomer: true, hasHandleExportPDF: true, formDataId: undefined, isEdit: false}",
+    "timestamp": "2025-10-11T21:01:08.157Z"
+  },
+  {
+    "type": "log",
+    "text": "🔄 Preparing quote data with labor conversion...",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 prepareQuoteDataWithLabor called",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 laborRows: [Object]",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 laborRows.length: 1",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 convertLaborRowsToQuoteItems called",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 laborRows to convert: [Object]",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 rates: {hourly: 75, overtime: 112.5, emergency: 112.5, markup: 25, tax: 8.25}",
+    "timestamp": "2025-10-11T21:01:08.158Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Converted labor row 0: {item_name: Labor 1, quantity: 8, rate: 75, item_type: labor, is_overtime: false}",
+    "timestamp": "2025-10-11T21:01:08.159Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 Total converted labor items: 1",
+    "timestamp": "2025-10-11T21:01:08.159Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 laborQuoteItems after conversion: [Object]",
+    "timestamp": "2025-10-11T21:01:08.159Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 laborQuoteItems.length: 1",
+    "timestamp": "2025-10-11T21:01:08.159Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 nonLaborItems: []",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 nonLaborItems.length: 0",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 combinedQuoteItems: [Object]",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 combinedQuoteItems.length: 1",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "🔧 labor_summary: {crew_size: 1, hours_per_day: 8, days: 1, regular_hours: 8, overtime_hours: 0}",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "🔄 Updated formData with labor: {title: TEST Time & Materials - Labor, description: , customer_id: , status: draft, notes: }",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "🔄 Calling onSubmit with labor items...",
+    "timestamp": "2025-10-11T21:01:08.160Z"
+  },
+  {
+    "type": "log",
+    "text": "✅ onSubmit returned: undefined",
+    "timestamp": "2025-10-11T21:01:08.163Z"
+  },
+  {
+    "type": "log",
+    "text": "📋 Quote to use for action: {quoteToUse: Object, hasId: false, action: send}",
+    "timestamp": "2025-10-11T21:01:08.163Z"
+  },
+  {
+    "type": "log",
+    "text": "⚠️ Action not executed: {action: send, hasHandler: true, hasQuoteId: false}",
+    "timestamp": "2025-10-11T21:01:08.163Z"
+  }
+]

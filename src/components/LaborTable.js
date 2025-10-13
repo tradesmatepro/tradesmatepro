@@ -196,10 +196,16 @@ export const LaborTable = ({
                 <tr key={index} className="border-b border-gray-100">
                   <td className="py-2 px-2">
                     <input
-                      type="number"
-                      min="1"
+                      type="text"
+                      inputMode="numeric"
                       value={row.employees || ''}
-                      onChange={(e) => updateLaborRow(index, 'employees', parseInt(e.target.value) || 1)}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        updateLaborRow(index, 'employees', val ? parseInt(val) : '');
+                      }}
+                      onBlur={(e) => {
+                        if (!e.target.value) updateLaborRow(index, 'employees', 1);
+                      }}
                       disabled={!isEditable}
                       className="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
                       placeholder="1"
@@ -207,11 +213,19 @@ export const LaborTable = ({
                   </td>
                   <td className="py-2 px-2">
                     <input
-                      type="number"
-                      min="0.1"
-                      step="0.1"
+                      type="text"
+                      inputMode="decimal"
                       value={row.hours_per_day || ''}
-                      onChange={(e) => updateLaborRow(index, 'hours_per_day', parseFloat(e.target.value) || 8)}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9.]/g, '');
+                        // Allow only one decimal point
+                        const parts = val.split('.');
+                        const cleaned = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : val;
+                        updateLaborRow(index, 'hours_per_day', cleaned ? parseFloat(cleaned) || cleaned : '');
+                      }}
+                      onBlur={(e) => {
+                        if (!e.target.value) updateLaborRow(index, 'hours_per_day', 8);
+                      }}
                       disabled={!isEditable}
                       className="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
                       placeholder="8"
@@ -219,10 +233,16 @@ export const LaborTable = ({
                   </td>
                   <td className="py-2 px-2">
                     <input
-                      type="number"
-                      min="1"
+                      type="text"
+                      inputMode="numeric"
                       value={row.days || ''}
-                      onChange={(e) => updateLaborRow(index, 'days', parseInt(e.target.value) || 1)}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/[^0-9]/g, '');
+                        updateLaborRow(index, 'days', val ? parseInt(val) : '');
+                      }}
+                      onBlur={(e) => {
+                        if (!e.target.value) updateLaborRow(index, 'days', 1);
+                      }}
                       disabled={!isEditable}
                       className="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
                       placeholder="1"

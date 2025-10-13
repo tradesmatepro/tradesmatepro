@@ -57,7 +57,7 @@ export const WorkOrderBuilder = ({
       try {
         if (!isEdit || !formData?.id) return;
         const res = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/work_order_required_skills?work_order_id=eq.${formData.id}&select=skill_id,required_level,quantity`, {
-          headers: { 'apikey': process.env.REACT_APP_SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_SERVICE_KEY}` }
+          headers: { 'apikey': process.env.REACT_APP_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}` }
         });
         if (!cancelled && res.ok) {
           const rows = await res.json();
@@ -84,12 +84,12 @@ export const WorkOrderBuilder = ({
       if (toDelete.length > 0) {
         const csv = toDelete.join(',');
         await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/work_order_required_skills?work_order_id=eq.${formData.id}&skill_id=in.(${csv})`, {
-          method: 'DELETE', headers: { 'apikey': process.env.REACT_APP_SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_SERVICE_KEY}` }
+          method: 'DELETE', headers: { 'apikey': process.env.REACT_APP_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}` }
         });
       }
       if (toUpsert.length > 0) {
         await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/work_order_required_skills`, {
-          method: 'POST', headers: { 'apikey': process.env.REACT_APP_SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=representation' }, body: JSON.stringify(toUpsert)
+          method: 'POST', headers: { 'apikey': process.env.REACT_APP_SUPABASE_ANON_KEY, 'Authorization': `Bearer ${process.env.REACT_APP_SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=representation' }, body: JSON.stringify(toUpsert)
         });
       }
       setOriginalRequiredSkills(next);

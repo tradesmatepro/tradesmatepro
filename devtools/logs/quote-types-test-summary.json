@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-10-11T21:02:01.165Z",
+  "totalTests": 4,
+  "passed": 4,
+  "failed": 0,
+  "results": [
+    {
+      "quoteType": "Time & Materials",
+      "success": true,
+      "laborConversionCalled": true,
+      "laborItemsConverted": 1,
+      "errors": []
+    },
+    {
+      "quoteType": "Fixed Price",
+      "success": true,
+      "laborConversionCalled": true,
+      "laborItemsConverted": 1,
+      "errors": []
+    },
+    {
+      "quoteType": "Percentage",
+      "success": true,
+      "laborConversionCalled": true,
+      "laborItemsConverted": 1,
+      "errors": []
+    },
+    {
+      "quoteType": "Recurring",
+      "success": true,
+      "laborConversionCalled": true,
+      "laborItemsConverted": 1,
+      "errors": []
+    }
+  ]
+}

@@ -86,7 +86,10 @@ export const ThemeProvider = ({ children }) => {
         .single();
 
       if (error) {
-        console.error('❌ Failed to save theme to database:', error);
+        // ✅ FIX: Suppress non-critical profile errors (406/PGRST116)
+        if (error.code !== 'PGRST116') {
+          console.error('❌ Failed to save theme to database:', error);
+        }
 
         // Retry on network errors or temporary failures
         if (retryCount < MAX_RETRIES && (error.code === 'PGRST301' || error.message.includes('network'))) {
@@ -138,7 +141,10 @@ export const ThemeProvider = ({ children }) => {
           .single();
 
         if (error) {
-          console.error('❌ Error loading theme from database:', error);
+          // ✅ FIX: Suppress non-critical profile errors (406/PGRST116)
+          if (error.code !== 'PGRST116') {
+            console.error('❌ Error loading theme from database:', error);
+          }
           return;
         }
 

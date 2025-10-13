@@ -92,12 +92,15 @@ serve(async (req) => {
             updated_at: now,
           })
           .eq("id", quoteId)
-          .eq("company_id", companyId);
+          .eq("company_id", companyId)
+          .select()
+          .single();
 
         if (error) {
           console.error("Failed to update work_order as sent:", error);
+          // Don't throw - email was already sent successfully
         } else {
-          console.log("✅ Quote status updated to 'sent'");
+          console.log("✅ Quote status updated to 'sent':", data);
         }
       } catch (e) {
         console.error("Failed to update work_order as sent:", e);

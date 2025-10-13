@@ -1,6 +1,6 @@
 // Documents Service for Attachments and Job Photos
 import { supabaseAdmin as supabase } from '../utils/supabaseClient';
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
 class DocumentsService {
   static getPathFromPublicUrl(publicUrl) {
@@ -64,8 +64,8 @@ class DocumentsService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/attachments`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -135,8 +135,8 @@ class DocumentsService {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/job_photos`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -168,7 +168,7 @@ class DocumentsService {
     try {
       let url = `${SUPABASE_URL}/rest/v1/attachments?company_id=eq.${companyId}&select=*,work_orders(id,title,customers(name)),users(full_name)&order=uploaded_at.desc`;
       if (jobId) url += `&work_order_id=eq.${jobId}`;
-      const response = await fetch(url, { headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Accept': 'application/json' } });
+      const response = await fetch(url, { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Accept': 'application/json' } });
       if (response.ok) {
         let attachments = await response.json();
         if (searchTerm) {
@@ -203,8 +203,8 @@ class DocumentsService {
 
       const response = await fetch(url, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -237,7 +237,7 @@ class DocumentsService {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
         method: 'PATCH',
-        headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
         body: JSON.stringify({ auto_tags: autoTags })
       });
       if (!response.ok) throw new Error('Failed to update tags');
@@ -264,8 +264,8 @@ class DocumentsService {
         `${SUPABASE_URL}/rest/v1/attachments?id=eq.${attachmentId}&company_id=eq.${companyId}`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Accept': 'application/json'
           }
         }
@@ -301,8 +301,8 @@ class DocumentsService {
         {
           method: 'DELETE',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );
@@ -326,8 +326,8 @@ class DocumentsService {
         `${SUPABASE_URL}/rest/v1/job_photos?id=eq.${photoId}&company_id=eq.${companyId}`,
         {
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
             'Accept': 'application/json'
           }
         }
@@ -363,8 +363,8 @@ class DocumentsService {
         {
           method: 'DELETE',
           headers: {
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           }
         }
       );
@@ -556,7 +556,7 @@ class DocumentsService {
       };
       const res = await fetch(`${SUPABASE_URL}/rest/v1/attachments`, {
         method: 'POST',
-        headers: { 'apikey': SUPABASE_SERVICE_KEY, 'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
         body: JSON.stringify(body)
       });
       if (!res.ok) throw new Error('Failed to create attachment record');

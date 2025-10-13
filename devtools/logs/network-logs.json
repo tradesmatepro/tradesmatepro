@@ -1,0 +1,1406 @@
+[
+  {
+    "type": "request",
+    "method": "POST",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/token?grant_type=password",
+    "timestamp": "2025-10-11T19:37:17.737Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/token?grant_type=password",
+    "timestamp": "2025-10-11T19:37:18.438Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:18.447Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:19.111Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:19.112Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:19.460Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:19.461Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:19.732Z"
+  },
+  {
+    "type": "request",
+    "method": "POST",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:19.740Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:19.740Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:19.945Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:19.973Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:19.974Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/user_dashboard_settings?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:19.974Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/user_dashboard_settings?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:19.975Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:20.014Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=*&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:20.016Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/user_dashboard_settings?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:20.246Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.280Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.280Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.281Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.282Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.282Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.282Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.282Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=*&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:20.321Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:20.364Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:20.365Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/user_dashboard_settings?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:20.398Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.558Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.558Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:20.559Z"
+  },
+  {
+    "type": "response",
+    "status": 400,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.561Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:20.574Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:20.575Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.640Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.641Z"
+  },
+  {
+    "type": "response",
+    "status": 400,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.645Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:20.677Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.730Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=amount,received_at&received_at=gte.2025-10-01T07:00:00.000Z&received_at=lt.2025-11-01T07:00:00.000Z&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.730Z"
+  },
+  {
+    "type": "response",
+    "status": 400,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.737Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.742Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.743Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=amount,received_at&received_at=gte.2025-10-01T07:00:00.000Z&received_at=lt.2025-11-01T07:00:00.000Z&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.900Z"
+  },
+  {
+    "type": "response",
+    "status": 400,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/inventory_stock?select=*%2Cinventory_items%28*%29%2Cinventory_locations%28*%29&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.900Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.900Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.901Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=amount,received_at&received_at=gte.2025-10-01T07:00:00.000Z&received_at=lt.2025-11-01T07:00:00.000Z&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:20.901Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.101Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=amount,received_at&received_at=gte.2025-10-01T07:00:00.000Z&received_at=lt.2025-11-01T07:00:00.000Z&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.102Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.103Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=amount,received_at&received_at=gte.2025-10-01T07:00:00.000Z&received_at=lt.2025-11-01T07:00:00.000Z&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.103Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.103Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.103Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=amount,received_at&received_at=gte.2025-10-01T07:00:00.000Z&received_at=lt.2025-11-01T07:00:00.000Z&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.228Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.229Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.229Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.230Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.402Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.403Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/invoices?select=id,total_amount,status,due_date&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.403Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.403Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.524Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/invoices?select=id,total_amount,status,due_date&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.525Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.632Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/invoices?select=id,total_amount,status,due_date&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.633Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/invoices?select=id,total_amount,status,due_date&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.633Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=invoice_id,amount&invoice_id=in.(d9513bca-ccf6-43e3-97a2-8774e9ca4fad,bda3ce90-630a-46f7-9b37-7c483fafb4bf,c416a910-9d8e-4c19-bbe1-ca25a1a32ad2,560128f2-b530-4512-8379-44143262879c)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.634Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/invoices?select=id,total_amount,status,due_date&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.741Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=invoice_id,amount&invoice_id=in.(d9513bca-ccf6-43e3-97a2-8774e9ca4fad,bda3ce90-630a-46f7-9b37-7c483fafb4bf,c416a910-9d8e-4c19-bbe1-ca25a1a32ad2,560128f2-b530-4512-8379-44143262879c)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.742Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=invoice_id,amount&invoice_id=in.(d9513bca-ccf6-43e3-97a2-8774e9ca4fad,bda3ce90-630a-46f7-9b37-7c483fafb4bf,c416a910-9d8e-4c19-bbe1-ca25a1a32ad2,560128f2-b530-4512-8379-44143262879c)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.815Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/invoices?select=id,total_amount,status,due_date&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.816Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(sent,approved)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.817Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=invoice_id,amount&invoice_id=in.(d9513bca-ccf6-43e3-97a2-8774e9ca4fad,bda3ce90-630a-46f7-9b37-7c483fafb4bf,c416a910-9d8e-4c19-bbe1-ca25a1a32ad2,560128f2-b530-4512-8379-44143262879c)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.817Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=invoice_id,amount&invoice_id=in.(d9513bca-ccf6-43e3-97a2-8774e9ca4fad,bda3ce90-630a-46f7-9b37-7c483fafb4bf,c416a910-9d8e-4c19-bbe1-ca25a1a32ad2,560128f2-b530-4512-8379-44143262879c)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.920Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(sent,approved)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:21.920Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(sent,approved)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.022Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/payments?select=invoice_id,amount&invoice_id=in.(d9513bca-ccf6-43e3-97a2-8774e9ca4fad,bda3ce90-630a-46f7-9b37-7c483fafb4bf,c416a910-9d8e-4c19-bbe1-ca25a1a32ad2,560128f2-b530-4512-8379-44143262879c)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.022Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.023Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(sent,approved)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.024Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(sent,approved)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.212Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.212Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.711Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&created_at=lt.2025-10-11&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.712Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=in.(sent,approved)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.757Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.758Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.792Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&created_at=lt.2025-10-11&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.793Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&created_at=lt.2025-10-11&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.835Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.sent&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.836Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.898Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&created_at=lt.2025-10-11&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.898Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&created_at=lt.2025-10-11&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.931Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.sent&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.932Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.sent&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.974Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:22.975Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&created_at=lt.2025-10-11&status=in.(scheduled,in_progress)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.036Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.sent&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.037Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.sent&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.078Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.079Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.085Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.scheduled&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.086Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.165Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.scheduled&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.166Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.sent&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.185Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.186Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.scheduled&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.225Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.in_progress&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.225Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.approved&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.294Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.scheduled&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.295Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.scheduled&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.300Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.in_progress&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.301Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.in_progress&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.331Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,created_by&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.331Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.scheduled&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.390Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.in_progress&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.391Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.in_progress&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.436Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,created_by&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.437Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,created_by&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.445Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id,name,first_name,last_name&id=in.(44475f47-be87-45ef-b465-2ecbbc0616ea)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.446Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id&status=eq.in_progress&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.506Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,created_by&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.507Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,created_by&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.528Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id,name,first_name,last_name&id=in.(44475f47-be87-45ef-b465-2ecbbc0616ea)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.530Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id,name,first_name,last_name&id=in.(44475f47-be87-45ef-b465-2ecbbc0616ea)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.587Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=created_at,updated_at&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.587Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,created_by&status=eq.completed&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.602Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id,name,first_name,last_name&id=in.(44475f47-be87-45ef-b465-2ecbbc0616ea)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.602Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id,name,first_name,last_name&id=in.(44475f47-be87-45ef-b465-2ecbbc0616ea)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.657Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=created_at,updated_at&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.657Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=created_at,updated_at&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.710Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,title,status,updated_at,customers(name)&order=updated_at.desc&limit=5&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.711Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id,name,first_name,last_name&id=in.(44475f47-be87-45ef-b465-2ecbbc0616ea)&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.750Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=created_at,updated_at&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.751Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=created_at,updated_at&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.792Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,title,status,updated_at,customers(name)&order=updated_at.desc&limit=5&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.794Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,title,status,updated_at,customers(name)&order=updated_at.desc&limit=5&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.836Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=created_at,updated_at&status=in.(scheduled,in_progress,completed)&created_at=gte.2025-10-01&created_at=lte.2025-11-01&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.893Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,title,status,updated_at,customers(name)&order=updated_at.desc&limit=5&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.894Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,title,status,updated_at,customers(name)&order=updated_at.desc&limit=5&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:23.944Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=id,title,status,updated_at,customers(name)&order=updated_at.desc&limit=5&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:24.017Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/user",
+    "timestamp": "2025-10-11T19:37:33.167Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/user",
+    "timestamp": "2025-10-11T19:37:33.388Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/user",
+    "timestamp": "2025-10-11T19:37:33.390Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/user",
+    "timestamp": "2025-10-11T19:37:33.500Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.504Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.504Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.504Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.504Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.504Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/user",
+    "timestamp": "2025-10-11T19:37:33.669Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.676Z"
+  },
+  {
+    "type": "response",
+    "status": 406,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.676Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.787Z"
+  },
+  {
+    "type": "response",
+    "status": 406,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.789Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/auth/v1/user",
+    "timestamp": "2025-10-11T19:37:33.789Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:33.790Z"
+  },
+  {
+    "type": "request",
+    "method": "PATCH",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:33.790Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:33.790Z"
+  },
+  {
+    "type": "request",
+    "method": "PATCH",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:33.790Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.790Z"
+  },
+  {
+    "type": "response",
+    "status": 406,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=preferences&user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.876Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:33.878Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:33.879Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/users?select=id%2Ccompany_id%2Crole%2Cstatus%2Ccreated_at%2Cupdated_at&auth_user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a",
+    "timestamp": "2025-10-11T19:37:33.884Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:33.884Z"
+  },
+  {
+    "type": "response",
+    "status": 406,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:33.917Z"
+  },
+  {
+    "type": "response",
+    "status": 406,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?user_id=eq.268b99b5-907d-4b48-ad0e-92cdd4ac388a&select=*",
+    "timestamp": "2025-10-11T19:37:34.013Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:34.014Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.014Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.017Z"
+  },
+  {
+    "type": "request",
+    "method": "POST",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:34.018Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:34.019Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/profiles?select=avatar_url%2Cpreferences%2Ctimezone%2Clanguage%2Cnotification_preferences&user_id=eq.44475f47-be87-45ef-b465-2ecbbc0616ea",
+    "timestamp": "2025-10-11T19:37:34.221Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:34.222Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:34.222Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.222Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.224Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=*&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:34.225Z"
+  },
+  {
+    "type": "request",
+    "method": "POST",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:34.244Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=*,customers(name,email,phone)&status=in.(draft,sent,presented,changes_requested,follow_up,rejected,expired,cancelled)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.322Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/customers?select=*,customer_tag_assignments(customer_tags(*))&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.323Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_analytics?select=*",
+    "timestamp": "2025-10-11T19:37:34.323Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_follow_ups?select=*&order=scheduled_date.asc",
+    "timestamp": "2025-10-11T19:37:34.323Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_approval_workflows?select=*&order=created_at.desc",
+    "timestamp": "2025-10-11T19:37:34.323Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=*,customers(name,email,phone)&status=in.(draft,sent,presented,changes_requested,follow_up,rejected,expired,cancelled)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.323Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/customers?select=*,customer_tag_assignments(customer_tags(*))&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.324Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_analytics?select=*",
+    "timestamp": "2025-10-11T19:37:34.324Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_follow_ups?select=*&order=scheduled_date.asc",
+    "timestamp": "2025-10-11T19:37:34.324Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_approval_workflows?select=*&order=created_at.desc",
+    "timestamp": "2025-10-11T19:37:34.324Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:34.324Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:34.325Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=name&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.341Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/companies?select=*&id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&limit=1",
+    "timestamp": "2025-10-11T19:37:34.341Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:34.350Z"
+  },
+  {
+    "type": "request",
+    "method": "POST",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:34.350Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:34.439Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:34.441Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rpc/is_onboarding_complete",
+    "timestamp": "2025-10-11T19:37:34.454Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_analytics?select=*",
+    "timestamp": "2025-10-11T19:37:34.490Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_follow_ups?select=*&order=scheduled_date.asc",
+    "timestamp": "2025-10-11T19:37:34.506Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_approval_workflows?select=*&order=created_at.desc",
+    "timestamp": "2025-10-11T19:37:34.510Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:34.525Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=*,customers(name,email,phone)&status=in.(draft,sent,presented,changes_requested,follow_up,rejected,expired,cancelled)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.541Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&order=created_at.desc&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29&limit=20",
+    "timestamp": "2025-10-11T19:37:34.542Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:34.546Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_analytics?select=*",
+    "timestamp": "2025-10-11T19:37:34.586Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_approval_workflows?select=*&order=created_at.desc",
+    "timestamp": "2025-10-11T19:37:34.601Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/quote_follow_ups?select=*&order=scheduled_date.asc",
+    "timestamp": "2025-10-11T19:37:34.605Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/customers?select=*,customer_tag_assignments(customer_tags(*))&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.633Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/notifications?select=id&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&status=eq.pending&or=%28user_id.eq.44475f47-be87-45ef-b465-2ecbbc0616ea%2Cuser_id.is.null%29",
+    "timestamp": "2025-10-11T19:37:34.639Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/work_orders?select=*,customers(name,email,phone)&status=in.(draft,sent,presented,changes_requested,follow_up,rejected,expired,cancelled)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.651Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/customers?select=*,customer_tag_assignments(customer_tags(*))&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:34.714Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id,user_id,job_title,hourly_rate,overtime_rate,users(id,first_name,last_name,name,role,status)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.522Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id,user_id,job_title,hourly_rate,overtime_rate,users(id,first_name,last_name,name,role,status)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.523Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.523Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.523Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.524Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.524Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id,user_id,job_title,hourly_rate,overtime_rate,users(id,first_name,last_name,name,role,status)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.692Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.692Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.694Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/employees?select=id,user_id,job_title,hourly_rate,overtime_rate,users(id,first_name,last_name,name,role,status)&order=created_at.desc&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.768Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.787Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.787Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.801Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.866Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.867Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.890Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/rate_cards?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e&is_active=eq.true&effective_date=lte.2025-10-11&or=%28expiration_date.is.null%2Cexpiration_date.gte.2025-10-11%29&order=effective_date.desc",
+    "timestamp": "2025-10-11T19:37:50.965Z"
+  },
+  {
+    "type": "request",
+    "method": "GET",
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.966Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:50.992Z"
+  },
+  {
+    "type": "response",
+    "status": 200,
+    "url": "https://cxlqzejzraczumqmsrcx.supabase.co/rest/v1/settings?select=*&company_id=eq.cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e",
+    "timestamp": "2025-10-11T19:37:51.067Z"
+  }
+]

@@ -23,6 +23,7 @@ const LOGS_MD_PATH = path.join(__dirname, 'logs.md');
 const AI_CONTEXT_PATH = path.join(ERROR_LOGS_DIR, 'ai_context.json');
 const AI_COMMANDS_PATH = path.join(DEVTOOLS_DIR, 'ai_commands.json');
 const AI_RESPONSES_PATH = path.join(DEVTOOLS_DIR, 'ai_responses.json');
+const SMART_LOGS_PATH = path.join(ERROR_LOGS_DIR, 'smart_logs_latest.json');
 
 // Ensure directories exist
 [ERROR_LOGS_DIR, DEVTOOLS_DIR].forEach(dir => {
@@ -203,27 +204,73 @@ const server = http.createServer((req, res) => {
   // Get latest errors
   if (req.url === '/latest' && req.method === 'GET') {
     const latestPath = path.join(ERROR_LOGS_DIR, 'latest.json');
-    
+
     if (fs.existsSync(latestPath)) {
       const data = fs.readFileSync(latestPath, 'utf8');
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(data);
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ 
-        ok: false, 
-        error: 'No errors captured yet' 
+      res.end(JSON.stringify({
+        ok: false,
+        error: 'No errors captured yet'
       }));
     }
-    
+
     return;
   }
-  
+
+  // Export smart logs (from SmartLoggingService)
+  if (req.url === '/export-smart-logs' && req.method === 'POST') {
+    let body = '';
+
+    req.on('data', chunk => {
+      body += chunk.toString();
+    });
+
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+
+        // Save to smart_logs_latest.json
+        fs.writeFileSync(SMART_LOGS_PATH, JSON.stringify(data, null, 2));
+
+        console.log(`📊 Smart logs exported: ${data.totalLogs} total logs`);
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, message: 'Smart logs exported' }));
+      } catch (err) {
+        console.error('❌ Failed to export smart logs:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: err.message }));
+      }
+    });
+
+    return;
+  }
+
+  // Get smart logs (for AI to read)
+  if (req.url === '/smart-logs' && req.method === 'GET') {
+    if (fs.existsSync(SMART_LOGS_PATH)) {
+      const data = fs.readFileSync(SMART_LOGS_PATH, 'utf8');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(data);
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        ok: false,
+        error: 'No smart logs captured yet. Make sure SmartLoggingService is running.'
+      }));
+    }
+
+    return;
+  }
+
   // 404
   res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ 
-    ok: false, 
-    error: 'Not found' 
+  res.end(JSON.stringify({
+    ok: false,
+    error: 'Not found'
   }));
 });
 
@@ -233,9 +280,11 @@ server.listen(PORT, () => {
   console.log(`📁 Saving errors to: ${ERROR_LOGS_DIR}`);
   console.log(`📝 Appending to: ${LOGS_MD_PATH}`);
   console.log(`\nEndpoints:`);
-  console.log(`  GET  /health       - Health check`);
-  console.log(`  POST /save-errors  - Save errors from frontend`);
-  console.log(`  GET  /latest       - Get latest errors\n`);
+  console.log(`  GET  /health             - Health check`);
+  console.log(`  POST /save-errors        - Save errors from frontend`);
+  console.log(`  GET  /latest             - Get latest errors`);
+  console.log(`  POST /export-smart-logs  - Export smart logs from frontend`);
+  console.log(`  GET  /smart-logs         - Get smart logs for AI analysis\n`);
 });
 
 // ============================================

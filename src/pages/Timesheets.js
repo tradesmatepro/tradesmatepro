@@ -8,7 +8,7 @@ import ModernCard from '../components/Common/ModernCard';
 import '../styles/modern-enhancements.css';
 import TimesheetFormModal from '../components/TimesheetFormModal';
 import PTORequestModal from '../components/PTORequestModal';
-import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/env';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 import { supabase } from '../utils/supabaseClient';
 
 import {
@@ -97,8 +97,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
   const supaFetch = async (endpoint, options = {}, companyId = null) => {
     const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
     const headers = {
-      'apikey': SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       'Content-Type': 'application/json',
       ...options.headers
     };
@@ -146,8 +146,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
 
       const response = await fetch(query, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -248,8 +248,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
       // Use correct column names from schema: job_title instead of title
       const response = await fetch(`${SUPABASE_URL}/rest/v1/work_orders?company_id=eq.${user.company_id}&select=id,title,customer_id&order=title`, {
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Accept': 'application/json'
         }
       });
@@ -372,8 +372,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           },
           body: JSON.stringify({
             status: update.status,
@@ -410,8 +410,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
           },
           body: JSON.stringify({
             status: update.status,
@@ -722,8 +722,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify(timesheetData)
@@ -763,8 +763,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify(timesheetData)
@@ -792,8 +792,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/employee_timesheets?id=eq.${timesheet.id}`, {
         method: 'DELETE',
         headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
 
@@ -820,8 +820,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
@@ -854,8 +854,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
@@ -891,8 +891,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify({
@@ -2224,8 +2224,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
-                        'apikey': SUPABASE_SERVICE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
                       },
                       body: JSON.stringify({
                         p_company_id: user.company_id,
@@ -2550,8 +2550,8 @@ const Timesheets = ({ initialTab, showAdminTabs = false }) => {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
-                    'apikey': SUPABASE_SERVICE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
                     'Prefer': 'return=minimal'
                   },
                   body: JSON.stringify({

@@ -33,6 +33,12 @@ class SettingsService {
         delete businessUpdates.next_invoice_number;
       }
 
+      // Map timezone to companies table (needed for smart scheduling)
+      if (Object.prototype.hasOwnProperty.call(businessUpdates, 'timezone')) {
+        companyUpdates.timezone = businessUpdates.timezone;
+        delete businessUpdates.timezone;
+      }
+
       // 2) If any company-level fields present, update companies table
       if (Object.keys(companyUpdates).length > 0) {
         const { error: compErr } = await supabase

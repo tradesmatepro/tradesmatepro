@@ -1,7 +1,7 @@
 // WorkOrderCompletionService
 // Phase 2 wiring: persist checklist, photos, signatures on job completion
 
-import { supaFetch, SUPABASE_URL, SUPABASE_SERVICE_KEY } from '../utils/supaFetch';
+import { supaFetch, SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/supaFetch';
 import { supabase } from '../utils/supabaseClient';
 import DocumentsService from './DocumentsService';
 import CloseoutPDFService from './CloseoutPDFService';
