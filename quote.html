@@ -880,11 +880,11 @@
           all_keys: Object.keys(quote)
         });
 
-        // Load company settings for approval workflow
-        // Use direct fetch to avoid 406 error
+        // Load company settings from companies table (includes scheduling settings)
+        console.log('🔍 DEBUG - Loading company settings for:', quote.company_id);
         try {
           const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/settings?company_id=eq.${quote.company_id}&select=*`,
+            `${SUPABASE_URL}/rest/v1/companies?id=eq.${quote.company_id}&select=*`,
             {
               headers: {
                 'apikey': SUPABASE_ANON_KEY,
@@ -895,31 +895,61 @@
             }
           );
 
+          console.log('🔍 DEBUG - Companies fetch response:', {
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText
+          });
+
           if (response.ok) {
-            const settingsArray = await response.json();
-            if (settingsArray && settingsArray.length > 0) {
-              companySettings = settingsArray[0];
-              console.log('✅ Company settings loaded:', companySettings);
+            const companiesArray = await response.json();
+            console.log('🔍 DEBUG - Companies data:', companiesArray);
+
+            if (companiesArray && companiesArray.length > 0) {
+              const company = companiesArray[0];
+              companySettings = {
+                // Approval wizard settings (use defaults if not in companies table)
+                require_signature_on_approval: true,
+                require_terms_acceptance: true,
+                require_deposit_on_approval: true,
+                allow_customer_scheduling: true,
+                terms_and_conditions_text: 'TERMS AND CONDITIONS\n\n1. Payment: Full payment is due upon completion.\n2. Warranty: All work guaranteed for 90 days.\n3. Cancellation: 48 hours notice required.\n\nBy accepting this quote, you agree to these terms.',
+                deposit_type: 'percentage',
+                default_deposit_percentage: 25,
+                default_deposit_amount: 0,
+
+                // Scheduling settings from companies table
+                business_hours_start: company.business_hours_start,
+                business_hours_end: company.business_hours_end,
+                working_days: company.working_days,
+                timezone: company.timezone,
+                job_buffer_minutes: company.job_buffer_minutes,
+                default_buffer_before_minutes: company.default_buffer_before_minutes,
+                default_buffer_after_minutes: company.default_buffer_after_minutes,
+                min_advance_booking_hours: company.min_advance_booking_hours,
+                max_advance_booking_days: company.max_advance_booking_days
+              };
+
+              console.log('✅ Company settings loaded:', {
+                business_hours: `${companySettings.business_hours_start} - ${companySettings.business_hours_end}`,
+                working_days: companySettings.working_days,
+                timezone: companySettings.timezone,
+                buffers: {
+                  job: companySettings.job_buffer_minutes,
+                  before: companySettings.default_buffer_before_minutes,
+                  after: companySettings.default_buffer_after_minutes
+                }
+              });
             } else {
-              throw new Error('No settings found');
+              throw new Error('No company found in database');
             }
           } else {
-            throw new Error(`Settings fetch failed: ${response.status}`);
+            throw new Error(`Companies fetch failed: ${response.status} ${response.statusText}`);
           }
         } catch (settingsError) {
-          console.warn('⚠️ Could not load company settings:', settingsError);
-          // Use defaults if settings not found
-          companySettings = {
-            require_signature_on_approval: true,  // Enable by default for testing
-            require_terms_acceptance: true,
-            require_deposit_on_approval: true,
-            allow_customer_scheduling: true,
-            terms_and_conditions_text: 'TERMS AND CONDITIONS\n\n1. Payment: Full payment is due upon completion.\n2. Warranty: All work guaranteed for 90 days.\n3. Cancellation: 48 hours notice required.\n\nBy accepting this quote, you agree to these terms.',
-            deposit_type: 'percentage',
-            default_deposit_percentage: 25,
-            default_deposit_amount: 0
-          };
-          console.log('📋 Using default settings:', companySettings);
+          console.error('❌ CRITICAL: Could not load company settings:', settingsError);
+          console.error('❌ Cannot schedule without company settings!');
+          throw settingsError; // Don't continue without settings
         }
 
         // Check if quote has already been processed
@@ -1599,9 +1629,29 @@
         }
 
         // Initialize the scheduling widget
-        console.log('🔍 About to create SchedulingWidget...');
-        console.log('🔍 SchedulingWidget available?', typeof SchedulingWidget);
-        console.log('🔍 window.SchedulingWidget available?', typeof window.SchedulingWidget);
+        console.log('🔍 DEBUG - About to create SchedulingWidget with:');
+        console.log('  Company ID:', quoteData.company_id);
+        console.log('  Employee IDs:', employeeIds);
+        console.log('  Duration (minutes):', durationMinutes);
+        console.log('  Duration (hours):', durationMinutes / 60);
+        console.log('  Company Settings:', {
+          business_hours: `${companySettings.business_hours_start} - ${companySettings.business_hours_end}`,
+          working_days: companySettings.working_days,
+          timezone: companySettings.timezone
+        });
+
+        // Calculate expected last slot time
+        if (companySettings.business_hours_start && companySettings.business_hours_end) {
+          const [startHour, startMin] = companySettings.business_hours_start.split(':').map(Number);
+          const [endHour, endMin] = companySettings.business_hours_end.split(':').map(Number);
+          const businessMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
+          const lastSlotHour = startHour + Math.floor((businessMinutes - durationMinutes) / 60);
+          const lastSlotMin = startMin + ((businessMinutes - durationMinutes) % 60);
+          console.log('  📊 Business hours:', businessMinutes, 'minutes');
+          console.log('  📊 Job duration:', durationMinutes, 'minutes');
+          console.log('  📊 Available window:', businessMinutes - durationMinutes, 'minutes');
+          console.log('  📊 Expected LAST slot:', `${String(lastSlotHour).padStart(2, '0')}:${String(lastSlotMin).padStart(2, '0')}`);
+        }
 
         schedulingWidget = new SchedulingWidget({
           containerId: 'scheduling-widget-container',
