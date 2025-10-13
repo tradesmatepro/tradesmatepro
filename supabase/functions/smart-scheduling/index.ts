@@ -363,8 +363,11 @@ async function findAvailableTimeSlots(
       const dayEnd = new Date(currentDay)
       dayEnd.setUTCHours(endHour - timezoneOffset, endMinute, 0, 0)
 
-      // Make sure we don't start before actualStartDate
-      const effectiveStart = new Date(Math.max(dayStart.getTime(), actualStartDate.getTime()))
+      // Apply buffer relative to business open so earliest slot respects prep/travel
+      const bufferBeforeMs = ((settings.default_buffer_before_minutes ?? settings.job_buffer_minutes ?? 0) * 60 * 1000)
+
+      // Make sure we don't start before actualStartDate and respect opening buffer
+      const effectiveStart = new Date(Math.max(dayStart.getTime() + bufferBeforeMs, actualStartDate.getTime()))
 
       // Round to next 15-minute interval
       const roundedStart = roundToNext15Minutes(effectiveStart)
