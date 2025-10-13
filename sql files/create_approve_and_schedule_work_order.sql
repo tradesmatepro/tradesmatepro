@@ -69,8 +69,11 @@ begin
     where id = p_quote_id;
   end if;
 
-  -- Use provided preferred employees first, up to crew size
-  v_assignees := coalesce(p_employee_ids, '{}')[:v_required_crew];
+  -- Use provided preferred employees first
+  v_assignees := coalesce(p_employee_ids, '{}');
+  if coalesce(array_length(v_assignees, 1), 0) > v_required_crew then
+    v_assignees := v_assignees[1:v_required_crew];
+  end if;
 
   -- Verify availability for each selected employee
   foreach v_employee_id in array v_assignees loop
@@ -106,7 +109,7 @@ begin
         )
       limit v_missing
     )
-    select coalesce(array_agg(employee_id), '{}') into strict v_assignees
+    select coalesce(array_agg(employee_id), '{}') into v_assignees
     from (
       select unnest(v_assignees) as employee_id
       union all
