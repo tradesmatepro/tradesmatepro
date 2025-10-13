@@ -831,12 +831,14 @@
             `;
 
             slots.forEach((slot, idx) => {
+              // Selection is based on start time only (deduped); slot contains employee_ids array
               const isSelected = this.selectedSlot &&
-                this.selectedSlot.start_time.getTime() === slot.start_time.getTime() &&
-                this.selectedSlot.employee_id === slot.employee_id;
+                this.selectedSlot.start_time.getTime() === slot.start_time.getTime();
 
-              const slotId = `slot-${slot.start_time.getTime()}-${slot.employee_id}`;
+              const slotId = `slot-${slot.start_time.getTime()}`;
               this[slotId] = slot;
+
+              const techsAvailable = Array.isArray(slot.employee_ids) ? slot.employee_ids.length : 1;
 
               html += `
                 <button
@@ -851,6 +853,7 @@
                     </svg>
                     <span style="font-size: 0.875rem;">${this.formatSlotTime(slot.start_time)}</span>
                   </div>
+                  <div style="font-size: 0.7rem; color: #6b7280; margin-top: 0.25rem;">${techsAvailable} tech${techsAvailable !== 1 ? 's' : ''} available</div>
                 </button>
               `;
             });
@@ -1443,6 +1446,13 @@
           </button>
         </div>
 
+        <!-- Floating confirm button for faster UX -->
+        <div id="floating-confirm" style="display:none; position: fixed; bottom: 16px; right: 16px; z-index: 1000;">
+          <button onclick="confirmSchedule()" style="padding: 0.75rem 1rem; background: #16a34a; color: white; border: none; border-radius: 9999px; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);">
+            Confirm Selected Time
+          </button>
+        </div>
+
 
       `;
     }
@@ -1718,9 +1728,13 @@
           onSlotSelected: (slot) => {
             selectedSlot = slot;
             console.log('📅 Slot selected:', slot);
-            // Enable confirm button
-            document.getElementById('confirm-schedule-btn').disabled = false;
-            document.getElementById('schedule-actions').style.display = 'block';
+            // Enable confirm buttons
+            const btn = document.getElementById('confirm-schedule-btn');
+            if (btn) btn.disabled = false;
+            const actions = document.getElementById('schedule-actions');
+            if (actions) actions.style.display = 'block';
+            const floatBtn = document.getElementById('floating-confirm');
+            if (floatBtn) floatBtn.style.display = 'flex';
           },
           onAutoSchedule: (slot) => {
             selectedSlot = slot;
@@ -1773,10 +1787,22 @@
         return;
       }
 
+      // Determine crew size needed from quote
+      const crewSize = (quoteData && quoteData.labor_summary && Number(quoteData.labor_summary.crew_size)) || 1;
+      const availableTechs = Array.isArray(selectedSlot.employee_ids) ? selectedSlot.employee_ids : (selectedSlot.employee_id ? [selectedSlot.employee_id] : []);
+
+      if (availableTechs.length < crewSize) {
+        alert(`Not enough technicians available for this time. Needed ${crewSize}, available ${availableTechs.length}. Please pick a different time.`);
+        return;
+      }
+
+      const assignedTechs = availableTechs.slice(0, crewSize);
+
       approvalData.scheduledTime = {
         start_time: selectedSlot.start_time.toISOString(),
         end_time: selectedSlot.end_time.toISOString(),
-        employee_id: selectedSlot.employee_id,
+        employee_ids: assignedTechs,
+        crew_size: crewSize,
         auto_scheduled: false
       };
 
@@ -1807,13 +1833,13 @@
 
         console.log('✅ Quote approved successfully');
 
-        // If customer scheduled a time, create schedule event
+        // If customer scheduled a time, create schedule events for assigned crew
         if (approvalData.scheduledTime) {
-          console.log('📅 Creating schedule event...');
+          console.log('📅 Creating schedule events for crew...', approvalData.scheduledTime);
 
-          const scheduleData = {
+          const crewIds = approvalData.scheduledTime.employee_ids || [];
+          const base = {
             work_order_id: quoteId,
-            employee_id: approvalData.scheduledTime.employee_id,
             start_time: approvalData.scheduledTime.start_time,
             end_time: approvalData.scheduledTime.end_time,
             title: `Customer Scheduled: Work Order #${quoteData.work_order_number || quoteId.slice(0, 8)}`,
@@ -1822,16 +1848,18 @@
             auto_scheduled: approvalData.scheduledTime.auto_scheduled || false
           };
 
+          const rows = crewIds.map(empId => ({ ...base, employee_id: empId }));
+
           const { error: scheduleError } = await supabase
             .from('schedule_events')
-            .insert(scheduleData);
+            .insert(rows);
 
           if (scheduleError) {
-            console.error('❌ Error creating schedule event:', scheduleError);
+            console.error('❌ Error creating schedule events:', scheduleError);
             // Don't fail the whole approval if scheduling fails
             alert('Quote approved, but there was an issue creating the schedule. We\'ll contact you to confirm the time.');
           } else {
-            console.log('✅ Schedule event created successfully');
+            console.log(`✅ Created ${rows.length} schedule event(s) for crew`, crewIds);
           }
         }
 
