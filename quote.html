@@ -870,6 +870,15 @@
         const quote = quotes[0];
         quoteData = quote;
         console.log('Quote loaded:', quote);
+        console.log('🔍 DEBUG - Quote fields:', {
+          id: quote.id,
+          status: quote.status,
+          total_amount: quote.total_amount,
+          labor_summary: quote.labor_summary,
+          has_labor_summary: !!quote.labor_summary,
+          labor_summary_type: typeof quote.labor_summary,
+          all_keys: Object.keys(quote)
+        });
 
         // Load company settings for approval workflow
         // Use direct fetch to avoid 406 error
@@ -1523,6 +1532,13 @@
         // Calculate duration from quote labor summary
         let durationMinutes = 480; // Default to 8 hours
 
+        console.log('🔍 DEBUG - Checking labor_summary:', {
+          has_labor_summary: !!quoteData.labor_summary,
+          labor_summary_value: quoteData.labor_summary,
+          labor_summary_type: typeof quoteData.labor_summary,
+          quote_keys: Object.keys(quoteData)
+        });
+
         if (quoteData.labor_summary) {
           const laborSummary = quoteData.labor_summary;
           const crewSize = laborSummary.crew_size || 1;
@@ -1533,7 +1549,7 @@
           const hoursPerEmployee = totalHours / crewSize;
           durationMinutes = Math.ceil(hoursPerEmployee * 60);
 
-          console.log('📊 Labor calculation:', {
+          console.log('✅ Labor calculation:', {
             crewSize,
             hoursPerDay,
             totalHours,
@@ -1542,6 +1558,7 @@
           });
         } else {
           console.warn('⚠️ No labor_summary found in quote, using default 8 hours');
+          console.warn('🔍 Quote data structure:', quoteData);
         }
 
         // Initialize the scheduling widget
