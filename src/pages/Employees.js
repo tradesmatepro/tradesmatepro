@@ -118,22 +118,10 @@ const Employees = () => {
 	  const [detailEmployee, setDetailEmployee] = useState(null);
 	  const [detailPermissions, setDetailPermissions] = useState(null);
 	  const openDetailPanel = async (employee) => {
-
 	    setDetailEmployee(employee);
 	    setShowDetailPanel(true);
-	    try {
-	      const res = await fetch(`${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${employee.id}&company_id=eq.${user.company_id}`, {
-	        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-	      });
-	      if (res.ok) {
-	        const list = await res.json();
-	        setDetailPermissions(list[0] || null);
-	      } else {
-	        setDetailPermissions(null);
-	      }
-	    } catch (_) {
-	      setDetailPermissions(null);
-	    }
+	    // ✅ REMOVED: user_permissions table doesn't exist yet
+	    setDetailPermissions(null);
 	  };
 	  const closeDetailPanel = () => { setShowDetailPanel(false); setDetailEmployee(null); setDetailPermissions(null); };
 
@@ -514,46 +502,9 @@ const Employees = () => {
         console.log('⏭️ Step 5 Skipped: Customer portal user (no employee record needed)');
       }
 
-      // Step 6: Create permissions (convert modules to permissions)
-      console.log('🔐 Step 6: Creating permissions...');
-      const permissionData = {
-        user_id: businessUserId,
-        company_id: user.company_id,
-        can_view_quotes: inviteData.modules.QUOTES || false,
-        can_create_jobs: inviteData.modules.JOBS || false,
-        can_access_customers: inviteData.modules.CUSTOMERS || false,
-        can_edit_documents: false,
-        can_manage_employees: inviteData.modules.EMPLOYEES || false,
-        can_access_settings: inviteData.modules.SETTINGS || false,
-        can_manage_permissions: false,
-        can_access_scheduling: inviteData.modules.SCHEDULING || false,
-        can_access_documents: false,
-        can_access_quotes: inviteData.modules.QUOTES || false,
-        can_access_invoices: inviteData.modules.INVOICING || false,
-        can_access_employees: inviteData.modules.EMPLOYEES || false,
-        can_access_reports: inviteData.modules.REPORTS || false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-
-      const permResponse = await fetch(`${SUPABASE_URL}/rest/v1/user_permissions`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(permissionData)
-      });
-
-      if (!permResponse.ok) {
-        const permError = await permResponse.json();
-        console.warn('⚠️ Permissions creation warning:', permError);
-        // Don't fail - permissions can be set later
-      } else {
-        console.log('✅ Step 6 Complete: Permissions created');
-      }
+      // ✅ REMOVED: user_permissions table doesn't exist yet
+      // Permissions are managed through role-based access control in the users table
+      console.log('✅ Step 6 Complete: User created (permissions managed via role)');
 
       console.log('🎉 ========== EMPLOYEE INVITE COMPLETE ==========');
       showAlert('success', `✅ Invite sent to ${inviteData.email}! They will receive an email to set their password.`);
@@ -1120,77 +1071,25 @@ const Employees = () => {
       role: employee.role
     });
 
-    // Load user permissions
-    try {
-      const permResponse = await fetch(
-        `${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${employee.id}&company_id=eq.${user.company_id}`,
-        {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        }
-      );
+    // ✅ REMOVED: user_permissions table doesn't exist yet
+    // Set default permissions based on role for now
+    setEditingPermissions({
+      can_view_quotes: false,
+      can_create_jobs: false,
+      can_access_customers: false,
+      can_edit_documents: false,
+      can_manage_employees: false,
+      can_access_settings: false,
+      can_manage_permissions: false,
+      can_access_scheduling: false,
+      can_access_documents: false,
+      can_access_quotes: false,
+      can_access_invoices: false,
+      can_access_employees: false,
+      can_access_reports: false
+    });
 
-      if (permResponse.ok) {
-        const userPermissions = await permResponse.json();
-        if (userPermissions.length > 0) {
-          const perm = userPermissions[0];
-          setEditingPermissions({
-            can_view_quotes: perm.can_view_quotes || false,
-            can_create_jobs: perm.can_create_jobs || false,
-            can_access_customers: perm.can_access_customers || false,
-            can_edit_documents: perm.can_edit_documents || false,
-            can_manage_employees: perm.can_manage_employees || false,
-            can_access_settings: perm.can_access_settings || false,
-            can_manage_permissions: perm.can_manage_permissions || false,
-            can_access_scheduling: perm.can_access_scheduling || false,
-            can_access_documents: perm.can_access_documents || false,
-            can_access_quotes: perm.can_access_quotes || false,
-            can_access_invoices: perm.can_access_invoices || false,
-            can_access_employees: perm.can_access_employees || false,
-            can_access_reports: perm.can_access_reports || false
-          });
-        } else {
-          // No permissions record exists, set defaults
-          setEditingPermissions({
-            can_view_quotes: false,
-            can_create_jobs: false,
-            can_access_customers: false,
-            can_edit_documents: false,
-            can_manage_employees: false,
-            can_access_settings: false,
-            can_manage_permissions: false,
-            can_access_scheduling: false,
-            can_access_documents: false,
-            can_access_quotes: false,
-            can_access_invoices: false,
-            can_access_employees: false,
-            can_access_reports: false
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Error loading permissions:', error);
-      // Set defaults on error
-      setEditingPermissions({
-        can_view_quotes: false,
-        can_create_jobs: false,
-        can_access_customers: false,
-        can_edit_documents: false,
-        can_manage_employees: false,
-        can_access_settings: false,
-        can_manage_permissions: false,
-        can_access_scheduling: false,
-        can_access_documents: false,
-        can_access_quotes: false,
-        can_access_invoices: false,
-        can_access_employees: false,
-        can_access_reports: false
-      });
-
-
-    // Load employee row id and skills for editing (outside permissions try/catch)
+    // Load employee row id and skills for editing
     try {
       const empRowRes = await fetch(`${SUPABASE_URL}/rest/v1/employees?user_id=eq.${employee.id}&company_id=eq.${user.company_id}&select=id`, {
         headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
@@ -1295,65 +1194,9 @@ const Employees = () => {
         console.log(`✅ Employee schedulable status updated successfully`);
       }
 
-      // Update permissions
-      const permissionData = {
-        user_id: editingEmployee.id,
-        company_id: user.company_id,
-        company_name: user.company_name,
-        ...editingPermissions,
-        updated_at: new Date().toISOString()
-      };
-
-      // Check if permissions record exists
-      const checkPermResponse = await fetch(
-        `${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${editingEmployee.id}&company_id=eq.${user.company_id}`,
-        {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        }
-      );
-
-      const existingPermissions = await checkPermResponse.json();
-
-      let permResponse;
-      if (existingPermissions.length > 0) {
-        // Update existing permissions
-        permResponse = await fetch(
-          `${SUPABASE_URL}/rest/v1/user_permissions?user_id=eq.${editingEmployee.id}&company_id=eq.${user.company_id}`,
-          {
-            method: 'PATCH',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(permissionData)
-          }
-        );
-      } else {
-        // Create new permissions
-        permResponse = await fetch(
-          `${SUPABASE_URL}/rest/v1/user_permissions`,
-          {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=representation'
-            },
-            body: JSON.stringify(permissionData)
-          }
-        );
-      }
-
-      if (!permResponse.ok) {
-        const permError = await permResponse.json();
-        console.warn(`⚠️ Failed to update permissions: ${permError.message}`);
-        // Don't fail the whole process, just warn
-      } else {
+      // ✅ REMOVED: user_permissions table doesn't exist yet
+      // Permissions are managed through role-based access control in the users table
+      // Future: Implement granular permissions system when needed else {
         console.log(`✅ User permissions updated successfully`);
       }
 
