@@ -401,6 +401,7 @@
     // ========================================
     // SCHEDULING WIDGET - Inline for standalone deployment
     // ========================================
+    console.log('🔧 Defining SchedulingWidget class...');
     class SchedulingWidget {
       constructor(options) {
         this.containerId = options.containerId;
@@ -797,6 +798,8 @@
     // ========================================
     // END SCHEDULING WIDGET
     // ========================================
+    console.log('✅ SchedulingWidget class defined successfully');
+    console.log('🔍 SchedulingWidget type:', typeof SchedulingWidget);
 
     // Get quote ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -1468,6 +1471,10 @@
         }
 
         // Initialize the scheduling widget
+        console.log('🔍 About to create SchedulingWidget...');
+        console.log('🔍 SchedulingWidget available?', typeof SchedulingWidget);
+        console.log('🔍 window.SchedulingWidget available?', typeof window.SchedulingWidget);
+
         schedulingWidget = new SchedulingWidget({
           containerId: 'scheduling-widget-container',
           companyId: quoteData.company_id,
