@@ -1,12 +1,22 @@
 {
   "commands": [
     {
-      "id": "cmd_navigate_employees_3005",
-      "command": "ui_navigate",
+      "id": "check_quote_labor_summary",
+      "command": "sql_query",
       "params": {
-        "url": "http://localhost:3005/employees"
+        "query": "SELECT id, work_order_number, status, total_amount, labor_summary FROM work_orders WHERE id = 'eeaa326b-0feb-464a-9bb3-1e63ad96e285'",
+        "reason": "Check if this specific quote has labor_summary data in the database - logs show it's missing"
       },
-      "timestamp": "2025-10-08T12:35:00.000Z"
+      "timestamp": "2025-10-13T18:00:00.000Z"
+    },
+    {
+      "id": "check_company_settings_table",
+      "command": "sql_query",
+      "params": {
+        "query": "SELECT * FROM settings WHERE company_id = 'cf619000-fa5b-4aeb-ae97-a2b5eb1dae8e' LIMIT 1",
+        "reason": "Check if company has settings in the settings table - logs show 'No settings found' error"
+      },
+      "timestamp": "2025-10-13T18:00:00.000Z"
     }
   ]
 }
