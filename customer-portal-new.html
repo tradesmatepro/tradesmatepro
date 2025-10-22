@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Customer Portal - TradeMate Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    .signup-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 2px solid white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .signup-btn:hover {
+      background: white;
+      color: #667eea;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: #fee;
+      border: 2px solid #f88;
+      color: #c33;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .timeline {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+
+    .timeline h3 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 30px;
+      bottom: -20px;
+      width: 2px;
+      background: #e5e7eb;
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    .timeline-icon {
+      position: absolute;
+      left: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .timeline-icon.completed {
+      background: #10b981;
+      color: white;
+    }
+
+    .timeline-icon.in-progress {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .timeline-icon.pending {
+      background: #e5e7eb;
+      color: #9ca3af;
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 4px;
+    }
+
+    .timeline-date {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .project-card {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .project-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .project-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .status-badge.approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.in-progress {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-badge.completed {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-badge.paid {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .project-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .detail-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-right: 10px;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .coming-soon-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      color: #667eea;
+      margin-bottom: 16px;
+    }
+
+    .modal-content p {
+      color: #6b7280;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="signup-btn" onclick="showSignupModal()">🚀 Coming Soon: Marketplace Signup</button>
+      <h1>Your Project Dashboard</h1>
+      <p id="customer-name">Loading...</p>
+    </div>
+
+    <div class="content">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your projects...</p>
+      </div>
+
+      <div id="error" class="error" style="display: none;"></div>
+
+      <div id="portal-content" style="display: none;">
+        <!-- Timeline -->
+        <div class="timeline">
+          <h3>📊 Project Timeline</h3>
+          <div id="timeline-items"></div>
+        </div>
+
+        <!-- Projects -->
+        <div id="projects-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coming Soon Modal -->
+  <div id="signup-modal" class="coming-soon-modal">
+    <div class="modal-content">
+      <h2>🚀 Marketplace Coming Soon!</h2>
+      <p>We're building a marketplace where you can offer your services to other contractors. Sign up to be notified when it launches!</p>
+      <p style="font-size: 14px; color: #9ca3af;">For now, you can view and manage your projects without creating an account.</p>
+      <button class="btn btn-primary" onclick="closeSignupModal()">Got it!</button>
+    </div>
+  </div>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY1OTk5NzksImV4cCI6MjA0MjE3NTk3OX0.Ks_CtINMWJxPqJT-Ks-Ks-Ks-Ks-Ks-Ks-Ks-Ks-Ks-Ks';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Get customer token from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerToken = urlParams.get('token');
+
+    let customerData = null;
+    let workOrders = [];
+
+    // Modal functions
+    function showSignupModal() {
+      document.getElementById('signup-modal').style.display = 'flex';
+    }
+
+    function closeSignupModal() {
+      document.getElementById('signup-modal').style.display = 'none';
+    }
+
+    // Load customer portal
+    async function loadPortal() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const portalContent = document.getElementById('portal-content');
+
+      if (!customerToken) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = '❌ Invalid portal link. Please use the link from your email.';
+        return;
+      }
+
+      try {
+        console.log('🔍 Loading customer portal for token:', customerToken);
+
+        // Get customer by portal token
+        const { data: customers, error: customerError } = await supabase
+          .rpc('get_customer_by_portal_token', { p_portal_token: customerToken });
+
+        if (customerError) throw customerError;
+        if (!customers || customers.length === 0) throw new Error('Customer not found');
+
+        customerData = customers[0];
+        console.log('✅ Customer loaded:', customerData);
+
+        // Update customer name in header
+        document.getElementById('customer-name').textContent = 
+          customerData.name || `${customerData.first_name || ''} ${customerData.last_name || ''}`.trim() || customerData.email;
+
+        // Get all work orders for this customer
+        const { data: orders, error: ordersError } = await supabase
+          .rpc('get_customer_work_orders', { p_customer_id: customerData.id });
+
+        if (ordersError) throw ordersError;
+
+        workOrders = orders || [];
+        console.log('✅ Work orders loaded:', workOrders.length);
+
+        // Log portal access
+        await supabase.rpc('log_customer_portal_activity', {
+          p_customer_id: customerData.id,
+          p_work_order_id: null,
+          p_action_type: 'viewed_portal',
+          p_metadata: { work_orders_count: workOrders.length }
+        });
+
+        // Render portal
+        renderTimeline();
+        renderProjects();
+
+        loading.style.display = 'none';
+        portalContent.style.display = 'block';
+
+      } catch (err) {
+        console.error('❌ Error loading portal:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `❌ Error loading portal: ${err.message}`;
+      }
+    }
+
+    // Render timeline
+    function renderTimeline() {
+      const container = document.getElementById('timeline-items');
+
+      // Build timeline from all work orders
+      const events = [];
+
+      workOrders.forEach(wo => {
+        if (wo.quote_sent_at) {
+          events.push({ date: wo.quote_sent_at, label: 'Quote Sent', status: 'completed', order: wo });
+        }
+        if (wo.quote_viewed_at) {
+          events.push({ date: wo.quote_viewed_at, label: 'Quote Viewed', status: 'completed', order: wo });
+        }
+        if (wo.quote_accepted_at) {
+          events.push({ date: wo.quote_accepted_at, label: 'Quote Approved', status: 'completed', order: wo });
+        }
+        if (wo.scheduled_start) {
+          const isPast = new Date(wo.scheduled_start) < new Date();
+          events.push({
+            date: wo.scheduled_start,
+            label: 'Job Scheduled',
+            status: isPast ? 'completed' : 'in-progress',
+            order: wo
+          });
+        }
+        if (wo.actual_start) {
+          events.push({ date: wo.actual_start, label: 'Job Started', status: 'completed', order: wo });
+        }
+        if (wo.actual_end || wo.completed_at) {
+          events.push({ date: wo.actual_end || wo.completed_at, label: 'Job Completed', status: 'completed', order: wo });
+        }
+        if (wo.invoice_sent_at) {
+          events.push({ date: wo.invoice_sent_at, label: 'Invoice Sent', status: 'completed', order: wo });
+        }
+        if (wo.paid_at) {
+          events.push({ date: wo.paid_at, label: 'Payment Received', status: 'completed', order: wo });
+        }
+      });
+
+      // Sort by date
+      events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      if (events.length === 0) {
+        container.innerHTML = '<p style="color: #6b7280;">No activity yet</p>';
+        return;
+      }
+
+      let html = '';
+      events.forEach(event => {
+        const icon = event.status === 'completed' ? '✓' : '●';
+        html += `
+          <div class="timeline-item">
+            <div class="timeline-icon ${event.status}">${icon}</div>
+            <div class="timeline-content">
+              <div class="timeline-title">${event.label}</div>
+              <div class="timeline-date">${formatDate(event.date)}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Render projects
+    function renderProjects() {
+      const container = document.getElementById('projects-container');
+
+      if (workOrders.length === 0) {
+        container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No projects yet</p>';
+        return;
+      }
+
+      let html = '';
+      workOrders.forEach(wo => {
+        const statusBadge = getStatusBadge(wo);
+        const stage = getProjectStage(wo);
+
+        html += `
+          <div class="project-card">
+            <div class="project-header">
+              <div class="project-title">${wo.title || 'Untitled Project'}</div>
+              ${statusBadge}
+            </div>
+
+            <p style="color: #6b7280; margin-bottom: 16px;">${wo.description || 'No description'}</p>
+
+            <div class="project-details">
+              <div class="detail-item">
+                <div class="detail-label">Project #</div>
+                <div class="detail-value">${wo.quote_number || wo.work_order_number || 'N/A'}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Total Amount</div>
+                <div class="detail-value">$${(wo.total_amount || 0).toFixed(2)}</div>
+              </div>
+              <div class="detail-item">
+                <div class="detail-label">Stage</div>
+                <div class="detail-value">${stage}</div>
+              </div>
+              ${wo.scheduled_start ? `
+                <div class="detail-item">
+                  <div class="detail-label">Scheduled</div>
+                  <div class="detail-value">${formatDate(wo.scheduled_start)}</div>
+                </div>
+              ` : ''}
+            </div>
+
+            <div style="margin-top: 20px; display: flex; gap: 10px;">
+              ${getActionButtons(wo)}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Get status badge HTML
+    function getStatusBadge(wo) {
+      if (wo.paid_at) {
+        return '<span class="status-badge paid">✓ Paid</span>';
+      }
+      if (wo.invoice_sent_at) {
+        return '<span class="status-badge pending">⏳ Invoice Sent</span>';
+      }
+      if (wo.actual_end || wo.completed_at) {
+        return '<span class="status-badge completed">✓ Completed</span>';
+      }
+      if (wo.actual_start) {
+        return '<span class="status-badge in-progress">🔧 In Progress</span>';
+      }
+      if (wo.scheduled_start) {
+        return '<span class="status-badge approved">📅 Scheduled</span>';
+      }
+      if (wo.quote_accepted_at) {
+        return '<span class="status-badge approved">✓ Approved</span>';
+      }
+      if (wo.quote_sent_at) {
+        return '<span class="status-badge pending">⏳ Quote Sent</span>';
+      }
+      return '<span class="status-badge pending">Draft</span>';
+    }
+
+    // Get project stage
+    function getProjectStage(wo) {
+      if (wo.paid_at) return 'Paid';
+      if (wo.invoice_sent_at) return 'Invoiced';
+      if (wo.actual_end || wo.completed_at) return 'Completed';
+      if (wo.actual_start) return 'In Progress';
+      if (wo.scheduled_start) return 'Scheduled';
+      if (wo.quote_accepted_at) return 'Approved';
+      if (wo.quote_sent_at) return 'Quote';
+      return 'Draft';
+    }
+
+    // Get action buttons
+    function getActionButtons(wo) {
+      let buttons = '';
+
+      // View quote button (always available)
+      buttons += `<button class="btn btn-secondary" onclick="viewQuote('${wo.id}')">View Details</button>`;
+
+      // Approve quote button (if quote sent but not approved)
+      if (wo.quote_sent_at && !wo.quote_accepted_at && !wo.quote_rejected_at) {
+        buttons += `<button class="btn btn-primary" onclick="approveQuote('${wo.id}')">Approve Quote</button>`;
+      }
+
+      // Pay invoice button (if invoice sent but not paid)
+      if (wo.invoice_sent_at && !wo.paid_at) {
+        buttons += `<button class="btn btn-primary" onclick="payInvoice('${wo.id}')">Pay Invoice</button>`;
+      }
+
+      return buttons;
+    }
+
+    // Format date
+    function formatDate(dateStr) {
+      if (!dateStr) return 'N/A';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Action handlers
+    function viewQuote(workOrderId) {
+      // Redirect to old quote.html for now (will be integrated later)
+      window.location.href = `quote.html?id=${workOrderId}`;
+    }
+
+    function approveQuote(workOrderId) {
+      // Redirect to old quote.html for approval
+      window.location.href = `quote.html?id=${workOrderId}`;
+    }
+
+    function payInvoice(workOrderId) {
+      alert('Payment processing coming soon! For now, please contact us to make a payment.');
+    }
+
+    // Load portal on page load
+    loadPortal();
+  </script>
+</body>
+</html>
+
