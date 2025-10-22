@@ -367,7 +367,7 @@
   <script>
     // Supabase configuration
     const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY1OTk5NzksImV4cCI6MjA0MjE3NTk3OX0.Ks_CtINMWJxPqJT-Ks-Ks-Ks-Ks-Ks-Ks-Ks-Ks-Ks-Ks';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // Get customer token from URL
@@ -400,45 +400,47 @@
       }
 
       try {
-        console.log('🔍 Loading customer portal for token:', customerToken);
+        console.log('🔍 Loading living quote data for token:', customerToken);
 
-        // Get customer by portal token
-        const { data: customers, error: customerError } = await supabase
-          .rpc('get_customer_by_portal_token', { p_portal_token: customerToken });
+        // Use new unified RPC for living quote data
+        const { data: quoteData, error: quoteError } = await supabase
+          .rpc('get_living_quote_data', { p_token: customerToken });
 
-        if (customerError) throw customerError;
-        if (!customers || customers.length === 0) throw new Error('Customer not found');
+        if (quoteError) throw quoteError;
+        if (!quoteData || quoteData.error) throw new Error(quoteData?.error || 'Quote not found');
 
-        customerData = customers[0];
-        console.log('✅ Customer loaded:', customerData);
+        console.log('✅ Living quote data loaded:', quoteData);
+
+        // Extract data from unified response
+        const quote = quoteData.quote;
+        const customer = quoteData.customer;
+        const items = quoteData.items || [];
+        const invoice = quoteData.invoice;
+        const messages = quoteData.messages || [];
+        const files = quoteData.files || [];
+
+        customerData = customer;
 
         // Update customer name in header
-        document.getElementById('customer-name').textContent = 
-          customerData.name || `${customerData.first_name || ''} ${customerData.last_name || ''}`.trim() || customerData.email;
+        document.getElementById('customer-name').textContent =
+          customer.name || customer.email;
 
-        // Get all work orders for this customer
-        const { data: orders, error: ordersError } = await supabase
-          .rpc('get_customer_work_orders', { p_customer_id: customerData.id });
+        // Store work orders in expected format for backward compatibility
+        workOrders = [quote];
+        console.log('✅ Quote loaded:', quote.work_order_number);
 
-        if (ordersError) throw ordersError;
-
-        workOrders = orders || [];
-        console.log('✅ Work orders loaded:', workOrders.length);
-
-        // Log portal access
-        await supabase.rpc('log_customer_portal_activity', {
-          p_customer_id: customerData.id,
-          p_work_order_id: null,
-          p_action_type: 'viewed_portal',
-          p_metadata: { work_orders_count: workOrders.length }
-        });
-
-        // Render portal
+        // Render portal with live data
         renderTimeline();
         renderProjects();
+        renderQuoteDetails(quote, items, invoice);
+        renderMessages(messages);
+        renderFiles(files);
 
         loading.style.display = 'none';
         portalContent.style.display = 'block';
+
+        // Start live refresh (every 30 seconds)
+        startLiveRefresh(customerToken);
 
       } catch (err) {
         console.error('❌ Error loading portal:', err);
@@ -651,6 +653,251 @@
 
     function payInvoice(workOrderId) {
       alert('Payment processing coming soon! For now, please contact us to make a payment.');
+    }
+
+    // =====================================================
+    // LIVING QUOTE LINK - LIVE REFRESH SYSTEM
+    // =====================================================
+    let refreshInterval = null;
+    let lastRefreshTime = null;
+
+    async function startLiveRefresh(token) {
+      console.log('🔄 Starting live refresh (every 30 seconds)...');
+
+      // Refresh immediately, then every 30 seconds
+      refreshInterval = setInterval(async () => {
+        await refreshLivingQuoteData(token);
+      }, 30000);
+    }
+
+    async function refreshLivingQuoteData(token) {
+      try {
+        const { data: quoteData, error } = await supabase
+          .rpc('get_living_quote_data', { p_token: token });
+
+        if (error) {
+          console.error('❌ Refresh error:', error);
+          return;
+        }
+
+        if (!quoteData || quoteData.error) {
+          console.warn('⚠️ Quote link expired or invalid');
+          clearInterval(refreshInterval);
+          showExpiredLinkMessage();
+          return;
+        }
+
+        const quote = quoteData.quote;
+        const items = quoteData.items || [];
+        const invoice = quoteData.invoice;
+        const messages = quoteData.messages || [];
+        const files = quoteData.files || [];
+
+        // Update work orders
+        workOrders = [quote];
+
+        // Re-render with updated data
+        renderTimeline();
+        renderProjects();
+        renderQuoteDetails(quote, items, invoice);
+        renderMessages(messages);
+        renderFiles(files);
+
+        lastRefreshTime = new Date();
+        console.log('✅ Live data refreshed at', lastRefreshTime.toLocaleTimeString());
+
+      } catch (err) {
+        console.error('❌ Refresh failed:', err);
+      }
+    }
+
+    function showExpiredLinkMessage() {
+      const content = document.getElementById('portal-content');
+      if (content) {
+        content.innerHTML = `
+          <div style="text-align: center; padding: 60px 20px;">
+            <h2 style="color: #dc2626; margin-bottom: 20px;">Link Expired</h2>
+            <p style="color: #6b7280; margin-bottom: 20px;">
+              This quote link has expired. Please contact the service provider for a new link.
+            </p>
+            <button onclick="location.reload()" style="
+              background: #667eea;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 14px;
+            ">Refresh Page</button>
+          </div>
+        `;
+      }
+    }
+
+    // =====================================================
+    // HELPER FUNCTIONS FOR RENDERING QUOTE DETAILS
+    // =====================================================
+
+    function renderQuoteDetails(quote, items, invoice) {
+      // Create or update quote details section
+      let detailsSection = document.getElementById('quote-details-section');
+      if (!detailsSection) {
+        detailsSection = document.createElement('div');
+        detailsSection.id = 'quote-details-section';
+        detailsSection.style.marginTop = '30px';
+        document.getElementById('portal-content').appendChild(detailsSection);
+      }
+
+      const statusColor = {
+        'quote': '#3b82f6',
+        'approved': '#10b981',
+        'scheduled': '#f59e0b',
+        'in_progress': '#8b5cf6',
+        'completed': '#10b981',
+        'invoiced': '#3b82f6',
+        'paid': '#10b981',
+        'closed': '#6b7280'
+      };
+
+      detailsSection.innerHTML = `
+        <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+          <h3 style="margin-bottom: 15px; color: #1f2937;">Quote Details</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <p style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Quote Number</p>
+              <p style="font-weight: 600; color: #1f2937;">${quote.work_order_number}</p>
+            </div>
+            <div>
+              <p style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Status</p>
+              <p style="font-weight: 600; color: white; background: ${statusColor[quote.status] || '#6b7280'}; padding: 4px 8px; border-radius: 4px; display: inline-block; font-size: 12px;">
+                ${quote.status.toUpperCase()}
+              </p>
+            </div>
+            <div>
+              <p style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Total Amount</p>
+              <p style="font-weight: 600; color: #1f2937;">$${(quote.total_amount || 0).toFixed(2)}</p>
+            </div>
+            <div>
+              <p style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Created</p>
+              <p style="font-weight: 600; color: #1f2937;">${new Date(quote.created_at).toLocaleDateString()}</p>
+            </div>
+          </div>
+
+          ${items.length > 0 ? `
+            <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 15px;">
+              <h4 style="margin-bottom: 10px; color: #1f2937;">Line Items</h4>
+              <table style="width: 100%; font-size: 14px;">
+                <thead>
+                  <tr style="border-bottom: 1px solid #e5e7eb;">
+                    <th style="text-align: left; padding: 8px; color: #6b7280;">Description</th>
+                    <th style="text-align: right; padding: 8px; color: #6b7280;">Qty</th>
+                    <th style="text-align: right; padding: 8px; color: #6b7280;">Price</th>
+                    <th style="text-align: right; padding: 8px; color: #6b7280;">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${items.map(item => `
+                    <tr style="border-bottom: 1px solid #f3f4f6;">
+                      <td style="padding: 8px; color: #1f2937;">${item.description}</td>
+                      <td style="text-align: right; padding: 8px; color: #1f2937;">${item.quantity}</td>
+                      <td style="text-align: right; padding: 8px; color: #1f2937;">$${(item.unit_price || 0).toFixed(2)}</td>
+                      <td style="text-align: right; padding: 8px; color: #1f2937; font-weight: 600;">$${(item.total_price || 0).toFixed(2)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          ` : ''}
+
+          ${invoice ? `
+            <div style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 15px; background: #f0fdf4; padding: 15px; border-radius: 6px;">
+              <h4 style="margin-bottom: 10px; color: #15803d;">Invoice</h4>
+              <p style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Invoice Number</p>
+              <p style="font-weight: 600; color: #1f2937; margin-bottom: 10px;">${invoice.invoice_number}</p>
+              <p style="color: #6b7280; font-size: 12px; margin-bottom: 5px;">Amount Due</p>
+              <p style="font-weight: 600; color: #1f2937; margin-bottom: 10px;">$${(invoice.amount_due || 0).toFixed(2)}</p>
+              ${invoice.paid_at ? `
+                <p style="color: #10b981; font-weight: 600;">✅ Paid on ${new Date(invoice.paid_at).toLocaleDateString()}</p>
+              ` : `
+                <button onclick="payInvoice('${quote.id}')" style="
+                  background: #667eea;
+                  color: white;
+                  border: none;
+                  padding: 8px 16px;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  font-size: 14px;
+                ">Pay Now</button>
+              `}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderMessages(messages) {
+      let messagesSection = document.getElementById('messages-section');
+      if (!messagesSection) {
+        messagesSection = document.createElement('div');
+        messagesSection.id = 'messages-section';
+        messagesSection.style.marginTop = '30px';
+        document.getElementById('portal-content').appendChild(messagesSection);
+      }
+
+      if (messages.length === 0) {
+        messagesSection.innerHTML = '<p style="color: #6b7280;">No messages yet</p>';
+        return;
+      }
+
+      messagesSection.innerHTML = `
+        <div style="background: #f9fafb; border-radius: 8px; padding: 20px;">
+          <h3 style="margin-bottom: 15px; color: #1f2937;">Updates & Messages</h3>
+          ${messages.map(msg => `
+            <div style="background: white; border-left: 4px solid #667eea; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
+              <p style="font-weight: 600; color: #1f2937; margin-bottom: 5px;">${msg.sender_name}</p>
+              <p style="color: #4b5563; margin-bottom: 5px;">${msg.message}</p>
+              <p style="color: #9ca3af; font-size: 12px;">${new Date(msg.created_at).toLocaleString()}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderFiles(files) {
+      let filesSection = document.getElementById('files-section');
+      if (!filesSection) {
+        filesSection = document.createElement('div');
+        filesSection.id = 'files-section';
+        filesSection.style.marginTop = '30px';
+        document.getElementById('portal-content').appendChild(filesSection);
+      }
+
+      if (files.length === 0) {
+        filesSection.innerHTML = '';
+        return;
+      }
+
+      filesSection.innerHTML = `
+        <div style="background: #f9fafb; border-radius: 8px; padding: 20px;">
+          <h3 style="margin-bottom: 15px; color: #1f2937;">Files & Attachments</h3>
+          ${files.map(file => `
+            <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <p style="font-weight: 600; color: #1f2937; margin-bottom: 5px;">${file.file_name}</p>
+                <p style="color: #9ca3af; font-size: 12px;">${new Date(file.uploaded_at).toLocaleDateString()}</p>
+              </div>
+              <a href="${file.file_url}" target="_blank" style="
+                background: #667eea;
+                color: white;
+                padding: 6px 12px;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 12px;
+              ">Download</a>
+            </div>
+          `).join('')}
+        </div>
+      `;
     }
 
     // Load portal on page load
