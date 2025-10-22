@@ -401,23 +401,77 @@
 
       try {
         console.log('🔍 Loading living quote data for token:', customerToken);
+        console.log('📡 Calling RPC: get_living_quote_data');
 
         // Use new unified RPC for living quote data
         const { data: quoteData, error: quoteError } = await supabase
           .rpc('get_living_quote_data', { p_token: customerToken });
 
-        if (quoteError) throw quoteError;
-        if (!quoteData || quoteData.error) throw new Error(quoteData?.error || 'Quote not found');
+        console.log('📊 RPC Response:', { data: quoteData, error: quoteError });
 
-        console.log('✅ Living quote data loaded:', quoteData);
+        if (quoteError) {
+          console.error('❌ RPC Error Details:', {
+            message: quoteError.message,
+            details: quoteError.details,
+            hint: quoteError.hint,
+            code: quoteError.code
+          });
+          throw quoteError;
+        }
+
+        if (!quoteData) {
+          console.error('❌ No data returned from RPC');
+          throw new Error('No data returned from server');
+        }
+
+        console.log('📦 Quote Data Type:', typeof quoteData);
+        console.log('📦 Quote Data:', JSON.stringify(quoteData, null, 2));
+
+        if (quoteData.error) {
+          console.error('❌ Server returned error:', quoteData.error);
+          throw new Error(quoteData.error);
+        }
+
+        console.log('✅ Living quote data loaded successfully');
+
+        // Debug: Log the structure we received
+        console.log('📦 Data structure received:', {
+          hasQuote: !!quoteData.quote,
+          hasCustomer: !!quoteData.customer,
+          hasItems: !!quoteData.items,
+          hasLineItems: !!quoteData.line_items,
+          hasInvoice: !!quoteData.invoice,
+          hasMessages: !!quoteData.messages,
+          hasFiles: !!quoteData.files,
+          keys: Object.keys(quoteData)
+        });
 
         // Extract data from unified response
         const quote = quoteData.quote;
         const customer = quoteData.customer;
-        const items = quoteData.items || [];
+        const items = quoteData.items || quoteData.line_items || [];
         const invoice = quoteData.invoice;
         const messages = quoteData.messages || [];
         const files = quoteData.files || [];
+
+        // Validate required data
+        if (!quote) {
+          console.error('❌ Missing quote in response');
+          throw new Error('Quote data not found in response');
+        }
+        if (!customer) {
+          console.error('❌ Missing customer in response');
+          throw new Error('Customer data not found in response');
+        }
+
+        console.log('📋 Extracted data:', {
+          quoteNumber: quote.work_order_number,
+          customerName: customer.name,
+          itemCount: items.length,
+          hasInvoice: !!invoice,
+          messageCount: messages.length,
+          fileCount: files.length
+        });
 
         customerData = customer;
 
@@ -444,9 +498,41 @@
 
       } catch (err) {
         console.error('❌ Error loading portal:', err);
+        console.error('❌ Error type:', err.constructor.name);
+        console.error('❌ Error message:', err.message);
+        console.error('❌ Error stack:', err.stack);
+
+        // More specific error messages
+        let errorMessage = 'Link expired or invalid';
+        let errorDetails = '';
+
+        if (err.message.includes('not found')) {
+          errorMessage = 'Quote not found';
+          errorDetails = 'The link may have expired or the quote may have been deleted.';
+        } else if (err.message.includes('expired')) {
+          errorMessage = 'Link expired';
+          errorDetails = 'Please request a new quote link from your service provider.';
+        } else if (err.code === 'PGRST116') {
+          errorMessage = 'System error';
+          errorDetails = 'Database function not found. Please contact support.';
+        } else if (err.message.includes('Quote data not found')) {
+          errorMessage = 'Invalid response';
+          errorDetails = 'The server returned an unexpected response. Please try again or contact support.';
+        } else if (err.message) {
+          errorMessage = err.message;
+        }
+
         loading.style.display = 'none';
         error.style.display = 'block';
-        error.innerHTML = `❌ Error loading portal: ${err.message}`;
+        error.innerHTML = `
+          <div style="text-align: center; padding: 20px;">
+            <h2 style="color: #dc3545; margin-bottom: 10px;">❌ ${errorMessage}</h2>
+            ${errorDetails ? `<p style="color: #6c757d; margin-bottom: 20px;">${errorDetails}</p>` : ''}
+            <p style="color: #6c757d; font-size: 14px;">
+              Token: <code style="background: #f8f9fa; padding: 2px 6px; border-radius: 3px;">${customerToken}</code>
+            </p>
+          </div>
+        `;
       }
     }
 
