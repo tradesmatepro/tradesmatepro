@@ -8,21 +8,22 @@
   <meta http-equiv="Expires" content="0">
   <title>View Your Quote - TradeMate Pro</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Version: 2.0 - Multi-step approval wizard -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <!-- Version: 2.1 - Stripe payment integration -->
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       padding: 20px;
     }
-    
+
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -31,34 +32,34 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
       overflow: hidden;
     }
-    
+
     .header {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       padding: 30px;
       text-align: center;
     }
-    
+
     .header h1 {
       font-size: 28px;
       margin-bottom: 10px;
     }
-    
+
     .header p {
       opacity: 0.9;
       font-size: 16px;
     }
-    
+
     .content {
       padding: 40px;
     }
-    
+
     .loading {
       text-align: center;
       padding: 60px 20px;
       color: #666;
     }
-    
+
     .spinner {
       border: 4px solid #f3f3f3;
       border-top: 4px solid #667eea;
@@ -68,12 +69,12 @@
       animation: spin 1s linear infinite;
       margin: 0 auto 20px;
     }
-    
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    
+
     .error {
       background: #fee;
       border: 2px solid #f88;
@@ -82,7 +83,7 @@
       border-radius: 8px;
       margin: 20px 0;
     }
-    
+
     .success {
       background: #efe;
       border: 2px solid #8f8;
@@ -92,41 +93,41 @@
       margin: 20px 0;
       text-align: center;
     }
-    
+
     .quote-details {
       margin: 30px 0;
     }
-    
+
     .detail-row {
       display: flex;
       justify-content: space-between;
       padding: 15px 0;
       border-bottom: 1px solid #eee;
     }
-    
+
     .detail-row:last-child {
       border-bottom: none;
     }
-    
+
     .detail-label {
       font-weight: 600;
       color: #666;
     }
-    
+
     .detail-value {
       color: #333;
       text-align: right;
     }
-    
+
     .line-items {
       margin: 30px 0;
     }
-    
+
     .line-items h3 {
       margin-bottom: 15px;
       color: #333;
     }
-    
+
     .line-item {
       display: flex;
       justify-content: space-between;
@@ -135,11 +136,11 @@
       margin-bottom: 8px;
       border-radius: 6px;
     }
-    
+
     .line-item-desc {
       flex: 1;
     }
-    
+
     .line-item-price {
       font-weight: 600;
       color: #667eea;
@@ -185,24 +186,24 @@
       margin: 30px 0;
       text-align: center;
     }
-    
+
     .total-label {
       font-size: 14px;
       opacity: 0.9;
       margin-bottom: 5px;
     }
-    
+
     .total-amount {
       font-size: 36px;
       font-weight: bold;
     }
-    
+
     .actions {
       display: flex;
       gap: 15px;
       margin-top: 30px;
     }
-    
+
     .btn {
       flex: 1;
       padding: 15px 30px;
@@ -213,34 +214,34 @@
       cursor: pointer;
       transition: all 0.3s;
     }
-    
+
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+
     .btn-approve {
       background: #10b981;
       color: white;
     }
-    
+
     .btn-approve:hover:not(:disabled) {
       background: #059669;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
     }
-    
+
     .btn-reject {
       background: #ef4444;
       color: white;
     }
-    
+
     .btn-reject:hover:not(:disabled) {
       background: #dc2626;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
     }
-    
+
     .status-badge {
       display: inline-block;
       padding: 6px 12px;
@@ -248,17 +249,17 @@
       font-size: 14px;
       font-weight: 600;
     }
-    
+
     .status-approved {
       background: #d1fae5;
       color: #065f46;
     }
-    
+
     .status-rejected {
       background: #fee2e2;
       color: #991b1b;
     }
-    
+
     .status-pending {
       background: #fef3c7;
       color: #92400e;
@@ -375,13 +376,13 @@
       <h1>📋 Your Quote</h1>
       <p>Review and respond to your quote below</p>
     </div>
-    
+
     <div class="content">
       <div id="loading" class="loading">
         <div class="spinner"></div>
         <p>Loading your quote...</p>
       </div>
-      
+
       <div id="error" class="error" style="display: none;"></div>
       <div id="success" class="success" style="display: none;"></div>
       <div id="quote-content" style="display: none;"></div>
@@ -399,285 +400,414 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // ========================================
-    // SCHEDULING WIDGET - Inline for standalone deployment
+    // SCHEDULING - Simple slot selection (business logic moved to RPCs)
     // ========================================
-    console.log('🔧 Defining SchedulingWidget class...');
-    class SchedulingWidget {
-      constructor(options) {
-        this.containerId = options.containerId;
-        this.companyId = options.companyId;
-        this.employeeIds = options.employeeIds || [];
-        this.durationMinutes = options.durationMinutes || 120;
-        this.supabaseUrl = options.supabaseUrl;
-        this.supabaseAnonKey = options.supabaseAnonKey;
-        this.companySettings = options.companySettings || null;
-        this.onSlotSelected = options.onSlotSelected || (() => {});
-        this.onAutoSchedule = options.onAutoSchedule || (() => {});
-        this.showAutoSchedule = options.showAutoSchedule !== false;
-        this.maxDaysAhead = options.maxDaysAhead || 90;
+    let selectedSlot = null;
 
-        this.availableSlots = [];
-        this.filteredSlots = [];
-        this.selectedSlot = null;
-        this.weekFilter = 0;
-        this.showCustomRange = false;
-        this.loading = true;
-        this.error = null;
-        this.earliestSlot = null;
+    // REMOVED: SchedulingWidget class (470 lines) - business logic now in get_available_time_slots RPC
 
-        this.container = document.getElementById(this.containerId);
-        if (!this.container) {
-          console.error(`Container #${this.containerId} not found`);
-          return;
-        }
+    // Simple slot rendering functions (UI only, no business logic)
+    function renderTimeSlots(slots, settings) {
+      const container = document.getElementById('scheduling-widget-container');
 
-        this.render();
-        this.loadAvailableSlots();
+      if (!slots || slots.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+            <p style="color: #991b1b; margin-bottom: 10px;"><strong>No Available Slots</strong></p>
+            <p style="color: #7f1d1d; font-size: 14px;">No technicians available for the requested time. Please contact us to schedule.</p>
+          </div>
+        `;
+        return;
       }
 
-      async loadAvailableSlots() {
-        this.loading = true;
-        this.error = null;
-        this.render();
+      let html = `
+        <div style="margin-bottom: 20px;">
+          <p style="color: #666; font-size: 14px;">
+            <strong>Duration:</strong> ${settings.duration_minutes / 60} hours |
+            <strong>Crew Size:</strong> ${settings.crew_size} technician(s)
+          </p>
+        </div>
+        <div style="max-height: 400px; overflow-y: auto;">
+      `;
 
-        try {
-          const startDate = new Date();
-          const endDate = new Date();
-          endDate.setDate(endDate.getDate() + this.maxDaysAhead);
+      // Group slots by date
+      const slotsByDate = {};
+      slots.forEach(slot => {
+        const date = slot.display_date;
+        if (!slotsByDate[date]) slotsByDate[date] = [];
+        slotsByDate[date].push(slot);
+      });
 
-          const requestBody = {
-            employeeIds: this.employeeIds,
-            durationMinutes: this.durationMinutes,
-            companyId: this.companyId,
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString()
-          };
+      // Render slots grouped by date
+      Object.keys(slotsByDate).forEach(date => {
+        html += `
+          <div style="margin-bottom: 20px;">
+            <h4 style="color: #667eea; margin-bottom: 10px;">${date}</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+        `;
 
-          console.log('🔍 DEBUG - Requesting slots:', requestBody);
+        slotsByDate[date].forEach(slot => {
+          const slotData = JSON.stringify({
+            start_time: slot.start_time,
+            end_time: slot.end_time,
+            employee_ids: slot.available_employees,
+            crew_size: slot.crew_size
+          }).replace(/"/g, '&quot;');
 
-          const response = await fetch(
-            `${this.supabaseUrl}/functions/v1/smart-scheduling`,
-            {
-              method: 'POST',
-              headers: {
-                'apikey': this.supabaseAnonKey,
-                'Authorization': `Bearer ${this.supabaseAnonKey}`,
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(requestBody)
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error(`Failed to load slots: ${response.status}`);
-          }
-
-          const data = await response.json();
-
-          const allSlots = [];
-          Object.values(data.suggestions || {}).forEach(employeeData => {
-            (employeeData.available_slots || []).forEach(slot => {
-              allSlots.push({
-                ...slot,
-                employee_id: employeeData.employee_id,
-                start_time: new Date(slot.start_time),
-                end_time: new Date(slot.end_time)
-              });
-            });
-          });
-
-          allSlots.sort((a, b) => a.start_time - b.start_time);
-
-          console.log('🔍 DEBUG - Raw slots returned (first 10):', allSlots.slice(0, 10).map(s => ({
-            start_iso: s.start_time.toISOString(),
-            end_iso: s.end_time.toISOString()
-          })));
-
-          // Client-side guard: prune any slots that extend beyond business hours in company timezone
-          let prunedSlots = allSlots;
-          if (this.companySettings && this.companySettings.business_hours_start && this.companySettings.business_hours_end && this.companySettings.timezone) {
-            const tz = this.companySettings.timezone;
-            const [bhStartH, bhStartM] = this.companySettings.business_hours_start.split(':').map(Number);
-            const [bhEndH, bhEndM] = this.companySettings.business_hours_end.split(':').map(Number);
-            const dayStartMinutes = bhStartH * 60 + bhStartM;
-            const dayEndMinutes = bhEndH * 60 + bhEndM;
-
-            const toMinutesInTz = (d) => {
-              const str = d.toLocaleTimeString('en-US', { hour12: false, timeZone: tz }); // HH:MM:SS
-              const [h, m] = str.split(':').map(Number);
-              return h * 60 + m;
-            };
-
-            prunedSlots = allSlots.filter(s => {
-              const startMin = toMinutesInTz(s.start_time);
-              const endMin = startMin + this.durationMinutes;
-              const within = startMin >= dayStartMinutes && endMin <= dayEndMinutes;
-              if (!within) {
-                console.log('⛔ Prune slot (outside biz hours):', {
-                  start_local: s.start_time.toLocaleTimeString('en-US', { timeZone: tz }),
-                  end_local: s.end_time.toLocaleTimeString('en-US', { timeZone: tz }),
-                  startMin, endMin, dayStartMinutes, dayEndMinutes
-                });
-              } else {
-                console.log('✅ Keep slot (within biz hours):', {
-                  start_local: s.start_time.toLocaleTimeString('en-US', { timeZone: tz }),
-                  end_estimated_local: new Date(s.start_time.getTime() + this.durationMinutes * 60000).toLocaleTimeString('en-US', { timeZone: tz })
-                });
-              }
-              return within;
-            });
-
-            // Log summary for the first day in view
-            if (prunedSlots.length > 0) {
-              const firstDay = prunedSlots[0].start_time.toLocaleDateString('en-US', { timeZone: tz });
-              const daySlots = prunedSlots.filter(s => s.start_time.toLocaleDateString('en-US', { timeZone: tz }) === firstDay);
-              const firstLocal = daySlots[0].start_time.toLocaleTimeString('en-US', { timeZone: tz });
-              const lastLocal = daySlots[daySlots.length - 1].start_time.toLocaleTimeString('en-US', { timeZone: tz });
-              console.log('📊 After pruning - First day summary:', { firstDay, count: daySlots.length, firstLocal, lastLocal });
-            }
-          } else {
-            console.warn('⚠️ Skipping business-hours pruning: missing companySettings/timezone');
-          }
-
-          this.availableSlots = prunedSlots;
-
-          if (allSlots.length > 0) {
-            this.earliestSlot = allSlots[0];
-          } else {
-            this.error = 'No available time slots found. Please contact us to schedule.';
-          }
-
-          this.filterSlotsByWeek(this.weekFilter);
-        } catch (err) {
-          console.error('Error loading slots:', err);
-          this.error = 'Unable to load available times. Please try again or contact us.';
-        } finally {
-          this.loading = false;
-          this.render();
-        }
-      }
-
-      filterSlotsByWeek(offset) {
-        this.weekFilter = offset;
-        this.showCustomRange = false;
-
-        const now = new Date();
-        const startOfWeek = new Date(now);
-        startOfWeek.setDate(now.getDate() + (offset * 7));
-        startOfWeek.setHours(0, 0, 0, 0);
-
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 7);
-
-        this.filteredSlots = this.availableSlots.filter(slot => {
-          return slot.start_time >= startOfWeek && slot.start_time < endOfWeek;
+          html += `
+            <button
+              class="time-slot-btn"
+              data-slot='${slotData}'
+              onclick="selectTimeSlot(this)"
+              style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; background: white; cursor: pointer; transition: all 0.2s;"
+              onmouseover="this.style.borderColor='#667eea'; this.style.background='#f3f4f6';"
+              onmouseout="if (!this.classList.contains('selected')) { this.style.borderColor='#e5e7eb'; this.style.background='white'; }"
+            >
+              <div style="font-weight: 600; color: #1f2937;">${slot.display_time}</div>
+              <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">${slot.crew_size} available</div>
+            </button>
+          `;
         });
 
-        this.render();
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 8px;">
+          <p style="font-size: 14px; color: #4b5563;">
+            <strong>Selected Time:</strong> <span id="selected-time-display">None</span>
+          </p>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button id="confirm-schedule-btn" class="btn btn-approve" onclick="confirmSchedule()" disabled>
+            Confirm Selected Time
+          </button>
+          <button class="btn btn-secondary" onclick="skipScheduling()">
+            Skip Scheduling
+          </button>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function selectTimeSlot(button) {
+      const slotData = JSON.parse(button.getAttribute('data-slot').replace(/&quot;/g, '"'));
+      selectedSlot = slotData;
+
+      // Update display
+      const displayTime = formatSlotDateTime(slotData.start_time);
+      document.getElementById('selected-time-display').textContent = displayTime;
+      document.getElementById('confirm-schedule-btn').disabled = false;
+
+      // Highlight selected slot
+      document.querySelectorAll('.time-slot-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.style.borderColor = '#e5e7eb';
+        btn.style.background = 'white';
+      });
+      button.classList.add('selected');
+      button.style.borderColor = '#667eea';
+      button.style.background = '#eff6ff';
+    }
+
+    function formatSlotDateTime(isoString) {
+      const date = new Date(isoString);
+      const dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      });
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      return `${dateStr} at ${timeStr}`;
+    }
+
+    // ========================================
+    // END SCHEDULING
+    // ========================================
+
+    // Global variables
+    let quoteData = null;
+    let companySettings = null;
+    let approvalData = {
+      consent: false,
+      signature: null,
+      terms: false,
+      depositMethod: null,
+      scheduledTime: null,
+      skipScheduling: false
+    };
+    let wizardSteps = [];
+    let currentStep = null;
+    let schedulingWidget = null;
+
+    // Get quote ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+
+    if (!quoteId) {
+      document.getElementById('quote-content').innerHTML = `
+        <div class="error">
+          <p>❌ No quote ID provided</p>
+        </div>
+      `;
+    } else {
+      loadQuote();
+    }
+
+    async function loadQuote() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const quoteContent = document.getElementById('quote-content');
+
+      try {
+        loading.style.display = 'block';
+        error.style.display = 'none';
+        quoteContent.style.display = 'none';
+
+        // Load quote data
+        const { data: quote, error: quoteError } = await supabase
+          .from('work_orders')
+          .select('*')
+          .eq('id', quoteId)
+          .single();
+
+        if (quoteError) throw quoteError;
+        if (!quote) throw new Error('Quote not found');
+
+        quoteData = quote;
+
+        // Load company settings
+        const { data: company, error: companyError } = await supabase
+          .from('companies')
+          .select('*')
+          .eq('id', quote.company_id)
+          .single();
+
+        if (companyError) throw companyError;
+        companySettings = company;
+
+        // Load line items
+        const { data: lineItems, error: lineItemsError } = await supabase
+          .from('work_order_line_items')
+          .select('*')
+          .eq('work_order_id', quoteId)
+          .order('sort_order');
+
+        if (lineItemsError) throw lineItemsError;
+
+        loading.style.display = 'none';
+        quoteContent.style.display = 'block';
+
+        displayQuote(quote, lineItems || []);
+
+      } catch (err) {
+        console.error('Error loading quote:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `❌ Error: ${err.message}`;
+      }
+    }
+
+    function displayQuote(quote, lineItems) {
+      const quoteContent = document.getElementById('quote-content');
+
+      let html = `
+        <div class="quote-details">
+          <div class="detail-row">
+            <span class="detail-label">Quote #:</span>
+            <span class="detail-value">${quote.work_order_number || quote.id.slice(0, 8)}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value">
+              <span class="status-badge status-${quote.status}">${quote.status.toUpperCase()}</span>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Title:</span>
+            <span class="detail-value">${quote.title || 'N/A'}</span>
+          </div>
+        </div>
+
+        <div class="line-items">
+          <h3>Line Items</h3>
+          ${lineItems.map(item => `
+            <div class="line-item">
+              <span class="line-item-desc">${item.description}</span>
+              <span class="line-item-price">$${parseFloat(item.total_price || 0).toFixed(2)}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="quote-summary">
+          <div class="summary-row">
+            <span class="summary-label">Subtotal:</span>
+            <span class="summary-value">$${parseFloat(quote.subtotal || 0).toFixed(2)}</span>
+          </div>
+          ${quote.discount_amount ? `
+            <div class="summary-row discount">
+              <span class="summary-label">Discount:</span>
+              <span class="summary-value">-$${parseFloat(quote.discount_amount).toFixed(2)}</span>
+            </div>
+          ` : ''}
+          ${quote.tax_amount ? `
+            <div class="summary-row">
+              <span class="summary-label">Tax:</span>
+              <span class="summary-value">$${parseFloat(quote.tax_amount).toFixed(2)}</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="total">
+          <div class="total-label">Total Amount</div>
+          <div class="total-amount">$${parseFloat(quote.total_amount || 0).toFixed(2)}</div>
+        </div>
+
+        <div class="actions">
+          ${quote.status === 'quote' || quote.status === 'sent' || quote.status === 'quoted' ? `
+            <button class="btn btn-approve" onclick="approveQuote()">Approve Quote</button>
+            <button class="btn btn-reject" onclick="rejectQuote()">Reject Quote</button>
+          ` : ''}
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+    }
+
+    async function approveQuote() {
+      // Start the multi-step approval wizard
+      currentStep = 'review';
+
+	      // Prefer server-defined steps
+	      try {
+	        const { data: cfg, error } = await supabase.rpc('get_quote_approval_config', { p_quote_id: quoteId });
+	        if (!error && cfg?.steps && Array.isArray(cfg.steps) && cfg.steps.length) {
+	          wizardSteps = cfg.steps;
+	          console.log('Wizard steps (server):', wizardSteps);
+	          showApprovalWizard();
+	          return;
+	        }
+	      } catch (e) {
+	        console.warn('get_quote_approval_config failed, using client logic:', e.message);
+	      }
+
+
+      console.log('=== APPROVAL WIZARD DEBUG ===');
+      console.log('Company Settings:', companySettings);
+      console.log('Quote Overrides:', {
+        scheduling_mode: quoteData.scheduling_mode,
+        deposit_required: quoteData.deposit_required,
+        deposit_required_before_scheduling: quoteData.deposit_required_before_scheduling
+      });
+
+      // Determine which steps are needed based on quote overrides OR company settings
+      // Quote-level overrides take precedence over company defaults
+      const schedulingMode = quoteData.scheduling_mode || 'customer_choice';
+      const allowScheduling = schedulingMode !== 'company_schedules'; // Company will call them
+      const depositRequired = quoteData.deposit_required !== undefined
+        ? quoteData.deposit_required
+        : (companySettings?.require_deposit_on_approval || false);
+
+      // Condensed flow: Review (with consent+terms) → Deposit (if required) → Schedule (if allowed) → Confirmation
+      wizardSteps = ['review'];
+
+      if (depositRequired) {
+        console.log('Adding deposit step (required by quote or company)');
+        wizardSteps.push('deposit');
       }
 
-      filterByCustomRange(startDateStr, endDateStr) {
-        if (!startDateStr || !endDateStr) {
-          alert('Please select both start and end dates');
-          return;
-        }
-
-        const start = new Date(startDateStr);
-        start.setHours(0, 0, 0, 0);
-
-        const end = new Date(endDateStr);
-        end.setHours(23, 59, 59, 999);
-
-        this.filteredSlots = this.availableSlots.filter(slot => {
-          return slot.start_time >= start && slot.start_time <= end;
-        });
-
-        this.showCustomRange = false;
-        this.render();
+      if (allowScheduling && (companySettings?.allow_customer_scheduling || schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule')) {
+        console.log('Adding schedule step (mode:', schedulingMode, ')');
+        wizardSteps.push('schedule');
+      } else if (schedulingMode === 'company_schedules') {
+        console.log('Skipping schedule step - company will call customer');
+      } else if (schedulingMode === 'auto_schedule') {
+        console.log('Auto-schedule mode - will book earliest slot automatically');
       }
 
-      selectSlot(slot) {
-        this.selectedSlot = slot;
-        this.onSlotSelected(slot);
-        this.render();
+      wizardSteps.push('confirmation');
+
+      console.log('Total steps:', wizardSteps);
+
+      // If no additional steps, just approve immediately
+      if (wizardSteps.length === 2) { // Only 'review' and 'confirmation'
+        console.log('No additional steps - showing simple confirm');
+        if (!confirm('Are you sure you want to approve this quote?')) return;
+        await finalizeApproval();
+        return;
       }
 
-      selectSlotById(slotId) {
-        const slot = this[slotId];
-        if (slot) {
-          this.selectSlot(slot);
-        }
+      // Show the wizard
+      console.log('Showing wizard with steps:', wizardSteps);
+      showApprovalWizard();
+    }
+
+    function showApprovalWizard() {
+      const quoteContent = document.getElementById('quote-content');
+
+      let html = `
+        <div class="wizard">
+          <div class="wizard-steps">
+            ${wizardSteps.map((step, index) => `
+              <div class="wizard-step ${index === 0 ? 'active' : ''}" id="step-${step}">
+                <div class="step-number">${index + 1}</div>
+                <div class="step-name">${getStepName(step)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="wizard-content" id="wizard-content">
+            ${getStepContent(wizardSteps[0])}
+          </div>
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+
+      // Initialize the first step
+      initializeStep(wizardSteps[0]);
+    }
+
+    function getStepName(step) {
+      const names = {
+        review: 'Review',
+        signature: 'Signature',
+        terms: 'Terms',
+        deposit: 'Deposit',
+        schedule: 'Schedule',
+        confirmation: 'Confirm'
+      };
+      return names[step] || step;
+    }
+
+    function getStepContent(step) {
+      switch (step) {
+        case 'review':
+          return getReviewStepContent();
+        case 'signature':
+          return getSignatureStepContent();
+        case 'terms':
+          return getTermsStepContent();
+        case 'deposit':
+          return getDepositStepContent();
+        case 'schedule':
+          return getScheduleStepContent();
+        case 'confirmation':
+          return getConfirmationStepContent();
+        default:
+          return '<p>Unknown step</p>';
       }
+    }
 
-      autoSchedule() {
-        if (this.earliestSlot) {
-          this.selectedSlot = this.earliestSlot;
-          this.onAutoSchedule(this.earliestSlot);
-          this.render();
-        }
-      }
-
-      formatSlotDateTime(date) {
-        const dateStr = date.toLocaleDateString('en-US', {
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric'
-        });
-        const timeStr = date.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-        return `${dateStr} at ${timeStr}`;
-      }
-
-      formatSlotTime(date) {
-        return date.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        });
-      }
-
-      groupSlotsByDay() {
-        const grouped = {};
-
-        // Deduplicate slots by start time (for crew jobs, multiple employees have same time)
-        const uniqueSlots = new Map();
-        this.filteredSlots.forEach(slot => {
-          const timeKey = slot.start_time.getTime();
-          if (!uniqueSlots.has(timeKey)) {
-            uniqueSlots.set(timeKey, {
-              ...slot,
-              employee_ids: [slot.employee_id],
-              crew_size: 1
-            });
-          } else {
-            // Add this employee to the crew
-            const existing = uniqueSlots.get(timeKey);
-            existing.employee_ids.push(slot.employee_id);
-            existing.crew_size++;
-          }
-        });
-
-        // Group deduplicated slots by day
-        uniqueSlots.forEach(slot => {
-          const dayKey = slot.start_time.toLocaleDateString('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-          });
-          if (!grouped[dayKey]) {
-            grouped[dayKey] = [];
-          }
-          grouped[dayKey].push(slot);
-        });
-
-        return grouped;
-      }
-
-      render() {
-        if (!this.container) return;
+    function getReviewStepContent() {
 
         if (this.loading) {
           this.container.innerHTML = `
@@ -1094,7 +1224,7 @@
 
     function displayQuote(quote, lineItems) {
       const quoteContent = document.getElementById('quote-content');
-      
+
       const quoteNumber = quote.work_order_number || quote.quote_number || 'N/A';
       const customerName = quote.customers?.name || 'Valued Customer';
       const companyName = quote.companies?.name || 'TradeMate Pro';
@@ -1187,6 +1317,8 @@
 
         <div class="actions">
           <button class="btn btn-approve" onclick="approveQuote()">
+
+
             ✅ Approve Quote
           </button>
           <button class="btn btn-reject" onclick="rejectQuote()">
@@ -1202,16 +1334,53 @@
       // Start the multi-step approval wizard
       currentStep = 'review';
 
+
+      // Prefer server-defined steps
+      try {
+        const { data: cfg, error } = await supabase.rpc('get_quote_approval_config', { p_quote_id: quoteId });
+        if (!error && cfg?.steps && Array.isArray(cfg.steps) && cfg.steps.length) {
+          wizardSteps = cfg.steps;
+          console.log('Wizard steps (server):', wizardSteps);
+          showApprovalWizard();
+          return;
+        }
+      } catch (e) {
+        console.warn('get_quote_approval_config failed, using client logic:', e.message);
+      }
+
       console.log('=== APPROVAL WIZARD DEBUG ===');
       console.log('Company Settings:', companySettings);
+      console.log('Quote Overrides:', {
+        scheduling_mode: quoteData.scheduling_mode,
+        deposit_required: quoteData.deposit_required,
+        deposit_required_before_scheduling: quoteData.deposit_required_before_scheduling
+      });
 
-      // Determine which steps are needed based on company settings
-      // Condensed flow: Review (with consent+terms) → Schedule → Confirmation (shows deposit info if required)
+      // Determine which steps are needed based on quote overrides OR company settings
+      // Quote-level overrides take precedence over company defaults
+      const schedulingMode = quoteData.scheduling_mode || 'customer_choice';
+      const allowScheduling = schedulingMode !== 'company_schedules'; // Company will call them
+      const depositRequired = quoteData.deposit_required !== undefined
+        ? quoteData.deposit_required
+        : (companySettings?.require_deposit_on_approval || false);
+
+      // Condensed flow: Review (with consent+terms) → Deposit (if required) → Schedule (if allowed) → Confirmation
       wizardSteps = ['review'];
-      if (companySettings && companySettings.allow_customer_scheduling) {
-        console.log('Adding schedule step');
-        wizardSteps.push('schedule');
+
+      if (depositRequired) {
+        console.log('Adding deposit step (required by quote or company)');
+        wizardSteps.push('deposit');
       }
+
+      if (allowScheduling && (companySettings?.allow_customer_scheduling || schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule')) {
+        console.log('Adding schedule step (mode:', schedulingMode, ')');
+        wizardSteps.push('schedule');
+      } else if (schedulingMode === 'company_schedules') {
+        console.log('Skipping schedule step - company will call customer');
+      } else if (schedulingMode === 'auto_schedule') {
+        console.log('Auto-schedule mode - will book earliest slot automatically');
+      }
+
       wizardSteps.push('confirmation');
 
       console.log('Total steps:', wizardSteps);
@@ -1392,44 +1561,42 @@
         ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
         : companySettings.default_deposit_amount;
 
+      // Get allowed payment methods from quote overrides or default to all
+      const allowedMethods = quoteData.allowed_payment_methods || ['online', 'cash', 'check'];
+      console.log('Allowed payment methods:', allowedMethods);
+
+      // Payment method options
+      const paymentMethods = [
+        { value: 'online', icon: '💳', label: 'Pay Online Now', desc: 'Secure payment via credit/debit card' },
+        { value: 'cash', icon: '💵', label: 'Cash (Pay on arrival)', desc: 'Pay cash when technician arrives' },
+        { value: 'check', icon: '🏦', label: 'Check (Pay on arrival)', desc: 'Pay by check when technician arrives' },
+        { value: 'prepaid', icon: '✅', label: 'Already Paid', desc: "I've already paid the deposit" }
+      ];
+
+      // Filter to only allowed methods
+      const availableMethods = paymentMethods.filter(m => allowedMethods.includes(m.value) || m.value === 'prepaid');
+      const firstMethod = availableMethods[0]?.value || 'online';
+
+      let methodsHtml = '';
+      availableMethods.forEach((method, index) => {
+        methodsHtml += `
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="${method.value}" ${index === 0 ? 'checked' : ''} style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">${method.icon} ${method.label}</div>
+              <div style="font-size: 12px; color: #6b7280;">${method.desc}</div>
+            </div>
+          </label>
+        `;
+      });
+
       return `
         <h2>💳 Deposit Required</h2>
         <p style="margin: 20px 0;">A deposit of <strong>$${depositAmount.toFixed(2)}</strong> is required to proceed.</p>
 
         <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
           <div style="font-weight: 600; margin-bottom: 12px;">How will you pay the deposit?</div>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="online" checked style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">💳 Pay Online Now</div>
-              <div style="font-size: 12px; color: #6b7280;">Secure payment via credit/debit card</div>
-            </div>
-          </label>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="cash" style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">💵 Cash (Pay on arrival)</div>
-              <div style="font-size: 12px; color: #6b7280;">Pay cash when technician arrives</div>
-            </div>
-          </label>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="check" style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">🏦 Check (Pay on arrival)</div>
-              <div style="font-size: 12px; color: #6b7280;">Pay by check when technician arrives</div>
-            </div>
-          </label>
-
-          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; background: white;">
-            <input type="radio" name="deposit-method" value="prepaid" style="margin-right: 10px; width: 18px; height: 18px;">
-            <div>
-              <div style="font-weight: 500;">✅ Already Paid</div>
-              <div style="font-size: 12px; color: #6b7280;">I've already paid the deposit</div>
-            </div>
-          </label>
+          ${methodsHtml}
         </div>
 
         <div id="stripe-payment-element" style="margin: 20px 0; display: none;"></div>
@@ -1719,7 +1886,7 @@
       nextWizardStep(currentIndex);
     }
 
-    function processDeposit() {
+    async function processDeposit() {
       // Capture selected payment method
       const selectedMethod = document.querySelector('input[name="deposit-method"]:checked');
       if (!selectedMethod) {
@@ -1732,14 +1899,157 @@
 
       console.log('💳 Deposit method selected:', selectedMethod.value);
 
-      // If online payment selected, show Stripe element (future enhancement)
+      // If online payment selected, process Stripe payment
       if (selectedMethod.value === 'online') {
-        // TODO: Initialize Stripe payment element
-        alert('Online payment processing coming soon. For now, we\'ll proceed and you can pay when the technician arrives.');
+        try {
+          await processStripePayment();
+        } catch (error) {
+          console.error('Payment error:', error);
+          alert('Payment failed: ' + error.message);
+          return;
+        }
       }
 
       const currentIndex = wizardSteps.indexOf('deposit');
       nextWizardStep(currentIndex);
+    }
+
+    // Stripe payment processing
+    let stripe = null;
+    let elements = null;
+    let paymentElement = null;
+
+    async function processStripePayment() {
+      const depositAmount = parseFloat(quoteData.deposit_amount || 0);
+
+      if (depositAmount <= 0) {
+        throw new Error('Invalid deposit amount');
+      }
+
+      console.log('💳 Processing Stripe payment for $' + depositAmount);
+
+      // Check if beta mode (show badge)
+      const isBetaMode = true; // Set to true for beta filtering
+
+      // Show loading
+      const paymentContainer = document.getElementById('stripe-payment-element');
+      paymentContainer.style.display = 'block';
+      paymentContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+          <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f4f6; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <p style="margin-top: 10px; color: #6b7280;">Initializing secure payment...</p>
+          ${isBetaMode ? '<span style="display: inline-block; margin-top: 8px; padding: 4px 12px; background: #ede9fe; color: #7c3aed; border-radius: 12px; font-size: 12px; font-weight: 600;">Beta</span>' : ''}
+        </div>
+      `;
+
+      try {
+        // Initialize Stripe
+        const publishableKey = 'pk_live_51SFd6pKHQ4eingl9ovc2k9brCuLQIdWSa1Vc0BvcQpVZNioWi6YIfl5nkqwAk9WqiRT4bVqOEZtyqv1frwJAQqfx00btBFP8HA';
+        stripe = Stripe(publishableKey);
+
+        // Create Payment Intent via Edge Function
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/create-payment-intent`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            amount: depositAmount,
+            currency: 'usd',
+            metadata: {
+              company_id: quoteData.company_id,
+              customer_id: quoteData.customer_id,
+              work_order_id: quoteData.id,
+              type: 'deposit'
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create payment intent');
+        }
+
+        const { clientSecret } = await response.json();
+
+        // Create Stripe Elements
+        elements = stripe.elements({ clientSecret });
+        paymentElement = elements.create('payment');
+
+        // Show payment form
+        paymentContainer.innerHTML = `
+          <div style="padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb;">
+            ${isBetaMode ? '<div style="margin-bottom: 12px;"><span style="display: inline-block; padding: 4px 12px; background: #ede9fe; color: #7c3aed; border-radius: 12px; font-size: 12px; font-weight: 600;">Beta</span></div>' : ''}
+            <div id="payment-element"></div>
+            <div style="margin-top: 16px; padding: 12px; background: #dbeafe; border: 1px solid #93c5fd; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600; color: #1e40af;">Amount to Pay:</span>
+                <span style="font-size: 18px; font-weight: 700; color: #1e40af;">$${depositAmount.toFixed(2)}</span>
+              </div>
+            </div>
+            <button id="submit-payment" style="width: 100%; margin-top: 16px; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+              🔒 Pay $${depositAmount.toFixed(2)}
+            </button>
+            <p style="text-align: center; margin-top: 12px; font-size: 12px; color: #6b7280;">
+              🔒 Secured by Stripe • PCI Compliant
+            </p>
+          </div>
+        `;
+
+        paymentElement.mount('#payment-element');
+
+        // Handle payment submission
+        return new Promise((resolve, reject) => {
+          document.getElementById('submit-payment').addEventListener('click', async () => {
+            const submitButton = document.getElementById('submit-payment');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div style="display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite;"></div> Processing...';
+
+            const { error, paymentIntent } = await stripe.confirmPayment({
+              elements,
+              confirmParams: {
+                return_url: window.location.href
+              },
+              redirect: 'if_required'
+            });
+
+            if (error) {
+              submitButton.disabled = false;
+              submitButton.innerHTML = `🔒 Pay $${depositAmount.toFixed(2)}`;
+              reject(error);
+            } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+              console.log('✅ Payment succeeded:', paymentIntent.id);
+              approvalData.paymentIntentId = paymentIntent.id;
+              paymentContainer.innerHTML = `
+                <div style="text-align: center; padding: 20px; background: #d1fae5; border: 1px solid #6ee7b7; border-radius: 8px;">
+                  <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+                  <p style="font-weight: 600; color: #065f46;">Payment Successful!</p>
+                  <p style="font-size: 14px; color: #047857; margin-top: 4px;">$${depositAmount.toFixed(2)} paid</p>
+                </div>
+              `;
+              setTimeout(() => {
+                paymentContainer.style.display = 'none';
+                resolve();
+              }, 2000);
+            } else {
+              submitButton.disabled = false;
+              submitButton.innerHTML = `🔒 Pay $${depositAmount.toFixed(2)}`;
+              reject(new Error('Payment was not successful'));
+            }
+          });
+        });
+
+      } catch (error) {
+        paymentContainer.innerHTML = `
+          <div style="text-align: center; padding: 20px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px;">
+            <p style="color: #991b1b; font-weight: 600;">Payment Error</p>
+            <p style="color: #dc2626; font-size: 14px; margin-top: 4px;">${error.message}</p>
+          </div>
+        `;
+        throw error;
+      }
     }
 
     // Scheduling functions
@@ -1756,44 +2066,42 @@
     }
 
     async function loadAvailableSlots() {
-      console.log('📅 Initializing scheduling widget...');
-      console.log('🔍 Company ID:', quoteData.company_id);
-
+      console.log('📅 Loading available slots via RPC...');
       try {
-        // Get employees for this company
-        console.log('🔍 Fetching employees...');
-        const employeesResponse = await fetch(
-          `${SUPABASE_URL}/rest/v1/employees?company_id=eq.${quoteData.company_id}&select=id`,
-          {
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-              'Content-Type': 'application/json'
-            }
-          }
-        );
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 90);
+        const startDateStr = startDate.toISOString().slice(0, 10);
+        const endDateStr = endDate.toISOString().slice(0, 10);
 
-        if (!employeesResponse.ok) {
-          const errorText = await employeesResponse.text();
-          console.error('❌ Employees fetch failed:', errorText);
-          throw new Error('Failed to load employees');
-        }
+        const { data, error } = await supabase.rpc('get_available_time_slots', {
+          p_quote_id: quoteId,
+          p_start_date: startDateStr,
+          p_end_date: endDateStr
+        });
+        if (error) throw error;
 
-        const employees = await employeesResponse.json();
-        console.log('✅ Employees loaded:', employees);
-        const employeeIds = employees.map(e => e.id);
-
-        if (employeeIds.length === 0) {
-          console.error('❌ No employees found for company');
+        if (!data || !data.slots || data.slots.length === 0) {
           document.getElementById('scheduling-widget-container').innerHTML = `
             <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
-              <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+              <p style="color: #991b1b; margin-bottom: 10px;"><strong>No Available Slots</strong></p>
               <p style="color: #7f1d1d; font-size: 14px;">No technicians available. Please contact us to schedule.</p>
             </div>
           `;
           return;
         }
 
+        renderTimeSlots(data.slots, data.settings || {});
+      } catch (error) {
+        console.error('❌ Error loading slots via RPC:', error);
+        document.getElementById('scheduling-widget-container').innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+            <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+            <p style="color: #7f1d1d; font-size: 14px;">Unable to load available times. Please contact us to schedule.</p>
+          </div>
+        `;
+      }
+    }
         // Calculate duration from quote labor summary
         let durationMinutes = 480; // Default to 8 hours
 
@@ -1826,81 +2134,8 @@
           console.warn('🔍 Quote data structure:', quoteData);
         }
 
-        // Initialize the scheduling widget
-        console.log('🔍 DEBUG - About to create SchedulingWidget with:');
-        console.log('  Company ID:', quoteData.company_id);
-        console.log('  Employee IDs:', employeeIds);
-        console.log('  Duration (minutes):', durationMinutes);
-        console.log('  Duration (hours):', durationMinutes / 60);
-        console.log('  Company Settings:', {
-          business_hours: `${companySettings.business_hours_start} - ${companySettings.business_hours_end}`,
-          working_days: companySettings.working_days,
-          timezone: companySettings.timezone
-        });
-
-        // Calculate expected last slot time
-        if (companySettings.business_hours_start && companySettings.business_hours_end) {
-          const [startHour, startMin] = companySettings.business_hours_start.split(':').map(Number);
-          const [endHour, endMin] = companySettings.business_hours_end.split(':').map(Number);
-          const businessMinutes = (endHour * 60 + endMin) - (startHour * 60 + startMin);
-          const lastSlotHour = startHour + Math.floor((businessMinutes - durationMinutes) / 60);
-          const lastSlotMin = startMin + ((businessMinutes - durationMinutes) % 60);
-          console.log('  📊 Business hours:', businessMinutes, 'minutes');
-          console.log('  📊 Job duration:', durationMinutes, 'minutes');
-          console.log('  📊 Available window:', businessMinutes - durationMinutes, 'minutes');
-          console.log('  📊 Expected LAST slot:', `${String(lastSlotHour).padStart(2, '0')}:${String(lastSlotMin).padStart(2, '0')}`);
-        }
-
-        schedulingWidget = new SchedulingWidget({
-          containerId: 'scheduling-widget-container',
-          companyId: quoteData.company_id,
-          employeeIds: employeeIds,
-          durationMinutes: durationMinutes,  // ← Dynamic based on quote labor!
-          supabaseUrl: SUPABASE_URL,
-          supabaseAnonKey: SUPABASE_ANON_KEY,
-          companySettings: companySettings,
-          onSlotSelected: (slot) => {
-            selectedSlot = slot;
-            console.log('📅 Slot selected:', slot);
-            // Enable confirm buttons
-            const btn = document.getElementById('confirm-schedule-btn');
-            if (btn) btn.disabled = false;
-            const actions = document.getElementById('schedule-actions');
-            if (actions) actions.style.display = 'block';
-            const floatBtn = document.getElementById('floating-confirm');
-            if (floatBtn) floatBtn.style.display = 'flex';
-          },
-          onAutoSchedule: (slot) => {
-            selectedSlot = slot;
-            approvalData.scheduledTime = {
-              start_time: slot.start_time.toISOString(),
-              end_time: slot.end_time.toISOString(),
-              employee_id: slot.employee_id,
-              auto_scheduled: true
-            };
-            console.log('⚡ Auto-scheduled:', approvalData.scheduledTime);
-
-            // Format and show confirmation
-            const dateTime = slot.start_time.toLocaleDateString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric'
-            }) + ' at ' + slot.start_time.toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true
-            });
-            alert(`✅ Scheduled for ${dateTime}`);
-
-            // Proceed to next step
-            const currentIndex = wizardSteps.indexOf('schedule');
-            nextWizardStep(currentIndex);
-          },
-          showAutoSchedule: true,
-          maxDaysAhead: 90
-        });
-
-        console.log('✅ Scheduling widget initialized');
+        // Load slots rendered by RPC; UI handled by renderTimeSlots
+        console.log('✅ Slots loaded via RPC and rendered');
 
       } catch (error) {
         console.error('❌ Error initializing scheduling widget:', error);
@@ -1921,9 +2156,8 @@
         return;
       }
 
-      // Determine crew size needed from quote
       const crewSize = (quoteData && quoteData.labor_summary && Number(quoteData.labor_summary.crew_size)) || 1;
-      const availableTechs = Array.isArray(selectedSlot.employee_ids) ? selectedSlot.employee_ids : (selectedSlot.employee_id ? [selectedSlot.employee_id] : []);
+      const availableTechs = Array.isArray(selectedSlot.employee_ids) ? selectedSlot.employee_ids : [];
 
       if (availableTechs.length < crewSize) {
         alert(`Not enough technicians available for this time. Needed ${crewSize}, available ${availableTechs.length}. Please pick a different time.`);
@@ -1933,8 +2167,8 @@
       const assignedTechs = availableTechs.slice(0, crewSize);
 
       approvalData.scheduledTime = {
-        start_time: selectedSlot.start_time.toISOString(),
-        end_time: selectedSlot.end_time.toISOString(),
+        start_time: selectedSlot.start_time,
+        end_time: selectedSlot.end_time,
         employee_ids: assignedTechs,
         crew_size: crewSize,
         auto_scheduled: false
@@ -1950,119 +2184,89 @@
 
     async function finalizeApproval() {
       console.log('🎯 finalizeApproval called');
-
       try {
-        // Save deposit payment method to work_orders table
-        if (approvalData.depositMethod) {
-          console.log('💳 Saving deposit payment method:', approvalData.depositMethod);
-          const { error: depositErr } = await supabase
-            .from('work_orders')
-            .update({
-              deposit_payment_method: approvalData.depositMethod,
-              deposit_paid_at: (approvalData.depositMethod === 'prepaid' || approvalData.depositMethod === 'online') ? new Date().toISOString() : null
-            })
-            .eq('id', quoteId);
+        let data, error;
 
-          if (depositErr) {
-            console.warn('⚠️ Could not save deposit method:', depositErr);
-          } else {
-            console.log('✅ Deposit method saved');
-          }
-        }
-
-        // Try atomic server-side approval + scheduling
+        // If customer scheduled a time, use approve_and_schedule_work_order
         if (approvalData.scheduledTime) {
-          try {
-            console.log('📞 Calling approve_and_schedule_work_order RPC...');
-            const { data, error } = await supabase.rpc('approve_and_schedule_work_order', {
-              p_quote_id: quoteId,
-              p_start: approvalData.scheduledTime.start_time,
-              p_end: approvalData.scheduledTime.end_time,
-              p_employee_ids: approvalData.scheduledTime.employee_ids || [],
-              p_crew_size: approvalData.scheduledTime.crew_size || 1
-            });
-            if (error) throw error;
-            console.log('✅ Approved & scheduled via RPC:', data);
-          } catch (rpcErr) {
-            console.warn('⚠️ approve_and_schedule_work_order failed or missing, falling back...', rpcErr);
-            // Fallback: approve then client-side insert of schedule_events
-            const { error: approveErr } = await supabase.rpc('approve_quote', { quote_id: quoteId, new_status: 'approved' });
-            if (approveErr) throw approveErr;
-            console.log('✅ Quote approved via fallback');
-
-            const crewIds = approvalData.scheduledTime.employee_ids || [];
-            const base = {
-              work_order_id: quoteId,
-              start_time: approvalData.scheduledTime.start_time,
-              end_time: approvalData.scheduledTime.end_time,
-              title: `Customer Scheduled: Work Order #${quoteData.work_order_number || quoteId.slice(0, 8)}`,
-              company_id: quoteData.company_id,
-              created_by_customer: true,
-              auto_scheduled: approvalData.scheduledTime.auto_scheduled || false
-            };
-            const rows = crewIds.map(empId => ({ ...base, employee_id: empId }));
-            const { error: scheduleError } = await supabase.from('schedule_events').insert(rows);
-            if (scheduleError) {
-              console.error('❌ Error creating schedule events:', scheduleError);
-              alert('Quote approved, but there was an issue creating the schedule. We\'ll contact you to confirm the time.');
-            } else {
-              console.log(`✅ Created ${rows.length} schedule event(s) for crew`, crewIds);
-            }
-          }
+          console.log('📞 Calling approve_and_schedule_work_order RPC...');
+          const schedulePayload = {
+            p_quote_id: quoteId,
+            p_start: approvalData.scheduledTime.start_time,
+            p_end: approvalData.scheduledTime.end_time,
+            p_employee_ids: approvalData.scheduledTime.employee_ids || [],
+            p_crew_size: approvalData.scheduledTime.crew_size || 1
+          };
+          const result = await supabase.rpc('approve_and_schedule_work_order', schedulePayload);
+          data = result.data;
+          error = result.error;
+          console.log('✅ Approved & scheduled via RPC:', data);
         } else {
-          // No scheduling selected -> just approve
-          console.log('📞 Calling approve_quote RPC...');
-          const { data, error } = await supabase.rpc('approve_quote', { quote_id: quoteId, new_status: 'approved' });
-          if (error) throw error;
-          console.log('✅ Quote approved successfully');
+          // Otherwise use approve_quote_with_options
+          console.log('📞 Calling approve_quote_with_options RPC...');
+          const payload = {
+            p_quote_id: quoteId,
+            p_deposit_method: approvalData.depositMethod || null,
+            p_scheduled_start: null,
+            p_scheduled_end: null,
+            p_skip_scheduling: true
+          };
+          const result = await supabase.rpc('approve_quote_with_options', payload);
+          data = result.data;
+          error = result.error;
+          console.log('✅ Approved via RPC:', data);
         }
 
-        // Check if we're in wizard mode or simple mode
+        if (error) throw error;
+        if (!data || data.success !== true) {
+          const msg = data && data.error ? data.error : 'Unknown error while approving quote';
+          throw new Error(msg);
+        }
+
+        // Show success UI
         const wizardContent = document.getElementById('wizard-content');
         const quoteContent = document.getElementById('quote-content');
         const successDiv = document.getElementById('success');
 
-        console.log('🔍 DOM elements:', {
-          wizardContent: !!wizardContent,
-          quoteContent: !!quoteContent,
-          successDiv: !!successDiv
-        });
-
+        const scheduledOk = !!(data && (data.created_events || data.created_events_count || data.assigned_employee_ids?.length));
         if (wizardContent) {
-          // Wizard mode - show confirmation step
-          console.log('📋 Wizard mode - showing confirmation');
-          wizardContent.innerHTML = getConfirmationStepContent();
-
-          // Update all steps to completed
-          const stepElements = document.querySelectorAll('.wizard-step');
-          stepElements.forEach(el => el.classList.add('completed'));
+          wizardContent.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+              <div style="font-size: 64px; margin-bottom: 20px;">✅</div>
+              <h2 style="color: #10b981; margin-bottom: 20px;">Quote Approved!</h2>
+              ${scheduledOk && data.scheduled_start ? `
+                <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                  <p style="font-size: 18px; margin-bottom: 10px;"><strong>Your service is scheduled for:</strong></p>
+                  <p style="font-size: 24px; color: #059669; font-weight: bold;">${formatSlotDateTime(new Date(data.scheduled_start))}</p>
+                </div>
+              ` : `
+                <p style="font-size: 16px; color: #6b7280;">We received your approval. We’ll finalize scheduling and confirm shortly.</p>
+              `}
+              <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-top: 30px; text-align: left;">
+                <p style="font-weight: bold; margin-bottom: 10px;">What happens next?</p>
+                <ul style="margin: 0; padding-left: 20px;">
+                  <li>We'll send you a confirmation email</li>
+                  ${scheduledOk ? '<li>Our technician will arrive at the scheduled time</li>' : '<li>Our team will contact you to schedule your service</li>'}
+                  <li>We'll get started on your project!</li>
+                </ul>
+              </div>
+            </div>
+          `;
+          const wizardActions = document.querySelector('.wizard-actions');
+          if (wizardActions) wizardActions.style.display = 'none';
+          document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('completed'));
         } else {
-          // Simple mode - show success message
-          console.log('📋 Simple mode - showing success message');
-
           if (quoteContent) quoteContent.style.display = 'none';
           if (successDiv) {
             successDiv.style.display = 'block';
-
-            let successMessage = '<h2>✅ Quote Approved!</h2>';
-            if (approvalData.scheduledTime) {
-              const scheduledDate = new Date(approvalData.scheduledTime.start_time);
-              const dateTimeStr = formatSlotDateTime(scheduledDate);
-              successMessage += `<p style="margin-top: 15px;">Your service is scheduled for <strong>${dateTimeStr}</strong>.</p>`;
-              successMessage += `<p>We'll send you a confirmation email shortly.</p>`;
-            } else {
-              successMessage += `<p style="margin-top: 15px;">Thank you for approving this quote. We'll be in touch soon to schedule your service.</p>`;
-            }
-
-            successDiv.innerHTML = successMessage;
-          } else {
-            console.error('❌ Success div not found!');
-            alert('Quote approved successfully!');
+            successDiv.innerHTML = `
+              <h2>✅ Quote Approved!</h2>
+              ${scheduledOk && data.scheduled_start ? `<p>Your service is scheduled for <strong>${formatSlotDateTime(new Date(data.scheduled_start))}</strong>.</p>` : `<p>Thank you for approving. We’ll be in touch to schedule.</p>`}
+            `;
           }
         }
-
       } catch (err) {
-        console.error('❌ Error approving quote:', err);
+        console.error('🚨 Error in finalizeApproval:', err);
         alert('Error approving quote: ' + err.message);
       }
     }
