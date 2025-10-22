@@ -9,6 +9,7 @@
   <title>Customer Portal - TradeMate Pro</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://js.stripe.com/v3/"></script>
+  <!-- Unified Customer Portal: Dashboard + Quote Approval + Deposit + Scheduling + Invoice Payment -->
   <style>
     * {
       margin: 0;
@@ -323,6 +324,147 @@
       color: #6b7280;
       margin-bottom: 24px;
     }
+
+    /* ===== APPROVAL WIZARD STYLES ===== */
+    .wizard-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .wizard-container {
+      background: white;
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    }
+
+    .wizard-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .wizard-progress {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .wizard-step {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .wizard-step.active {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .wizard-step.completed {
+      opacity: 0.8;
+    }
+
+    .wizard-content {
+      padding: 32px;
+    }
+
+    .wizard-content h2 {
+      color: #1f2937;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    .wizard-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-approve {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-approve:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-reject:hover:not(:disabled) {
+      background: #dc2626;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* ===== SCHEDULING WIDGET STYLES ===== */
+    .scheduling-widget {
+      margin: 20px 0;
+    }
+
+    .time-slot-btn {
+      padding: 12px;
+      margin: 8px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .time-slot-btn:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .time-slot-btn.selected {
+      border-color: #667eea;
+      background: #667eea;
+      color: white;
+      font-weight: 600;
+    }
+
+    .time-slot-btn.unavailable {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .time-slot-btn.unavailable:hover {
+      border-color: #e5e7eb;
+      background: white;
+    }
   </style>
 </head>
 <body>
@@ -364,6 +506,17 @@
     </div>
   </div>
 
+  <!-- Approval Wizard Modal -->
+  <div id="wizard-modal" class="wizard-modal">
+    <div class="wizard-container">
+      <div class="wizard-header">
+        <h2 id="wizard-title">Approve Quote</h2>
+        <div class="wizard-progress" id="wizard-progress"></div>
+      </div>
+      <div class="wizard-content" id="wizard-content"></div>
+    </div>
+  </div>
+
   <script>
     // Supabase configuration
     const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
@@ -374,8 +527,27 @@
     const urlParams = new URLSearchParams(window.location.search);
     const customerToken = urlParams.get('token');
 
+    // Global state
     let customerData = null;
     let workOrders = [];
+    let quoteData = null; // Current quote being approved
+    let companySettings = null;
+    let currentStep = 'review';
+    let wizardSteps = [];
+    let approvalData = {
+      consent: false,
+      signature: null,
+      terms: false,
+      depositMethod: null,
+      scheduledTime: null,
+      skipScheduling: false,
+      paymentIntentId: null
+    };
+    let selectedSlot = null;
+    let schedulingWidget = null;
+    let stripe = null;
+    let elements = null;
+    let paymentElement = null;
 
     // Modal functions
     function showSignupModal() {
