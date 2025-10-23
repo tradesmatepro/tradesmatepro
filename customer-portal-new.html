@@ -471,6 +471,7 @@
   <div class="container">
     <div class="header">
       <button class="signup-btn" onclick="showSignupModal()">🚀 Coming Soon: Marketplace Signup</button>
+      <div id="company-info" style="display: none; margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
       <h1>Your Project Dashboard</h1>
       <p id="customer-name">Loading...</p>
     </div>
@@ -621,10 +622,12 @@
         // Extract data from unified response
         const quote = quoteData.quote;
         const customer = quoteData.customer;
+        const company = quoteData.company;
         const items = quoteData.items || quoteData.line_items || [];
         const invoice = quoteData.invoice;
         const messages = quoteData.messages || [];
         const files = quoteData.files || [];
+        const timeline = quoteData.timeline || [];
 
         // Validate required data
         if (!quote) {
@@ -639,13 +642,20 @@
         console.log('📋 Extracted data:', {
           quoteNumber: quote.work_order_number,
           customerName: customer.name,
+          companyName: company?.name,
           itemCount: items.length,
           hasInvoice: !!invoice,
           messageCount: messages.length,
-          fileCount: files.length
+          fileCount: files.length,
+          timelineEvents: timeline.length
         });
 
         customerData = customer;
+
+        // Display company info
+        if (company) {
+          displayCompanyInfo(company);
+        }
 
         // Update customer name in header
         document.getElementById('customer-name').textContent =
@@ -656,7 +666,7 @@
         console.log('✅ Quote loaded:', quote.work_order_number);
 
         // Render portal with live data
-        renderTimeline();
+        renderTimeline(timeline);
         renderProjects();
         renderQuoteDetails(quote, items, invoice);
         renderMessages(messages);
@@ -709,44 +719,54 @@
     }
 
     // Render timeline
-    function renderTimeline() {
+    function renderTimeline(timelineData = []) {
       const container = document.getElementById('timeline-items');
 
-      // Build timeline from all work orders
-      const events = [];
+      // Use timeline data from RPC if available, otherwise build from work orders
+      let events = [];
 
-      workOrders.forEach(wo => {
-        if (wo.quote_sent_at) {
-          events.push({ date: wo.quote_sent_at, label: 'Quote Sent', status: 'completed', order: wo });
-        }
-        if (wo.quote_viewed_at) {
-          events.push({ date: wo.quote_viewed_at, label: 'Quote Viewed', status: 'completed', order: wo });
-        }
-        if (wo.quote_accepted_at) {
-          events.push({ date: wo.quote_accepted_at, label: 'Quote Approved', status: 'completed', order: wo });
-        }
-        if (wo.scheduled_start) {
-          const isPast = new Date(wo.scheduled_start) < new Date();
-          events.push({
-            date: wo.scheduled_start,
-            label: 'Job Scheduled',
-            status: isPast ? 'completed' : 'in-progress',
-            order: wo
-          });
-        }
-        if (wo.actual_start) {
-          events.push({ date: wo.actual_start, label: 'Job Started', status: 'completed', order: wo });
-        }
-        if (wo.actual_end || wo.completed_at) {
-          events.push({ date: wo.actual_end || wo.completed_at, label: 'Job Completed', status: 'completed', order: wo });
-        }
-        if (wo.invoice_sent_at) {
-          events.push({ date: wo.invoice_sent_at, label: 'Invoice Sent', status: 'completed', order: wo });
-        }
-        if (wo.paid_at) {
-          events.push({ date: wo.paid_at, label: 'Payment Received', status: 'completed', order: wo });
-        }
-      });
+      if (timelineData && timelineData.length > 0) {
+        // Use timeline from RPC
+        events = timelineData.map(item => ({
+          date: item.timestamp,
+          label: item.description,
+          status: 'completed'
+        }));
+      } else {
+        // Fallback: Build timeline from work orders
+        workOrders.forEach(wo => {
+          if (wo.quote_sent_at) {
+            events.push({ date: wo.quote_sent_at, label: 'Quote Sent', status: 'completed', order: wo });
+          }
+          if (wo.quote_viewed_at || wo.viewed_at) {
+            events.push({ date: wo.quote_viewed_at || wo.viewed_at, label: 'Quote Viewed', status: 'completed', order: wo });
+          }
+          if (wo.quote_accepted_at || wo.approved_at) {
+            events.push({ date: wo.quote_accepted_at || wo.approved_at, label: 'Quote Approved', status: 'completed', order: wo });
+          }
+          if (wo.scheduled_start) {
+            const isPast = new Date(wo.scheduled_start) < new Date();
+            events.push({
+              date: wo.scheduled_start,
+              label: 'Job Scheduled',
+              status: isPast ? 'completed' : 'in-progress',
+              order: wo
+            });
+          }
+          if (wo.actual_start) {
+            events.push({ date: wo.actual_start, label: 'Job Started', status: 'completed', order: wo });
+          }
+          if (wo.actual_end || wo.completed_at) {
+            events.push({ date: wo.actual_end || wo.completed_at, label: 'Job Completed', status: 'completed', order: wo });
+          }
+          if (wo.invoice_sent_at) {
+            events.push({ date: wo.invoice_sent_at, label: 'Invoice Sent', status: 'completed', order: wo });
+          }
+          if (wo.paid_at) {
+            events.push({ date: wo.paid_at, label: 'Payment Received', status: 'completed', order: wo });
+          }
+        });
+      }
 
       // Sort by date
       events.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -898,18 +918,59 @@
       });
     }
 
+    // Display company info
+    function displayCompanyInfo(company) {
+      console.log('🏢 displayCompanyInfo called with:', company);
+      const container = document.getElementById('company-info');
+      console.log('📦 Container element:', container);
+
+      if (!company || !company.name) {
+        console.log('⚠️ No company data or name, hiding container');
+        if (container) container.style.display = 'none';
+        return;
+      }
+
+      console.log('✅ Displaying company:', company.name);
+      container.style.display = 'block';
+      container.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 15px;">
+          ${company.logo_url ? `
+            <img src="${company.logo_url}" alt="${company.name}" style="height: 50px; width: auto; border-radius: 4px;">
+          ` : ''}
+          <div style="flex: 1;">
+            <h3 style="margin: 0 0 5px 0; color: #1f2937; font-size: 18px;">${company.name}</h3>
+            <div style="display: flex; gap: 15px; font-size: 14px; color: #6b7280;">
+              ${company.phone ? `<span>📞 ${company.phone}</span>` : ''}
+              ${company.email ? `<span>✉️ ${company.email}</span>` : ''}
+              ${company.website ? `<span>🌐 <a href="${company.website}" target="_blank" style="color: #667eea;">${company.website}</a></span>` : ''}
+            </div>
+            ${company.address_line1 ? `
+              <div style="font-size: 13px; color: #9ca3af; margin-top: 5px;">
+                📍 ${company.address_line1}${company.city ? `, ${company.city}` : ''}${company.state_province ? `, ${company.state_province}` : ''}${company.postal_code ? ` ${company.postal_code}` : ''}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
     // Action handlers
     function viewQuote(workOrderId) {
-      // Redirect to old quote.html for now (will be integrated later)
-      window.location.href = `quote.html?id=${workOrderId}`;
+      // Scroll to quote details (they're already visible below)
+      const detailsSection = document.getElementById('quote-details-section');
+      if (detailsSection) {
+        detailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     function approveQuote(workOrderId) {
-      // Redirect to old quote.html for approval
+      // TODO: Open approval wizard modal
+      // For now, redirect to old quote.html
       window.location.href = `quote.html?id=${workOrderId}`;
     }
 
     function payInvoice(workOrderId) {
+      // TODO: Open invoice payment modal
       alert('Payment processing coming soon! For now, please contact us to make a payment.');
     }
 
@@ -1111,10 +1172,15 @@
         <div style="background: #f9fafb; border-radius: 8px; padding: 20px;">
           <h3 style="margin-bottom: 15px; color: #1f2937;">Updates & Messages</h3>
           ${messages.map(msg => `
-            <div style="background: white; border-left: 4px solid #667eea; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
-              <p style="font-weight: 600; color: #1f2937; margin-bottom: 5px;">${msg.sender_name}</p>
-              <p style="color: #4b5563; margin-bottom: 5px;">${msg.message}</p>
-              <p style="color: #9ca3af; font-size: 12px;">${new Date(msg.created_at).toLocaleString()}</p>
+            <div style="background: white; border-left: 4px solid ${msg.sender_type === 'customer' ? '#10b981' : '#667eea'}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                <p style="font-weight: 600; color: #1f2937; margin: 0;">
+                  ${msg.sender_name || (msg.sender_type === 'customer' ? 'You' : 'Company')}
+                  <span style="font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 8px;">${msg.sender_type === 'customer' ? '(You)' : '(Company)'}</span>
+                </p>
+                <p style="color: #9ca3af; font-size: 12px; margin: 0;">${new Date(msg.created_at).toLocaleString()}</p>
+              </div>
+              <p style="color: #4b5563; margin: 0;">${msg.message_text || msg.content || msg.message || ''}</p>
             </div>
           `).join('')}
         </div>
