@@ -465,9 +465,194 @@
       border-color: #e5e7eb;
       background: white;
     }
+
+    /* Approval Wizard Modal Styles */
+    .wizard-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10000;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .wizard-modal-content {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .wizard-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 12px 12px 0 0;
+      text-align: center;
+    }
+
+    .wizard-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .wizard-close:hover {
+      background: rgba(255,255,255,0.3);
+      transform: rotate(90deg);
+    }
+
+    .wizard {
+      padding: 40px;
+    }
+
+    .wizard-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .wizard-steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e5e7eb;
+      z-index: 0;
+    }
+
+    .wizard-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #e5e7eb;
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .wizard-step.active .step-number {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .wizard-step.completed .step-number {
+      background: #10b981;
+      color: white;
+      border-color: #10b981;
+    }
+
+    .step-name {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .wizard-step.active .step-name {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .wizard-step.completed .step-name {
+      color: #10b981;
+    }
+
+    .wizard-content {
+      background: #f9fafb;
+      padding: 30px;
+      border-radius: 8px;
+      min-height: 300px;
+    }
+
+    .wizard-content h2 {
+      margin-bottom: 20px;
+      color: #1f2937;
+      font-size: 24px;
+    }
+
+    .wizard-actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+    }
+
+    .btn-wizard {
+      padding: 12px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .btn-wizard-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-wizard-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-wizard-secondary {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+
+    .btn-wizard-secondary:hover {
+      background: #d1d5db;
+    }
   </style>
 </head>
 <body>
+  <!-- Approval Wizard Modal -->
+  <div id="wizard-modal" class="wizard-modal">
+    <div class="wizard-modal-content">
+      <div class="wizard-header">
+        <button class="wizard-close" onclick="closeApprovalWizard()">&times;</button>
+        <h1>Approve Your Quote</h1>
+        <p>Let's get your project started!</p>
+      </div>
+      <div id="wizard-container"></div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="header">
       <button class="signup-btn" onclick="showSignupModal()">🚀 Coming Soon: Marketplace Signup</button>
@@ -671,6 +856,7 @@
         renderQuoteDetails(quote, items, invoice);
         renderMessages(messages);
         renderFiles(files);
+        renderActionButtons(quote, invoice);
 
         loading.style.display = 'none';
         portalContent.style.display = 'block';
@@ -885,24 +1071,9 @@
       return 'Draft';
     }
 
-    // Get action buttons
+    // Get action buttons (removed - buttons now rendered separately)
     function getActionButtons(wo) {
-      let buttons = '';
-
-      // View quote button (always available)
-      buttons += `<button class="btn btn-secondary" onclick="viewQuote('${wo.id}')">View Details</button>`;
-
-      // Approve quote button (if quote sent but not approved)
-      if (wo.quote_sent_at && !wo.quote_accepted_at && !wo.quote_rejected_at) {
-        buttons += `<button class="btn btn-primary" onclick="approveQuote('${wo.id}')">Approve Quote</button>`;
-      }
-
-      // Pay invoice button (if invoice sent but not paid)
-      if (wo.invoice_sent_at && !wo.paid_at) {
-        buttons += `<button class="btn btn-primary" onclick="payInvoice('${wo.id}')">Pay Invoice</button>`;
-      }
-
-      return buttons;
+      return ''; // Buttons moved to bottom of page
     }
 
     // Format date
@@ -954,19 +1125,440 @@
       `;
     }
 
-    // Action handlers
-    function viewQuote(workOrderId) {
-      // Scroll to quote details (they're already visible below)
-      const detailsSection = document.getElementById('quote-details-section');
-      if (detailsSection) {
-        detailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Render action buttons at bottom of page
+    function renderActionButtons(quote, invoice) {
+      let actionsSection = document.getElementById('actions-section');
+      if (!actionsSection) {
+        actionsSection = document.createElement('div');
+        actionsSection.id = 'actions-section';
+        actionsSection.style.cssText = `
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: white;
+          padding: 20px;
+          box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          z-index: 1000;
+        `;
+        document.body.appendChild(actionsSection);
+      }
+
+      let buttons = '';
+
+      // Approve quote button (if quote sent but not approved)
+      if (quote.quote_sent_at && !quote.quote_accepted_at && !quote.quote_rejected_at) {
+        buttons += `
+          <button onclick="openApprovalWizard()" style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(102, 126, 234, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';">
+            ✅ Approve Quote
+          </button>
+        `;
+      }
+
+      // Pay invoice button (if invoice sent but not paid)
+      if (invoice && invoice.sent_at && !invoice.paid_at) {
+        buttons += `
+          <button onclick="payInvoice('${quote.id}')" style="
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(16, 185, 129, 0.5)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16, 185, 129, 0.4)';">
+            💳 Pay Invoice
+          </button>
+        `;
+      }
+
+      if (buttons) {
+        actionsSection.innerHTML = buttons;
+        actionsSection.style.display = 'flex';
+      } else {
+        actionsSection.style.display = 'none';
       }
     }
 
-    function approveQuote(workOrderId) {
-      // TODO: Open approval wizard modal
-      // For now, redirect to old quote.html
-      window.location.href = `quote.html?id=${workOrderId}`;
+    // ========================================
+    // APPROVAL WIZARD
+    // ========================================
+
+    let wizardSteps = [];
+    let currentStepIndex = 0;
+    let approvalData = {
+      consentGiven: false,
+      depositMethod: null,
+      scheduledTime: null,
+      skipScheduling: false
+    };
+    let currentQuote = null;
+
+    // Action handlers
+    function openApprovalWizard() {
+      console.log('🎯 Opening approval wizard...');
+      showApprovalWizard();
+    }
+
+    function closeApprovalWizard() {
+      document.getElementById('wizard-modal').style.display = 'none';
+      approvalData = {
+        consentGiven: false,
+        depositMethod: null,
+        scheduledTime: null,
+        skipScheduling: false
+      };
+      currentStepIndex = 0;
+    }
+
+    async function showApprovalWizard() {
+      // Get the current quote from workOrders
+      currentQuote = workOrders && workOrders.length > 0 ? workOrders[0] : null;
+      if (!currentQuote) {
+        alert('Quote data not found. Please refresh the page.');
+        return;
+      }
+
+      console.log('📋 Starting approval wizard for quote:', currentQuote.work_order_number);
+
+      // Determine wizard steps based on quote settings
+      wizardSteps = ['review'];
+
+      // Check if deposit is required
+      if (currentQuote.deposit_required) {
+        console.log('💰 Deposit required');
+        wizardSteps.push('deposit');
+      }
+
+      // Check if customer can schedule
+      const schedulingMode = currentQuote.scheduling_mode || 'customer_choice';
+      if (schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule') {
+        console.log('📅 Customer can schedule');
+        wizardSteps.push('schedule');
+      } else if (schedulingMode === 'company_schedules') {
+        console.log('📞 Company will schedule');
+        approvalData.skipScheduling = true;
+      }
+
+      wizardSteps.push('confirmation');
+
+      console.log('✅ Wizard steps:', wizardSteps);
+
+      // Show modal
+      document.getElementById('wizard-modal').style.display = 'block';
+      renderWizard();
+    }
+
+    function renderWizard() {
+      const container = document.getElementById('wizard-container');
+      const currentStep = wizardSteps[currentStepIndex];
+
+      container.innerHTML = `
+        <div class="wizard">
+          <div class="wizard-steps">
+            ${wizardSteps.map((step, index) => `
+              <div class="wizard-step ${index === currentStepIndex ? 'active' : ''} ${index < currentStepIndex ? 'completed' : ''}">
+                <div class="step-number">${index + 1}</div>
+                <div class="step-name">${getStepName(step)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="wizard-content">
+            ${getStepContent(currentStep)}
+          </div>
+        </div>
+      `;
+
+      // Initialize step-specific functionality
+      initializeStep(currentStep);
+    }
+
+    function getStepName(step) {
+      const names = {
+        'review': 'Review',
+        'deposit': 'Deposit',
+        'schedule': 'Schedule',
+        'confirmation': 'Complete'
+      };
+      return names[step] || step;
+    }
+
+    function getStepContent(step) {
+      switch(step) {
+        case 'review':
+          return getReviewStepContent();
+        case 'deposit':
+          return getDepositStepContent();
+        case 'schedule':
+          return getScheduleStepContent();
+        case 'confirmation':
+          return getConfirmationStepContent();
+        default:
+          return '<p>Unknown step</p>';
+      }
+    }
+
+    function getReviewStepContent() {
+      return `
+        <h2>📋 Review Your Quote</h2>
+        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+            <span style="font-weight: 600;">Quote Number:</span>
+            <span>${currentQuote.quote_number || currentQuote.work_order_number}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+            <span style="font-weight: 600;">Project:</span>
+            <span>${currentQuote.title || 'Untitled'}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-top: 15px; border-top: 2px solid #e5e7eb;">
+            <span style="font-weight: 600; font-size: 18px;">Total Amount:</span>
+            <span style="font-weight: 700; font-size: 18px; color: #667eea;">$${(currentQuote.total_amount || 0).toFixed(2)}</span>
+          </div>
+        </div>
+
+        <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; margin: 20px 0;">
+          <label style="display: flex; align-items: start; cursor: pointer;">
+            <input type="checkbox" id="consent-checkbox" style="margin-right: 12px; margin-top: 4px; width: 18px; height: 18px;">
+            <span style="color: #1e40af; font-size: 14px;">
+              I have reviewed the quote details and agree to proceed with this project. I understand the scope of work and the total cost.
+            </span>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-secondary" onclick="closeApprovalWizard()">Cancel</button>
+          <button class="btn-wizard btn-wizard-primary" id="review-next-btn" onclick="nextStep()" disabled>Continue</button>
+        </div>
+      `;
+    }
+
+    function getDepositStepContent() {
+      const depositAmount = currentQuote.deposit_amount || 0;
+      const allowedMethods = currentQuote.allowed_payment_methods || ['online', 'cash', 'check'];
+
+      return `
+        <h2>💰 Deposit Payment</h2>
+        <p style="margin-bottom: 20px;">A deposit of <strong>$${depositAmount.toFixed(2)}</strong> is required to proceed.</p>
+
+        <div style="background: white; padding: 20px; border-radius: 8px;">
+          <p style="font-weight: 600; margin-bottom: 15px;">How would you like to pay the deposit?</p>
+
+          ${allowedMethods.includes('online') ? `
+            <label style="display: block; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#667eea'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#e5e7eb'">
+              <input type="radio" name="deposit-method" value="online" style="margin-right: 10px;" onchange="selectDepositMethod('online')">
+              <strong>💳 Pay Online Now</strong>
+              <div style="font-size: 14px; color: #6b7280; margin-top: 5px; margin-left: 24px;">Secure payment via credit/debit card</div>
+            </label>
+          ` : ''}
+
+          ${allowedMethods.includes('cash') ? `
+            <label style="display: block; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#667eea'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#e5e7eb'">
+              <input type="radio" name="deposit-method" value="cash" style="margin-right: 10px;" onchange="selectDepositMethod('cash')">
+              <strong>💵 Pay Cash on Arrival</strong>
+              <div style="font-size: 14px; color: #6b7280; margin-top: 5px; margin-left: 24px;">Pay when technician arrives</div>
+            </label>
+          ` : ''}
+
+          ${allowedMethods.includes('check') ? `
+            <label style="display: block; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#667eea'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#e5e7eb'">
+              <input type="radio" name="deposit-method" value="check" style="margin-right: 10px;" onchange="selectDepositMethod('check')">
+              <strong>🏦 Pay by Check on Arrival</strong>
+              <div style="font-size: 14px; color: #6b7280; margin-top: 5px; margin-left: 24px;">Pay when technician arrives</div>
+            </label>
+          ` : ''}
+
+          <label style="display: block; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#667eea'" onmouseout="if(!this.querySelector('input').checked) this.style.borderColor='#e5e7eb'">
+            <input type="radio" name="deposit-method" value="prepaid" style="margin-right: 10px;" onchange="selectDepositMethod('prepaid')">
+            <strong>✅ Already Paid</strong>
+            <div style="font-size: 14px; color: #6b7280; margin-top: 5px; margin-left: 24px;">I've already paid the deposit</div>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-secondary" onclick="previousStep()">Back</button>
+          <button class="btn-wizard btn-wizard-primary" id="deposit-next-btn" onclick="nextStep()" disabled>Continue</button>
+        </div>
+      `;
+    }
+
+    function getScheduleStepContent() {
+      return `
+        <h2>📅 Schedule Your Service</h2>
+        <p style="margin-bottom: 20px;">When would you like us to start your project?</p>
+
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <p style="font-weight: 600; margin-bottom: 15px;">Choose an option:</p>
+
+          <label style="display: block; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; cursor: pointer;" onclick="selectScheduleOption('asap')">
+            <input type="radio" name="schedule-option" value="asap" style="margin-right: 10px;">
+            <strong>⚡ As Soon As Possible</strong>
+            <div style="font-size: 14px; color: #6b7280; margin-top: 5px; margin-left: 24px;">We'll schedule the earliest available slot</div>
+          </label>
+
+          <label style="display: block; padding: 15px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer;" onclick="selectScheduleOption('call')">
+            <input type="radio" name="schedule-option" value="call" style="margin-right: 10px;">
+            <strong>📞 Call Me to Schedule</strong>
+            <div style="font-size: 14px; color: #6b7280; margin-top: 5px; margin-left: 24px;">We'll contact you within 1 business day</div>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-secondary" onclick="previousStep()">Back</button>
+          <button class="btn-wizard btn-wizard-primary" id="schedule-next-btn" onclick="nextStep()" disabled>Continue</button>
+        </div>
+      `;
+    }
+
+    function getConfirmationStepContent() {
+      let scheduleInfo = '';
+      if (approvalData.scheduledTime === 'asap') {
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">⚡ Scheduled ASAP</div>
+            <div style="font-size: 16px;">We'll contact you with the earliest available time slot.</div>
+          </div>
+        `;
+      } else if (approvalData.scheduledTime === 'call' || approvalData.skipScheduling) {
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">📞 We'll Contact You</div>
+            <div style="font-size: 16px;">Our team will call you within 1 business day to schedule a convenient time.</div>
+          </div>
+        `;
+      }
+
+      let depositInfo = '';
+      if (approvalData.depositMethod) {
+        const depositAmount = currentQuote.deposit_amount || 0;
+        const methodLabels = {
+          'online': '💳 Online Payment',
+          'cash': '💵 Cash (on arrival)',
+          'check': '🏦 Check (on arrival)',
+          'prepaid': '✅ Already Paid'
+        };
+
+        depositInfo = `
+          <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;">
+            <div style="font-weight: 600; color: #92400e;">Deposit: $${depositAmount.toFixed(2)}</div>
+            <div style="color: #92400e; font-size: 14px; margin-top: 4px;">Payment method: ${methodLabels[approvalData.depositMethod]}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <h2>🎉 All Set!</h2>
+        <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
+
+        ${scheduleInfo}
+        ${depositInfo}
+
+        <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
+          <strong>What happens next?</strong>
+          <ul style="margin: 10px 0 0 20px;">
+            <li>We'll send you a confirmation email</li>
+            <li>Our team will contact you to finalize details</li>
+            <li>We'll get started on your project!</li>
+          </ul>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn-wizard btn-wizard-primary" onclick="finalizeApproval()" style="width: 100%;">Confirm & Finish</button>
+        </div>
+      `;
+    }
+
+    function initializeStep(step) {
+      if (step === 'review') {
+        const checkbox = document.getElementById('consent-checkbox');
+        const nextBtn = document.getElementById('review-next-btn');
+        if (checkbox && nextBtn) {
+          checkbox.addEventListener('change', function() {
+            approvalData.consentGiven = this.checked;
+            nextBtn.disabled = !this.checked;
+          });
+        }
+      }
+    }
+
+    function selectDepositMethod(method) {
+      approvalData.depositMethod = method;
+      const nextBtn = document.getElementById('deposit-next-btn');
+      if (nextBtn) nextBtn.disabled = false;
+      console.log('💰 Deposit method selected:', method);
+    }
+
+    function selectScheduleOption(option) {
+      approvalData.scheduledTime = option;
+      const nextBtn = document.getElementById('schedule-next-btn');
+      if (nextBtn) nextBtn.disabled = false;
+      console.log('📅 Schedule option selected:', option);
+    }
+
+    function nextStep() {
+      if (currentStepIndex < wizardSteps.length - 1) {
+        currentStepIndex++;
+        renderWizard();
+      }
+    }
+
+    function previousStep() {
+      if (currentStepIndex > 0) {
+        currentStepIndex--;
+        renderWizard();
+      }
+    }
+
+    async function finalizeApproval() {
+      const btn = event.target;
+      btn.disabled = true;
+      btn.textContent = 'Processing...';
+
+      try {
+        console.log('✅ Finalizing approval with data:', approvalData);
+
+        // Call RPC to approve quote
+        const { data, error } = await supabase.rpc('approve_quote', {
+          quote_id: currentQuote.id,
+          new_status: 'approved'
+        });
+
+        if (error) throw error;
+
+        console.log('✅ Quote approved successfully!', data);
+
+        // Show success message
+        document.getElementById('wizard-container').innerHTML = `
+          <div style="text-align: center; padding: 60px 40px;">
+            <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+            <h2 style="color: #10b981; margin-bottom: 20px; font-size: 32px;">Quote Approved!</h2>
+            <p style="font-size: 18px; color: #6b7280; margin-bottom: 30px;">Thank you for approving your quote. We're excited to work with you!</p>
+            <button class="btn-wizard btn-wizard-primary" onclick="closeApprovalWizard(); location.reload();">Close</button>
+          </div>
+        `;
+
+      } catch (error) {
+        console.error('❌ Error approving quote:', error);
+        alert('Error approving quote: ' + error.message);
+        btn.disabled = false;
+        btn.textContent = 'Confirm & Finish';
+      }
     }
 
     function payInvoice(workOrderId) {
