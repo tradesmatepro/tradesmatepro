@@ -1201,26 +1201,31 @@
     // APPROVAL WIZARD
     // ========================================
 
-    let wizardSteps = [];
+    // Wizard state variables (reuse existing global variables)
     let currentStepIndex = 0;
-    let approvalData = {
-      consentGiven: false,
-      depositMethod: null,
-      scheduledTime: null,
-      skipScheduling: false
-    };
-    let currentQuote = null;
 
     // Action handlers
     function openApprovalWizard() {
       console.log('🎯 Opening approval wizard...');
+      // Reset approval data
+      approvalData = {
+        consent: false,
+        signature: null,
+        terms: false,
+        depositMethod: null,
+        scheduledTime: null,
+        skipScheduling: false
+      };
+      currentStepIndex = 0;
       showApprovalWizard();
     }
 
     function closeApprovalWizard() {
       document.getElementById('wizard-modal').style.display = 'none';
       approvalData = {
-        consentGiven: false,
+        consent: false,
+        signature: null,
+        terms: false,
         depositMethod: null,
         scheduledTime: null,
         skipScheduling: false
@@ -1230,25 +1235,25 @@
 
     async function showApprovalWizard() {
       // Get the current quote from workOrders
-      currentQuote = workOrders && workOrders.length > 0 ? workOrders[0] : null;
-      if (!currentQuote) {
+      quoteData = workOrders && workOrders.length > 0 ? workOrders[0] : null;
+      if (!quoteData) {
         alert('Quote data not found. Please refresh the page.');
         return;
       }
 
-      console.log('📋 Starting approval wizard for quote:', currentQuote.work_order_number);
+      console.log('📋 Starting approval wizard for quote:', quoteData.work_order_number);
 
       // Determine wizard steps based on quote settings
       wizardSteps = ['review'];
 
       // Check if deposit is required
-      if (currentQuote.deposit_required) {
+      if (quoteData.deposit_required) {
         console.log('💰 Deposit required');
         wizardSteps.push('deposit');
       }
 
       // Check if customer can schedule
-      const schedulingMode = currentQuote.scheduling_mode || 'customer_choice';
+      const schedulingMode = quoteData.scheduling_mode || 'customer_choice';
       if (schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule') {
         console.log('📅 Customer can schedule');
         wizardSteps.push('schedule');
@@ -1321,15 +1326,15 @@
         <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
             <span style="font-weight: 600;">Quote Number:</span>
-            <span>${currentQuote.quote_number || currentQuote.work_order_number}</span>
+            <span>${quoteData.quote_number || quoteData.work_order_number}</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
             <span style="font-weight: 600;">Project:</span>
-            <span>${currentQuote.title || 'Untitled'}</span>
+            <span>${quoteData.title || 'Untitled'}</span>
           </div>
           <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-top: 15px; border-top: 2px solid #e5e7eb;">
             <span style="font-weight: 600; font-size: 18px;">Total Amount:</span>
-            <span style="font-weight: 700; font-size: 18px; color: #667eea;">$${(currentQuote.total_amount || 0).toFixed(2)}</span>
+            <span style="font-weight: 700; font-size: 18px; color: #667eea;">$${(quoteData.total_amount || 0).toFixed(2)}</span>
           </div>
         </div>
 
@@ -1350,8 +1355,8 @@
     }
 
     function getDepositStepContent() {
-      const depositAmount = currentQuote.deposit_amount || 0;
-      const allowedMethods = currentQuote.allowed_payment_methods || ['online', 'cash', 'check'];
+      const depositAmount = quoteData.deposit_amount || 0;
+      const allowedMethods = quoteData.allowed_payment_methods || ['online', 'cash', 'check'];
 
       return `
         <h2>💰 Deposit Payment</h2>
@@ -1446,7 +1451,7 @@
 
       let depositInfo = '';
       if (approvalData.depositMethod) {
-        const depositAmount = currentQuote.deposit_amount || 0;
+        const depositAmount = quoteData.deposit_amount || 0;
         const methodLabels = {
           'online': '💳 Online Payment',
           'cash': '💵 Cash (on arrival)',
@@ -1490,7 +1495,7 @@
         const nextBtn = document.getElementById('review-next-btn');
         if (checkbox && nextBtn) {
           checkbox.addEventListener('change', function() {
-            approvalData.consentGiven = this.checked;
+            approvalData.consent = this.checked;
             nextBtn.disabled = !this.checked;
           });
         }
@@ -1535,7 +1540,7 @@
 
         // Call RPC to approve quote
         const { data, error } = await supabase.rpc('approve_quote', {
-          quote_id: currentQuote.id,
+          quote_id: quoteData.id,
           new_status: 'approved'
         });
 
