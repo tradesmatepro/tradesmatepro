@@ -910,6 +910,7 @@
 
       // Use timeline data from RPC if available, otherwise build from work orders
       let events = [];
+      let currentStatus = null;
 
       if (timelineData && timelineData.length > 0) {
         // Use timeline from RPC
@@ -921,35 +922,37 @@
       } else {
         // Fallback: Build timeline from work orders
         workOrders.forEach(wo => {
+          currentStatus = wo.status; // Track current status
+
           if (wo.quote_sent_at) {
-            events.push({ date: wo.quote_sent_at, label: 'Quote Sent', status: 'completed', order: wo });
+            events.push({ date: wo.quote_sent_at, label: 'Quote sent to customer', status: 'completed', order: wo });
           }
           if (wo.quote_viewed_at || wo.viewed_at) {
-            events.push({ date: wo.quote_viewed_at || wo.viewed_at, label: 'Quote Viewed', status: 'completed', order: wo });
+            events.push({ date: wo.quote_viewed_at || wo.viewed_at, label: 'Customer viewed quote', status: 'completed', order: wo });
           }
           if (wo.quote_accepted_at || wo.approved_at) {
-            events.push({ date: wo.quote_accepted_at || wo.approved_at, label: 'Quote Approved', status: 'completed', order: wo });
+            events.push({ date: wo.quote_accepted_at || wo.approved_at, label: 'Quote approved by customer', status: 'completed', order: wo });
           }
           if (wo.scheduled_start) {
             const isPast = new Date(wo.scheduled_start) < new Date();
             events.push({
               date: wo.scheduled_start,
-              label: 'Job Scheduled',
+              label: 'Job scheduled',
               status: isPast ? 'completed' : 'in-progress',
               order: wo
             });
           }
           if (wo.actual_start) {
-            events.push({ date: wo.actual_start, label: 'Job Started', status: 'completed', order: wo });
+            events.push({ date: wo.actual_start, label: 'Job started', status: 'completed', order: wo });
           }
           if (wo.actual_end || wo.completed_at) {
-            events.push({ date: wo.actual_end || wo.completed_at, label: 'Job Completed', status: 'completed', order: wo });
+            events.push({ date: wo.actual_end || wo.completed_at, label: 'Job completed', status: 'completed', order: wo });
           }
           if (wo.invoice_sent_at) {
-            events.push({ date: wo.invoice_sent_at, label: 'Invoice Sent', status: 'completed', order: wo });
+            events.push({ date: wo.invoice_sent_at, label: 'Invoice sent', status: 'completed', order: wo });
           }
           if (wo.paid_at) {
-            events.push({ date: wo.paid_at, label: 'Payment Received', status: 'completed', order: wo });
+            events.push({ date: wo.paid_at, label: 'Payment received', status: 'completed', order: wo });
           }
         });
       }
@@ -960,6 +963,22 @@
       if (events.length === 0) {
         container.innerHTML = '<p style="color: #6b7280;">No activity yet</p>';
         return;
+      }
+
+      // Determine next step based on current status
+      let nextStep = null;
+      if (currentStatus === 'sent' || currentStatus === 'viewed') {
+        nextStep = '⏳ Awaiting your approval';
+      } else if (currentStatus === 'approved') {
+        nextStep = '⏳ Awaiting scheduling';
+      } else if (currentStatus === 'scheduled') {
+        nextStep = '⏳ Awaiting job start';
+      } else if (currentStatus === 'in_progress') {
+        nextStep = '⏳ Job in progress';
+      } else if (currentStatus === 'completed') {
+        nextStep = '⏳ Awaiting invoice';
+      } else if (currentStatus === 'invoiced') {
+        nextStep = '⏳ Awaiting payment';
       }
 
       let html = '';
@@ -975,6 +994,19 @@
           </div>
         `;
       });
+
+      // Add next step indicator
+      if (nextStep) {
+        html += `
+          <div class="timeline-item">
+            <div class="timeline-icon in-progress">●</div>
+            <div class="timeline-content">
+              <div class="timeline-title" style="color: #667eea; font-weight: 600;">${nextStep}</div>
+              <div class="timeline-date" style="color: #9ca3af;">Next step</div>
+            </div>
+          </div>
+        `;
+      }
 
       container.innerHTML = html;
     }
@@ -1835,7 +1867,7 @@
           p_work_order_id: workOrder.id,
           p_customer_id: workOrder.customer_id,
           p_content: messageText,
-          p_portal_token: token
+          p_portal_token: customerToken
         });
 
         if (error) throw error;
