@@ -1760,28 +1760,106 @@
         document.getElementById('portal-content').appendChild(messagesSection);
       }
 
-      if (messages.length === 0) {
-        messagesSection.innerHTML = '<p style="color: #6b7280;">No messages yet</p>';
-        return;
-      }
-
       messagesSection.innerHTML = `
         <div style="background: #f9fafb; border-radius: 8px; padding: 20px;">
           <h3 style="margin-bottom: 15px; color: #1f2937;">Updates & Messages</h3>
-          ${messages.map(msg => `
-            <div style="background: white; border-left: 4px solid ${msg.sender_type === 'customer' ? '#10b981' : '#667eea'}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
-              <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                <p style="font-weight: 600; color: #1f2937; margin: 0;">
-                  ${msg.sender_name || (msg.sender_type === 'customer' ? 'You' : 'Company')}
-                  <span style="font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 8px;">${msg.sender_type === 'customer' ? '(You)' : '(Company)'}</span>
-                </p>
-                <p style="color: #9ca3af; font-size: 12px; margin: 0;">${new Date(msg.created_at).toLocaleString()}</p>
+
+          <!-- Message List -->
+          <div id="message-list" style="margin-bottom: 20px; max-height: 400px; overflow-y: auto;">
+            ${messages.length === 0 ? '<p style="color: #6b7280;">No messages yet. Send a message below to get started!</p>' : messages.map(msg => `
+              <div style="background: white; border-left: 4px solid ${msg.sender_type === 'customer' ? '#10b981' : '#667eea'}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                  <p style="font-weight: 600; color: #1f2937; margin: 0;">
+                    ${msg.sender_name || (msg.sender_type === 'customer' ? 'You' : 'Company')}
+                    <span style="font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 8px;">${msg.sender_type === 'customer' ? '(You)' : '(Company)'}</span>
+                  </p>
+                  <p style="color: #9ca3af; font-size: 12px; margin: 0;">${new Date(msg.created_at).toLocaleString()}</p>
+                </div>
+                <p style="color: #4b5563; margin: 0;">${msg.message_text || msg.content || msg.message || ''}</p>
               </div>
-              <p style="color: #4b5563; margin: 0;">${msg.message_text || msg.content || msg.message || ''}</p>
-            </div>
-          `).join('')}
+            `).join('')}
+          </div>
+
+          <!-- Send Message Form -->
+          <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
+            <h4 style="margin: 0 0 12px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Send a Message</h4>
+            <form id="send-message-form" onsubmit="sendMessage(event)">
+              <textarea
+                id="message-input"
+                placeholder="Type your message here..."
+                style="width: 100%; min-height: 80px; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical; margin-bottom: 12px;"
+                required
+              ></textarea>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <p style="color: #6b7280; font-size: 12px; margin: 0;">We'll respond as soon as possible</p>
+                <button
+                  type="submit"
+                  id="send-message-btn"
+                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
+                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';"
+                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                >
+                  Send Message
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       `;
+    }
+
+    async function sendMessage(event) {
+      event.preventDefault();
+
+      const messageInput = document.getElementById('message-input');
+      const sendBtn = document.getElementById('send-message-btn');
+      const messageText = messageInput.value.trim();
+
+      if (!messageText) return;
+
+      // Disable form while sending
+      messageInput.disabled = true;
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Sending...';
+
+      try {
+        console.log('📤 Sending message...');
+
+        const workOrder = workOrders && workOrders.length > 0 ? workOrders[0] : null;
+        if (!workOrder) {
+          throw new Error('Work order not found');
+        }
+
+        // Call RPC function to send message
+        const { data, error } = await supabase.rpc('send_portal_message', {
+          p_work_order_id: workOrder.id,
+          p_customer_id: workOrder.customer_id,
+          p_content: messageText,
+          p_portal_token: token
+        });
+
+        if (error) throw error;
+
+        console.log('✅ Message sent successfully!', data);
+
+        // Clear input
+        messageInput.value = '';
+
+        // Reload portal data to show new message
+        await loadPortalData();
+
+        // Show success message
+        alert('✅ Message sent successfully!');
+
+      } catch (error) {
+        console.error('❌ Error sending message:', error);
+        alert('Failed to send message: ' + error.message);
+      } finally {
+        // Re-enable form
+        messageInput.disabled = false;
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send Message';
+      }
     }
 
     function renderFiles(files) {
