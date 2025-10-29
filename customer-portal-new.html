@@ -1899,10 +1899,7 @@
           p_customer_id: workOrder.customer_id,
           p_portal_token: customerToken,
           p_work_order_id: workOrder.id,
-          p_content: messageText,
-          p_message_type: MESSAGE_TYPES.IN_APP,
-          p_sender_type: SENDER_TYPES.CUSTOMER,
-          p_delivery_method: DELIVERY_METHODS.APP
+          p_content: messageText
         });
 
         if (error) throw error;
