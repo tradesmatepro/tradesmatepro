@@ -709,6 +709,36 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // =====================================================
+    // STANDARDIZED MESSAGING ENUMS
+    // =====================================================
+    const MESSAGE_TYPES = {
+      IN_APP: 'in_app',
+      EMAIL: 'email',
+      SMS: 'sms',
+      SYSTEM: 'system'
+    };
+
+    const SENDER_TYPES = {
+      CUSTOMER: 'customer',
+      EMPLOYEE: 'employee',
+      SYSTEM: 'system'
+    };
+
+    const DELIVERY_METHODS = {
+      APP: 'app',
+      EMAIL: 'email',
+      SMS: 'sms',
+      PUSH: 'push'
+    };
+
+    const MESSAGE_STATUS = {
+      SENT: 'sent',
+      DELIVERED: 'delivered',
+      READ: 'read',
+      FAILED: 'failed'
+    };
+
     // Get customer token from URL
     const urlParams = new URLSearchParams(window.location.search);
     const customerToken = urlParams.get('token');
@@ -1799,11 +1829,11 @@
           <!-- Message List -->
           <div id="message-list" style="margin-bottom: 20px; max-height: 400px; overflow-y: auto;">
             ${messages.length === 0 ? '<p style="color: #6b7280;">No messages yet. Send a message below to get started!</p>' : messages.map(msg => `
-              <div style="background: white; border-left: 4px solid ${msg.sender_type === 'customer' ? '#10b981' : '#667eea'}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
+              <div style="background: white; border-left: 4px solid ${msg.sender_type === SENDER_TYPES.CUSTOMER ? '#10b981' : '#667eea'}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
                 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
                   <p style="font-weight: 600; color: #1f2937; margin: 0;">
-                    ${msg.sender_name || (msg.sender_type === 'customer' ? 'You' : 'Company')}
-                    <span style="font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 8px;">${msg.sender_type === 'customer' ? '(You)' : '(Company)'}</span>
+                    ${msg.sender_name || (msg.sender_type === SENDER_TYPES.CUSTOMER ? 'You' : 'Company')}
+                    <span style="font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 8px;">${msg.sender_type === SENDER_TYPES.CUSTOMER ? '(You)' : '(Company)'}</span>
                   </p>
                   <p style="color: #9ca3af; font-size: 12px; margin: 0;">${new Date(msg.created_at).toLocaleString()}</p>
                 </div>
@@ -1863,13 +1893,16 @@
         }
 
         console.log('📋 Work order data:', { id: workOrder.id, customer_id: workOrder.customer_id, token: customerToken });
-        
+
         // Call RPC function to send message
         const { data, error } = await supabase.rpc('send_portal_message', {
           p_customer_id: workOrder.customer_id,
           p_portal_token: customerToken,
           p_work_order_id: workOrder.id,
-          p_content: messageText
+          p_content: messageText,
+          p_message_type: MESSAGE_TYPES.IN_APP,
+          p_sender_type: SENDER_TYPES.CUSTOMER,
+          p_delivery_method: DELIVERY_METHODS.APP
         });
 
         if (error) throw error;
