@@ -1863,25 +1863,6 @@
         }
 
         console.log('📋 Work order data:', { id: workOrder.id, customer_id: workOrder.customer_id, token: customerToken });
-
-        // DEBUG: Log exactly what we're sending
-        const params = {
-          p_customer_id: workOrder.customer_id,
-          p_portal_token: customerToken,
-          p_work_order_id: workOrder.id,
-          p_content: messageText
-        };
-        console.log('📤 RPC Parameters:', params);
-
-        const workOrder = workOrders && workOrders.length > 0 ? workOrders[0] : null;
-        if (!workOrder) {
-          throw new Error('Work order not found');
-        }
-        
-        console.log('🔍 Full workOrder object:', workOrder);
-        console.log('🔍 customer_id value:', workOrder.customer_id);
-        console.log('🔍 workOrder type:', typeof workOrder);
-        console.log('🔍 workOrder keys:', Object.keys(workOrder));        
         
         // Call RPC function to send message
         const { data, error } = await supabase.rpc('send_portal_message', {
