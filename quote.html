@@ -1866,10 +1866,10 @@
 
         // Call RPC function to send message
         const { data, error } = await supabase.rpc('send_portal_message', {
-          p_content: messageText,
           p_customer_id: workOrder.customer_id,
           p_portal_token: customerToken,
-          p_work_order_id: workOrder.id
+          p_work_order_id: workOrder.id,
+          p_content: messageText
         });
 
         if (error) throw error;
