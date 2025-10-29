@@ -17,73 +17,120 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #8b5cf6;
+      --accent: #ec4899;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-dark: #0f172a;
+      --bg-light: #f8fafc;
+      --surface: #ffffff;
+      --surface-alt: #f1f5f9;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       padding: 20px;
+      color: var(--text-primary);
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      background: var(--surface);
+      border-radius: 20px;
+      box-shadow: var(--shadow-xl), 0 0 60px rgba(102, 126, 234, 0.2);
       overflow: hidden;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .header {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      padding: 30px;
+      padding: 50px 40px;
       text-align: center;
       position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
     }
 
     .header h1 {
-      font-size: 28px;
-      margin-bottom: 10px;
+      font-size: 36px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      position: relative;
+      z-index: 1;
     }
 
     .header p {
-      opacity: 0.9;
+      opacity: 0.95;
       font-size: 16px;
+      position: relative;
+      z-index: 1;
+      font-weight: 500;
     }
 
     .signup-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.2);
+      top: 24px;
+      right: 24px;
+      background: rgba(255,255,255,0.15);
       color: white;
-      border: 2px solid white;
-      padding: 8px 16px;
-      border-radius: 6px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      padding: 10px 20px;
+      border-radius: 10px;
       cursor: pointer;
       font-size: 14px;
       font-weight: 600;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      z-index: 10;
     }
 
     .signup-btn:hover {
-      background: white;
-      color: #667eea;
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-2px);
     }
 
     .content {
-      padding: 40px;
+      padding: 50px 40px;
     }
 
     .loading {
       text-align: center;
-      padding: 60px 20px;
-      color: #666;
+      padding: 80px 20px;
+      color: var(--text-secondary);
     }
 
     .spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #667eea;
+      border: 3px solid var(--bg-light);
+      border-top: 3px solid var(--primary);
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -97,13 +144,41 @@
     }
 
     .error {
-      background: #fee;
-      border: 2px solid #f88;
-      color: #c33;
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 1px solid #fca5a5;
+      color: #991b1b;
       padding: 20px;
-      border-radius: 8px;
+      border-radius: 12px;
       margin: 20px 0;
+      box-shadow: var(--shadow-md);
     }
+
+    /* Modern sections and messages */
+    .section-block { background: var(--surface-alt); border-radius: 16px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+    .section-block.glass { background: rgba(255,255,255,0.65); backdrop-filter: blur(12px); }
+    .section-title { display:flex; justify-content: space-between; align-items: center; margin-bottom: 16px; color: var(--text-primary); font-weight: 700; font-size: 20px; }
+    .badge { background: rgba(99,102,241,0.15); color: var(--primary-dark); padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+
+    .message-list { margin-bottom: 20px; max-height: 420px; overflow-y: auto; padding-right: 4px; }
+    .message-bubble { border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+    .message-bubble.company { background: linear-gradient(to right, rgba(99,102,241,0.08), rgba(139,92,246,0.08)); border-left: 4px solid var(--primary); }
+    .message-bubble.customer { background: linear-gradient(to right, rgba(16,185,129,0.08), rgba(99,102,241,0.05)); border-left: 4px solid var(--success); }
+    .message-header { display:flex; justify-content: space-between; margin-bottom: 6px; }
+    .sender-name { font-weight: 700; color: var(--text-primary); }
+    .message-time { font-size: 12px; color: var(--text-secondary); }
+    .message-content { color: #334155; line-height: 1.5; white-space: pre-wrap; }
+    .empty-hint { color: var(--text-secondary); }
+
+    .message-compose.card { background: var(--surface); border-radius: 12px; padding: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+    .compose-title { margin: 0 0 12px 0; color: var(--text-primary); font-size: 14px; font-weight: 700; }
+    .textarea-modern { width: 100%; min-height: 90px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; font-size: 14px; resize: vertical; margin-bottom: 12px; background: var(--surface); transition: box-shadow .2s, border-color .2s; }
+    .textarea-modern:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(99,102,241,0.12); }
+    .compose-actions { display:flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .compose-hint { color: var(--text-secondary); font-size: 12px; margin: 0; }
+    .btn-modern { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: transform .15s ease, box-shadow .2s ease, filter .2s ease; box-shadow: 0 10px 20px rgba(99,102,241,0.25); }
+    .btn-modern:hover { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(99,102,241,0.35); filter: saturate(1.1); }
+    .btn-modern:disabled { opacity: 0.6; cursor: not-allowed; }
+
 
     .timeline {
       margin: 30px 0;
@@ -1823,43 +1898,41 @@
       }
 
       messagesSection.innerHTML = `
-        <div style="background: #f9fafb; border-radius: 8px; padding: 20px;">
-          <h3 style="margin-bottom: 15px; color: #1f2937;">Updates & Messages</h3>
+        <div class="section-block glass">
+          <div class="section-title">
+            <span>Updates & Messages</span>
+            <span class="badge">${messages.length}</span>
+          </div>
 
           <!-- Message List -->
-          <div id="message-list" style="margin-bottom: 20px; max-height: 400px; overflow-y: auto;">
-            ${messages.length === 0 ? '<p style="color: #6b7280;">No messages yet. Send a message below to get started!</p>' : messages.map(msg => `
-              <div style="background: white; border-left: 4px solid ${msg.sender_type === SENDER_TYPES.CUSTOMER ? '#10b981' : '#667eea'}; padding: 12px; margin-bottom: 10px; border-radius: 4px;">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                  <p style="font-weight: 600; color: #1f2937; margin: 0;">
-                    ${msg.sender_name || (msg.sender_type === SENDER_TYPES.CUSTOMER ? 'You' : 'Company')}
-                    <span style="font-size: 11px; font-weight: 400; color: #9ca3af; margin-left: 8px;">${msg.sender_type === SENDER_TYPES.CUSTOMER ? '(You)' : '(Company)'}</span>
-                  </p>
-                  <p style="color: #9ca3af; font-size: 12px; margin: 0;">${new Date(msg.created_at).toLocaleString()}</p>
+          <div id="message-list" class="message-list">
+            ${messages.length === 0 ? '<p class="empty-hint">No messages yet. Send a message below to get started!</p>' : messages.map(msg => `
+              <div class="message-bubble ${msg.sender_type === SENDER_TYPES.CUSTOMER ? 'customer' : 'company'}">
+                <div class="message-header">
+                  <span class="sender-name">${msg.sender_name || (msg.sender_type === SENDER_TYPES.CUSTOMER ? 'You' : 'Company')}</span>
+                  <span class="message-time">${new Date(msg.created_at).toLocaleString()}</span>
                 </div>
-                <p style="color: #4b5563; margin: 0;">${msg.message_text || msg.content || msg.message || ''}</p>
+                <div class="message-content">${msg.message_text || msg.content || msg.message || ''}</div>
               </div>
             `).join('')}
           </div>
 
           <!-- Send Message Form -->
-          <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
-            <h4 style="margin: 0 0 12px 0; color: #1f2937; font-size: 14px; font-weight: 600;">Send a Message</h4>
+          <div class="message-compose card">
+            <h4 class="compose-title">Send a Message</h4>
             <form id="send-message-form" onsubmit="sendMessage(event)">
               <textarea
                 id="message-input"
+                class="textarea-modern"
                 placeholder="Type your message here..."
-                style="width: 100%; min-height: 80px; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; font-size: 14px; resize: vertical; margin-bottom: 12px;"
                 required
               ></textarea>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <p style="color: #6b7280; font-size: 12px; margin: 0;">We'll respond as soon as possible</p>
+              <div class="compose-actions">
+                <p class="compose-hint">We'll respond as soon as possible</p>
                 <button
                   type="submit"
                   id="send-message-btn"
-                  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
-                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';"
-                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';"
+                  class="btn-modern"
                 >
                   Send Message
                 </button>
