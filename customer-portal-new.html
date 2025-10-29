@@ -1880,7 +1880,7 @@
         messageInput.value = '';
 
         // Reload portal data to show new message
-        await loadPortalData();
+        await refreshLivingQuoteData(customerToken);
 
         // Show success message
         alert('✅ Message sent successfully!');
