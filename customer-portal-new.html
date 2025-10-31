@@ -2016,22 +2016,28 @@
       filesSection.innerHTML = `
         <div style="background: #f9fafb; border-radius: 8px; padding: 20px;">
           <h3 style="margin-bottom: 15px; color: #1f2937;">Files & Attachments</h3>
-          ${files.map(file => `
-            <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <p style="font-weight: 600; color: #1f2937; margin-bottom: 5px;">${file.file_name}</p>
-                <p style="color: #9ca3af; font-size: 12px;">${new Date(file.uploaded_at).toLocaleDateString()}</p>
+          ${files.map(file => {
+            // Construct proper Supabase Storage public URL
+            const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/files/${file.file_url}`;
+            console.log('📎 File URL:', file.file_name, '→', publicUrl);
+
+            return `
+              <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <p style="font-weight: 600; color: #1f2937; margin-bottom: 5px;">${file.file_name}</p>
+                  <p style="color: #9ca3af; font-size: 12px;">${new Date(file.uploaded_at).toLocaleDateString()}</p>
+                </div>
+                <a href="${publicUrl}" target="_blank" style="
+                  background: #667eea;
+                  color: white;
+                  padding: 6px 12px;
+                  border-radius: 4px;
+                  text-decoration: none;
+                  font-size: 12px;
+                ">Download</a>
               </div>
-              <a href="${file.file_url}" target="_blank" style="
-                background: #667eea;
-                color: white;
-                padding: 6px 12px;
-                border-radius: 4px;
-                text-decoration: none;
-                font-size: 12px;
-              ">Download</a>
-            </div>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       `;
     }
