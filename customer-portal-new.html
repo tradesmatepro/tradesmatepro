@@ -1015,15 +1015,18 @@
 
       // Use timeline data from RPC if available, otherwise build from work orders
       let events = [];
-      let currentStatus = null;
+      let currentStatus = (workOrders && workOrders[0] && workOrders[0].status) || null;
 
       if (timelineData && timelineData.length > 0) {
-        // Use timeline from RPC
-        events = timelineData.map(item => ({
-          date: item.timestamp,
-          label: item.description,
-          status: 'completed'
-        }));
+        // Use timeline from RPC (be tolerant to different field names)
+        events = timelineData
+          .map(item => {
+            const date = item.timestamp || item.time || item.created_at || item.date || item.occurred_at || null;
+            const label = item.description || item.event || item.label || item.title || item.name || null;
+            return { date, label, status: 'completed' };
+          })
+          // Filter out entries with no label to avoid "undefined"
+          .filter(e => !!e.label);
       } else {
         // Fallback: Build timeline from work orders
         workOrders.forEach(wo => {
@@ -1062,6 +1065,44 @@
         });
       }
 
+      // If RPC timeline produced no valid events, fallback to work orders
+      if (events.length === 0 && workOrders && workOrders.length > 0) {
+        workOrders.forEach(wo => {
+          currentStatus = wo.status;
+          if (wo.quote_sent_at) {
+            events.push({ date: wo.quote_sent_at, label: 'Quote sent to customer', status: 'completed', order: wo });
+          }
+          if (wo.quote_viewed_at || wo.viewed_at) {
+            events.push({ date: wo.quote_viewed_at || wo.viewed_at, label: 'Customer viewed quote', status: 'completed', order: wo });
+          }
+          if (wo.quote_accepted_at || wo.approved_at) {
+            events.push({ date: wo.quote_accepted_at || wo.approved_at, label: 'Quote approved by customer', status: 'completed', order: wo });
+          }
+          if (wo.scheduled_start) {
+            const isPast = new Date(wo.scheduled_start) < new Date();
+            events.push({
+              date: wo.scheduled_start,
+              label: 'Job scheduled',
+              status: isPast ? 'completed' : 'in-progress',
+              order: wo
+            });
+          }
+          if (wo.actual_start) {
+            events.push({ date: wo.actual_start, label: 'Job started', status: 'completed', order: wo });
+          }
+          if (wo.actual_end || wo.completed_at) {
+            events.push({ date: wo.actual_end || wo.completed_at, label: 'Job completed', status: 'completed', order: wo });
+          }
+          if (wo.invoice_sent_at) {
+            events.push({ date: wo.invoice_sent_at, label: 'Invoice sent', status: 'completed', order: wo });
+          }
+          if (wo.paid_at) {
+            events.push({ date: wo.paid_at, label: 'Payment received', status: 'completed', order: wo });
+          }
+        });
+      }
+
+
       // Sort by date
       events.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -1089,12 +1130,13 @@
       let html = '';
       events.forEach(event => {
         const icon = event.status === 'completed' ? '✓' : '●';
+        const dateText = formatDate(event.date);
         html += `
           <div class="timeline-item">
             <div class="timeline-icon ${event.status}">${icon}</div>
             <div class="timeline-content">
               <div class="timeline-title">${event.label}</div>
-              <div class="timeline-date">${formatDate(event.date)}</div>
+              ${dateText ? `<div class="timeline-date">${dateText}</div>` : ''}
             </div>
           </div>
         `;
@@ -1213,10 +1255,11 @@
       return ''; // Buttons moved to bottom of page
     }
 
-    // Format date
+    // Format date (returns empty string if invalid)
     function formatDate(dateStr) {
-      if (!dateStr) return 'N/A';
+      if (!dateStr) return '';
       const date = new Date(dateStr);
+      if (isNaN(date.getTime())) return '';
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
