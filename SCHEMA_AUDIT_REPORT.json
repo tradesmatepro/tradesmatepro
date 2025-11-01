@@ -1,0 +1,205 @@
+{
+  "timestamp": "2025-10-17T15:56:23.046Z",
+  "summary": {
+    "tablesChecked": 40,
+    "tablesExist": 25,
+    "tablesMissing": 15,
+    "bucketsChecked": 3,
+    "bucketsExist": 0,
+    "bucketsMissing": 3,
+    "totalIssues": 18
+  },
+  "tables": {
+    "exists": [
+      "companies",
+      "users",
+      "profiles",
+      "employees",
+      "customers",
+      "settings",
+      "work_orders",
+      "work_order_line_items",
+      "work_order_attachments",
+      "schedule_events",
+      "employee_time_off",
+      "documents",
+      "invoices",
+      "invoice_line_items",
+      "payments",
+      "expenses",
+      "purchase_orders",
+      "messages",
+      "notifications",
+      "marketplace_requests",
+      "marketplace_responses",
+      "company_tags",
+      "request_tags",
+      "auto_accept_rules",
+      "vendors"
+    ],
+    "missing": [
+      "public_settings",
+      "employee_availability",
+      "job_assignments",
+      "attachments",
+      "job_photos",
+      "expense_receipts",
+      "marketplace_reviews",
+      "company_approval_settings",
+      "customer_portal_accounts",
+      "service_requests",
+      "customer_reviews",
+      "service_contracts",
+      "technician_locations",
+      "items_catalog",
+      "company_customers"
+    ],
+    "empty": [
+      "users",
+      "profiles",
+      "settings",
+      "work_order_attachments",
+      "schedule_events",
+      "employee_time_off",
+      "documents",
+      "invoices",
+      "invoice_line_items",
+      "payments",
+      "expenses",
+      "purchase_orders",
+      "messages",
+      "notifications",
+      "marketplace_requests",
+      "marketplace_responses",
+      "company_tags",
+      "request_tags",
+      "auto_accept_rules",
+      "vendors"
+    ],
+    "hasData": [
+      "companies",
+      "employees",
+      "customers",
+      "work_orders",
+      "work_order_line_items"
+    ]
+  },
+  "buckets": {
+    "exists": [],
+    "missing": [
+      "files",
+      "company-files",
+      "company-assets"
+    ]
+  },
+  "issues": [
+    {
+      "type": "MISSING_TABLE",
+      "table": "public_settings",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "employee_availability",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "job_assignments",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "attachments",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "job_photos",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "expense_receipts",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "marketplace_reviews",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "company_approval_settings",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "customer_portal_accounts",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "service_requests",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "customer_reviews",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "service_contracts",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "technician_locations",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "items_catalog",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_TABLE",
+      "table": "company_customers",
+      "severity": "HIGH",
+      "impact": "Frontend queries will fail with 404 errors"
+    },
+    {
+      "type": "MISSING_BUCKET",
+      "bucket": "files",
+      "severity": "HIGH",
+      "impact": "File uploads will fail"
+    },
+    {
+      "type": "MISSING_BUCKET",
+      "bucket": "company-files",
+      "severity": "HIGH",
+      "impact": "File uploads will fail"
+    },
+    {
+      "type": "MISSING_BUCKET",
+      "bucket": "company-assets",
+      "severity": "HIGH",
+      "impact": "File uploads will fail"
+    }
+  ]
+}

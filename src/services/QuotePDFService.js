@@ -25,7 +25,20 @@ const QuotePDFService = {
     return { quote, items, customer };
   },
 
-  exportHtml(company, quote, items, customer = {}) {
+  async getAttachments(companyId, quoteId) {
+    try {
+      const attachmentsRes = await supaFetch(`attachments?work_order_id=eq.${quoteId}&select=*`, { method: 'GET' }, companyId);
+      if (attachmentsRes.ok) {
+        return await attachmentsRes.json();
+      }
+      return [];
+    } catch (error) {
+      console.error('Error fetching attachments:', error);
+      return [];
+    }
+  },
+
+  exportHtml(company, quote, items, customer = {}, attachments = []) {
     const currency = company?.currency || 'USD';
     const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(Number(n || 0));
 
@@ -170,51 +183,173 @@ const QuotePDFService = {
     }
 
     const logoHtml = company.company_logo_url
-      ? `<img src="${company.company_logo_url}" alt="Logo" style="height:120px;object-fit:contain;max-width:560px" />`
-      : `<div style="font-size:20px;font-weight:700">${company.name || company.company_name || 'Your Company'}</div>`;
+      ? `<img src="${company.company_logo_url}" alt="Logo" style="height:100px;object-fit:contain;max-width:400px;margin-bottom:15px" />`
+      : '';
+
+    const quoteDate = quote.created_at ? new Date(quote.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
 
     return `<!doctype html><html><head><meta charset="utf-8"><title>Quote #${quote.quote_number || quote.id}</title>
     <style>
-    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:#000;padding:24px;line-height:1.6;background:#fff}
-    .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:24px;border-bottom:3px solid #000}
-    .brand{display:flex;gap:16px;align-items:flex-start}
-    .meta{font-size:14px;color:#333;line-height:1.4}
-    .section{margin:24px 0;padding:20px;background:#fff;border:2px solid #000;border-radius:8px}
-    .section h4{margin:0 0 16px 0;font-weight:700;color:#000;font-size:18px;border-bottom:2px solid #000;padding-bottom:8px}
-    table{width:100%;border-collapse:collapse;margin:24px 0;background:white;border:2px solid #000;border-radius:8px;overflow:hidden}
-    th,td{padding:16px 12px;border-bottom:1px solid #000;text-align:left;font-size:14px;color:#000}
-    th{background:#f0f0f0;font-weight:700;color:#000}
-    .totals{margin-top:32px;padding:20px;background:#fff;border:2px solid #000;border-radius:8px;max-width:400px;margin-left:auto}
-    .totals div{margin:8px 0;display:flex;justify-content:space-between;font-size:16px;color:#000}
-    .totals div:last-child{border-top:3px solid #000;font-weight:700;font-size:20px;padding-top:12px;margin-top:12px;color:#000}
-    @media print{body{padding:12px} .section{break-inside:avoid}}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #1f2937; padding: 40px; line-height: 1.6; background: #fff; font-size: 13px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 3px solid #3b82f6; }
+    .company-section { flex: 1; }
+    .company-logo { margin-bottom: 15px; }
+    .company-name { font-size: 28px; font-weight: 700; color: #3b82f6; margin-bottom: 8px; }
+    .company-details { font-size: 13px; color: #6b7280; line-height: 1.8; }
+    .quote-section { text-align: right; }
+    .quote-title { font-size: 48px; font-weight: 700; color: #3b82f6; margin: 0; }
+    .quote-meta { font-size: 13px; color: #6b7280; margin-top: 10px; line-height: 1.8; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 40px; }
+    .info-box { padding: 20px; background: #f3f4f6; border-radius: 8px; border-left: 4px solid #3b82f6; }
+    .info-label { font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .info-content { font-size: 13px; color: #1f2937; line-height: 1.8; }
+    .info-content strong { color: #111827; }
+    .section { margin: 30px 0; padding: 20px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #3b82f6; }
+    .section h4 { margin: 0 0 15px 0; font-weight: 700; color: #3b82f6; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .section-content { font-size: 13px; color: #1f2937; line-height: 1.6; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th { background: #3b82f6; color: white; padding: 12px 15px; text-align: left; font-weight: 600; font-size: 13px; }
+    td { padding: 12px 15px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+    tr:last-child td { border-bottom: none; }
+    .totals-section { margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb; }
+    .totals-table { width: 100%; max-width: 400px; margin-left: auto; }
+    .totals-table td { border: none; padding: 10px 15px; }
+    .totals-row { font-size: 13px; color: #6b7280; }
+    .totals-row td:first-child { text-align: right; }
+    .totals-row td:last-child { text-align: right; color: #1f2937; }
+    .total-amount-row { font-size: 18px; font-weight: 700; color: #3b82f6; border-top: 2px solid #3b82f6; padding-top: 15px !important; }
+    .total-amount-row td:last-child { color: #3b82f6; font-size: 24px; }
+    .footer { margin-top: 50px; padding-top: 30px; border-top: 1px solid #e5e7eb; text-align: center; color: #6b7280; font-size: 12px; }
+    .footer-text { margin: 5px 0; }
+    @media print { body { padding: 0; } .container { max-width: 100%; } }
     </style></head><body>
+    <div class="container">
+      <!-- Header -->
       <div class="header">
-        <div class="brand">
-          ${logoHtml}
-          <div>
-            <div style="font-size:18px;font-weight:600">${company.name || company.company_name || ''}</div>
-            <div class="meta">${companyAddr}</div>
-            <div class="meta">${company.phone || ''}${company.email ? ` • ${company.email}` : ''}</div>
+        <div class="company-section">
+          <div class="company-logo">${logoHtml}</div>
+          <div class="company-name">${company.name || company.company_name || 'Your Company'}</div>
+          <div class="company-details">
+            ${companyAddr ? `<div>${companyAddr}</div>` : ''}
+            ${company.phone ? `<div>📞 ${company.phone}</div>` : ''}
+            ${company.email ? `<div>📧 ${company.email}</div>` : ''}
           </div>
         </div>
-        <div class="meta">Quote #${quote.quote_number || quote.id}<br/>Date: ${quote.created_at ? new Date(quote.created_at).toLocaleDateString() : ''}<br/>${validityText}</div>
+        <div class="quote-section">
+          <div class="quote-title">QUOTE</div>
+          <div class="quote-meta">
+            Quote #${quote.quote_number || quote.id}<br/>
+            Date: ${quoteDate}<br/>
+            ${validityText}
+          </div>
+        </div>
       </div>
-      <div class="section">
-        <h4>Quote For</h4>
-        <div>${customer.name || ''}</div>
-        <div class="meta">${customer.email || ''}${customer.phone ? ` • ${customer.phone}` : ''}</div>
-        <div class="meta">${customerAddr || '<span style="color:#9ca3af">No billing address on file</span>'}</div>
+
+      <!-- Quote For & Details -->
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-label">Quote For</div>
+          <div class="info-content">
+            <strong>${customer.name || 'Customer'}</strong><br>
+            ${customer.email ? `<div style="margin-top: 8px;">${customer.email}</div>` : ''}
+            ${customer.phone ? `<div>${customer.phone}</div>` : ''}
+            ${customerAddr ? `<div style="white-space: pre-line; margin-top: 8px;">${customerAddr}</div>` : '<div style="color: #9ca3af; margin-top: 8px;">No billing address on file</div>'}
+          </div>
+        </div>
+        <div class="info-box">
+          <div class="info-label">Quote Details</div>
+          <div class="info-content">
+            <div><strong>Valid Until:</strong> ${validityText}</div>
+            ${quote.description ? `<div style="margin-top: 8px;"><strong>Description:</strong> ${quote.description}</div>` : ''}
+          </div>
+        </div>
       </div>
-      ${quote.description ? `<div class="section"><h4>Quote Description</h4><div style="background:#fff;padding:12px;border-radius:6px;border:2px solid #000;color:#000">${quote.description}</div></div>` : ''}
+
+      <!-- Pricing Content -->
       ${pricingContent}
-      <div class="totals">
-        <div><span>Subtotal</span><span>${fmt(subtotal)}</span></div>
-        <div><span>Tax</span><span>${fmt(tax_amount)}</span></div>
-        <div style="font-weight:700"><span>Total Quote</span><span>${fmt(total_amount)}</span></div>
+
+      <!-- Totals -->
+      <div class="totals-section">
+        <table class="totals-table">
+          <tr class="totals-row">
+            <td>Subtotal:</td>
+            <td>${fmt(subtotal)}</td>
+          </tr>
+          <tr class="totals-row">
+            <td>Tax:</td>
+            <td>${fmt(tax_amount)}</td>
+          </tr>
+          <tr class="total-amount-row">
+            <td>Total Quote:</td>
+            <td>${fmt(total_amount)}</td>
+          </tr>
+        </table>
       </div>
-      ${ (company.quote_terms || company.default_quote_terms) ? `<div class="section"><h4>Terms & Conditions</h4><div>${company.quote_terms || company.default_quote_terms}</div></div>` : ''}
-      ${ (company.quote_footer) ? `<div class="section"><div>${company.quote_footer}</div></div>` : ''}
+
+      <!-- Attachments Section -->
+      ${attachments && attachments.length > 0 ? `
+      <div class="section" style="margin-top: 40px; page-break-inside: avoid;">
+        <h4 style="color: #1f2937; font-size: 16px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #3b82f6; padding-bottom: 8px;">📎 Attachments</h4>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+          ${attachments.map(file => {
+            const isImage = file.file_type && ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(file.file_type.toLowerCase());
+            const fileName = file.file_name || 'Attachment';
+            const fileSize = file.file_size ? `${(file.file_size / 1024).toFixed(1)} KB` : '';
+
+            if (isImage) {
+              // For images, show thumbnail with filename below
+              return `
+                <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; background: #f9fafb; text-align: center;">
+                  <div style="width: 100%; height: 150px; background: #fff; border-radius: 4px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <div style="color: #9ca3af; font-size: 12px;">📷 ${fileName}</div>
+                  </div>
+                  <div style="font-size: 12px; color: #6b7280; word-break: break-word;">${fileName}</div>
+                  ${fileSize ? `<div style="font-size: 11px; color: #9ca3af; margin-top: 4px;">${fileSize}</div>` : ''}
+                </div>`;
+            } else {
+              // For non-images, show file icon with details
+              return `
+                <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; background: #f9fafb; display: flex; align-items: center; gap: 10px;">
+                  <div style="font-size: 32px;">📄</div>
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="font-size: 13px; color: #1f2937; font-weight: 500; word-break: break-word;">${fileName}</div>
+                    ${fileSize ? `<div style="font-size: 11px; color: #9ca3af; margin-top: 4px;">${fileSize}</div>` : ''}
+                  </div>
+                </div>`;
+            }
+          }).join('')}
+        </div>
+        <div style="margin-top: 15px; padding: 12px; background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 4px;">
+          <p style="margin: 0; font-size: 12px; color: #1e40af;">
+            <strong>Note:</strong> Attached files are available for download in the digital version of this quote.
+          </p>
+        </div>
+      </div>
+      ` : ''}
+
+      <!-- Terms & Conditions -->
+      ${ (company.quote_terms || company.default_quote_terms) ? `
+      <div class="section">
+        <h4>Terms & Conditions</h4>
+        <div class="section-content">${company.quote_terms || company.default_quote_terms}</div>
+      </div>
+      ` : ''}
+
+      <!-- Footer -->
+      ${ (company.quote_footer) ? `
+      <div class="section">
+        <div class="section-content">${company.quote_footer}</div>
+      </div>
+      ` : ''}
+
+      <div class="footer">
+        <div class="footer-text"><strong>Thank you for considering us!</strong></div>
+        <div class="footer-text">Please contact us if you have any questions about this quote.</div>
+        <div class="footer-text" style="margin-top: 15px; font-size: 11px; color: #9ca3af;">Powered by TradeMate Pro</div>
+      </div>
+    </div>
     </body></html>`;
   },
 
@@ -224,7 +359,11 @@ const QuotePDFService = {
     const companyProfile = await settingsService.getCompanyProfile(companyId);
     const businessSettings = await settingsService.getBusinessSettings(companyId);
     const company = { ...(businessSettings || {}), ...(companyProfile || {}) };
-    const html = this.exportHtml(company, quote, items, customer);
+
+    // Fetch attachments for this quote
+    const attachments = await this.getAttachments(companyId, quoteId);
+
+    const html = this.exportHtml(company, quote, items, customer, attachments);
     const w = window.open('', '_blank');
     if (w) {
       w.document.write(html);
@@ -241,7 +380,11 @@ const QuotePDFService = {
     const companyProfile = await settingsService.getCompanyProfile(companyId);
     const businessSettings = await settingsService.getBusinessSettings(companyId);
     const company = { ...(businessSettings || {}), ...(companyProfile || {}) };
-    const html = this.exportHtml(company, quote, items, customer);
+
+    // Fetch attachments for this quote
+    const attachments = await this.getAttachments(companyId, quoteId);
+
+    const html = this.exportHtml(company, quote, items, customer, attachments);
     const w = window.open('', '_blank');
     if (w) {
       w.document.write(html);
@@ -260,7 +403,11 @@ const QuotePDFService = {
     try {
       const { quote, items, customer } = await this.get(companyId, quoteId);
       const company = await settingsService.getBusinessSettings(companyId);
-      const html = this.exportHtml(company, quote, items, customer);
+
+      // Fetch attachments for this quote
+      const attachments = await this.getAttachments(companyId, quoteId);
+
+      const html = this.exportHtml(company, quote, items, customer, attachments);
 
       // Convert HTML to PDF using browser's print functionality
       // Create a temporary window for PDF generation

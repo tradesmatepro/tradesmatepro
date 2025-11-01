@@ -1,0 +1,97 @@
+[
+  {
+    "tab": "Business Settings",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Business Settings",
+    "issue": "NO_PHONE_FORMATTING",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Service Tags",
+    "issue": "NO_SAVE_FUNCTION",
+    "severity": "CRITICAL"
+  },
+  {
+    "tab": "Service Tags",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Rate Cards",
+    "issue": "NO_SAVE_FUNCTION",
+    "severity": "CRITICAL"
+  },
+  {
+    "tab": "Rate Cards",
+    "issue": "NO_API_METHOD",
+    "severity": "CRITICAL"
+  },
+  {
+    "tab": "Rate Cards",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Rates & Pricing",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Smart Scheduling",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Marketplace Settings",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Quote Acceptance",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Invoicing",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Document Templates",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Org & Approvals",
+    "issue": "NO_SAVE_FUNCTION",
+    "severity": "CRITICAL"
+  },
+  {
+    "tab": "Org & Approvals",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Module Permissions",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Appearance",
+    "issue": "FILE_NOT_FOUND",
+    "severity": "CRITICAL"
+  },
+  {
+    "tab": "Notifications",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  },
+  {
+    "tab": "Security",
+    "issue": "NO_SANITIZATION",
+    "severity": "WARNING"
+  }
+]

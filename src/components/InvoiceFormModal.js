@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supaFetch } from '../utils/supaFetch';
-import { XMarkIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, PlusIcon, TrashIcon, PaperClipIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import DocumentsService from '../services/DocumentsService';
+import { useUser } from '../contexts/UserContext';
 // Avoid relying on persisted line_total; recompute UI totals from normalized fields
 const computeTotalsUI = (items = [], invoiceTaxRate = 0, invoiceDiscountAmount = 0) => {
   const lineItemsTotal = items.reduce((sum, item) => {
@@ -32,6 +34,7 @@ const computeTotalsUI = (items = [], invoiceTaxRate = 0, invoiceDiscountAmount =
 
 
 const InvoiceFormModal = ({ isOpen, onClose, onSubmit, invoice = null, companyId, onStatusChange }) => {
+  const { user } = useUser();
   const [formData, setFormData] = useState({
     customer_id: '',
     work_order_id: '',
@@ -46,22 +49,37 @@ const InvoiceFormModal = ({ isOpen, onClose, onSubmit, invoice = null, companyId
   const [workOrders, setWorkOrders] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // File attachments state
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [uploadingFiles, setUploadingFiles] = useState(false);
+
   useEffect(() => {
     if (isOpen && companyId) {
       loadCustomers();
       loadWorkOrders();
       if (invoice) {
+        // ✅ Handle both invoice data (editing) and work_order data (creating)
+        const isExistingInvoice = invoice.invoice_number || invoice.invoice_id;
+
         setFormData({
           customer_id: invoice.customer_id || '',
-          work_order_id: invoice.work_order_id || invoice.job_id || '',
-          notes: invoice.notes || '',
+          work_order_id: invoice.work_order_id || invoice.id || invoice.job_id || '',
+          notes: invoice.notes || invoice.description || '',
           tax_rate: typeof invoice.tax_rate === 'number' ? invoice.tax_rate : 0,
           discount_amount: typeof invoice.discount_amount === 'number' ? invoice.discount_amount : 0,
           currency: invoice.currency || 'USD',
           status: invoice.status || invoice.invoice_status || 'UNPAID'
         });
-        // Normalize items shape from invoice_items to the UI's expected fields
-        const normalizedItems = (invoice.items || []).map(it => {
+
+        // Normalize items shape from invoice_items or work_order_line_items
+        let itemsToUse = invoice.items || invoice.invoice_items || [];
+
+        // If this is a work_order being converted to invoice, use work_order line items
+        if (!isExistingInvoice && invoice.work_order_line_items) {
+          itemsToUse = invoice.work_order_line_items;
+        }
+
+        const normalizedItems = itemsToUse.map(it => {
           const quantity = Number(it.quantity ?? it.qty ?? 1);
           const unitPrice = Number(it.unit_price ?? it.rate ?? 0);
           const discountVal = Number(it.discount_value ?? it.discount ?? 0);
@@ -106,6 +124,89 @@ const InvoiceFormModal = ({ isOpen, onClose, onSubmit, invoice = null, companyId
       }
     } catch (error) {
       console.error('Error loading work orders:', error);
+    }
+  };
+
+  // Load existing attachments when editing an invoice
+  useEffect(() => {
+    const loadAttachments = async () => {
+      if (isOpen && invoice?.work_order_id && companyId) {
+        try {
+          const response = await supaFetch(
+            `attachments?work_order_id=eq.${invoice.work_order_id}&select=*`,
+            { method: 'GET' },
+            companyId
+          );
+
+          if (response && Array.isArray(response)) {
+            setAttachedFiles(response);
+          }
+        } catch (error) {
+          console.error('Error loading attachments:', error);
+        }
+      }
+    };
+
+    loadAttachments();
+  }, [isOpen, invoice?.work_order_id, companyId]);
+
+  // File upload handlers
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploadingFiles(true);
+    try {
+      const workOrderId = formData.work_order_id || invoice?.work_order_id;
+
+      for (const file of files) {
+        // Upload file using DocumentsService
+        const result = await DocumentsService.uploadAttachment(
+          companyId,
+          workOrderId, // Can be null for new invoices
+          file,
+          user?.id,
+          ['invoice', 'receipt'], // Auto-tag as invoice/receipt attachment
+          '' // No OCR text
+        );
+
+        if (result.success) {
+          setAttachedFiles(prev => [...prev, {
+            id: result.attachment?.id,
+            file_name: file.name,
+            file_url: result.attachment?.file_url,
+            file_size: file.size,
+            uploaded_at: new Date().toISOString()
+          }]);
+        }
+      }
+
+      // Reset file input
+      e.target.value = '';
+
+      alert('Files uploaded successfully!');
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      alert('Failed to upload files: ' + error.message);
+    } finally {
+      setUploadingFiles(false);
+    }
+  };
+
+  const handleRemoveFile = async (fileId) => {
+    try {
+      // Delete from database
+      await supaFetch(`attachments?id=eq.${fileId}`, {
+        method: 'DELETE'
+      }, companyId);
+
+      // Remove from state
+      setAttachedFiles(prev => prev.filter(f => f.id !== fileId));
+
+      alert('File removed successfully!');
+    } catch (error) {
+      console.error('Error removing file:', error);
+      alert('Failed to remove file: ' + error.message);
     }
   };
 
@@ -274,6 +375,83 @@ const InvoiceFormModal = ({ isOpen, onClose, onSubmit, invoice = null, companyId
               <option value="OVERDUE">Overdue</option>
               <option value="VOID">Void</option>
             </select>
+          </div>
+
+          {/* File Attachments - Photos, Receipts, etc. */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+              <PaperClipIcon className="w-5 h-5" />
+              Attachments
+              <span className="text-xs text-gray-500 font-normal">(Before/after photos, receipts, proof of work)</span>
+            </label>
+
+            {/* Upload Button */}
+            <div className="mb-3">
+              <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors">
+                <PhotoIcon className="w-5 h-5" />
+                <span>{uploadingFiles ? 'Uploading...' : 'Upload Files'}</span>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*,application/pdf,.doc,.docx"
+                  onChange={handleFileUpload}
+                  disabled={uploadingFiles}
+                  className="hidden"
+                />
+              </label>
+              <p className="text-xs text-gray-500 mt-1">
+                Attach before/after photos, receipts for materials, or proof of work completed
+              </p>
+            </div>
+
+            {/* Attached Files List */}
+            {attachedFiles.length > 0 && (
+              <div className="space-y-2">
+                {attachedFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    className="flex items-center justify-between p-2 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 transition-colors"
+                  >
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          // Generate signed URL for private file
+                          const signedUrl = await DocumentsService.getSignedUrl(file.file_url, 3600);
+                          if (signedUrl) {
+                            window.open(signedUrl, '_blank');
+                          } else {
+                            window?.toast?.error?.('Unable to open file');
+                          }
+                        } catch (error) {
+                          console.error('Error opening file:', error);
+                          window?.toast?.error?.('Failed to open file: ' + error.message);
+                        }
+                      }}
+                      className="flex items-center gap-2 flex-1 min-w-0 text-left"
+                    >
+                      <PaperClipIcon className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-blue-600 hover:text-blue-800 underline truncate">
+                          {file.file_name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {(file.file_size / 1024).toFixed(1)} KB • Click to view
+                        </p>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFile(file.id)}
+                      className="ml-2 p-1 text-red-600 hover:bg-red-50 rounded"
+                      title="Remove file"
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div>

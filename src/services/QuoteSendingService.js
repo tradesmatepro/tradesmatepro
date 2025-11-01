@@ -41,16 +41,40 @@ class QuoteSendingService {
 
   /**
    * Generate portal link for customer to view/approve quote
-   * UPDATED: Use simple query parameter format for standalone HTML page
+   * UPDATED: Use customer portal token (unified portal for all work orders)
    */
   async generatePortalLink(companyId, quoteId) {
     try {
-      // For standalone HTML page, we just use the quote ID as a query parameter
-      // No need for tokens since the HTML page will check quote status
-      // and only allow actions on quotes with status='sent'
+      console.log('🔗 Generating portal link for quote:', quoteId);
 
-      // Return portal URL with quote ID
-      return `${PORTAL_BASE_URL}?id=${quoteId}`;
+      // Get the quote with its portal_token
+      const quoteResponse = await supaFetch(
+        `work_orders?id=eq.${quoteId}&select=portal_token`,
+        { method: 'GET' },
+        companyId
+      );
+
+      if (!quoteResponse.ok) {
+        throw new Error('Failed to fetch quote');
+      }
+
+      const quotes = await quoteResponse.json();
+      if (!quotes || quotes.length === 0) {
+        throw new Error('Quote not found');
+      }
+
+      const portalToken = quotes[0].portal_token;
+
+      if (!portalToken) {
+        throw new Error('Quote portal token not found - this should have been auto-generated');
+      }
+
+      // Return living quote portal URL with token
+      // Customer will see quote, progress, invoice, messages, files
+      const portalUrl = `${PORTAL_BASE_URL.replace('quote.html', 'customer-portal-new.html')}?token=${portalToken}`;
+      console.log('✅ Portal link generated:', portalUrl);
+
+      return portalUrl;
     } catch (error) {
       console.error('Failed to generate portal link:', error);
       throw new Error('Failed to generate portal link');
@@ -135,7 +159,10 @@ class QuoteSendingService {
         }
       }
 
-      // Build email HTML with custom message
+      // Fetch attachments for this quote
+      const attachments = await QuotePDFService.getAttachments(companyId, quoteId);
+
+      // Build email HTML with custom message and attachments
       const emailHtml = this.buildEmailTemplate({
         customerName: customerName,
         companyName: company.name || company.company_name || 'TradeMate Pro',
@@ -145,18 +172,77 @@ class QuoteSendingService {
         portalLink,
         companyPhone: company.phone || company.phone_number || '',
         companyAddress: company.address || company.street_address || '',
-        customMessage: options.customMessage || ''
+        customMessage: options.customMessage || '',
+        attachments: attachments || []
       });
+
+      // Download and attach actual files from Supabase Storage
+      const fileAttachments = [];
+      if (attachments && attachments.length > 0) {
+        console.log('📎 Downloading attachments for email:', attachments.length, attachments);
+        const supabase = getSupabaseClient();
+
+        for (const attachment of attachments) {
+          try {
+            console.log('📥 Downloading attachment:', attachment.file_name, 'from:', attachment.file_url);
+
+            // Download file from storage
+            const { data: fileData, error: downloadError } = await supabase.storage
+              .from('files')
+              .download(attachment.file_url);
+
+            if (downloadError) {
+              console.error('❌ Failed to download attachment:', attachment.file_name, downloadError);
+              continue;
+            }
+
+            console.log('✅ Downloaded file:', attachment.file_name, 'size:', fileData.size, 'type:', fileData.type);
+
+            // Convert blob to base64 (browser-compatible, handles large files)
+            const base64 = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                // Remove the data URL prefix (e.g., "data:image/jpeg;base64,")
+                const base64String = reader.result.split(',')[1];
+                resolve(base64String);
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(fileData);
+            });
+
+            console.log('✅ Converted to base64, length:', base64.length);
+
+            fileAttachments.push({
+              filename: attachment.file_name,
+              content: base64,
+              contentType: fileData.type || 'application/octet-stream'
+            });
+
+            console.log('✅ Attached file:', attachment.file_name);
+          } catch (err) {
+            console.error('❌ Error processing attachment:', attachment.file_name, err);
+          }
+        }
+      }
+
+      console.log('📎 Total file attachments prepared:', fileAttachments.length);
 
       // Build payload for Edge Function
       const companyName = company.name || company.company_name || 'TradeMate Pro';
+      const allAttachments = [
+        ...(pdfAttachment ? [pdfAttachment] : []),
+        ...fileAttachments
+      ];
+
+      console.log('📎 All attachments for email:', allAttachments.map(a => ({ filename: a.filename, contentLength: a.content?.length, contentType: a.contentType })));
+
       const emailPayload = {
         from: options.fromEmail || `${companyName} <quotes@updates.tradesmatepro.com>`,
         to: customer.email,
         reply_to: company.email || 'support@tradesmatepro.com',  // Customer replies go to business email
         subject: options.subject || `Quote from ${companyName} - ${quote.title}`,
         html: emailHtml,
-        attachments: pdfAttachment ? [pdfAttachment] : [],
+        attachments: allAttachments,
         tags: [
           { name: 'type', value: 'quote' },
           { name: 'quote_id', value: quoteId.toString() },
@@ -278,6 +364,33 @@ class QuoteSendingService {
         Or copy this link: <a href="${data.portalLink}" style="color: #1e88e5;">${data.portalLink}</a>
       </p>
 
+      ${data.attachments && data.attachments.length > 0 ? `
+      <!-- Attachments Section -->
+      <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin: 30px 0;">
+        <h4 style="margin: 0 0 15px 0; font-size: 16px; color: #333;">📎 Attached Files (${data.attachments.length})</h4>
+        <div style="display: grid; gap: 10px;">
+          ${data.attachments.map(file => {
+            const fileName = file.file_name || 'Attachment';
+            const fileSize = file.file_size ? `${(file.file_size / 1024).toFixed(1)} KB` : '';
+            const isImage = file.file_type && ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(file.file_type.toLowerCase());
+            const icon = isImage ? '📷' : '📄';
+            return `
+              <div style="background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 24px;">${icon}</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 14px; color: #333; font-weight: 500;">${fileName}</div>
+                  ${fileSize ? `<div style="font-size: 12px; color: #666; margin-top: 2px;">${fileSize}</div>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <p style="margin: 15px 0 0 0; font-size: 13px; color: #666;">
+          <strong>Note:</strong> View all attachments in the customer portal by clicking the button above.
+        </p>
+      </div>
+      ` : ''}
+
       <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 30px 0; border-radius: 4px;">
         <p style="margin: 0; font-size: 14px; color: #856404;">
           <strong>💡 Pro Tip:</strong> This link is valid for 24 hours. After that, you can still access your quote by contacting us.
@@ -370,8 +483,11 @@ class QuoteSendingService {
    * Reduced from 12MB to ~200-500KB by using lower scale and JPEG compression
    */
   async generatePDFBase64(company, quote, customer) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
+        // Fetch attachments for this quote
+        const attachments = await QuotePDFService.getAttachments(company.id, quote.id);
+
         // Create a temporary container for rendering
         const container = document.createElement('div');
         container.style.position = 'absolute';
@@ -380,8 +496,8 @@ class QuoteSendingService {
         container.style.background = 'white';
         container.style.padding = '40px';
 
-        // Get HTML content from QuotePDFService
-        const htmlContent = QuotePDFService.exportHtml(company, quote, [], customer);
+        // Get HTML content from QuotePDFService with attachments
+        const htmlContent = QuotePDFService.exportHtml(company, quote, [], customer, attachments);
         container.innerHTML = htmlContent;
         document.body.appendChild(container);
 

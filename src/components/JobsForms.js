@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { supaFetch } from '../utils/supaFetch';
 import settingsService from '../services/SettingsService';
-import { getJobFormStatuses, getStatusLabel } from '../utils/statusHelpers';
 
 import {
   XMarkIcon,
@@ -23,8 +22,7 @@ export const JobForm = ({
   onSubmit,
   onCancel,
   onRevertToQuote,
-  loading = false,
-  onStatusChange
+  loading = false
 }) => {
   const navigate = useNavigate();
   const { user } = useUser();
@@ -37,7 +35,7 @@ export const JobForm = ({
 
   // Monitor job status changes for completion prompt
   useEffect(() => {
-    if ((formData?.job_status || '').toLowerCase() === 'completed' && !completionChoice) {
+    if (formData?.job_status === 'COMPLETED' && !completionChoice) {
       (async () => {
         try {
           const settings = await settingsService.getBusinessSettings(user.company_id);
@@ -55,7 +53,7 @@ export const JobForm = ({
           setShowCompletionPrompt(true);
         }
       })();
-    } else if ((formData?.job_status || '').toLowerCase() !== 'completed') {
+    } else if (formData?.job_status !== 'COMPLETED') {
       setShowCompletionPrompt(false);
       setCompletionChoice(null);
     }
@@ -152,13 +150,7 @@ export const JobForm = ({
         </button>
       </div>
 
-      <form onSubmit={(e) => {
-        console.log('🔍 JobsForms - Form submitted:', {
-          formData_job_status: formData.job_status,
-          formData_id: formData.id
-        });
-        onSubmit(e);
-      }}>
+      <form onSubmit={onSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Job Information */}
           <div className="space-y-4">
@@ -167,9 +159,9 @@ export const JobForm = ({
             {/* Model badge and Edit Quote link for model-priced jobs */}
             <div className="flex items-center justify-between mb-2">
               <span className={getBadgeClass(formData?.pricing_model)}>
-                {formData?.pricing_model ? `Model: ${formData.pricing_model.replace('_', ' ')}` : 'Model: Hourly Rate'}
+                {formData?.pricing_model ? `Model: ${formData.pricing_model.replace('_', ' ')}` : 'Model: Time & Materials'}
               </span>
-              {formData?.pricing_model && formData.pricing_model !== 'HOURLY' && formData?.id && (
+              {formData?.pricing_model && formData.pricing_model !== 'TIME_MATERIALS' && formData?.id && (
                 <button
                   type="button"
                   onClick={() => navigate(`/quotes?id=${formData.id}`)}
@@ -241,8 +233,8 @@ export const JobForm = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">Unassigned</option>
-                {Array.from(new Map((employees || []).map(emp => [emp.id, emp])).values()).map((employee, idx) => (
-                  <option key={`${employee.id}-${idx}`} value={employee.id}>
+                {employees.map(employee => (
+                  <option key={employee.id} value={employee.id}>
                     {employee.full_name} ({employee.role})
                   </option>
                 ))}
@@ -255,30 +247,15 @@ export const JobForm = ({
               </label>
               <select
                 value={formData.job_status}
-                onChange={(e) => {
-                  const nextStatus = e.target.value;
-                  console.log('🔍 JobsForms - Status dropdown changed:', {
-                    oldStatus: formData.job_status,
-                    newStatus: nextStatus
-                  });
-                  setFormData({ ...formData, job_status: nextStatus });
-                  // Auto-save status changes immediately using optional callback provided by parent
-                  if (typeof onStatusChange === 'function') {
-                    onStatusChange(nextStatus);
-                  }
-                }}
+                onChange={(e) => setFormData({...formData, job_status: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                {/* ✅ SMART STATUS FILTERING: Only show relevant statuses based on current status */}
-                {getJobFormStatuses(formData.job_status || 'approved').map(status => (
-                  <option key={status} value={status}>
-                    {getStatusLabel(status)}
-                  </option>
-                ))}
+                <option value="DRAFT">Draft</option>
+                <option value="SCHEDULED">Scheduled</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
               </select>
-              <p className="mt-1 text-xs text-gray-500">
-                Only relevant status transitions are shown
-              </p>
             </div>
 
             {/* Job Address Card */}
@@ -364,8 +341,8 @@ export const JobForm = ({
             )}
 
 
-            {/* Pricing summary for non-Hourly jobs */}
-            {formData?.pricing_model && formData.pricing_model !== 'HOURLY' && (
+            {/* Pricing summary for non-Time & Materials jobs */}
+            {formData?.pricing_model && formData.pricing_model !== 'TIME_MATERIALS' && (
               <div className="bg-gray-50 p-4 rounded-md border border-gray-200 mb-2">
                 <div className="text-sm text-gray-700 mb-2">
                   Pricing Model: <span className="font-medium">{formData.pricing_model.replace('_', ' ')}</span>

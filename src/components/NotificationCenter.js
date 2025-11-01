@@ -4,6 +4,8 @@ import { useUser } from '../contexts/UserContext';
 import notificationsService from '../services/NotificationsService';
 import { useNavigate } from 'react-router-dom';
 import { isAdmin } from '../utils/roleUtils';
+import { getSupabaseClient } from '../utils/supabaseClient';
+
 
 const POLL_MS = 60000; // 60s
 
@@ -42,27 +44,81 @@ const NotificationCenter = () => {
       }
     } catch {}
 
-    if (!n?.related_id) {
-      navigate('/notifications');
+    // Use action_url if available (new standard)
+    if (n.action_url) {
+      navigate(n.action_url);
       return;
     }
 
-    switch (n.type) {
-      case 'INVOICE':
-        navigate(`/invoices?view=${n.related_id}`);
-        break;
-      case 'QUOTE':
-        navigate(`/quotes?open=${n.related_id}`);
-        break;
-      case 'INVENTORY':
-        navigate(`/inventory?item=${n.related_id}`);
-        break;
-      case 'PTO':
-        navigate(isAdmin(user) ? '/admin/time-off' : '/my-time-off');
-        break;
-      default:
-        navigate('/notifications');
+    // Route based on business category and metadata in data JSON
+    const d = n.data || {};
+    const category = String(d.category || '').toUpperCase();
+    const relatedId = d.related_id || n.related_id || d.work_order_id || d.invoice_id || d.customer_id || d.id || null;
+
+    // Heuristic: detect quote approval notifications without explicit category
+    const titleLower = (n.title || '').toLowerCase();
+    const messageLower = (n.message || '').toLowerCase();
+    const looksLikeQuoteApproval = (titleLower.includes('quote') || messageLower.includes('quote')) && (titleLower.includes('approved') || messageLower.includes('approved')) && (d.work_order_id || relatedId);
+
+    // QUOTE APPROVED -> go schedule the job
+    if (category === 'WORK_ORDER' || category === 'JOB' || looksLikeQuoteApproval) {
+      const jobId = d.work_order_id || relatedId;
+      if (jobId) {
+        navigate(`/jobs?edit=${jobId}&schedule=new`);
+        return;
+      }
     }
+
+    // QUOTE-related
+    if (category === 'QUOTE') {
+      if (relatedId) {
+        navigate(`/quotes?open=${relatedId}`);
+      } else if (d.work_order_id) {
+        navigate(`/quotes?open=${d.work_order_id}`);
+      } else {
+        navigate('/quotes');
+      }
+      return;
+    }
+
+    // MESSAGE-related
+    if (category === 'MESSAGE') {
+      // For now, take user to Messages hub (deep-linking can be added later)
+      navigate('/messages');
+      return;
+    }
+
+    // INVENTORY
+    if (category === 'INVENTORY') {
+      navigate(relatedId ? `/operations/inventory?id=${relatedId}` : '/operations/inventory');
+      return;
+    }
+
+    // PTO / Time Off
+    if (category === 'PTO') {
+      navigate(isAdmin(user) ? '/admin/time-off' : '/my-time-off');
+      return;
+    }
+
+    // SCHEDULE / Calendar
+    if (category === 'SCHEDULE') {
+      if (d.start_time) {
+        const date = new Date(d.start_time).toISOString().slice(0, 10);
+        navigate(`/calendar?date=${date}`);
+      } else {
+        navigate('/calendar');
+      }
+      return;
+    }
+
+    // Default fallbacks
+    if (relatedId && (titleLower.includes('invoice') || category === 'INVOICE' || category === 'INVOICE_OVERDUE')) {
+      navigate('/invoices');
+      return;
+    }
+
+    // If nothing matched, go to the notifications page
+    navigate('/notifications');
   };
 
   useEffect(() => {
@@ -71,6 +127,46 @@ const NotificationCenter = () => {
     pollRef.current = setInterval(load, POLL_MS);
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, [user?.company_id]);
+
+  // Realtime: instant bell updates when new notifications arrive
+  useEffect(() => {
+    if (!user?.company_id) return;
+    const supabase = getSupabaseClient();
+
+    const channel = supabase
+      .channel(`notifications_${user?.id || 'company'}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `company_id=eq.${user.company_id}`
+        },
+        (payload) => {
+          try {
+            const n = payload.new || {};
+            // Only count unread/pending items for this user or broadcast (null user)
+            const isForUser = !n.user_id || n.user_id === user.id;
+            const isPending = (n.status || 'pending') === 'pending';
+            if (!isForUser || !isPending) return;
+
+            setUnreadCount((prev) => prev + 1);
+            setNotifications((prev) => [
+              { ...n, read: false, is_read: false, timestamp: n.created_at },
+              ...prev
+            ].slice(0, 50));
+          } catch (e) {
+            // no-op
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      try { supabase.removeChannel(channel); } catch {}
+    };
+  }, [user?.company_id, user?.id]);
 
   const markAsRead = async (notificationId) => {
     try {

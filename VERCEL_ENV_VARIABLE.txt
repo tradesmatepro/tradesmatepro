@@ -1,0 +1,41 @@
+VERCEL ENVIRONMENT VARIABLE FOR BETA LAUNCH
+=============================================
+
+Copy and paste this into Vercel:
+
+Name:  REACT_APP_DEPLOYMENT_TYPE
+Value: beta
+
+Environment: Production (IMPORTANT!)
+
+---
+
+STEP BY STEP:
+
+1. Go to https://vercel.com/dashboard
+2. Click on "TradeMate Pro" project
+3. Click "Settings" (top menu)
+4. Click "Environment Variables" (left sidebar)
+5. Click "Add New"
+6. Paste the above Name and Value
+7. Make sure "Production" is selected
+8. Click "Save"
+9. Go to "Deployments" tab
+10. Click "..." on latest deployment
+11. Click "Redeploy"
+12. Wait 5-10 minutes
+13. Visit your app and verify only 9 modules are visible
+
+---
+
+WHAT THIS DOES:
+
+- Users will only see 9 beta modules
+- Marketplace, Inventory, etc. will be hidden
+- You can still test everything locally
+- Easy to release new features later
+
+---
+
+THAT'S IT! YOU'RE LIVE!
+

@@ -267,18 +267,33 @@
     const url = typeof args[0] === 'string' ? args[0] : args[0]?.url || 'unknown';
     const method = args[1]?.method || 'GET';
 
-    return originalFetch.apply(this, args).then(response => {
+    return originalFetch.apply(this, args).then(async response => {
       // Capture HTTP error responses (400, 500, etc.)
       if (!response.ok) {
-        window.capturedErrors.push({
+        // Suppress 404 errors for non-existent tables (user_permissions, etc.)
+        // These are expected and handled gracefully by the application
+        if (response.status === 404 && url.includes('user_permissions')) {
+          return response;
+        }
+
+        let bodyText = '';
+        try {
+          bodyText = await response.clone().text();
+        } catch (e) {
+          bodyText = '[unable to read body]';
+        }
+        const errObj = {
           type: 'HTTP_ERROR',
           message: `${method} ${url} ${response.status} (${response.statusText})`,
           url: url,
           method: method,
           status: response.status,
           statusText: response.statusText,
+          body: bodyText,
           timestamp: new Date().toISOString()
-        });
+        };
+        window.capturedErrors.push(errObj);
+        console.error('HTTP_ERROR_DETAIL', errObj);
       }
       return response;
     }).catch(error => {

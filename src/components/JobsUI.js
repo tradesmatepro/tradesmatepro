@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   BriefcaseIcon,
   PencilIcon,
@@ -16,23 +16,18 @@ import {
   ArchiveBoxIcon,
   CheckCircleIcon
 } from '@heroicons/react/24/outline';
-import { getJobStatuses, getStatusLabel, getStatusBadgeProps } from '../utils/statusHelpers';
-import { supaFetch } from '../utils/supaFetch';
-import { useUser } from '../contexts/UserContext';
-
 
 export const JobsStats = ({ jobs }) => {
   const totalJobs = jobs.length;
 
-  // Unscheduled jobs (no scheduled_start) - ✅ FIX: work_orders uses 'scheduled_start'
-  const unscheduledJobs = jobs.filter(j => !(j.scheduled_start || j.start_time)).length;
+  // Unscheduled jobs (no start_time)
+  const unscheduledJobs = jobs.filter(j => !j.start_time).length;
 
-  // Scheduled today (scheduled_start is today) - ✅ FIX: work_orders uses 'scheduled_start'
+  // Scheduled today (start_time is today)
   const today = new Date().toDateString();
   const scheduledToday = jobs.filter(j => {
-    const startTime = j.scheduled_start || j.start_time;
-    if (!startTime) return false;
-    return new Date(startTime).toDateString() === today;
+    if (!j.start_time) return false;
+    return new Date(j.start_time).toDateString() === today;
   }).length;
 
   // Total value of all jobs
@@ -191,8 +186,8 @@ export const JobsFiltersBar = ({ searchTerm, setSearchTerm, statusFilter, setSta
         <UserIcon className="w-4 h-4 text-gray-500" />
         <select value={techFilter} onChange={(e)=>setTechFilter(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300">
           <option value="all">All Techs</option>
-          {Array.from(new Map((employees || []).map(e => [e.id, e])).values()).map((e, i) => (
-            <option key={`${e.id}-${i}`} value={e.id}>{e.full_name || e.name || 'Unnamed'}</option>
+          {employees.map(e => (
+            <option key={e.id} value={e.id}>{e.full_name}</option>
           ))}
         </select>
       </div>
@@ -260,13 +255,11 @@ export const JobsSearchFilter = ({ searchTerm, setSearchTerm, statusFilter, setS
           <option value="scheduled">Scheduled</option>
         </select>
       </div>
-
-
     </div>
   </div>
 );
 
-export const JobsTable = ({ jobs, customers, employees, loading, openEditForm, deleteJob, onCreateInvoice, onScheduleJob, onAllocateInventory, onConfirmUsage, onViewCloseout, onCreatePartialInvoice }) => {
+export const JobsTable = ({ jobs, customers, employees, loading, openEditForm, deleteJob, onCreateInvoice, onScheduleJob, onAllocateInventory, onConfirmUsage }) => {
   const [expanded, setExpanded] = useState({});
   const toggleExpanded = (id) => setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
 
@@ -289,33 +282,6 @@ export const JobsTable = ({ jobs, customers, employees, loading, openEditForm, d
     const days = Math.round(hours / 24);
     return `${days}d ago`;
   };
-
-const CloseoutPresenceBadge = ({ workOrderId }) => {
-  const { user } = useUser();
-  const [hasData, setHasData] = useState(false);
-  useEffect(() => {
-    let isMounted = true;
-    (async () => {
-      try {
-        const [ph, sg, cl] = await Promise.all([
-          supaFetch(`work_order_photos?work_order_id=eq.${workOrderId}&select=id&limit=1`, { method: 'GET' }, user?.company_id),
-          supaFetch(`work_order_signatures?work_order_id=eq.${workOrderId}&select=id&limit=1`, { method: 'GET' }, user?.company_id),
-          supaFetch(`work_order_checklists?work_order_id=eq.${workOrderId}&select=id&limit=1`, { method: 'GET' }, user?.company_id)
-        ]);
-        const any = (ph.ok && (await ph.json()).length>0) || (sg.ok && (await sg.json()).length>0) || (cl.ok && (await cl.json()).length>0);
-        if (isMounted) setHasData(Boolean(any));
-      } catch { if (isMounted) setHasData(false); }
-    })();
-    return () => { isMounted = false; };
-  }, [workOrderId, user?.company_id]);
-  if (!hasData) return null;
-  return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800" title="Closeout data available">
-      Closeout
-    </span>
-  );
-};
-
 
   // naive conflict: same tech overlapping time ranges on same day
   const getConflicts = (job) => {
@@ -346,14 +312,64 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
     return tech ? tech.full_name : 'Unassigned';
   };
 
-  // ✅ REPLACED: Use centralized status badge helper
+  const getSchedulingStatus = (job) => {
+    // 1) Invoiced overrides scheduling status
+    if (job.invoice_id || job.job_status === 'INVOICED') {
+      return {
+        bg: 'bg-gray-100',
+        text: 'text-gray-800',
+        label: 'Invoiced'
+      };
+    }
+
+    // 2) Use the unified job_status field that handles both job_status and work_status
+    const currentStatus = job.job_status;
+    const isScheduled = job.start_time && String(job.start_time).trim() !== '';
+
+    // Show actual status for scheduled jobs
+    if (isScheduled) {
+      const statusConfig = {
+        'ASSIGNED': { bg: 'bg-blue-100', text: 'text-blue-800', label: 'Scheduled' }, // Show "Scheduled" instead of "Assigned"
+        'IN_PROGRESS': { bg: 'bg-yellow-100', text: 'text-yellow-800', label: 'In Progress' },
+        'COMPLETED': { bg: 'bg-green-100', text: 'text-green-800', label: 'Completed' },
+        'CANCELLED': { bg: 'bg-red-100', text: 'text-red-800', label: 'Cancelled' }
+      };
+
+      const config = statusConfig[currentStatus];
+      if (config) {
+        return config;
+      }
+
+      // Fallback for scheduled jobs without specific status
+      return {
+        bg: 'bg-blue-100',
+        text: 'text-blue-800',
+        label: 'Scheduled'
+      };
+    }
+
+    // Unscheduled jobs - show job status or default
+    if (currentStatus === 'DRAFT') {
+      return {
+        bg: 'bg-gray-100',
+        text: 'text-gray-800',
+        label: 'Draft'
+      };
+    }
+
+    return {
+      bg: 'bg-gray-100',
+      text: 'text-gray-800',
+      label: 'Unscheduled'
+    };
+  };
+
   const getStatusBadge = (job) => {
-    const status = job.status || job.job_status;
-    const props = getStatusBadgeProps(status);
+    const config = getSchedulingStatus(job);
     return (
-      <span className={props.className}>
-        {props.label}
-        {status === 'invoiced' && job.invoice_number && (
+      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${config.bg} ${config.text}`}>
+        {config.label}
+        {config.label === 'Invoiced' && job.invoice_number && (
           <span className="ml-2 text-gray-700">#{job.invoice_number}</span>
         )}
       </span>
@@ -409,12 +425,12 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                 </td>
               </tr>
             ) : (
-              jobs.map((job, index) => (
-                <React.Fragment key={job.id || job.work_order_id || `job-${index}`}>
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => openEditForm(job)}>
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
+              jobs.map((job) => (
+                <React.Fragment key={job.id}>
+                <tr key={job.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
                         {job.title || job.job_title || `Job #${job.id}`}
                       </div>
                       <div className="text-xs text-gray-500">
@@ -431,12 +447,12 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => openEditForm(job)}>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
                       {getCustomerName(job.customer_id)}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap cursor-pointer" onClick={() => openEditForm(job)}>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900 flex items-center gap-2">
                       <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs text-gray-700">
                         {(getTechnicianName(job.assigned_technician_id) || '?').slice(0,1)}
@@ -449,12 +465,11 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {/* ✅ FIX: work_orders uses 'scheduled_start' and 'scheduled_end' */}
-                      {(job.scheduled_start || job.start_time) ? (
+                      {job.start_time ? (
                         <>
-                          <div className="text-sm">{fmtDateNice(job.scheduled_start || job.start_time)}</div>
+                          <div className="text-sm">{fmtDateNice(job.start_time)}</div>
                           <div className="text-xs text-gray-500">
-                            {fmtTime(job.scheduled_start || job.start_time)}{(job.scheduled_end || job.end_time) && ` - ${fmtTime(job.scheduled_end || job.end_time)}`}
+                            {fmtTime(job.start_time)}{job.end_time && ` - ${fmtTime(job.end_time)}`}
                           </div>
                         </>
                       ) : (
@@ -475,8 +490,8 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                         <PencilIcon className="w-4 h-4" />
                       </button>
 
-                      {/* Schedule button when not scheduled - ✅ FIX: work_orders uses 'scheduled_start' */}
-                      {!(job.scheduled_start || job.start_time) && (
+                      {/* Schedule button when not scheduled */}
+                      {!job.start_time && (
                         <button
                           onClick={() => onScheduleJob && onScheduleJob(job)}
                           className="text-blue-600 hover:text-blue-900"
@@ -486,8 +501,8 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                         </button>
                       )}
 
-                      {/* Reschedule button when scheduled - ✅ FIX: work_orders uses 'scheduled_start' */}
-                      {(job.scheduled_start || job.start_time) && (
+                      {/* Reschedule button when scheduled */}
+                      {job.start_time && (
                         <button
                           onClick={() => onScheduleJob && onScheduleJob(job)}
                           className="text-orange-600 hover:text-orange-900"
@@ -498,7 +513,7 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                       )}
 
                       {/* Start button for SCHEDULED jobs */}
-                      {((job.status || job.job_status || '').toLowerCase() === 'scheduled') && (
+                      {job.job_status === 'SCHEDULED' && (
                         <button
                           onClick={() => {
                             // Update job status to IN_PROGRESS
@@ -522,30 +537,8 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                         </a>
                       )}
 
-                      {/* View Closeout Data (Phase 2 verification) */}
-                      {((job.status || job.job_status || '').toLowerCase() === 'completed') && (
-                        <button
-                          onClick={() => onViewCloseout && onViewCloseout(job)}
-                          className="text-gray-600 hover:text-gray-900"
-                          title="View closeout data"
-                        >
-                          <ClipboardDocumentListIcon className="w-4 h-4" />
-                        </button>
-                      )}
-
-                      {/* Create Partial Invoice (Phase 3) */}
-                      {(['completed','invoiced'].includes((job.status || job.job_status || '').toLowerCase())) && (
-                        <button
-                          onClick={() => onCreatePartialInvoice && onCreatePartialInvoice(job)}
-                          className="text-purple-600 hover:text-purple-900"
-                          title="Create Partial Invoice"
-                        >
-                          <CurrencyDollarIcon className="w-4 h-4" />
-                        </button>
-                      )}
-
                       {/* Invoice button for COMPLETED jobs (show if not invoiced yet) */}
-                      {((job.status || job.job_status || '').toLowerCase() === 'completed') && !job.invoice_id && (
+                      {job.job_status === 'COMPLETED' && !job.invoice_id && (
                         <button
                           onClick={() => onCreateInvoice && onCreateInvoice(job)}
                           className="text-purple-600 hover:text-purple-900"
@@ -631,12 +624,7 @@ const CloseoutPresenceBadge = ({ workOrderId }) => {
                         </div>
                         <div>
                           <div className="text-gray-500 text-xs mb-1">Last activity</div>
-                          <div className="text-xs text-gray-600 flex items-center gap-2">
-                            <span>{relativeTime(job.updated_at || job.created_at)}</span>
-                            {(job.status === 'completed' || job.job_status === 'COMPLETED') && (
-                              <CloseoutPresenceBadge workOrderId={job.id} />
-                            )}
-                          </div>
+                          <div className="text-xs text-gray-600">{relativeTime(job.updated_at || job.created_at)}</div>
                         </div>
                       </div>
                     </td>

@@ -13,15 +13,53 @@ class SettingsService {
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutes
   }
 
+  // Sanitize data to meet database constraints
+  sanitizeData(data) {
+    const sanitized = { ...data };
+
+    // Convert empty strings to null for all fields
+    Object.keys(sanitized).forEach(key => {
+      if (sanitized[key] === '') {
+        sanitized[key] = null;
+      }
+    });
+
+    // Phone: must be E.164 format or null
+    if (sanitized.phone !== null && sanitized.phone !== undefined) {
+      const digits = String(sanitized.phone).replace(/\D/g, '');
+      if (digits.length === 11 && digits.startsWith('1')) {
+        sanitized.phone = '+' + digits;
+      } else if (digits.length === 10) {
+        sanitized.phone = '+1' + digits;
+      } else if (String(sanitized.phone).startsWith('+')) {
+        sanitized.phone = '+' + digits;
+      } else {
+        sanitized.phone = null;
+      }
+    }
+
+    // Email: must be valid format or null
+    if (sanitized.email !== null && sanitized.email !== undefined) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sanitized.email)) {
+        sanitized.email = null;
+      }
+    }
+
+    return sanitized;
+  }
+
   // Unified update entrypoint used by multiple Settings tabs (Notifications, Invoicing UI, etc.)
   // Routes fields to the correct tables and creates settings rows if missing.
   async updateSettings(companyId, updates) {
     try {
       if (!companyId) throw new Error('Missing companyId');
 
+      // Sanitize all data before processing
+      const sanitizedUpdates = this.sanitizeData(updates);
+
       // 1) Split updates into companies vs settings
       const companyUpdates = {};
-      const businessUpdates = { ...updates };
+      const businessUpdates = { ...sanitizedUpdates };
 
       // Map known company-level fields used by invoicing
       if (Object.prototype.hasOwnProperty.call(businessUpdates, 'invoice_number_prefix')) {
@@ -197,6 +235,9 @@ class SettingsService {
   // Update business settings (settings table, creates row if missing)
   async updateBusinessSettings(companyId, updates) {
     try {
+      // Sanitize data before saving
+      const sanitizedUpdates = this.sanitizeData(updates);
+
       // Ensure a settings row exists for this company
       const { data: existing, error: selErr } = await supabase
         .from('settings')
@@ -219,7 +260,7 @@ class SettingsService {
       const { data, error } = await supabase
         .from('settings')
         .update({
-          ...updates,
+          ...sanitizedUpdates,
           updated_at: new Date().toISOString()
         })
         .eq('company_id', companyId)
@@ -244,10 +285,13 @@ class SettingsService {
   // Update company profile
   async updateCompanyProfile(companyId, updates) {
     try {
+      // Sanitize data before saving
+      const sanitizedUpdates = this.sanitizeData(updates);
+
       const { data, error } = await supabase
         .from('companies')
         .update({
-          ...updates,
+          ...sanitizedUpdates,
           updated_at: new Date().toISOString()
         })
         .eq('id', companyId)
@@ -374,6 +418,16 @@ class SettingsService {
         console.log('✅ Using rate_cards table (industry standard)');
         const primaryCard = rateCards[0]; // Most recent active card
 
+        // Get markup from settings table (not hardcoded)
+        const { data: appSettings } = await supabase
+          .from('settings')
+          .select('parts_markup, material_markup, subcontractor_markup')
+          .eq('company_id', companyId)
+          .single();
+
+        const partsMarkup = parseFloat(appSettings?.parts_markup || appSettings?.material_markup || 0);
+        const subcontractorMarkup = parseFloat(appSettings?.subcontractor_markup || 0);
+
         return {
           rateCards: rateCards,
           laborRates: {
@@ -384,10 +438,10 @@ class SettingsService {
             holiday: parseFloat(primaryCard.base_rate) * parseFloat(primaryCard.holiday_multiplier || 1.5)
           },
           markupPercentages: {
-            materials: 25,  // TODO: Add to company_settings or rate_cards
-            subcontractor: 15
+            materials: partsMarkup,
+            subcontractor: subcontractorMarkup
           },
-          taxRate: 8.25,  // TODO: Get from company_settings
+          taxRate: 0,  // DEFAULT TO 0 (no tax) - auto-detect by customer zip code
           travelChargePerMile: 0.65,
           minimumTravelCharge: 25.00,
           cancellationFee: 50.00
@@ -409,12 +463,12 @@ class SettingsService {
       // STEP 4: Extract rates from settings (legacy compatibility)
       const laborRate = parseFloat(appSettings?.labor_rate || 75);
       const overtimeMultiplier = parseFloat(appSettings?.overtime_multiplier || 1.5);
-      const partsMarkup = parseFloat(appSettings?.parts_markup || 25);
-      const emergencyMultiplier = parseFloat(appSettings?.emergency_rate_multiplier || 1.5);
-      const travelCharge = parseFloat(appSettings?.travel_charge_per_mile || 0.65);
-      const minTravel = parseFloat(appSettings?.minimum_travel_charge || 25.00);
-      const cancelFee = parseFloat(appSettings?.cancellation_fee || 50.00);
-      const taxRate = parseFloat(appSettings?.default_tax_rate || 8.25);
+      const partsMarkup = appSettings?.parts_markup != null ? parseFloat(appSettings.parts_markup) : 0;  // Allow 0 value
+      const emergencyMultiplier = parseFloat(appSettings?.emergency_rate_multiplier ?? 1.5);
+      const travelCharge = parseFloat(appSettings?.travel_charge_per_mile ?? 0.65);
+      const minTravel = parseFloat(appSettings?.minimum_travel_charge ?? 25.00);
+      const cancelFee = parseFloat(appSettings?.cancellation_fee ?? 50.00);
+      const taxRate = parseFloat(appSettings?.default_tax_rate ?? 0);  // DEFAULT TO 0 (no tax) - auto-detect by zip code
 
       console.log('✅ Loaded rates from settings:', {
         laborRate,
@@ -444,7 +498,7 @@ class SettingsService {
       };
     } catch (error) {
       console.error('❌ Error fetching rates pricing settings:', error);
-      // Return safe defaults on error
+      // Return safe defaults on error (use 0% markup as default, not 25%)
       return {
         rateCards: [],
         laborRates: {
@@ -455,10 +509,10 @@ class SettingsService {
           holiday: 112.5
         },
         markupPercentages: {
-          materials: 25,
-          subcontractor: 15
+          materials: 0,  // Default to 0% markup (user can configure in settings)
+          subcontractor: 0
         },
-        taxRate: 8.25,
+        taxRate: 0,  // DEFAULT TO 0 (no tax) - auto-detect by zip code
         travelChargePerMile: 0.65,
         minimumTravelCharge: 25.00,
         cancellationFee: 50.00,
@@ -491,6 +545,52 @@ class SettingsService {
       return { number: 1, prefix: 'INV' };
     }
   }
+
+  // Generate and increment invoice number atomically-ish (best effort)
+  async getAndIncrementInvoiceNumber(companyId) {
+    try {
+      if (!companyId) throw new Error('Missing companyId');
+
+      // 1) Load current prefix and counter from companies
+      const { data, error } = await supabase
+        .from('companies')
+        .select('invoice_prefix, invoice_start_number')
+        .eq('id', companyId)
+        .single();
+
+      // Safe defaults
+      const prefix = (data?.invoice_prefix || 'INV').toString().trim() || 'INV';
+      let nextNumber = Number(data?.invoice_start_number);
+      if (!Number.isFinite(nextNumber) || nextNumber < 1) {
+        nextNumber = 1;
+      }
+
+      // 2) Compute formatted invoice number (PREFIX-YYYY-####)
+      const year = new Date().getFullYear();
+      const suffix = String(nextNumber).padStart(4, '0');
+      const formatted = `${prefix}-${year}-${suffix}`;
+
+      // 3) Persist increment (best effort; if it fails we still return formatted)
+      try {
+        await supabase
+          .from('companies')
+          .update({ invoice_start_number: nextNumber + 1, updated_at: new Date().toISOString() })
+          .eq('id', companyId);
+      } catch (incErr) {
+        console.warn('⚠️ getAndIncrementInvoiceNumber: increment failed (non-blocking)', incErr);
+      }
+
+      return formatted;
+    } catch (e) {
+      console.warn('⚠️ getAndIncrementInvoiceNumber: fallback generator used', e?.message || e);
+      // Fallback generator similar to InvoicesService.generateInvoiceNumber
+      const ms2 = String(Date.now() % 100).padStart(2, '0');
+      const r2 = String(Math.floor(Math.random() * 90) + 10); // 10-99
+      const year = new Date().getFullYear();
+      return `INV-${year}-${ms2}${r2}`;
+    }
+  }
+
 
   // Clear cache (useful after settings updates)
   clearCache() {

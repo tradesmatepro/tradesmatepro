@@ -19,6 +19,8 @@ class DocumentsService {
   // Upload attachment file
   static async uploadAttachment(companyId, jobId, file, uploadedBy, autoTags = [], ocrText = '') {
     try {
+      console.log('📎 DocumentsService.uploadAttachment called:', { companyId, jobId, fileName: file.name, fileSize: file.size });
+
       // Generate unique filename
       const fileExt = file.name.split('.').pop();
       const timestamp = Date.now();
@@ -30,6 +32,9 @@ class DocumentsService {
         ? `company-${companyId}/jobs/${jobId}/attachments/${fileName}`
         : `company-${companyId}/general/attachments/${fileName}`;
 
+      console.log('📁 Upload path:', filePath);
+      console.log('🪣 Storage bucket: files');
+
       // Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('files')
@@ -39,20 +44,22 @@ class DocumentsService {
         });
 
       if (uploadError) {
+        console.error('❌ Storage upload error:', uploadError);
         throw new Error(`Upload failed: ${uploadError.message}`);
       }
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('files')
-        .getPublicUrl(filePath);
+      console.log('✅ File uploaded to storage:', uploadData);
+
+      // Do NOT store public URL for private buckets; store storage path instead
+      const storagePath = filePath;
+      console.log('🔗 Storage path to save (private):', storagePath);
 
       // Insert into attachments table
       const attachmentData = {
         work_order_id: jobId || null, // Allow null for general files
         company_id: companyId,
         uploaded_by: uploadedBy,
-        file_url: urlData.publicUrl,
+        file_url: storagePath, // store path; signed URL will be generated when reading
         file_name: file.name,
         file_type: fileExt.toLowerCase(),
         file_size: file.size,
@@ -61,11 +68,17 @@ class DocumentsService {
         uploaded_at: new Date().toISOString()
       };
 
+      console.log('💾 Saving metadata to attachments table:', attachmentData);
+
+      // Get authenticated user's session token for RLS
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token || SUPABASE_ANON_KEY;
+
       const response = await fetch(`${SUPABASE_URL}/rest/v1/attachments`, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
           'Prefer': 'return=representation'
         },
@@ -73,10 +86,13 @@ class DocumentsService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save attachment metadata');
+        const errorText = await response.text();
+        console.error('❌ Database insert error:', response.status, errorText);
+        throw new Error(`Failed to save attachment metadata: ${errorText}`);
       }
 
       const attachment = await response.json();
+      console.log('✅ Metadata saved:', attachment);
 
       return {
         success: true,
@@ -84,7 +100,8 @@ class DocumentsService {
         message: 'Attachment uploaded successfully!'
       };
     } catch (error) {
-      console.error('Error uploading attachment:', error);
+      console.error('❌ Error uploading attachment:', error);
+      console.error('Error stack:', error.stack);
       return {
         success: false,
         message: `Upload failed: ${error.message}`
@@ -95,6 +112,8 @@ class DocumentsService {
   // Upload job photo
   static async uploadJobPhoto(companyId, workOrderId, file, uploadedBy, autoTags = []) {
     try {
+      console.log('📸 DocumentsService.uploadJobPhoto called:', { companyId, workOrderId, fileName: file.name, fileSize: file.size, autoTags });
+
       // Generate unique filename
       const fileExt = file.name.split('.').pop();
       const timestamp = Date.now();
@@ -106,6 +125,9 @@ class DocumentsService {
         ? `company-${companyId}/work-orders/${workOrderId}/photos/${fileName}`
         : `company-${companyId}/general/photos/${fileName}`;
 
+      console.log('📁 Upload path:', filePath);
+      console.log('🪣 Storage bucket: files');
+
       // Upload to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('files')
@@ -115,22 +137,27 @@ class DocumentsService {
         });
 
       if (uploadError) {
+        console.error('❌ Storage upload error:', uploadError);
         throw new Error(`Upload failed: ${uploadError.message}`);
       }
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from('files')
-        .getPublicUrl(filePath);
+      console.log('✅ File uploaded to storage:', uploadData);
+
+      // Do NOT store public URL for private buckets; store storage path instead
+      const storagePath = filePath;
+      console.log('🔗 Storage path to save (private):', storagePath);
 
       // Insert into job_photos table with correct schema
       const photoData = {
+        company_id: companyId,
         work_order_id: workOrderId || null,
-        photo_url: urlData.publicUrl,
+        photo_url: storagePath, // store path; signed URL will be generated when reading
         tag: autoTags.includes('BEFORE') ? 'BEFORE' : autoTags.includes('AFTER') ? 'AFTER' : 'DURING',
         uploaded_by: uploadedBy,
         created_at: new Date().toISOString()
       };
+
+      console.log('💾 Saving metadata to job_photos table:', photoData);
 
       const response = await fetch(`${SUPABASE_URL}/rest/v1/job_photos`, {
         method: 'POST',
@@ -144,10 +171,13 @@ class DocumentsService {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save photo metadata');
+        const errorText = await response.text();
+        console.error('❌ Database insert error:', response.status, errorText);
+        throw new Error(`Failed to save photo metadata: ${errorText}`);
       }
 
       const photo = await response.json();
+      console.log('✅ Metadata saved:', photo);
 
       return {
         success: true,
@@ -155,7 +185,8 @@ class DocumentsService {
         message: 'Photo uploaded successfully!'
       };
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      console.error('❌ Error uploading photo:', error);
+      console.error('Error stack:', error.stack);
       return {
         success: false,
         message: `Upload failed: ${error.message}`
@@ -247,13 +278,33 @@ class DocumentsService {
 
   static async getSignedUrl(publicUrl, expiresInSeconds = 3600) {
     try {
-      const parsed = this.getPathFromPublicUrl(publicUrl);
-      if (!parsed) return null;
-      const { bucket, path } = parsed;
+      let bucket = 'files';
+      let path = publicUrl;
+
+      // If it's a full URL, parse it
+      if (publicUrl.includes('/storage/v1/object/')) {
+        const parsed = this.getPathFromPublicUrl(publicUrl);
+        if (parsed) {
+          bucket = parsed.bucket;
+          path = parsed.path;
+        }
+      }
+      // Otherwise, assume it's already a storage path (e.g., "company-xxx/jobs/yyy/attachments/file.png")
+
+      console.log('🔐 Generating signed URL for:', { bucket, path });
+
       const { data, error } = await supabase.storage.from(bucket).createSignedUrl(path, expiresInSeconds);
-      if (error) { console.warn('createSignedUrl error', error); return null; }
+      if (error) {
+        console.warn('createSignedUrl error:', error);
+        return null;
+      }
+
+      console.log('✅ Signed URL generated:', data?.signedUrl);
       return data?.signedUrl || null;
-    } catch (e) { console.error('getSignedUrl failed', e); return null; }
+    } catch (e) {
+      console.error('getSignedUrl failed:', e);
+      return null;
+    }
   }
 
   // Delete attachment
@@ -282,13 +333,20 @@ class DocumentsService {
 
       const attachment = attachments[0];
 
-      // Extract file path from URL
-      const urlParts = attachment.file_url.split('/');
-      const filePath = urlParts.slice(-4).join('/'); // company-id/jobs/job-id/attachments/filename
+      // Determine storage path and bucket from stored value
+      let bucketName = 'files';
+      let filePath = attachment.file_url;
+      if (typeof attachment.file_url === 'string' && attachment.file_url.startsWith('http')) {
+        const parsed = DocumentsService.getPathFromPublicUrl(attachment.file_url);
+        if (parsed) {
+          bucketName = parsed.bucket || 'files';
+          filePath = parsed.path;
+        }
+      }
 
       // Delete from storage
       const { error: storageError } = await supabase.storage
-        .from('files')
+        .from(bucketName)
         .remove([filePath]);
 
       if (storageError) {
@@ -344,13 +402,20 @@ class DocumentsService {
 
       const photo = photos[0];
 
-      // Extract file path from URL
-      const urlParts = photo.photo_url.split('/');
-      const filePath = urlParts.slice(-4).join('/'); // company-id/jobs/job-id/photos/filename
+      // Determine storage path and bucket from stored value
+      let bucketName = 'files';
+      let filePath = photo.photo_url;
+      if (typeof photo.photo_url === 'string' && photo.photo_url.startsWith('http')) {
+        const parsed = DocumentsService.getPathFromPublicUrl(photo.photo_url);
+        if (parsed) {
+          bucketName = parsed.bucket || 'files';
+          filePath = parsed.path;
+        }
+      }
 
       // Delete from storage
       const { error: storageError } = await supabase.storage
-        .from('files')
+        .from(bucketName)
         .remove([filePath]);
 
       if (storageError) {
@@ -536,8 +601,8 @@ class DocumentsService {
       const blob = new Blob([html], { type: 'text/html' });
       const { error } = await supabase.storage.from('files').upload(filePath, blob, { upsert: false, contentType: 'text/html' });
       if (error) throw error;
-      const { data: urlData } = supabase.storage.from('files').getPublicUrl(filePath);
-      return urlData.publicUrl;
+      // Return storage path; UI will generate a signed URL when needed
+      return filePath;
     } catch (e) { console.error('uploadPackageHtml failed', e); return null; }
   }
 
@@ -554,9 +619,13 @@ class DocumentsService {
         uploaded_by: uploadedBy,
         uploaded_at: new Date().toISOString()
       };
+      // Get authenticated user's session token for RLS
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token || SUPABASE_ANON_KEY;
+
       const res = await fetch(`${SUPABASE_URL}/rest/v1/attachments`, {
         method: 'POST',
-        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
+        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json', 'Prefer': 'return=representation' },
         body: JSON.stringify(body)
       });
       if (!res.ok) throw new Error('Failed to create attachment record');

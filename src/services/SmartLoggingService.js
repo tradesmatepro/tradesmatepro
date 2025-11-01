@@ -72,8 +72,8 @@ class SmartLoggingService {
       this.originalConsole.debug.apply(console, args);
     };
 
-    // Start auto-export - DISABLED (server not running)
-    // this.startAutoExport();
+    // Start auto-export
+    this.startAutoExport();
   }
 
   /**

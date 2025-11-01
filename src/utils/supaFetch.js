@@ -3,8 +3,7 @@
 //   supaFetch('quotes?select=*', { method: 'GET' }, companyId)
 //   supaFetch('jobs', { method: 'POST', body: { title: 'A' } }, companyId)
 
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './env.js';
-import { getSupabaseClient } from './supabaseClient.js';
+import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from './env';
 
 const SCOPE_TABLES = new Set([
   'users',
@@ -16,7 +15,6 @@ const SCOPE_TABLES = new Set([
   'work_order_labor', // accessed through work_orders relationship for security
   'work_order_audit', // audit trail for stage transitions
   'work_order_versions', // version history
-  'work_order_messages', // messages related to work orders
   // COMPATIBILITY VIEWS (USE THESE INSTEAD OF LEGACY TABLES)
   'quotes_compat_v', // maps work_orders (stage=QUOTE) to legacy quotes interface
   'quote_items_compat_v', // maps work_order_items to legacy quote_items interface
@@ -34,10 +32,7 @@ const SCOPE_TABLES = new Set([
   // FINANCIAL
   'payments',
   'invoices',
-  'invoice_line_items', // invoice line items
-  'expenses',
-  'expense_categories',
-  'expense_approvals',
+  'invoice_items', // invoice line items
   // VENDOR & PURCHASE ORDER MANAGEMENT
   'vendors',
   'vendor_contacts',
@@ -57,34 +52,30 @@ const SCOPE_TABLES = new Set([
   'quote_templates',
   // COMMUNICATION
   'messages',
-  // MARKETPLACE TABLES
-  'marketplace_requests', // service requests posted by customers
-  'marketplace_responses', // responses/quotes from contractors
-  'marketplace_messages', // messages related to marketplace requests
-  'request_tags', // tags linked to marketplace requests
   // SETTINGS (UNIFIED)
   'settings', // legacy
   'company_profiles', // new normalized table
   'business_settings', // new normalized table
   'integrations', // new normalized table
-  // LEGACY TABLES REMOVED - These tables no longer exist in the database
-  // If you need to access quote/job data, use:
-  // - work_orders?status=in.(DRAFT,SENT,ACCEPTED) (for quotes)
-  // - work_orders?status=in.(SCHEDULED,IN_PROGRESS,COMPLETED,CANCELLED,INVOICED) (for jobs)
-  // - work_order_items (for line items)
+  // DEPRECATED TABLES (AVOID USING - MARKED FOR REMOVAL)
+  'quotes', // DEPRECATED: Use work_orders with stage='QUOTE' instead
+  'quote_items', // DEPRECATED: Use work_order_items instead
+  'jobs', // DEPRECATED: Use work_orders with stage='JOB' instead
 ]);
 
 function parsePath(path) {
-  // path examples: 'work_orders?status=in.(DRAFT,SENT,ACCEPTED)&select=*', 'work_order_items', etc.
+  // path examples: 'work_orders?stage=eq.QUOTE&select=*', 'work_order_items', etc.
   const [table, qs] = path.split('?');
 
-  // Legacy table access prevention - these tables no longer exist
-  if (table === 'quotes' || table === 'quote_items' || table === 'jobs') {
-    console.error(`❌ Table "${table}" no longer exists. Use unified work_orders system instead:
-    - For quotes: work_orders?status=in.(QUOTE,SENT,ACCEPTED,REJECTED)
-    - For jobs: work_orders?status=in.(SCHEDULED,IN_PROGRESS,COMPLETED,CANCELLED,INVOICED)
-    - For items: work_order_items`);
-    throw new Error(`Legacy table "${table}" has been removed. Use work_orders system instead.`);
+  // DEPRECATION WARNINGS for legacy tables
+  if (table === 'quotes') {
+    console.warn('⚠️ DEPRECATED: Using legacy "quotes" table. Use "work_orders?stage=eq.QUOTE" or "quotes_compat_v" instead.');
+  }
+  if (table === 'quote_items') {
+    console.warn('⚠️ DEPRECATED: Using legacy "quote_items" table. Use "work_order_items" or "quote_items_compat_v" instead.');
+  }
+  if (table === 'jobs') {
+    console.warn('⚠️ DEPRECATED: Using legacy "jobs" table. Use "work_orders?stage=eq.JOB" instead.');
   }
 
   return { table, qs: qs || '' };
@@ -126,20 +117,14 @@ function injectCompanyIntoBody(table, body, companyId) {
 
 export async function supaFetch(path, options = {}, companyId = null) {
   const method = (options.method || 'GET').toUpperCase();
-  const supabase = getSupabaseClient();
-
-  // Use the authenticated user's session token
-  const { data: { session } } = await supabase.auth.getSession();
-  const accessToken = session?.access_token || SUPABASE_ANON_KEY;
-
   const headers = {
-    'apikey': SUPABASE_ANON_KEY,
-    'Authorization': `Bearer ${accessToken}`,
+    'apikey': SUPABASE_SERVICE_KEY,
+    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
     ...(options.headers || {}),
   };
 
   let finalPath = path;
-  const { table } = parsePath(path);
+  const { table, qs } = parsePath(path);
 
   if (method === 'GET' || method === 'DELETE') {
     finalPath = ensureCompanyQuery(path, companyId);
@@ -168,5 +153,5 @@ export async function supaFetch(path, options = {}, companyId = null) {
   return fetch(url, { ...options, method, headers, body });
 }
 
-export { SUPABASE_URL, SUPABASE_ANON_KEY };
+export { SUPABASE_URL, SUPABASE_SERVICE_KEY };
 

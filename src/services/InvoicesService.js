@@ -129,11 +129,12 @@ export function calculateInvoiceStatus(total) {
 }
 
 const ALLOWED_TRANSITIONS = {
+  DRAFT: ['SENT', 'VOID'],
+  SENT: ['UNPAID', 'VOID'],
   UNPAID: ['PARTIALLY_PAID', 'PAID', 'OVERDUE', 'VOID'],
   PARTIALLY_PAID: ['PAID', 'VOID'],
   OVERDUE: ['PAID', 'VOID'],
-  PAID: ['VOID'],
-  VOID: []
+  PAID: []
 };
 
 export const InvoicesService = {
@@ -200,18 +201,11 @@ export const InvoicesService = {
     const { terms, days } = await fetchInvoicingTerms(companyId);
     const due = computeDueDateFromTerms(issuedDate, terms, days);
 
-    // Determine invoice number via SettingsService when not provided
-    let finalNumber = data.invoice_number;
-    if (!finalNumber) {
-      try { finalNumber = await settingsService.getAndIncrementInvoiceNumber(companyId); }
-      catch { finalNumber = generateInvoiceNumber(); }
-    }
-
     const invoice = {
       company_id: companyId,
       customer_id: data.customer_id,
-      job_id: data.job_id || null,
-      invoice_number: finalNumber,
+      work_order_id: data.work_order_id || null,
+      invoice_number: data.invoice_number || generateInvoiceNumber(),
       status: status,
       issued_at: (data.issued_at ? new Date(data.issued_at) : issuedDate).toISOString(),
       // Use schema column due_date (not due_at); fallback to computed if not provided
@@ -245,7 +239,7 @@ export const InvoicesService = {
 
     // Use user-provided status if valid, otherwise calculate from totals
     const userStatus = data.status;
-    const validStatuses = ['UNPAID', 'PARTIALLY_PAID', 'PAID', 'OVERDUE', 'VOID'];
+    const validStatuses = ['DRAFT', 'SENT', 'UNPAID', 'OVERDUE', 'PARTIAL_PAID', 'PAID', 'CANCELLED'];
     const status = validStatuses.includes(userStatus) ? userStatus : calculateInvoiceStatus(totals.total_amount);
 
     // Only send fields that exist in the invoices table - exclude items, totals, etc.
@@ -475,17 +469,11 @@ export const InvoicesService = {
   async copyWorkOrderItemsToInvoice(invoiceId, { workOrderId = null, jobId = null }, companyId) {
     let woItems = [];
 
-    // Get items from work_order_line_items first (preferred), then fallback
+    // Get items from work_order_items if workOrderId provided
     if (workOrderId) {
-      const res1 = await supaFetch(`work_order_line_items?work_order_id=eq.${workOrderId}`, { method: 'GET' }, companyId);
-      if (res1.ok) {
-        woItems = await res1.json();
-      }
-      if (!woItems?.length) {
-        const res2 = await supaFetch(`work_order_items?work_order_id=eq.${workOrderId}`, { method: 'GET' }, companyId);
-        if (res2.ok) {
-          woItems = await res2.json();
-        }
+      const itemsRes = await supaFetch(`work_order_items?work_order_id=eq.${workOrderId}`, { method: 'GET' }, companyId);
+      if (itemsRes.ok) {
+        woItems = await itemsRes.json();
       }
     }
 
@@ -643,18 +631,15 @@ export const InvoicesService = {
 
 
   // Record a payment and update invoice status and balance
-  async addPayment(invoiceId, amount, method, companyId, customerId, createdBy, txId = null) {
+  async addPayment(invoiceId, amount, method, companyId, txId = null, note = null) {
     const payment = {
-      company_id: companyId,
-      customer_id: customerId,
       invoice_id: invoiceId,
-      method: method.toUpperCase(), // 'CASH', 'CARD', 'ACH', 'CHECK'
       amount: Number(amount),
-      status: 'SUCCESS',
-      transaction_reference: txId,
-      received_at: new Date().toISOString(),
-      created_by: createdBy,
-      created_at: new Date().toISOString()
+      payment_method: method, // 'cash' | 'check' | 'card' | 'bank_transfer'
+      transaction_id: txId,
+      note,
+      paid_at: new Date().toISOString(),
+      company_id: companyId
     };
 
     // 1) Persist payment row
@@ -677,7 +662,7 @@ export const InvoicesService = {
     const [invoice] = invRes.ok ? await invRes.json() : [];
 
     // Normalize to UI statuses
-    let invoiceStatus = 'PARTIALLY_PAID';
+    let invoiceStatus = 'PARTIAL_PAID';
     if (invoice) {
       const total = Number(invoice.total_amount || 0);
       if (paidToDate >= total && total > 0) {
@@ -721,7 +706,7 @@ export const InvoicesService = {
     if (invoice) {
       const total = Number(invoice.total_amount || 0);
       if (paidToDate >= total && total > 0) invoiceStatus = 'PAID';
-      else if (paidToDate > 0) invoiceStatus = 'PARTIALLY_PAID';
+      else if (paidToDate > 0) invoiceStatus = 'PARTIAL_PAID';
     }
 
     await supaFetch(`invoices?id=eq.${invoiceId}`, {
@@ -793,90 +778,6 @@ export const InvoicesService = {
     } catch (error) {
       addLog('🧾 ERROR IN createFromWorkOrder:', error);
       throw error;
-    }
-    },
-
-  async createProgressInvoice(companyId, jobId, customerId, partialData, options = {}) {
-    try {
-      const issuedAt = new Date();
-      const { terms, days } = await fetchInvoicingTerms(companyId);
-      const due = computeDueDateFromTerms(issuedAt, terms, days);
-      // Determine invoice number via SettingsService
-      let invoiceNumber;
-      try { invoiceNumber = await settingsService.getAndIncrementInvoiceNumber(companyId); }
-      catch { invoiceNumber = generateInvoiceNumber(); }
-
-      // Optionally fetch parent invoice if not provided
-      let parent_invoice_id = options.parentInvoiceId || null;
-      if (!parent_invoice_id) {
-        try {
-          const invRes = await supaFetch(`invoices?job_id=eq.${jobId}&order=created_at.asc`, { method: 'GET' }, companyId);
-          if (invRes.ok) {
-            const rows = await invRes.json();
-            parent_invoice_id = rows?.[0]?.id || null;
-          }
-        } catch (e) { /* non-blocking */ }
-      }
-
-      const amount = Number(partialData.amount);
-      const payload = {
-        company_id: companyId,
-        customer_id: customerId,
-        job_id: jobId,
-        invoice_number: invoiceNumber,
-        status: 'UNPAID',
-        issued_at: issuedAt.toISOString(),
-        due_date: due.toISOString(),
-        kind: 'progress',
-        parent_invoice_id,
-        progress_basis: partialData.basis,
-        progress_percent: partialData.basis === 'percent' ? Number(partialData.percent) : null,
-        progress_amount: Number(partialData.raw_amount_before_deposit ?? amount),
-        deposit_amount: Number(partialData.applied_deposit || 0),
-        computed_balance: Number(partialData.remaining_after ?? 0),
-        subtotal: amount,
-        total_amount: amount,
-        notes: `Progress invoice (${partialData.basis === 'percent' ? (partialData.percent + '%') : ('$' + amount)})`
-      };
-
-      const invCreate = await supaFetch('invoices', { method: 'POST', headers: { 'Prefer': 'return=representation' }, body: payload }, companyId);
-      if (!invCreate.ok) {
-        const t = await invCreate.text();
-        throw new Error(t || 'Invoice create failed');
-      }
-      const [created] = await invCreate.json();
-
-      // Single line item for the progress amount
-      const item = {
-        invoice_id: created.id,
-        item_name: 'Progress Payment',
-        description: 'Partial/progress amount',
-        quantity: 1,
-        unit_price: amount,
-        discount_type: 'NONE',
-        discount_value: 0,
-        tax_rate: 0,
-        tax_amount: 0,
-        line_total: amount,
-        sort_order: 1
-      };
-      await supaFetch('invoice_items', { method: 'POST', body: [item] });
-
-      // Ledger entry (non-blocking)
-      try {
-        const note = `Progress invoice (${partialData.basis === 'percent' ? (partialData.percent + '%') : ('$' + amount)})`;
-        await supaFetch('invoice_progress_ledger', {
-          method: 'POST',
-          body: [{ company_id: companyId, invoice_id: created.id, entry_type: 'progress',
-            percent: partialData.basis === 'percent' ? Number(partialData.percent) : null,
-            amount: amount, note, created_by: options.createdBy || null }]
-        }, companyId);
-      } catch (e) { /* non-blocking */ }
-
-      return created;
-    } catch (e) {
-      console.error('createProgressInvoice failed', e);
-      throw e;
     }
   }
 };

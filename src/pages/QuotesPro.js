@@ -16,6 +16,8 @@ import RejectionModal from '../components/RejectionModal';
 import ChangesRequestedModal from '../components/ChangesRequestedModal';
 import FollowUpModal from '../components/FollowUpModal';
 import ExpiredModal from '../components/ExpiredModal';
+import ConfirmationModal from '../components/ConfirmationModal';
+import { useConfirmation } from '../hooks/useConfirmation';
 import '../styles/modern-enhancements.css';
 import {
   PlusIcon,
@@ -49,6 +51,9 @@ export default function QuotesPro(){
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useUser();
+
+  // ✅ FIX: useConfirmation at page level to prevent state loss on re-render
+  const { modal, confirm, success, error } = useConfirmation();
   const savedDropdownRef = useRef(null);
   const storageKey = useMemo(() => `quotes_saved_views_${user?.company_id || 'guest'}`,[user?.company_id]);
   const lastViewKey = useMemo(() => `quotes_last_view_${user?.company_id || 'guest'}`,[user?.company_id]);
@@ -129,7 +134,7 @@ export default function QuotesPro(){
   }, [lastViewKey, savedViews]);
 
   // eslint-disable-next-line no-unused-vars
-  const quotesPanelData = QuotesDatabasePanel();
+  const quotesPanelData = QuotesDatabasePanel({ confirm, success, error });
 
   const {
     quotes,
@@ -710,11 +715,16 @@ export default function QuotesPro(){
 
       // Reload quotes to show updated status
       await loadQuotes();
+      const anySuccess = emailSuccess || smsSuccess;
+      if (anySuccess) {
+        window?.toast?.success?.(`Quote sent${emailSuccess && smsSuccess ? ' via email and SMS' : emailSuccess ? ' via email' : ' via SMS'}.`);
+        setShowSendModal(false);
+      } else {
+        window?.toast?.error?.('Nothing was sent. Please fix the errors and try again.');
+      }
     } catch (error) {
       console.error('❌ Failed to send quote from modal:', error);
       window?.toast?.error?.(error.message || 'Failed to send quote');
-    } finally {
-      setShowSendModal(false);
     }
   };
 
@@ -916,6 +926,7 @@ export default function QuotesPro(){
           customerPhone={customers.find(c=>c.id===activeQuote?.customer_id)?.phone}
           quoteAmount={activeQuote?.total_amount || activeQuote?.grand_total || 0}
           portalLink={`${window.location.origin}/portal/quote/${activeQuote?.id}`}
+          quoteId={activeQuote?.id}
           companySettings={companySettings}
         />
       )}
@@ -1597,6 +1608,7 @@ function QuoteTemplatesModal({ onClose, onUseTemplate, companyId }) {
         customerEmail={quoteToSend?.customers?.email || ''}
         customerPhone={quoteToSend?.customers?.phone || ''}
         quoteAmount={quoteToSend?.grand_total || quoteToSend?.total_amount || 0}
+        quoteId={quoteToSend?.id}
       />
 
       {/* Presented Modal */}
@@ -1653,6 +1665,11 @@ function QuoteTemplatesModal({ onClose, onUseTemplate, companyId }) {
         expirationDate={quoteToExpire?.expiration_date}
         customerName={quoteToExpire?.customers?.name || 'Customer'}
       />
+
+      {/* Modern Confirmation Modal */}
+      {console.log('🗑️ QuotesPro: modal state:', modal)}
+      {modal && <ConfirmationModal {...modal} />}
+
       {/* eslint-enable no-undef */}
     </div>
   );

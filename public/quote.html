@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>View Your Quote - TradeMate Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <!-- Version: 2.1 - Stripe payment integration -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: #fee;
+      border: 2px solid #f88;
+      color: #c33;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .success {
+      background: #efe;
+      border: 2px solid #8f8;
+      color: #3c3;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .quote-details {
+      margin: 30px 0;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #666;
+    }
+
+    .detail-value {
+      color: #333;
+      text-align: right;
+    }
+
+    .line-items {
+      margin: 30px 0;
+    }
+
+    .line-items h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .line-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      background: #f9f9f9;
+      margin-bottom: 8px;
+      border-radius: 6px;
+    }
+
+    .line-item-desc {
+      flex: 1;
+    }
+
+    .line-item-price {
+      font-weight: 600;
+      color: #667eea;
+      margin-left: 20px;
+    }
+
+    .quote-summary {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 6px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-row.discount .summary-value {
+      color: #10b981;
+    }
+
+    .summary-label {
+      color: #666;
+    }
+
+    .summary-value {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .total {
+      background: #667eea;
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 30px 0;
+      text-align: center;
+    }
+
+    .total-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+    }
+
+    .total-amount {
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-approve {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-approve:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+    }
+
+    .btn-reject:hover:not(:disabled) {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .status-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* Wizard Styles */
+    .wizard {
+      padding: 20px 0;
+    }
+
+    .wizard-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .wizard-steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e5e7eb;
+      z-index: 0;
+    }
+
+    .wizard-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .wizard-step.active .step-number {
+      background: #667eea;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+    }
+
+    .wizard-step.completed .step-number {
+      background: #10b981;
+      color: white;
+    }
+
+    .step-name {
+      font-size: 14px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .wizard-step.active .step-name {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .wizard-step.completed .step-name {
+      color: #10b981;
+    }
+
+    .wizard-content {
+      background: #f9fafb;
+      padding: 30px;
+      border-radius: 8px;
+      min-height: 300px;
+    }
+
+    .wizard-content h2 {
+      margin-bottom: 20px;
+      color: #1f2937;
+    }
+
+    .wizard-actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+    }
+
+    .btn-secondary {
+      background: #6b7280;
+      color: white;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #4b5563;
+    }
+
+    #signature-canvas {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 Your Quote</h1>
+      <p>Review and respond to your quote below</p>
+    </div>
+
+    <div class="content">
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Loading your quote...</p>
+      </div>
+
+      <div id="error" class="error" style="display: none;"></div>
+      <div id="success" class="success" style="display: none;"></div>
+      <div id="quote-content" style="display: none;"></div>
+    </div>
+  </div>
+
+  <script>
+    // Version check
+    console.log('🚀 Quote Portal v2.0 - Multi-step Approval Wizard');
+    console.log('📅 Loaded at:', new Date().toISOString());
+
+    // Supabase configuration - Using legacy JWT format (required for edge functions)
+    const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ========================================
+    // SCHEDULING - Simple slot selection (business logic moved to RPCs)
+    // ========================================
+    let selectedSlot = null;
+
+    // REMOVED: SchedulingWidget class (470 lines) - business logic now in get_available_time_slots RPC
+
+    // Simple slot rendering functions (UI only, no business logic)
+    function renderTimeSlots(slots, settings) {
+      const container = document.getElementById('scheduling-widget-container');
+
+      if (!slots || slots.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+            <p style="color: #991b1b; margin-bottom: 10px;"><strong>No Available Slots</strong></p>
+            <p style="color: #7f1d1d; font-size: 14px;">No technicians available for the requested time. Please contact us to schedule.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div style="margin-bottom: 20px;">
+          <p style="color: #666; font-size: 14px;">
+            <strong>Duration:</strong> ${settings.duration_minutes / 60} hours |
+            <strong>Crew Size:</strong> ${settings.crew_size} technician(s)
+          </p>
+        </div>
+        <div style="max-height: 400px; overflow-y: auto;">
+      `;
+
+      // Group slots by date
+      const slotsByDate = {};
+      slots.forEach(slot => {
+        const date = slot.display_date;
+        if (!slotsByDate[date]) slotsByDate[date] = [];
+        slotsByDate[date].push(slot);
+      });
+
+      // Render slots grouped by date
+      Object.keys(slotsByDate).forEach(date => {
+        html += `
+          <div style="margin-bottom: 20px;">
+            <h4 style="color: #667eea; margin-bottom: 10px;">${date}</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">
+        `;
+
+        slotsByDate[date].forEach(slot => {
+          const slotData = JSON.stringify({
+            start_time: slot.start_time,
+            end_time: slot.end_time,
+            employee_ids: slot.available_employees,
+            crew_size: slot.crew_size
+          }).replace(/"/g, '&quot;');
+
+          html += `
+            <button
+              class="time-slot-btn"
+              data-slot='${slotData}'
+              onclick="selectTimeSlot(this)"
+              style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; background: white; cursor: pointer; transition: all 0.2s;"
+              onmouseover="this.style.borderColor='#667eea'; this.style.background='#f3f4f6';"
+              onmouseout="if (!this.classList.contains('selected')) { this.style.borderColor='#e5e7eb'; this.style.background='white'; }"
+            >
+              <div style="font-weight: 600; color: #1f2937;">${slot.display_time}</div>
+              <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">${slot.crew_size} available</div>
+            </button>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: #f3f4f6; border-radius: 8px;">
+          <p style="font-size: 14px; color: #4b5563;">
+            <strong>Selected Time:</strong> <span id="selected-time-display">None</span>
+          </p>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button id="confirm-schedule-btn" class="btn btn-approve" onclick="confirmSchedule()" disabled>
+            Confirm Selected Time
+          </button>
+          <button class="btn btn-secondary" onclick="skipScheduling()">
+            Skip Scheduling
+          </button>
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function selectTimeSlot(button) {
+      const slotData = JSON.parse(button.getAttribute('data-slot').replace(/&quot;/g, '"'));
+      selectedSlot = slotData;
+
+      // Update display
+      const displayTime = formatSlotDateTime(slotData.start_time);
+      document.getElementById('selected-time-display').textContent = displayTime;
+      document.getElementById('confirm-schedule-btn').disabled = false;
+
+      // Highlight selected slot
+      document.querySelectorAll('.time-slot-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.style.borderColor = '#e5e7eb';
+        btn.style.background = 'white';
+      });
+      button.classList.add('selected');
+      button.style.borderColor = '#667eea';
+      button.style.background = '#eff6ff';
+    }
+
+    function formatSlotDateTime(isoString) {
+      const date = new Date(isoString);
+      const dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      });
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      return `${dateStr} at ${timeStr}`;
+    }
+
+    // ========================================
+    // END SCHEDULING
+    // ========================================
+
+    // Global variables
+    let quoteData = null;
+    let companySettings = null;
+    let approvalData = {
+      consent: false,
+      signature: null,
+      terms: false,
+      depositMethod: null,
+      scheduledTime: null,
+      skipScheduling: false
+    };
+    let wizardSteps = [];
+    let currentStep = null;
+    let schedulingWidget = null;
+
+    // Get quote ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+
+    if (!quoteId) {
+      document.getElementById('quote-content').innerHTML = `
+        <div class="error">
+          <p>❌ No quote ID provided</p>
+        </div>
+      `;
+    } else {
+      loadQuote();
+    }
+
+    async function loadQuote() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const quoteContent = document.getElementById('quote-content');
+
+      try {
+        loading.style.display = 'block';
+        error.style.display = 'none';
+        quoteContent.style.display = 'none';
+
+        // Load quote data
+        const { data: quote, error: quoteError } = await supabase
+          .from('work_orders')
+          .select('*')
+          .eq('id', quoteId)
+          .single();
+
+        if (quoteError) throw quoteError;
+        if (!quote) throw new Error('Quote not found');
+
+        quoteData = quote;
+
+        // Load company settings
+        const { data: company, error: companyError } = await supabase
+          .from('companies')
+          .select('*')
+          .eq('id', quote.company_id)
+          .single();
+
+        if (companyError) throw companyError;
+        companySettings = company;
+
+        // Load line items
+        const { data: lineItems, error: lineItemsError } = await supabase
+          .from('work_order_line_items')
+          .select('*')
+          .eq('work_order_id', quoteId)
+          .order('sort_order');
+
+        if (lineItemsError) throw lineItemsError;
+
+        loading.style.display = 'none';
+        quoteContent.style.display = 'block';
+
+        displayQuote(quote, lineItems || []);
+
+      } catch (err) {
+        console.error('Error loading quote:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `❌ Error: ${err.message}`;
+      }
+    }
+
+    function displayQuote(quote, lineItems) {
+      const quoteContent = document.getElementById('quote-content');
+
+      let html = `
+        <div class="quote-details">
+          <div class="detail-row">
+            <span class="detail-label">Quote #:</span>
+            <span class="detail-value">${quote.work_order_number || quote.id.slice(0, 8)}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value">
+              <span class="status-badge status-${quote.status}">${quote.status.toUpperCase()}</span>
+            </span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Title:</span>
+            <span class="detail-value">${quote.title || 'N/A'}</span>
+          </div>
+        </div>
+
+        <div class="line-items">
+          <h3>Line Items</h3>
+          ${lineItems.map(item => `
+            <div class="line-item">
+              <span class="line-item-desc">${item.description}</span>
+              <span class="line-item-price">$${parseFloat(item.total_price || 0).toFixed(2)}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="quote-summary">
+          <div class="summary-row">
+            <span class="summary-label">Subtotal:</span>
+            <span class="summary-value">$${parseFloat(quote.subtotal || 0).toFixed(2)}</span>
+          </div>
+          ${quote.discount_amount ? `
+            <div class="summary-row discount">
+              <span class="summary-label">Discount:</span>
+              <span class="summary-value">-$${parseFloat(quote.discount_amount).toFixed(2)}</span>
+            </div>
+          ` : ''}
+          ${quote.tax_amount ? `
+            <div class="summary-row">
+              <span class="summary-label">Tax:</span>
+              <span class="summary-value">$${parseFloat(quote.tax_amount).toFixed(2)}</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="total">
+          <div class="total-label">Total Amount</div>
+          <div class="total-amount">$${parseFloat(quote.total_amount || 0).toFixed(2)}</div>
+        </div>
+
+        <div class="actions">
+          ${quote.status === 'quote' || quote.status === 'sent' || quote.status === 'quoted' ? `
+            <button class="btn btn-approve" onclick="approveQuote()">Approve Quote</button>
+            <button class="btn btn-reject" onclick="rejectQuote()">Reject Quote</button>
+          ` : ''}
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+    }
+
+    async function approveQuote() {
+      // Start the multi-step approval wizard
+      currentStep = 'review';
+
+	      // Prefer server-defined steps
+	      try {
+	        const { data: cfg, error } = await supabase.rpc('get_quote_approval_config', { p_quote_id: quoteId });
+	        if (!error && cfg?.steps && Array.isArray(cfg.steps) && cfg.steps.length) {
+	          wizardSteps = cfg.steps;
+	          console.log('Wizard steps (server):', wizardSteps);
+	          showApprovalWizard();
+	          return;
+	        }
+	      } catch (e) {
+	        console.warn('get_quote_approval_config failed, using client logic:', e.message);
+	      }
+
+
+      console.log('=== APPROVAL WIZARD DEBUG ===');
+      console.log('Company Settings:', companySettings);
+      console.log('Quote Overrides:', {
+        scheduling_mode: quoteData.scheduling_mode,
+        deposit_required: quoteData.deposit_required,
+        deposit_required_before_scheduling: quoteData.deposit_required_before_scheduling
+      });
+
+      // Determine which steps are needed based on quote overrides OR company settings
+      // Quote-level overrides take precedence over company defaults
+      const schedulingMode = quoteData.scheduling_mode || 'customer_choice';
+      const allowScheduling = schedulingMode !== 'company_schedules'; // Company will call them
+      const depositRequired = quoteData.deposit_required !== undefined
+        ? quoteData.deposit_required
+        : (companySettings?.require_deposit_on_approval || false);
+
+      // Condensed flow: Review (with consent+terms) → Deposit (if required) → Schedule (if allowed) → Confirmation
+      wizardSteps = ['review'];
+
+      if (depositRequired) {
+        console.log('Adding deposit step (required by quote or company)');
+        wizardSteps.push('deposit');
+      }
+
+      if (allowScheduling && (companySettings?.allow_customer_scheduling || schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule')) {
+        console.log('Adding schedule step (mode:', schedulingMode, ')');
+        wizardSteps.push('schedule');
+      } else if (schedulingMode === 'company_schedules') {
+        console.log('Skipping schedule step - company will call customer');
+      } else if (schedulingMode === 'auto_schedule') {
+        console.log('Auto-schedule mode - will book earliest slot automatically');
+      }
+
+      wizardSteps.push('confirmation');
+
+      console.log('Total steps:', wizardSteps);
+
+      // If no additional steps, just approve immediately
+      if (wizardSteps.length === 2) { // Only 'review' and 'confirmation'
+        console.log('No additional steps - showing simple confirm');
+        if (!confirm('Are you sure you want to approve this quote?')) return;
+        await finalizeApproval();
+        return;
+      }
+
+      // Show the wizard
+      console.log('Showing wizard with steps:', wizardSteps);
+      showApprovalWizard();
+    }
+
+    function showApprovalWizard() {
+      const quoteContent = document.getElementById('quote-content');
+
+      let html = `
+        <div class="wizard">
+          <div class="wizard-steps">
+            ${wizardSteps.map((step, index) => `
+              <div class="wizard-step ${index === 0 ? 'active' : ''}" id="step-${step}">
+                <div class="step-number">${index + 1}</div>
+                <div class="step-name">${getStepName(step)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="wizard-content" id="wizard-content">
+            ${getStepContent(wizardSteps[0])}
+          </div>
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+
+      // Initialize the first step
+      initializeStep(wizardSteps[0]);
+    }
+
+    function getStepName(step) {
+      const names = {
+        review: 'Review',
+        signature: 'Signature',
+        terms: 'Terms',
+        deposit: 'Deposit',
+        schedule: 'Schedule',
+        confirmation: 'Confirm'
+      };
+      return names[step] || step;
+    }
+
+    function getStepContent(step) {
+      switch (step) {
+        case 'review':
+          return getReviewStepContent();
+        case 'signature':
+          return getSignatureStepContent();
+        case 'terms':
+          return getTermsStepContent();
+        case 'deposit':
+          return getDepositStepContent();
+        case 'schedule':
+          return getScheduleStepContent();
+        case 'confirmation':
+          return getConfirmationStepContent();
+        default:
+          return '<p>Unknown step</p>';
+      }
+    }
+
+    function getReviewStepContent() {
+
+        if (this.loading) {
+          this.container.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+              <div style="border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 3rem; height: 3rem; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+              <p style="color: #666;">Loading available times...</p>
+            </div>
+            <style>
+              @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+              }
+            </style>
+          `;
+          return;
+        }
+
+        if (this.error) {
+          this.container.innerHTML = `
+            <div style="background: #fee; border: 2px solid #f88; color: #c33; padding: 1.5rem; border-radius: 0.5rem;">
+              ${this.error}
+            </div>
+          `;
+          return;
+        }
+
+        const groupedSlots = this.groupSlotsByDay();
+
+        let html = '<div class="scheduling-widget">';
+
+        // Auto-Schedule ASAP Button
+        if (this.showAutoSchedule && this.earliestSlot) {
+          html += `
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: linear-gradient(to right, #ede9fe, #ddd6fe); border-radius: 0.5rem; border: 1px solid #c4b5fd;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <svg style="width: 1.5rem; height: 1.5rem; color: #7c3aed;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                  </svg>
+                  <div>
+                    <p style="font-weight: 600; color: #111; margin: 0;">Auto-Schedule ASAP</p>
+                    <p style="font-size: 0.875rem; color: #666; margin: 0;">Next available: ${this.formatSlotDateTime(this.earliestSlot.start_time)}</p>
+                  </div>
+                </div>
+                <button
+                  onclick="window.schedulingWidget.autoSchedule()"
+                  style="padding: 0.5rem 1rem; background: #7c3aed; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer; transition: background 0.2s;"
+                  onmouseover="this.style.background='#6d28d9'"
+                  onmouseout="this.style.background='#7c3aed'"
+                >
+                  Schedule Now
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        // Week Filters
+        html += `
+          <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+              <button
+                onclick="window.schedulingWidget.filterSlotsByWeek(0)"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.weekFilter === 0 && !this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                This Week
+              </button>
+              <button
+                onclick="window.schedulingWidget.filterSlotsByWeek(1)"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.weekFilter === 1 && !this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                Next Week
+              </button>
+              <button
+                onclick="window.schedulingWidget.filterSlotsByWeek(2)"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.weekFilter === 2 && !this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                2 Weeks Out
+              </button>
+              <button
+                onclick="window.schedulingWidget.showCustomRange = true; window.schedulingWidget.render();"
+                style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 500; border: none; cursor: pointer; ${this.showCustomRange ? 'background: #7c3aed; color: white;' : 'background: #f3f4f6; color: #374151;'}"
+              >
+                Custom Range
+              </button>
+            </div>
+        `;
+
+        // Custom Date Range Picker
+        if (this.showCustomRange) {
+          const today = new Date().toISOString().split('T')[0];
+          const thirtyDays = new Date();
+          thirtyDays.setDate(thirtyDays.getDate() + 30);
+          const thirtyDaysStr = thirtyDays.toISOString().split('T')[0];
+
+          html += `
+            <div style="background: #f9fafb; border-radius: 0.5rem; padding: 1rem; border: 1px solid #e5e7eb;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                  <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Start Date</label>
+                  <input type="date" id="custom-start-date" value="${today}" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">End Date</label>
+                  <input type="date" id="custom-end-date" value="${thirtyDaysStr}" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button
+                  onclick="window.schedulingWidget.filterByCustomRange(document.getElementById('custom-start-date').value, document.getElementById('custom-end-date').value)"
+                  style="padding: 0.5rem 1rem; background: #7c3aed; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;"
+                >
+                  Apply Range
+                </button>
+                <button
+                  onclick="window.schedulingWidget.filterSlotsByWeek(0)"
+                  style="padding: 0.5rem 1rem; background: #e5e7eb; color: #374151; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        html += '</div>'; // Close week filters div
+
+        // Available Slots Grouped by Day
+        html += '<div style="display: flex; flex-direction: column; gap: 1.5rem;">';
+
+        if (Object.keys(groupedSlots).length === 0) {
+          html += `
+            <div style="text-align: center; padding: 2rem; color: #6b7280;">
+              No available slots for this time period. Try a different week.
+            </div>
+          `;
+        } else {
+          Object.entries(groupedSlots).forEach(([day, slots]) => {
+            html += `
+              <div style="border: 1px solid #e5e7eb; border-radius: 0.5rem; overflow: hidden;">
+                <div style="background: #f9fafb; padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb;">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg style="width: 1.25rem; height: 1.25rem; color: #6b7280;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <h3 style="font-weight: 600; color: #111; margin: 0;">${day}</h3>
+                    <span style="font-size: 0.875rem; color: #6b7280;">(${slots.length} available)</span>
+                  </div>
+                </div>
+                <div style="padding: 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.75rem;">
+            `;
+
+            slots.forEach((slot, idx) => {
+              // Selection is based on start time only (deduped); slot contains employee_ids array
+              const isSelected = this.selectedSlot &&
+                this.selectedSlot.start_time.getTime() === slot.start_time.getTime();
+
+              const slotId = `slot-${slot.start_time.getTime()}`;
+              this[slotId] = slot;
+
+              const techsAvailable = Array.isArray(slot.employee_ids) ? slot.employee_ids.length : 1;
+
+              html += `
+                <button
+                  onclick="window.schedulingWidget.selectSlotById('${slotId}')"
+                  style="padding: 0.75rem 1rem; border-radius: 0.5rem; border: 2px solid ${isSelected ? '#7c3aed' : '#e5e7eb'}; background: ${isSelected ? '#ede9fe' : 'white'}; color: ${isSelected ? '#5b21b6' : '#374151'}; cursor: pointer; transition: all 0.2s; font-weight: ${isSelected ? '600' : '400'};"
+                  onmouseover="if (!${isSelected}) { this.style.borderColor='#c4b5fd'; this.style.background='#faf5ff'; }"
+                  onmouseout="if (!${isSelected}) { this.style.borderColor='#e5e7eb'; this.style.background='white'; }"
+                >
+                  <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+                    <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span style="font-size: 0.875rem;">${this.formatSlotTime(slot.start_time)}</span>
+                  </div>
+                  <div style="font-size: 0.7rem; color: #6b7280; margin-top: 0.25rem;">${techsAvailable} tech${techsAvailable !== 1 ? 's' : ''} available</div>
+                </button>
+              `;
+            });
+
+            html += `
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        html += '</div>'; // Close slots container
+        html += '</div>'; // Close widget
+
+        this.container.innerHTML = html;
+
+        window.schedulingWidget = this;
+      }
+    }
+    // ========================================
+    // END SCHEDULING WIDGET
+    // ========================================
+    console.log('✅ SchedulingWidget class defined successfully');
+    console.log('🔍 SchedulingWidget type:', typeof SchedulingWidget);
+
+    // Get quote ID from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const quoteId = urlParams.get('id');
+
+    // Global state
+    let quoteData = null;
+    let companySettings = null;
+    let currentStep = 'review'; // review, signature, terms, deposit, schedule, confirmation
+    let wizardSteps = []; // Store wizard steps globally
+    let approvalData = {
+      signature: null,
+      termsAccepted: false,
+      depositPaid: false,
+      scheduledTime: null
+    };
+
+    async function loadQuote() {
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const quoteContent = document.getElementById('quote-content');
+
+      if (!quoteId) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = '❌ No quote ID provided. Please use the link from your email.';
+        return;
+      }
+
+      try {
+        // Fetch quote from Supabase
+        const { data: quotes, error: fetchError } = await supabase
+          .from('work_orders')
+          .select('*, customers(*), companies(*)')
+          .eq('id', quoteId)
+          .limit(1);
+
+        if (fetchError) {
+          console.error('Fetch error:', fetchError);
+          throw fetchError;
+        }
+
+        if (!quotes || quotes.length === 0) {
+          throw new Error('Quote not found. Please check the link from your email.');
+        }
+
+        const quote = quotes[0];
+        quoteData = quote;
+        console.log('Quote loaded:', quote);
+        console.log('🔍 DEBUG - Quote fields:', {
+          id: quote.id,
+          status: quote.status,
+          total_amount: quote.total_amount,
+          labor_summary: quote.labor_summary,
+          has_labor_summary: !!quote.labor_summary,
+          labor_summary_type: typeof quote.labor_summary,
+          all_keys: Object.keys(quote)
+        });
+
+        // Load company settings from companies table (includes scheduling settings)
+        console.log('🔍 DEBUG - Loading company settings for:', quote.company_id);
+        try {
+          const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/companies?id=eq.${quote.company_id}&select=*`,
+            {
+              headers: {
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+            }
+          );
+
+          console.log('🔍 DEBUG - Companies fetch response:', {
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText
+          });
+
+          if (response.ok) {
+            const companiesArray = await response.json();
+            console.log('🔍 DEBUG - Companies data:', companiesArray);
+
+            if (companiesArray && companiesArray.length > 0) {
+              const company = companiesArray[0];
+              companySettings = {
+                // Approval wizard settings (use defaults if not in companies table)
+                require_signature_on_approval: true,
+                require_terms_acceptance: true,
+                require_deposit_on_approval: true,
+                allow_customer_scheduling: true,
+                terms_and_conditions_text: 'TERMS AND CONDITIONS\n\n1. Payment: Full payment is due upon completion.\n2. Warranty: All work guaranteed for 90 days.\n3. Cancellation: 48 hours notice required.\n\nBy accepting this quote, you agree to these terms.',
+                deposit_type: 'percentage',
+                default_deposit_percentage: 25,
+                default_deposit_amount: 0,
+
+                // Scheduling settings from companies table
+                business_hours_start: company.business_hours_start,
+                business_hours_end: company.business_hours_end,
+                working_days: company.working_days,
+                timezone: company.timezone,
+                job_buffer_minutes: company.job_buffer_minutes,
+                default_buffer_before_minutes: company.default_buffer_before_minutes,
+                default_buffer_after_minutes: company.default_buffer_after_minutes,
+                min_advance_booking_hours: company.min_advance_booking_hours,
+                max_advance_booking_days: company.max_advance_booking_days
+              };
+
+              console.log('✅ Company settings loaded:', {
+                business_hours: `${companySettings.business_hours_start} - ${companySettings.business_hours_end}`,
+                working_days: companySettings.working_days,
+                timezone: companySettings.timezone,
+                buffers: {
+                  job: companySettings.job_buffer_minutes,
+                  before: companySettings.default_buffer_before_minutes,
+                  after: companySettings.default_buffer_after_minutes
+                }
+              });
+            } else {
+              throw new Error('No company found in database');
+            }
+          } else {
+            throw new Error(`Companies fetch failed: ${response.status} ${response.statusText}`);
+          }
+        } catch (settingsError) {
+          console.error('❌ CRITICAL: Could not load company settings:', settingsError);
+          console.error('❌ Cannot schedule without company settings!');
+          throw settingsError; // Don't continue without settings
+        }
+
+        // Check if quote has already been processed
+        if (quote.status === 'approved') {
+          loading.style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          const approvedDate = quote.approved_at || quote.customer_approved_at;
+          document.getElementById('success').innerHTML = `
+            <h2>✅ Quote Already Approved</h2>
+            <p style="margin-top: 15px;">This quote was approved${approvedDate ? ' on ' + new Date(approvedDate).toLocaleDateString() : ''}. We'll be in touch soon!</p>
+          `;
+          return;
+        }
+
+        if (quote.status === 'rejected') {
+          loading.style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          const rejectedDate = quote.rejected_at || quote.quote_rejected_at;
+          document.getElementById('success').innerHTML = `
+            <h2>Quote Declined</h2>
+            <p style="margin-top: 15px;">This quote was declined${rejectedDate ? ' on ' + new Date(rejectedDate).toLocaleDateString() : ''}.</p>
+          `;
+          return;
+        }
+
+        // Fetch line items
+        const { data: lineItems, error: itemsError } = await supabase
+          .from('work_order_line_items')
+          .select('*')
+          .eq('work_order_id', quoteId)
+          .order('sort_order');
+
+        if (itemsError) throw itemsError;
+
+        // Calculate labor_summary from line items if not already in quote
+        if (!quote.labor_summary && lineItems && lineItems.length > 0) {
+          const laborItems = lineItems.filter(item =>
+            item.line_type === 'labor' || item.item_type === 'labor'
+          );
+
+          if (laborItems.length > 0) {
+            const totalLaborHours = laborItems.reduce((sum, item) =>
+              sum + (parseFloat(item.quantity) || 0), 0
+            );
+
+            // Smart crew size calculation
+            // If total hours > 8, assume multiple people working same day
+            // Example: 16 hours = 2 people × 8 hours each
+            const hoursPerDay = 8; // Standard workday
+            const crewSize = Math.max(1, Math.ceil(totalLaborHours / hoursPerDay));
+            const hoursPerEmployee = totalLaborHours / crewSize;
+
+            quote.labor_summary = {
+              crew_size: crewSize,
+              hours_per_day: hoursPerDay,
+              regular_hours: totalLaborHours,
+              overtime_hours: 0,
+              labor_subtotal: laborItems.reduce((sum, item) =>
+                sum + (parseFloat(item.total_price) || 0), 0
+              )
+            };
+
+            console.log('✅ Calculated labor_summary from line items:', {
+              totalLaborHours,
+              crewSize,
+              hoursPerEmployee,
+              labor_summary: quote.labor_summary
+            });
+          }
+        }
+
+        // Display quote
+        displayQuote(quote, lineItems || []);
+
+        loading.style.display = 'none';
+        quoteContent.style.display = 'block';
+
+      } catch (err) {
+        console.error('Error loading quote:', err);
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        error.innerHTML = `❌ Error: ${err.message}`;
+      }
+    }
+
+    function displayQuote(quote, lineItems) {
+      const quoteContent = document.getElementById('quote-content');
+
+      const quoteNumber = quote.work_order_number || quote.quote_number || 'N/A';
+      const customerName = quote.customers?.name || 'Valued Customer';
+      const companyName = quote.companies?.name || 'TradeMate Pro';
+      const totalAmount = parseFloat(quote.total_amount || 0).toFixed(2);
+      const createdDate = new Date(quote.created_at).toLocaleDateString();
+
+      let html = `
+        <div class="quote-details">
+          <div class="detail-row">
+            <span class="detail-label">Quote Number:</span>
+            <span class="detail-value"><strong>${quoteNumber}</strong></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">From:</span>
+            <span class="detail-value">${companyName}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">To:</span>
+            <span class="detail-value">${customerName}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date:</span>
+            <span class="detail-value">${createdDate}</span>
+          </div>
+        </div>
+      `;
+
+      if (lineItems.length > 0) {
+        html += `
+          <div class="line-items">
+            <h3>Items & Services</h3>
+        `;
+
+        lineItems.forEach(item => {
+          const price = parseFloat(item.total_price || 0).toFixed(2);
+          const qty = parseFloat(item.quantity || 1);
+          const unitPrice = parseFloat(item.unit_price || 0).toFixed(2);
+          html += `
+            <div class="line-item">
+              <div class="line-item-desc">
+                <strong>${item.description || 'Service'}</strong>
+                ${qty > 1 ? `<br><small>Quantity: ${qty} × $${unitPrice}</small>` : ''}
+              </div>
+              <div class="line-item-price">$${price}</div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      }
+
+      // Show subtotal, tax, and total breakdown
+      const subtotal = parseFloat(quote.subtotal || 0).toFixed(2);
+      const taxAmount = parseFloat(quote.tax_amount || 0).toFixed(2);
+      const discountAmount = parseFloat(quote.discount_amount || 0).toFixed(2);
+
+      html += `
+        <div class="quote-summary">
+          <div class="summary-row">
+            <span class="summary-label">Subtotal:</span>
+            <span class="summary-value">$${subtotal}</span>
+          </div>
+      `;
+
+      if (parseFloat(discountAmount) > 0) {
+        html += `
+          <div class="summary-row discount">
+            <span class="summary-label">Discount:</span>
+            <span class="summary-value">-$${discountAmount}</span>
+          </div>
+        `;
+      }
+
+      if (parseFloat(taxAmount) > 0) {
+        html += `
+          <div class="summary-row">
+            <span class="summary-label">Tax:</span>
+            <span class="summary-value">$${taxAmount}</span>
+          </div>
+        `;
+      }
+
+      html += `
+        </div>
+
+        <div class="total">
+          <div class="total-label">Total Amount</div>
+          <div class="total-amount">$${totalAmount}</div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-approve" onclick="approveQuote()">
+
+
+            ✅ Approve Quote
+          </button>
+          <button class="btn btn-reject" onclick="rejectQuote()">
+            ❌ Decline Quote
+          </button>
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+    }
+
+    async function approveQuote() {
+      // Start the multi-step approval wizard
+      currentStep = 'review';
+
+
+      // Prefer server-defined steps
+      try {
+        const { data: cfg, error } = await supabase.rpc('get_quote_approval_config', { p_quote_id: quoteId });
+        if (!error && cfg?.steps && Array.isArray(cfg.steps) && cfg.steps.length) {
+          wizardSteps = cfg.steps;
+          console.log('Wizard steps (server):', wizardSteps);
+          showApprovalWizard();
+          return;
+        }
+      } catch (e) {
+        console.warn('get_quote_approval_config failed, using client logic:', e.message);
+      }
+
+      console.log('=== APPROVAL WIZARD DEBUG ===');
+      console.log('Company Settings:', companySettings);
+      console.log('Quote Overrides:', {
+        scheduling_mode: quoteData.scheduling_mode,
+        deposit_required: quoteData.deposit_required,
+        deposit_required_before_scheduling: quoteData.deposit_required_before_scheduling
+      });
+
+      // Determine which steps are needed based on quote overrides OR company settings
+      // Quote-level overrides take precedence over company defaults
+      const schedulingMode = quoteData.scheduling_mode || 'customer_choice';
+      const allowScheduling = schedulingMode !== 'company_schedules'; // Company will call them
+      const depositRequired = quoteData.deposit_required !== undefined
+        ? quoteData.deposit_required
+        : (companySettings?.require_deposit_on_approval || false);
+
+      // Condensed flow: Review (with consent+terms) → Deposit (if required) → Schedule (if allowed) → Confirmation
+      wizardSteps = ['review'];
+
+      if (depositRequired) {
+        console.log('Adding deposit step (required by quote or company)');
+        wizardSteps.push('deposit');
+      }
+
+      if (allowScheduling && (companySettings?.allow_customer_scheduling || schedulingMode === 'customer_choice' || schedulingMode === 'custom_schedule')) {
+        console.log('Adding schedule step (mode:', schedulingMode, ')');
+        wizardSteps.push('schedule');
+      } else if (schedulingMode === 'company_schedules') {
+        console.log('Skipping schedule step - company will call customer');
+      } else if (schedulingMode === 'auto_schedule') {
+        console.log('Auto-schedule mode - will book earliest slot automatically');
+      }
+
+      wizardSteps.push('confirmation');
+
+      console.log('Total steps:', wizardSteps);
+
+      // If no additional steps, just approve immediately
+      if (wizardSteps.length === 2) { // Only 'review' and 'confirmation'
+        console.log('No additional steps - showing simple confirm');
+        if (!confirm('Are you sure you want to approve this quote?')) return;
+        await finalizeApproval();
+        return;
+      }
+
+      // Show the wizard
+      console.log('Showing wizard with steps:', wizardSteps);
+      showApprovalWizard();
+    }
+
+    function showApprovalWizard() {
+      const quoteContent = document.getElementById('quote-content');
+
+      let html = `
+        <div class="wizard">
+          <div class="wizard-steps">
+            ${wizardSteps.map((step, index) => `
+              <div class="wizard-step ${index === 0 ? 'active' : ''}">
+                <div class="step-number">${index + 1}</div>
+                <div class="step-name">${getStepName(step)}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div id="wizard-content" class="wizard-content">
+            ${getStepContent(wizardSteps[0])}
+          </div>
+        </div>
+      `;
+
+      quoteContent.innerHTML = html;
+
+      // Initialize the first step
+      initializeStep(wizardSteps[0]);
+    }
+
+    function getStepName(step) {
+      const names = {
+        'review': 'Review',
+        'signature': 'Consent',
+        'terms': 'Terms',
+        'deposit': 'Deposit',
+        'schedule': 'Schedule',
+        'confirmation': 'Complete'
+      };
+      return names[step] || step;
+    }
+
+    function getStepContent(step) {
+      switch(step) {
+        case 'review':
+          return getReviewStepContent();
+        case 'signature':
+          return getSignatureStepContent();
+        case 'terms':
+          return getTermsStepContent();
+        case 'deposit':
+          return getDepositStepContent();
+        case 'schedule':
+          return getScheduleStepContent();
+        case 'confirmation':
+          return getConfirmationStepContent();
+        default:
+          return '<p>Unknown step</p>';
+      }
+    }
+
+    function getReviewStepContent() {
+      const nextSteps = wizardSteps.filter(s => s !== 'review' && s !== 'confirmation');
+      return `
+        <h2>📋 Review & Approve Quote</h2>
+        <p style="margin: 20px 0;">You're about to approve this quote for <strong>$${quoteData.total_amount.toFixed(2)}</strong></p>
+
+        ${nextSteps.length > 0 ? `
+          <div style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin: 20px 0;">
+            <strong>What you'll do next:</strong>
+            <ul style="margin: 10px 0 0 20px;">
+              ${nextSteps.map(step => `<li>${getStepDescription(step)}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <div style="margin-bottom: 12px; font-weight: 600;">Consent & Terms</div>
+          <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer;">
+            <input type="checkbox" id="review-consent" style="margin-right: 10px; width: 18px; height: 18px;">
+            <span>I approve this quote and authorize the work.</span>
+          </label>
+          <div style="max-height: 240px; overflow-y: auto; border: 1px solid #ddd; padding: 14px; margin: 12px 0; background: #fff; border-radius: 6px;">
+            ${(companySettings.terms_and_conditions_text || '').replace(/\n/g, '<br>')}
+          </div>
+          <label style="display: flex; align-items: center; margin: 10px 0; cursor: pointer;">
+            <input type="checkbox" id="review-terms" style="margin-right: 10px; width: 18px; height: 18px;">
+            <span>I have read and agree to the terms and conditions.</span>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" id="review-continue-btn" onclick="nextWizardStep(0)" disabled>
+            Continue
+          </button>
+          <button class="btn btn-secondary" onclick="location.reload()">
+            Cancel
+          </button>
+        </div>
+      `;
+    }
+
+    function getStepDescription(step) {
+      const descriptions = {
+        'signature': 'Acknowledge and approve the quote',
+        'terms': 'Accept terms and conditions',
+        'deposit': 'Pay deposit',
+        'schedule': 'Schedule your service',
+      };
+      return descriptions[step] || step;
+    }
+
+    function getSignatureStepContent() {
+      return `
+        <h2>✅ Acknowledgement & Consent</h2>
+        <p style="margin: 20px 0;">Please review and acknowledge the following:</p>
+
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <div style="margin-bottom: 15px;">
+            <strong>Quote Details:</strong>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Total Amount: <strong>$${quoteData.total_amount.toFixed(2)}</strong></li>
+              <li>Work Order: ${quoteData.work_order_number}</li>
+              <li>Customer: ${quoteData.customer?.name || 'N/A'}</li>
+            </ul>
+          </div>
+
+          <label style="display: flex; align-items: start; margin: 20px 0; cursor: pointer; padding: 15px; background: white; border-radius: 6px; border: 2px solid #e5e7eb;">
+            <input type="checkbox" id="consent-checkbox" style="margin-right: 12px; margin-top: 4px; width: 20px; height: 20px; cursor: pointer;">
+            <span style="flex: 1;">
+              <strong>I acknowledge and approve this quote.</strong><br>
+              <span style="font-size: 14px; color: #6b7280; margin-top: 5px; display: block;">
+                By checking this box, I confirm that I have reviewed the quote details and authorize the work to proceed as described.
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="saveConsent()" id="consent-btn" disabled>Continue</button>
+        </div>
+      `;
+    }
+
+    function getTermsStepContent() {
+      const terms = companySettings.terms_and_conditions_text || 'By accepting this quote, you agree to the terms and conditions.';
+      return `
+        <h2>📄 Terms & Conditions</h2>
+        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 20px; margin: 20px 0; background: #f9f9f9;">
+          ${terms.replace(/\n/g, '<br>')}
+        </div>
+
+        <label style="display: flex; align-items: center; margin: 20px 0; cursor: pointer;">
+          <input type="checkbox" id="terms-checkbox" style="margin-right: 10px; width: 20px; height: 20px;">
+          <span>I have read and agree to the terms and conditions</span>
+        </label>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="acceptTerms()" id="accept-terms-btn" disabled>Continue</button>
+        </div>
+      `;
+    }
+
+    function getDepositStepContent() {
+      const depositAmount = companySettings.deposit_type === 'percentage'
+        ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
+        : companySettings.default_deposit_amount;
+
+      // Get allowed payment methods from quote overrides or default to all
+      const allowedMethods = quoteData.allowed_payment_methods || ['online', 'cash', 'check'];
+      console.log('Allowed payment methods:', allowedMethods);
+
+      // Payment method options
+      const paymentMethods = [
+        { value: 'online', icon: '💳', label: 'Pay Online Now', desc: 'Secure payment via credit/debit card' },
+        { value: 'cash', icon: '💵', label: 'Cash (Pay on arrival)', desc: 'Pay cash when technician arrives' },
+        { value: 'check', icon: '🏦', label: 'Check (Pay on arrival)', desc: 'Pay by check when technician arrives' },
+        { value: 'prepaid', icon: '✅', label: 'Already Paid', desc: "I've already paid the deposit" }
+      ];
+
+      // Filter to only allowed methods
+      const availableMethods = paymentMethods.filter(m => allowedMethods.includes(m.value) || m.value === 'prepaid');
+      const firstMethod = availableMethods[0]?.value || 'online';
+
+      let methodsHtml = '';
+      availableMethods.forEach((method, index) => {
+        methodsHtml += `
+          <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #e5e7eb; border-radius: 6px; margin-bottom: 10px; cursor: pointer; background: white;">
+            <input type="radio" name="deposit-method" value="${method.value}" ${index === 0 ? 'checked' : ''} style="margin-right: 10px; width: 18px; height: 18px;">
+            <div>
+              <div style="font-weight: 500;">${method.icon} ${method.label}</div>
+              <div style="font-size: 12px; color: #6b7280;">${method.desc}</div>
+            </div>
+          </label>
+        `;
+      });
+
+      return `
+        <h2>💳 Deposit Required</h2>
+        <p style="margin: 20px 0;">A deposit of <strong>$${depositAmount.toFixed(2)}</strong> is required to proceed.</p>
+
+        <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <div style="font-weight: 600; margin-bottom: 12px;">How will you pay the deposit?</div>
+          ${methodsHtml}
+        </div>
+
+        <div id="stripe-payment-element" style="margin: 20px 0; display: none;"></div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="processDeposit()" id="deposit-continue-btn">Continue</button>
+        </div>
+
+        <p style="margin-top: 20px; font-size: 14px; color: #666;">
+          <em>Note: Online payment processing coming soon. For now, select your preferred payment method and continue.</em>
+        </p>
+      `;
+    }
+
+    function getScheduleStepContent() {
+      // Compute labor summary reliably (fallback if missing)
+      function computeLaborSummaryFallback() {
+        try {
+          const laborItems = (quoteData.line_items || []).filter(i => (i.line_type || '').toLowerCase() === 'labor');
+          const totalLaborHours = laborItems.reduce((sum, item) => sum + (parseFloat(item.quantity) || 0), 0);
+          const hoursPerDay = 8;
+          const crewSize = Math.max(1, Math.ceil(totalLaborHours / hoursPerDay)) || 1;
+          const totalHours = totalLaborHours || hoursPerDay;
+          const hoursPerEmployee = totalHours / crewSize;
+          return { crew_size: crewSize, hours_per_day: hoursPerDay, regular_hours: totalHours, overtime_hours: 0, hoursPerEmployee, totalHours };
+        } catch { return { crew_size: 1, hours_per_day: 8, regular_hours: 8, overtime_hours: 0, hoursPerEmployee: 8, totalHours: 8 }; }
+      }
+
+      const ls = quoteData.labor_summary || computeLaborSummaryFallback();
+      const crewSize = ls.crew_size || 1;
+      const hoursPerDay = ls.hours_per_day || 8;
+      const totalHours = (ls.regular_hours || 0) + (ls.overtime_hours || 0) || hoursPerDay;
+      const hoursPerEmployee = totalHours / crewSize;
+
+      const jobInfoHtml = `
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+            <svg style="width: 2rem; height: 2rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <div>
+              <div style="font-size: 1.25rem; font-weight: 700;">${crewSize} Technician${crewSize > 1 ? 's' : ''} for ${Math.round(hoursPerEmployee)} Hour${Math.round(hoursPerEmployee) > 1 ? 's' : ''}</div>
+              <div style="font-size: 0.875rem; opacity: 0.9;">Total project time: ${totalHours} hours</div>
+            </div>
+          </div>
+          <div style="font-size: 0.875rem; opacity: 0.8; margin-top: 0.5rem;">
+            Select a time when our team can arrive to start your service.
+          </div>
+        </div>
+      `;
+
+      const chip = (companySettings && companySettings.timezone) ? `
+        <div style=\"margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 9999px; background: #f3f4f6; color: #374151; font-size: 12px;\">
+          <span>Showing times in <strong>${companySettings.timezone}</strong></span>
+          <span>•</span>
+          <span>Hours ${companySettings.business_hours_start || '08:00'}–${companySettings.business_hours_end || '17:00'}</span>
+          <span>•</span>
+          <span>Buffers ${companySettings.default_buffer_before_minutes || 0}/${companySettings.default_buffer_after_minutes || 0} min</span>
+          <span>•</span>
+          <span>15-min intervals</span>
+        </div>
+      ` : '';
+
+      return `
+        <h2>📅 Schedule Your Service</h2>
+
+        ${jobInfoHtml}
+
+        <!-- Scheduling Widget Container -->
+        <div id="scheduling-widget-container"></div>
+        ${chip}
+
+        <div class="wizard-actions" id="schedule-actions" style="display: none; margin-top: 20px;">
+          <button class="btn btn-approve" onclick="confirmSchedule()" id="confirm-schedule-btn" disabled>
+            Confirm Selected Time
+          </button>
+        </div>
+
+        <!-- Floating confirm button for faster UX -->
+        <div id="floating-confirm" style="display:none; position: fixed; bottom: 16px; right: 16px; z-index: 1000;">
+          <button onclick="confirmSchedule()" style="padding: 0.75rem 1rem; background: #16a34a; color: white; border: none; border-radius: 9999px; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);">
+            Confirm Selected Time
+          </button>
+        </div>
+
+        <!-- Skip Scheduling Option -->
+        <div style="margin-top: 30px; padding: 20px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; text-align: center;">
+          <p style="margin-bottom: 12px; color: #6b7280;">Don't have a preferred time?</p>
+          <button onclick="skipScheduling()" class="btn btn-secondary" style="background: #6b7280; color: white;">
+            Skip - Let Company Schedule
+          </button>
+          <p style="margin-top: 8px; font-size: 12px; color: #9ca3af;">We'll call you to schedule a convenient time</p>
+        </div>
+      `;
+    }
+
+    // Helper function to format date/time for display (outside of SchedulingWidget class)
+    function formatSlotDateTime(date) {
+      const dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      });
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      return `${dateStr} at ${timeStr}`;
+    }
+
+    function getConfirmationStepContent() {
+      let scheduleInfo = '';
+
+      if (approvalData.scheduledTime) {
+        const scheduledDate = new Date(approvalData.scheduledTime.start_time);
+        const dateTimeStr = formatSlotDateTime(scheduledDate);
+        const autoScheduled = approvalData.scheduledTime.auto_scheduled ? ' (Auto-scheduled)' : '';
+
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">📅 Your Service is Scheduled</div>
+            <div style="font-size: 24px; font-weight: 700;">${dateTimeStr}${autoScheduled}</div>
+          </div>
+        `;
+      } else if (approvalData.skipScheduling) {
+        scheduleInfo = `
+          <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">📞 We'll Contact You</div>
+            <div style="font-size: 16px;">Our team will call you within 1 business day to schedule a convenient time.</div>
+          </div>
+        `;
+      }
+
+      // Deposit summary (condensed into final step)
+      let depositHtml = '';
+      if (companySettings && companySettings.require_deposit_on_approval && approvalData.depositMethod) {
+        const depositAmount = companySettings.deposit_type === 'percentage'
+          ? (quoteData.total_amount * (companySettings.default_deposit_percentage / 100))
+          : companySettings.default_deposit_amount;
+
+        const methodLabels = {
+          'online': '💳 Online Payment',
+          'cash': '💵 Cash (on arrival)',
+          'check': '🏦 Check (on arrival)',
+          'prepaid': '✅ Already Paid'
+        };
+
+        depositHtml = `
+          <div style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 16px; margin: 16px 0;">
+            <div style="font-weight: 600; color: #92400e;">Deposit: $${depositAmount.toFixed(2)}</div>
+            <div style="color: #92400e; font-size: 14px; margin-top: 4px;">Payment method: ${methodLabels[approvalData.depositMethod] || approvalData.depositMethod}</div>
+            ${approvalData.depositMethod === 'cash' || approvalData.depositMethod === 'check' ?
+              '<div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">Please have payment ready when the technician arrives.</div>' :
+              approvalData.depositMethod === 'prepaid' ?
+              '<div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">Thank you for your payment!</div>' :
+              '<div style="color: #92400e; font-size: 12px; opacity: 0.9; margin-top: 6px;">We will send a secure payment link to complete the deposit.</div>'
+            }
+          </div>
+        `;
+      }
+
+      return `
+        <h2>🎉 All Set!</h2>
+        <p style="margin: 20px 0; font-size: 18px;">Your quote has been approved successfully!</p>
+
+        ${scheduleInfo}
+        ${depositHtml}
+
+        <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 20px; margin: 20px 0;">
+          <strong>What happens next?</strong>
+          <ul style="margin: 10px 0 0 20px;">
+            <li>We'll send you a confirmation email</li>
+            ${approvalData.scheduledTime ? '<li>Our technician will arrive at the scheduled time</li>' : '<li>Our team will contact you to schedule your service</li>'}
+            <li>We'll get started on your project!</li>
+          </ul>
+        </div>
+
+        <div class="wizard-actions">
+          <button class="btn btn-approve" onclick="finalizeApproval()">Confirm & Finish</button>
+        </div>
+      `;
+    }
+
+    async function rejectQuote() {
+      if (!confirm('Are you sure you want to decline this quote?')) return;
+
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => btn.disabled = true);
+
+      try {
+        // Use RPC function to reject quote (bypasses RLS issues)
+        const { data, error } = await supabase
+          .rpc('approve_quote', {
+            quote_id: quoteId,
+            new_status: 'rejected'
+          });
+
+        if (error) throw error;
+
+        document.getElementById('quote-content').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('success').innerHTML = `
+          <h2>Quote Declined</h2>
+          <p style="margin-top: 15px;">We've received your response. If you have any questions, please contact us.</p>
+        `;
+
+      } catch (err) {
+        console.error('Error rejecting quote:', err);
+        alert('Error declining quote: ' + err.message);
+        buttons.forEach(btn => btn.disabled = false);
+      }
+    }
+
+    // Wizard navigation
+    function nextWizardStep(currentIndex) {
+      console.log('🔄 nextWizardStep called, currentIndex:', currentIndex);
+
+      const nextIndex = currentIndex + 1;
+      if (nextIndex >= wizardSteps.length) {
+        console.log('✅ All steps complete, finalizing approval');
+        finalizeApproval();
+        return;
+      }
+
+      const nextStep = wizardSteps[nextIndex];
+      currentStep = nextStep;
+
+      console.log('➡️ Moving to step:', nextStep, 'index:', nextIndex);
+
+      // Update wizard UI
+      const wizardContent = document.getElementById('wizard-content');
+      wizardContent.innerHTML = getStepContent(nextStep);
+
+      // Update step indicators
+      const stepElements = document.querySelectorAll('.wizard-step');
+      stepElements.forEach((el, index) => {
+        el.classList.remove('active', 'completed');
+        if (index < nextIndex) el.classList.add('completed');
+        if (index === nextIndex) el.classList.add('active');
+      });
+
+      // Initialize step-specific functionality
+      initializeStep(nextStep);
+    }
+
+    function initializeStep(step) {
+      if (step === 'review') {
+        // Enable continue when both consent and terms are checked
+        const consent = document.getElementById('review-consent');
+        const terms = document.getElementById('review-terms');
+        const btn = document.getElementById('review-continue-btn');
+        const update = () => { if (btn) btn.disabled = !(consent?.checked && terms?.checked); };
+        if (consent) consent.addEventListener('change', update);
+        if (terms) terms.addEventListener('change', update);
+        update();
+      } else if (step === 'schedule') {
+        // Load available scheduling slots
+        loadAvailableSlots();
+      }
+    }
+
+    function saveConsent() {
+      const checkbox = document.getElementById('consent-checkbox');
+      if (!checkbox || !checkbox.checked) {
+        alert('Please check the consent box to continue');
+        return;
+      }
+
+      approvalData.signature = {
+        consented: true,
+        timestamp: new Date().toISOString(),
+        ip: 'customer-portal' // Could capture real IP if needed
+      };
+      console.log('✅ Consent acknowledged');
+
+      // Find current step index and move to next
+      const currentIndex = wizardSteps.indexOf('signature');
+      nextWizardStep(currentIndex);
+    }
+
+    function acceptTerms() {
+      approvalData.termsAccepted = true;
+      console.log('📄 Terms accepted');
+
+      const currentIndex = wizardSteps.indexOf('terms');
+      nextWizardStep(currentIndex);
+    }
+
+    async function processDeposit() {
+      // Capture selected payment method
+      const selectedMethod = document.querySelector('input[name="deposit-method"]:checked');
+      if (!selectedMethod) {
+        alert('Please select a payment method');
+        return;
+      }
+
+      approvalData.depositMethod = selectedMethod.value;
+      approvalData.depositPaid = (selectedMethod.value === 'prepaid' || selectedMethod.value === 'online');
+
+      console.log('💳 Deposit method selected:', selectedMethod.value);
+
+      // If online payment selected, process Stripe payment
+      if (selectedMethod.value === 'online') {
+        try {
+          await processStripePayment();
+        } catch (error) {
+          console.error('Payment error:', error);
+          alert('Payment failed: ' + error.message);
+          return;
+        }
+      }
+
+      const currentIndex = wizardSteps.indexOf('deposit');
+      nextWizardStep(currentIndex);
+    }
+
+    // Stripe payment processing
+    let stripe = null;
+    let elements = null;
+    let paymentElement = null;
+
+    async function processStripePayment() {
+      const depositAmount = parseFloat(quoteData.deposit_amount || 0);
+
+      if (depositAmount <= 0) {
+        throw new Error('Invalid deposit amount');
+      }
+
+      console.log('💳 Processing Stripe payment for $' + depositAmount);
+
+      // Check if beta mode (show badge)
+      const isBetaMode = true; // Set to true for beta filtering
+
+      // Show loading
+      const paymentContainer = document.getElementById('stripe-payment-element');
+      paymentContainer.style.display = 'block';
+      paymentContainer.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+          <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f4f6; border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <p style="margin-top: 10px; color: #6b7280;">Initializing secure payment...</p>
+          ${isBetaMode ? '<span style="display: inline-block; margin-top: 8px; padding: 4px 12px; background: #ede9fe; color: #7c3aed; border-radius: 12px; font-size: 12px; font-weight: 600;">Beta</span>' : ''}
+        </div>
+      `;
+
+      try {
+        // Initialize Stripe
+        const publishableKey = 'pk_live_51SFd6pKHQ4eingl9ovc2k9brCuLQIdWSa1Vc0BvcQpVZNioWi6YIfl5nkqwAk9WqiRT4bVqOEZtyqv1frwJAQqfx00btBFP8HA';
+        stripe = Stripe(publishableKey);
+
+        // Create Payment Intent via Edge Function
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/create-payment-intent`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({
+            amount: depositAmount,
+            currency: 'usd',
+            metadata: {
+              company_id: quoteData.company_id,
+              customer_id: quoteData.customer_id,
+              work_order_id: quoteData.id,
+              type: 'deposit'
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create payment intent');
+        }
+
+        const { clientSecret } = await response.json();
+
+        // Create Stripe Elements
+        elements = stripe.elements({ clientSecret });
+        paymentElement = elements.create('payment');
+
+        // Show payment form
+        paymentContainer.innerHTML = `
+          <div style="padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px; background: #f9fafb;">
+            ${isBetaMode ? '<div style="margin-bottom: 12px;"><span style="display: inline-block; padding: 4px 12px; background: #ede9fe; color: #7c3aed; border-radius: 12px; font-size: 12px; font-weight: 600;">Beta</span></div>' : ''}
+            <div id="payment-element"></div>
+            <div style="margin-top: 16px; padding: 12px; background: #dbeafe; border: 1px solid #93c5fd; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 600; color: #1e40af;">Amount to Pay:</span>
+                <span style="font-size: 18px; font-weight: 700; color: #1e40af;">$${depositAmount.toFixed(2)}</span>
+              </div>
+            </div>
+            <button id="submit-payment" style="width: 100%; margin-top: 16px; padding: 12px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+              🔒 Pay $${depositAmount.toFixed(2)}
+            </button>
+            <p style="text-align: center; margin-top: 12px; font-size: 12px; color: #6b7280;">
+              🔒 Secured by Stripe • PCI Compliant
+            </p>
+          </div>
+        `;
+
+        paymentElement.mount('#payment-element');
+
+        // Handle payment submission
+        return new Promise((resolve, reject) => {
+          document.getElementById('submit-payment').addEventListener('click', async () => {
+            const submitButton = document.getElementById('submit-payment');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div style="display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite;"></div> Processing...';
+
+            const { error, paymentIntent } = await stripe.confirmPayment({
+              elements,
+              confirmParams: {
+                return_url: window.location.href
+              },
+              redirect: 'if_required'
+            });
+
+            if (error) {
+              submitButton.disabled = false;
+              submitButton.innerHTML = `🔒 Pay $${depositAmount.toFixed(2)}`;
+              reject(error);
+            } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+              console.log('✅ Payment succeeded:', paymentIntent.id);
+              approvalData.paymentIntentId = paymentIntent.id;
+              paymentContainer.innerHTML = `
+                <div style="text-align: center; padding: 20px; background: #d1fae5; border: 1px solid #6ee7b7; border-radius: 8px;">
+                  <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+                  <p style="font-weight: 600; color: #065f46;">Payment Successful!</p>
+                  <p style="font-size: 14px; color: #047857; margin-top: 4px;">$${depositAmount.toFixed(2)} paid</p>
+                </div>
+              `;
+              setTimeout(() => {
+                paymentContainer.style.display = 'none';
+                resolve();
+              }, 2000);
+            } else {
+              submitButton.disabled = false;
+              submitButton.innerHTML = `🔒 Pay $${depositAmount.toFixed(2)}`;
+              reject(new Error('Payment was not successful'));
+            }
+          });
+        });
+
+      } catch (error) {
+        paymentContainer.innerHTML = `
+          <div style="text-align: center; padding: 20px; background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px;">
+            <p style="color: #991b1b; font-weight: 600;">Payment Error</p>
+            <p style="color: #dc2626; font-size: 14px; margin-top: 4px;">${error.message}</p>
+          </div>
+        `;
+        throw error;
+      }
+    }
+
+    // Scheduling functions
+    let selectedSlot = null;
+    let schedulingWidget = null;
+
+    function skipScheduling() {
+      console.log('⏭️ Customer chose to skip scheduling');
+      approvalData.scheduledTime = null;
+      approvalData.skipScheduling = true;
+
+      // ✅ NEW: Capture selected employee IDs even when skipping scheduling
+      if (selectedSlot && Array.isArray(selectedSlot.employee_ids)) {
+        approvalData.selectedEmployeeIds = selectedSlot.employee_ids;
+        console.log('📋 Captured employee IDs for skip-scheduling:', approvalData.selectedEmployeeIds);
+      }
+
+      const currentIndex = wizardSteps.indexOf('schedule');
+      nextWizardStep(currentIndex);
+    }
+
+    async function loadAvailableSlots() {
+      console.log('📅 Loading available slots via RPC...');
+      try {
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 90);
+        const startDateStr = startDate.toISOString().slice(0, 10);
+        const endDateStr = endDate.toISOString().slice(0, 10);
+
+        const { data, error } = await supabase.rpc('get_available_time_slots', {
+          p_quote_id: quoteId,
+          p_start_date: startDateStr,
+          p_end_date: endDateStr
+        });
+        if (error) throw error;
+
+        if (!data || !data.slots || data.slots.length === 0) {
+          document.getElementById('scheduling-widget-container').innerHTML = `
+            <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+              <p style="color: #991b1b; margin-bottom: 10px;"><strong>No Available Slots</strong></p>
+              <p style="color: #7f1d1d; font-size: 14px;">No technicians available. Please contact us to schedule.</p>
+            </div>
+          `;
+          return;
+        }
+
+        renderTimeSlots(data.slots, data.settings || {});
+      } catch (error) {
+        console.error('❌ Error loading slots via RPC:', error);
+        document.getElementById('scheduling-widget-container').innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+            <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+            <p style="color: #7f1d1d; font-size: 14px;">Unable to load available times. Please contact us to schedule.</p>
+          </div>
+        `;
+      }
+    }
+        // Calculate duration from quote labor summary
+        let durationMinutes = 480; // Default to 8 hours
+
+        console.log('🔍 DEBUG - Checking labor_summary:', {
+          has_labor_summary: !!quoteData.labor_summary,
+          labor_summary_value: quoteData.labor_summary,
+          labor_summary_type: typeof quoteData.labor_summary,
+          quote_keys: Object.keys(quoteData)
+        });
+
+        if (quoteData.labor_summary) {
+          const laborSummary = quoteData.labor_summary;
+          const crewSize = laborSummary.crew_size || 1;
+          const hoursPerDay = laborSummary.hours_per_day || 8;
+          const totalHours = laborSummary.regular_hours + laborSummary.overtime_hours || hoursPerDay;
+
+          // Calculate hours per employee
+          const hoursPerEmployee = totalHours / crewSize;
+          durationMinutes = Math.ceil(hoursPerEmployee * 60);
+
+          console.log('✅ Labor calculation:', {
+            crewSize,
+            hoursPerDay,
+            totalHours,
+            hoursPerEmployee,
+            durationMinutes
+          });
+        } else {
+          console.warn('⚠️ No labor_summary found in quote, using default 8 hours');
+          console.warn('🔍 Quote data structure:', quoteData);
+        }
+
+        // Load slots rendered by RPC; UI handled by renderTimeSlots
+        console.log('✅ Slots loaded via RPC and rendered');
+
+      } catch (error) {
+        console.error('❌ Error initializing scheduling widget:', error);
+        document.getElementById('scheduling-widget-container').innerHTML = `
+          <div style="text-align: center; padding: 40px; background: #fee2e2; border-radius: 8px;">
+            <p style="color: #991b1b; margin-bottom: 10px;"><strong>Scheduling Unavailable</strong></p>
+            <p style="color: #7f1d1d; font-size: 14px;">Unable to load available times. Please contact us to schedule.</p>
+          </div>
+        `;
+      }
+    }
+
+
+
+    function confirmSchedule() {
+      if (!selectedSlot) {
+        alert('Please select a time slot');
+        return;
+      }
+
+      const crewSize = (quoteData && quoteData.labor_summary && Number(quoteData.labor_summary.crew_size)) || 1;
+      const availableTechs = Array.isArray(selectedSlot.employee_ids) ? selectedSlot.employee_ids : [];
+
+      if (availableTechs.length < crewSize) {
+        alert(`Not enough technicians available for this time. Needed ${crewSize}, available ${availableTechs.length}. Please pick a different time.`);
+        return;
+      }
+
+      const assignedTechs = availableTechs.slice(0, crewSize);
+
+      approvalData.scheduledTime = {
+        start_time: selectedSlot.start_time,
+        end_time: selectedSlot.end_time,
+        employee_ids: assignedTechs,
+        crew_size: crewSize,
+        auto_scheduled: false
+      };
+
+      console.log('📅 Schedule confirmed:', approvalData.scheduledTime);
+
+      const currentIndex = wizardSteps.indexOf('schedule');
+      nextWizardStep(currentIndex);
+    }
+
+
+
+    async function finalizeApproval() {
+      console.log('🎯 finalizeApproval called');
+      try {
+        let data, error;
+
+        // If customer scheduled a time, use approve_and_schedule_work_order
+        if (approvalData.scheduledTime) {
+          console.log('📞 Calling approve_and_schedule_work_order RPC...');
+          const schedulePayload = {
+            p_quote_id: quoteId,
+            p_start: approvalData.scheduledTime.start_time,
+            p_end: approvalData.scheduledTime.end_time,
+            p_employee_ids: approvalData.scheduledTime.employee_ids || [],
+            p_crew_size: approvalData.scheduledTime.crew_size || 1
+          };
+          const result = await supabase.rpc('approve_and_schedule_work_order', schedulePayload);
+          data = result.data;
+          error = result.error;
+          console.log('✅ Approved & scheduled via RPC:', data);
+        } else {
+          // Otherwise use approve_quote_with_options
+          console.log('📞 Calling approve_quote_with_options RPC...');
+          // ✅ NEW: Pass employee IDs even when skipping scheduling
+          const payload = {
+            p_quote_id: quoteId,
+            p_deposit_method: approvalData.depositMethod || null,
+            p_scheduled_start: null,
+            p_scheduled_end: null,
+            p_skip_scheduling: true,
+            p_employee_ids: approvalData.selectedEmployeeIds || []
+          };
+          const result = await supabase.rpc('approve_quote_with_options', payload);
+          data = result.data;
+          error = result.error;
+          console.log('✅ Approved via RPC:', data);
+        }
+
+        if (error) throw error;
+        if (!data || data.success !== true) {
+          const msg = data && data.error ? data.error : 'Unknown error while approving quote';
+          throw new Error(msg);
+        }
+
+        // ✅ NEW: Send approval notification email to business owner
+        console.log('📧 Sending quote approval notification...');
+        try {
+          const notificationResponse = await fetch(`${window.location.origin}/functions/v1/send-quote-approval-notification`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+            },
+            body: JSON.stringify({
+              quoteId: quoteId,
+              companyId: quote.company_id
+            })
+          });
+
+          if (notificationResponse.ok) {
+            console.log('✅ Quote approval notification sent');
+          } else {
+            console.warn('⚠️ Failed to send notification:', await notificationResponse.text());
+          }
+        } catch (notifError) {
+          console.warn('⚠️ Notification error (non-blocking):', notifError);
+        }
+
+        // Show success UI
+        const wizardContent = document.getElementById('wizard-content');
+        const quoteContent = document.getElementById('quote-content');
+        const successDiv = document.getElementById('success');
+
+        const scheduledOk = !!(data && (data.created_events || data.created_events_count || data.assigned_employee_ids?.length));
+        if (wizardContent) {
+          wizardContent.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+              <div style="font-size: 64px; margin-bottom: 20px;">✅</div>
+              <h2 style="color: #10b981; margin-bottom: 20px;">Quote Approved!</h2>
+              ${scheduledOk && data.scheduled_start ? `
+                <div style="background: #f0fdf4; border: 2px solid #22c55e; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                  <p style="font-size: 18px; margin-bottom: 10px;"><strong>Your service is scheduled for:</strong></p>
+                  <p style="font-size: 24px; color: #059669; font-weight: bold;">${formatSlotDateTime(new Date(data.scheduled_start))}</p>
+                </div>
+              ` : `
+                <p style="font-size: 16px; color: #6b7280;">We received your approval. We’ll finalize scheduling and confirm shortly.</p>
+              `}
+              <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-top: 30px; text-align: left;">
+                <p style="font-weight: bold; margin-bottom: 10px;">What happens next?</p>
+                <ul style="margin: 0; padding-left: 20px;">
+                  <li>We'll send you a confirmation email</li>
+                  ${scheduledOk ? '<li>Our technician will arrive at the scheduled time</li>' : '<li>Our team will contact you to schedule your service</li>'}
+                  <li>We'll get started on your project!</li>
+                </ul>
+              </div>
+            </div>
+          `;
+          const wizardActions = document.querySelector('.wizard-actions');
+          if (wizardActions) wizardActions.style.display = 'none';
+          document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('completed'));
+        } else {
+          if (quoteContent) quoteContent.style.display = 'none';
+          if (successDiv) {
+            successDiv.style.display = 'block';
+            successDiv.innerHTML = `
+              <h2>✅ Quote Approved!</h2>
+              ${scheduledOk && data.scheduled_start ? `<p>Your service is scheduled for <strong>${formatSlotDateTime(new Date(data.scheduled_start))}</strong>.</p>` : `<p>Thank you for approving. We’ll be in touch to schedule.</p>`}
+            `;
+          }
+        }
+      } catch (err) {
+        console.error('🚨 Error in finalizeApproval:', err);
+        alert('Error approving quote: ' + err.message);
+      }
+    }
+
+    // Load quote on page load
+    loadQuote();
+  </script>
+</body>
+</html>
+

@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { supaFetch } from '../utils/supaFetch';
 import { isStatusTransitionAllowed } from '../utils/statusHelpers';
+import { getSupabaseClient } from '../utils/supabaseClient';
 
 
 // Supabase configuration
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 
-const QuotesDatabasePanel = () => {
+const QuotesDatabasePanel = ({ confirm, success, error }) => {
   const { user } = useUser();
   const navigate = useNavigate();
   const [quotes, setQuotes] = useState([]);
@@ -77,6 +78,42 @@ const QuotesDatabasePanel = () => {
     loadInitialData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Real-time subscription for work_orders updates
+  useEffect(() => {
+    if (!user?.company_id) return;
+
+    console.log('🔔 Setting up real-time subscription for work_orders...');
+    const supabase = getSupabaseClient();
+
+    const subscription = supabase
+      .channel('work_orders_changes')
+      .on('postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'work_orders',
+          filter: `company_id=eq.${user.company_id}`
+        },
+        (payload) => {
+          console.log('🔔 Work order updated!', payload);
+          console.log('   Old status:', payload.old?.status);
+          console.log('   New status:', payload.new?.status);
+
+          // Reload quotes when any work order changes
+          // This will catch quote approvals from customer portal
+          loadQuotes();
+        }
+      )
+      .subscribe((status) => {
+        console.log('🔔 Subscription status:', status);
+      });
+
+    return () => {
+      console.log('🔔 Unsubscribing from work_orders changes');
+      subscription.unsubscribe();
+    };
+  }, [user?.company_id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const showAlert = (type, message) => {
     setAlert({ show: true, type, message });
     setTimeout(() => setAlert({ show: false, type: '', message: '' }), 5000);
@@ -102,7 +139,8 @@ const QuotesDatabasePanel = () => {
       // ✅ SMART STATUS FILTERING: Load all quote-stage statuses
       // Includes competitive advantage statuses: presented, changes_requested, follow_up
       // Excludes 'approved' - those move to Jobs page as "Unscheduled"
-      const quoteStatuses = ['draft', 'sent', 'presented', 'changes_requested', 'follow_up', 'rejected', 'expired', 'cancelled'];
+      // ✅ EXCLUDE 'cancelled' - Cancelled quotes are archived (soft delete)
+      const quoteStatuses = ['draft', 'sent', 'presented', 'changes_requested', 'follow_up', 'rejected', 'expired'];
       const statusList = quoteStatuses.join(',');
       const response = await supaFetch(`work_orders?select=*,customers(name,email,phone)&status=in.(${statusList})&order=created_at.desc`, { method: 'GET' }, user.company_id);
 
@@ -169,10 +207,18 @@ const QuotesDatabasePanel = () => {
 
   const createCustomer = async ({ name, phone, email }) => {
     try {
+      // ✅ FIX: Don't send 'name' - it's a GENERATED column
+      // Parse name into first_name/last_name (assume residential for quick add)
+      const nameParts = (name || '').trim().split(' ');
+      const first_name = nameParts[0] || null;
+      const last_name = nameParts.slice(1).join(' ') || null;
+
       const response = await supaFetch(`customers`, {
         method: 'POST',
         body: {
-          name,
+          type: 'residential',
+          first_name,
+          last_name,
           phone: phone || null,
           email: email || null,
           status: 'active',
@@ -207,20 +253,42 @@ const QuotesDatabasePanel = () => {
     return `Q${year}${month}${day}-${hours}${minutes}${seconds}${millis}-${rand}`;
   };
 
-  // ✅ INDUSTRY STANDARD: Tax calculation with proper rounding and validation
-  const calculateTotals = async (items) => {
+  // ✅ INDUSTRY STANDARD: Tax calculation using customer location (zip code/state)
+  const calculateTotals = async (items, customerId = null) => {
     // Pull settings once
     const settingsModule = await import('../services/SettingsService');
     const settingsSvc = settingsModule.default || settingsModule; // singleton
     const settings = await settingsSvc.getBusinessSettings(user.company_id);
 
     const markupPct = Number(settings.parts_markup_percent) || 0;
-    const taxRate = Number(settings.default_tax_rate) || 0;
+    let taxRate = Number(settings.default_tax_rate) || 0;
+
+    // ✅ FIX: Get customer location and determine tax rate by state/zip
+    if (customerId) {
+      try {
+        const customerRes = await supaFetch(`customers?id=eq.${customerId}`, { method: 'GET' }, user.company_id);
+        if (customerRes.ok) {
+          const [customer] = await customerRes.json();
+          if (customer) {
+            // Determine tax rate based on customer state/zip
+            taxRate = getTaxRateByLocation(customer.state, customer.zip_code);
+            console.log('📍 Customer location tax rate:', {
+              state: customer.state,
+              zip: customer.zip_code,
+              taxRate
+            });
+          }
+        }
+      } catch (error) {
+        console.warn('⚠️ Could not fetch customer location, using default tax rate:', error.message);
+      }
+    }
 
     console.log('💰 TAX CALCULATION DEBUG:', {
       itemCount: items?.length || 0,
       markupPct,
       taxRate,
+      customerId,
       items: items?.map(i => ({
         description: i.item_name || i.description,
         type: i.item_type,
@@ -242,6 +310,7 @@ const QuotesDatabasePanel = () => {
         line = line * (1 + markupPct / 100);
       }
 
+      console.log(`💰 Item calculation: qty=${qty}, rate=${rate}, type=${type}, line=${line}`);
       return sum + line;
     }, 0);
 
@@ -251,10 +320,12 @@ const QuotesDatabasePanel = () => {
     const totalAmount = Math.round((roundedSubtotal + taxAmount) * 100) / 100;
 
     console.log('💰 TAX CALCULATION RESULT:', {
-      subtotal: roundedSubtotal,
+      rawSubtotal: subtotal,
+      roundedSubtotal: roundedSubtotal,
       tax_rate: taxRate,
-      tax_amount: taxAmount,
-      total_amount: totalAmount
+      taxAmount: taxAmount,
+      totalAmount: totalAmount,
+      calculation: `${roundedSubtotal} + ${taxAmount} = ${totalAmount}`
     });
 
     return {
@@ -265,12 +336,58 @@ const QuotesDatabasePanel = () => {
     };
   };
 
+  // ✅ NEW: Get tax rate by customer state (industry standard tax rates)
+  const getTaxRateByLocation = (state, zipCode) => {
+    // Tax-free states
+    const taxFreeStates = ['OR', 'MT', 'NH', 'DE'];
+    if (state && taxFreeStates.includes(state.toUpperCase())) {
+      return 0;
+    }
+
+    // State tax rates (simplified - in production, use a tax service API)
+    const stateTaxRates = {
+      'CA': 7.25, 'TX': 6.25, 'FL': 6.0, 'NY': 4.0, 'WA': 6.5,
+      'CO': 2.9, 'IL': 6.25, 'PA': 6.0, 'OH': 5.75, 'GA': 4.0,
+      'NC': 4.75, 'MI': 6.0, 'NJ': 6.625, 'VA': 5.3, 'WI': 5.0,
+      'AZ': 5.6, 'MA': 6.25, 'TN': 9.55, 'IN': 7.0, 'MO': 4.225,
+      'MD': 6.0, 'WV': 6.0, 'AL': 4.0, 'LA': 4.45, 'KY': 6.0,
+      'SC': 7.5, 'OK': 4.5, 'CT': 6.35, 'UT': 4.85, 'NM': 5.125,
+      'NV': 6.85, 'AR': 6.5, 'KS': 5.7, 'MS': 7.0, 'IA': 6.0,
+      'ID': 6.0, 'ME': 5.5, 'HI': 4.0, 'AK': 0, 'VT': 6.0,
+      'RI': 7.0, 'SD': 4.5, 'ND': 5.0, 'WY': 4.0, 'DC': 5.75
+    };
+
+    const rate = stateTaxRates[state?.toUpperCase()] || 0;
+    return rate;
+  };
+
   // Compute totals from pricing model if not TIME_MATERIALS
   const calculateModelTotals = async (data) => {
     const settingsModule = await import('../services/SettingsService');
     const settingsSvc = settingsModule.default || settingsModule;
     const settings = await settingsSvc.getBusinessSettings(user.company_id);
-    const taxRate = Number(settings.default_tax_rate) || 0;
+    let taxRate = Number(settings.default_tax_rate) || 0;
+
+    // ✅ FIX: Get customer location and determine tax rate by state/zip (same as calculateTotals)
+    if (data.customer_id) {
+      try {
+        const customerRes = await supaFetch(`customers?id=eq.${data.customer_id}`, { method: 'GET' }, user.company_id);
+        if (customerRes.ok) {
+          const [customer] = await customerRes.json();
+          if (customer) {
+            // Determine tax rate based on customer state/zip
+            taxRate = getTaxRateByLocation(customer.state, customer.zip_code);
+            console.log('📍 Customer location tax rate (model totals):', {
+              state: customer.state,
+              zip: customer.zip_code,
+              taxRate
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('⚠️ Could not fetch customer for tax calculation, using default:', err);
+      }
+    }
 
     let subtotal = 0;
     switch (data.pricing_model) {
@@ -297,7 +414,7 @@ const QuotesDatabasePanel = () => {
       }
       case 'TIME_MATERIALS':
       default:
-        return calculateTotals(data.quote_items);
+        return calculateTotals(data.quote_items, data.customer_id);
     }
 
     const tax_amount = subtotal * (taxRate / 100);
@@ -375,7 +492,7 @@ const QuotesDatabasePanel = () => {
     }
 
     try {
-      const totals = await (dataToUse.pricing_model === 'TIME_MATERIALS' ? calculateTotals(dataToUse.quote_items) : calculateModelTotals(dataToUse));
+      const totals = await (dataToUse.pricing_model === 'TIME_MATERIALS' ? calculateTotals(dataToUse.quote_items, dataToUse.customer_id) : calculateModelTotals(dataToUse));
 
       console.log('💰 TOTALS CALCULATION DEBUG:', {
         pricing_model: dataToUse.pricing_model,
@@ -562,71 +679,84 @@ const QuotesDatabasePanel = () => {
             newWO = Array.isArray(responseData) ? responseData[0] : responseData;
           }
         } catch (_) {}
-        if (!newWO) newWO = { id: undefined };
-        console.log('New work order (QUOTE):', newWO);
+
+        // ✅ CRITICAL FIX: Verify work order was created with ID before saving line items
+        if (!newWO || !newWO.id) {
+          console.error('❌ CRITICAL: Work order created but no ID returned:', newWO);
+          throw new Error('Work order created but response did not include ID. Cannot save line items.');
+        }
+
+        console.log('✅ New work order created:', { id: newWO.id, quote_number: newWO.quote_number });
 
         // Save work order items - Industry standard: save all line items with proper validation
         console.log('🔍 CHECKING LINE ITEMS:', {
+          pricing_model: dataToUse.pricing_model,
           quote_items_length: dataToUse.quote_items?.length,
-          quote_items: dataToUse.quote_items,
           work_order_id: newWO.id
         });
 
-        // ✅ FIX: Create appropriate line items based on pricing model
-        if (dataToUse.pricing_model === 'TIME_MATERIALS') {
-          // For Time & Materials, save the actual quote items
-          if (dataToUse.quote_items && dataToUse.quote_items.length > 0) {
-            console.log('Saving work order items (TIME_MATERIALS)...');
-            await saveQuoteItems(newWO.id, dataToUse.quote_items);
+        // ✅ PROPER FIX: Create appropriate line items based on pricing model
+        try {
+          if (dataToUse.pricing_model === 'TIME_MATERIALS') {
+            // For Time & Materials, save the actual quote items
+            if (dataToUse.quote_items && dataToUse.quote_items.length > 0) {
+              console.log('💾 Saving line items (TIME_MATERIALS):', dataToUse.quote_items.length);
+              await saveQuoteItems(newWO.id, dataToUse.quote_items);
+            }
+          } else if (dataToUse.pricing_model === 'PERCENTAGE') {
+            // For Percentage pricing, create a single line item describing the percentage
+            const percentageLineItem = [{
+              item_name: `${dataToUse.percentage}% of Base Amount`,
+              description: `${dataToUse.percentage}% of $${(dataToUse.percentage_base_amount || 0).toFixed(2)}`,
+              item_type: 'service',
+              quantity: 1,
+              rate: totals.subtotal,
+              total: totals.subtotal
+            }];
+            console.log('💾 Saving line items (PERCENTAGE):', percentageLineItem);
+            await saveQuoteItems(newWO.id, percentageLineItem);
+          } else if (dataToUse.pricing_model === 'FLAT_RATE') {
+            // For Flat Rate, create a single line item
+            const flatRateLineItem = [{
+              item_name: dataToUse.title || 'Flat Rate Service',
+              description: 'Flat rate for entire job',
+              item_type: 'service',
+              quantity: 1,
+              rate: dataToUse.flat_rate_amount || 0,
+              total: dataToUse.flat_rate_amount || 0
+            }];
+            console.log('💾 Saving line items (FLAT_RATE):', flatRateLineItem);
+            await saveQuoteItems(newWO.id, flatRateLineItem);
+          } else if (dataToUse.pricing_model === 'UNIT') {
+            // For Unit pricing, create a single line item
+            const unitLineItem = [{
+              item_name: dataToUse.title || 'Unit-Based Service',
+              description: `${dataToUse.unit_count} units @ $${(dataToUse.unit_price || 0).toFixed(2)} each`,
+              item_type: 'service',
+              quantity: dataToUse.unit_count || 1,
+              rate: dataToUse.unit_price || 0,
+              total: totals.subtotal
+            }];
+            console.log('💾 Saving line items (UNIT):', unitLineItem);
+            await saveQuoteItems(newWO.id, unitLineItem);
+          } else if (dataToUse.pricing_model === 'RECURRING') {
+            // For Recurring, create a single line item
+            const recurringLineItem = [{
+              item_name: dataToUse.title || 'Recurring Service',
+              description: `${dataToUse.recurring_interval} recurring service`,
+              item_type: 'service',
+              quantity: 1,
+              rate: dataToUse.recurring_rate || 0,
+              total: dataToUse.recurring_rate || 0
+            }];
+            console.log('💾 Saving line items (RECURRING):', recurringLineItem);
+            await saveQuoteItems(newWO.id, recurringLineItem);
+          } else {
+            console.log('⚠️ Unknown pricing model, no line items created:', dataToUse.pricing_model);
           }
-        } else if (dataToUse.pricing_model === 'PERCENTAGE') {
-          // For Percentage pricing, create a single line item describing the percentage
-          const percentageLineItem = [{
-            item_name: `${dataToUse.percentage}% of Base Amount`,
-            description: `${dataToUse.percentage}% of $${(dataToUse.percentage_base_amount || 0).toFixed(2)}`,
-            item_type: 'service',
-            quantity: 1,
-            rate: totals.subtotal,
-            total: totals.subtotal
-          }];
-          console.log('Saving percentage line item:', percentageLineItem);
-          await saveQuoteItems(newWO.id, percentageLineItem);
-        } else if (dataToUse.pricing_model === 'FLAT_RATE') {
-          // For Flat Rate, create a single line item
-          const flatRateLineItem = [{
-            item_name: dataToUse.title || 'Flat Rate Service',
-            description: 'Flat rate for entire job',
-            item_type: 'service',
-            quantity: 1,
-            rate: dataToUse.flat_rate_amount || 0,
-            total: dataToUse.flat_rate_amount || 0
-          }];
-          console.log('Saving flat rate line item:', flatRateLineItem);
-          await saveQuoteItems(newWO.id, flatRateLineItem);
-        } else if (dataToUse.pricing_model === 'UNIT') {
-          // For Unit pricing, create a single line item
-          const unitLineItem = [{
-            item_name: dataToUse.title || 'Unit-Based Service',
-            description: `${dataToUse.unit_count} units @ $${(dataToUse.unit_price || 0).toFixed(2)} each`,
-            item_type: 'service',
-            quantity: dataToUse.unit_count || 1,
-            rate: dataToUse.unit_price || 0,
-            total: totals.subtotal
-          }];
-          console.log('Saving unit line item:', unitLineItem);
-          await saveQuoteItems(newWO.id, unitLineItem);
-        } else if (dataToUse.pricing_model === 'RECURRING') {
-          // For Recurring, create a single line item
-          const recurringLineItem = [{
-            item_name: dataToUse.title || 'Recurring Service',
-            description: `${dataToUse.recurring_interval} recurring service`,
-            item_type: 'service',
-            quantity: 1,
-            rate: dataToUse.recurring_rate || 0,
-            total: dataToUse.recurring_rate || 0
-          }];
-          console.log('Saving recurring line item:', recurringLineItem);
-          await saveQuoteItems(newWO.id, recurringLineItem);
+        } catch (lineItemError) {
+          console.error('❌ Failed to save line items:', lineItemError);
+          throw new Error(`Quote created but failed to save line items: ${lineItemError.message}`);
         }
 
         // After work order is created, save milestones if applicable
@@ -638,7 +768,7 @@ const QuotesDatabasePanel = () => {
           }
         }
 
-        console.log('Quote creation complete, closing modal...');
+        console.log('✅ Quote creation complete!');
         showAlert('success', 'Quote created successfully!');
 
         // ✅ Return the new quote so QuoteBuilder can handle "Send to Customer"
@@ -653,8 +783,10 @@ const QuotesDatabasePanel = () => {
         throw new Error('Failed to create quote');
       }
     } catch (error) {
-      console.error('Error creating quote:', error);
-      showAlert('error', 'Failed to create quote');
+      console.error('❌ Error creating quote:', error);
+      showAlert('error', error.message || 'Failed to create quote');
+      // ✅ Don't return anything on error - let caller handle it
+      throw error;
     }
   };
 
@@ -766,7 +898,7 @@ const QuotesDatabasePanel = () => {
     }
 
     try {
-      const totals = await (dataToUse.pricing_model === 'TIME_MATERIALS' ? calculateTotals(dataToUse.quote_items) : calculateModelTotals(dataToUse));
+      const totals = await (dataToUse.pricing_model === 'TIME_MATERIALS' ? calculateTotals(dataToUse.quote_items, dataToUse.customer_id) : calculateModelTotals(dataToUse));
       const quoteData = {
         title: dataToUse.title,
         description: dataToUse.description,
@@ -1100,7 +1232,14 @@ const QuotesDatabasePanel = () => {
 
   // ✅ INDUSTRY STANDARD: Save line items with proper validation and error handling
   const saveQuoteItems = async (workOrderId, items) => {
+    // ✅ CRITICAL: Validate work order ID exists
+    if (!workOrderId) {
+      console.error('❌ CRITICAL: saveQuoteItems called with undefined workOrderId');
+      throw new Error('Cannot save line items: work order ID is missing');
+    }
+
     console.log('🔍 ===== SAVE QUOTE ITEMS DEBUG =====');
+    console.log('🔍 Work Order ID:', workOrderId);
     console.log('🔍 RAW ITEMS RECEIVED:', JSON.stringify(items, null, 2));
     console.log('🔍 Total items received:', items.length);
 
@@ -1122,12 +1261,21 @@ const QuotesDatabasePanel = () => {
       })
       .map((item, index) => {
         // Map frontend fields to database schema (industry standard)
+        const quantity = parseFloat(item.quantity) || 1;
+        const unitPrice = parseFloat(item.rate || item.unit_price) || 0;
+        const lineType = (item.item_type || item.line_type || 'material').toLowerCase();
+
+        // Use pre-calculated total if available (from QuoteBuilder with markup already applied)
+        // Otherwise calculate: quantity × unit_price (no markup - will be 0 for most cases)
+        const totalPrice = item.total != null ? parseFloat(item.total) : (quantity * unitPrice);
+
         const lineItem = {
           work_order_id: workOrderId,
-          line_type: (item.item_type || item.line_type || 'material').toLowerCase(), // labor, material, equipment, service, fee, discount, tax
+          line_type: lineType,
           description: item.item_name || item.description,
-          quantity: parseFloat(item.quantity) || 1,
-          unit_price: parseFloat(item.rate || item.unit_price) || 0,
+          quantity: quantity,
+          unit_price: unitPrice,
+          total_price: totalPrice,
           sort_order: index
         };
 
@@ -1172,9 +1320,19 @@ const QuotesDatabasePanel = () => {
           status: response.status,
           statusText: response.statusText,
           errorBody: errorText,
-          sentData: itemsData
+          sentData: itemsData,
+          workOrderId: workOrderId,
+          companyId: user.company_id
         });
-        throw new Error(`Failed to save line items (${response.status}): ${errorText}`);
+
+        // ✅ Better error messages for common issues
+        if (response.status === 403) {
+          throw new Error(`RLS Policy Error: Cannot save line items. Work order may not exist in your company. Work Order ID: ${workOrderId}`);
+        } else if (response.status === 400) {
+          throw new Error(`Invalid line item data: ${errorText}`);
+        } else {
+          throw new Error(`Failed to save line items (${response.status}): ${errorText}`);
+        }
       }
 
       console.log('✅ Line items saved successfully:', itemsData.length, 'items');
@@ -1191,26 +1349,24 @@ const QuotesDatabasePanel = () => {
   };
 
   const deleteQuote = async (quoteId, quoteTitle) => {
-    if (!window.confirm(`Are you sure you want to delete quote: ${quoteTitle}?`)) {
-      return;
-    }
+    console.log('🗑️ Deleting quote:', quoteId, quoteTitle);
 
     try {
-      // Delete quote items first
-      await deleteQuoteItems(quoteId);
-
-      // Delete work order (unified system)
-      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, { method: 'DELETE' }, user.company_id);
+      const response = await supaFetch(`work_orders?id=eq.${quoteId}`, {
+        method: 'DELETE'
+      }, user.company_id);
 
       if (response.ok) {
-        showAlert('success', `Quote ${quoteTitle} deleted successfully`);
+        console.log('✅ Quote deleted successfully');
         loadQuotes();
       } else {
-        throw new Error('Failed to delete quote');
+        const errorText = await response.text();
+        console.error('❌ Delete failed:', errorText);
+        throw new Error(`Failed to delete quote: ${errorText}`);
       }
-    } catch (error) {
-      console.error('Error deleting quote:', error);
-      showAlert('error', 'Failed to delete quote');
+    } catch (err) {
+      console.error('❌ Error deleting quote:', err);
+      alert(`Failed to delete quote: ${err.message}`);
     }
   };
 
@@ -1845,6 +2001,7 @@ const QuotesDatabasePanel = () => {
   return {
     quotes: filteredQuotes,
     customers,
+    setCustomers, // ✅ FIX: Export setCustomers so QuoteBuilder can add new customers to array
     loading,
     showCreateForm,
     showEditForm,

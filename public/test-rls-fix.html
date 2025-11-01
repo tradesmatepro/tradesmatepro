@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test RLS Fix</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    .result {
+      margin: 10px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      border-left: 3px solid #00ff00;
+    }
+    .error {
+      border-left-color: #ff0000;
+      color: #ff6666;
+    }
+    button {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      font-family: monospace;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #00cc00;
+    }
+    input {
+      background: #2a2a2a;
+      color: #00ff00;
+      border: 1px solid #00ff00;
+      padding: 5px;
+      font-family: monospace;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔒 RLS Fix Test - TradeMate Pro</h1>
+  
+  <div>
+    <h3>Step 1: Login</h3>
+    <input type="email" id="email" placeholder="Email" value="andy@andysflowers.com">
+    <input type="password" id="password" placeholder="Password" value="Alphaecho19!">
+    <button onclick="login()">Login</button>
+    <div id="loginResult"></div>
+  </div>
+
+  <div>
+    <h3>Step 2: Test Company Update</h3>
+    <button onclick="testCompanyUpdate()">Test PATCH /companies</button>
+    <div id="companyResult"></div>
+  </div>
+
+  <div>
+    <h3>Step 3: Test Settings Update</h3>
+    <button onclick="testSettingsUpdate()">Test PATCH /settings</button>
+    <div id="settingsResult"></div>
+  </div>
+
+  <div>
+    <h3>Debug Info</h3>
+    <button onclick="showDebug()">Show Debug Info</button>
+    <div id="debugInfo"></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://cxlqzejzraczumqmsrcx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4bHF6ZWp6cmFjenVtcW1zcmN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg5ODU0NDMsImV4cCI6MjA3NDU2MTQ0M30.zoD59re6xxW9Z6HOexR0qwWwTBU29MvjwP_y8qwBkkg';
+    
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    let currentUser = null;
+    let companyId = null;
+
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const resultDiv = document.getElementById('loginResult');
+      
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (error) throw error;
+        
+        currentUser = data.user;
+        
+        // Get user's company_id
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('company_id, role')
+          .eq('auth_user_id', currentUser.id)
+          .single();
+        
+        if (userError) throw userError;
+        
+        companyId = userData.company_id;
+        
+        resultDiv.innerHTML = `<div class="result">✅ Logged in as ${email}<br>User ID: ${currentUser.id}<br>Company ID: ${companyId}<br>Role: ${userData.role}</div>`;
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="result error">❌ Login failed: ${error.message}</div>`;
+      }
+    }
+
+    async function testCompanyUpdate() {
+      const resultDiv = document.getElementById('companyResult');
+      
+      if (!currentUser || !companyId) {
+        resultDiv.innerHTML = '<div class="result error">❌ Please login first</div>';
+        return;
+      }
+      
+      try {
+        // Try a simple update
+        const { data, error } = await supabase
+          .from('companies')
+          .update({ 
+            name: 'Ford Brothers',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', companyId)
+          .select();
+        
+        if (error) {
+          resultDiv.innerHTML = `<div class="result error">❌ Update failed:<br>${JSON.stringify(error, null, 2)}</div>`;
+        } else {
+          resultDiv.innerHTML = `<div class="result">✅ Update successful!<br>${JSON.stringify(data, null, 2)}</div>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="result error">❌ Exception: ${error.message}</div>`;
+      }
+    }
+
+    async function testSettingsUpdate() {
+      const resultDiv = document.getElementById('settingsResult');
+      
+      if (!currentUser || !companyId) {
+        resultDiv.innerHTML = '<div class="result error">❌ Please login first</div>';
+        return;
+      }
+      
+      try {
+        // Check if settings exist
+        const { data: existing, error: checkError } = await supabase
+          .from('settings')
+          .select('id')
+          .eq('company_id', companyId)
+          .single();
+        
+        if (checkError && checkError.code !== 'PGRST116') {
+          throw checkError;
+        }
+        
+        if (existing) {
+          // Update existing
+          const { data, error } = await supabase
+            .from('settings')
+            .update({ 
+              updated_at: new Date().toISOString(),
+              labor_rate: 75
+            })
+            .eq('id', existing.id)
+            .select();
+          
+          if (error) {
+            resultDiv.innerHTML = `<div class="result error">❌ Update failed:<br>${JSON.stringify(error, null, 2)}</div>`;
+          } else {
+            resultDiv.innerHTML = `<div class="result">✅ Update successful!<br>${JSON.stringify(data, null, 2)}</div>`;
+          }
+        } else {
+          // Insert new
+          const { data, error } = await supabase
+            .from('settings')
+            .insert({ 
+              company_id: companyId,
+              created_at: new Date().toISOString(),
+              labor_rate: 75
+            })
+            .select();
+          
+          if (error) {
+            resultDiv.innerHTML = `<div class="result error">❌ Insert failed:<br>${JSON.stringify(error, null, 2)}</div>`;
+          } else {
+            resultDiv.innerHTML = `<div class="result">✅ Insert successful!<br>${JSON.stringify(data, null, 2)}</div>`;
+          }
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<div class="result error">❌ Exception: ${error.message}</div>`;
+      }
+    }
+
+    async function showDebug() {
+      const resultDiv = document.getElementById('debugInfo');
+      
+      const session = await supabase.auth.getSession();
+      
+      resultDiv.innerHTML = `<div class="result">
+        <strong>Session:</strong><br>
+        ${JSON.stringify(session, null, 2)}
+        <br><br>
+        <strong>Current User:</strong><br>
+        ${JSON.stringify(currentUser, null, 2)}
+        <br><br>
+        <strong>Company ID:</strong> ${companyId}
+      </div>`;
+    }
+  </script>
+</body>
+</html>
+

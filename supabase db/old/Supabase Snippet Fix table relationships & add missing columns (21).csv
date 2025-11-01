@@ -1,0 +1,101 @@
+table_name,column_name,data_type,is_nullable,column_default
+account_lockouts,id,uuid,NO,gen_random_uuid()
+account_lockouts,user_id,uuid,NO,null
+account_lockouts,email,text,NO,null
+account_lockouts,locked_at,timestamp with time zone,YES,now()
+account_lockouts,unlock_at,timestamp with time zone,NO,null
+account_lockouts,reason,text,YES,null
+account_lockouts,failed_attempts,integer,YES,0
+account_lockouts,is_active,boolean,YES,true
+approval_settings,id,uuid,NO,gen_random_uuid()
+approval_settings,company_id,uuid,NO,null
+approval_settings,level2_threshold,numeric,YES,500.00
+approval_settings,level3_threshold,numeric,YES,2000.00
+approval_settings,finance_required_card,boolean,YES,true
+approval_settings,auto_escalate_days,integer,YES,3
+approval_settings,allow_delegate,boolean,YES,true
+approval_settings,created_at,timestamp with time zone,YES,now()
+approval_settings,updated_at,timestamp with time zone,YES,now()
+attachments,id,uuid,NO,gen_random_uuid()
+attachments,company_id,uuid,NO,null
+attachments,work_order_id,uuid,YES,null
+attachments,uploaded_by,uuid,YES,null
+attachments,file_url,text,NO,null
+attachments,file_name,text,YES,null
+attachments,file_type,text,YES,null
+attachments,file_size,integer,YES,null
+attachments,auto_tags,ARRAY,YES,null
+attachments,ocr_text,text,YES,null
+attachments,uploaded_at,timestamp with time zone,YES,now()
+attachments,created_at,timestamp with time zone,YES,now()
+audit_logs,id,uuid,NO,gen_random_uuid()
+audit_logs,company_id,uuid,YES,null
+audit_logs,user_id,uuid,YES,null
+audit_logs,table_name,text,NO,null
+audit_logs,record_id,uuid,YES,null
+audit_logs,action,USER-DEFINED,NO,null
+audit_logs,old_values,jsonb,YES,null
+audit_logs,new_values,jsonb,YES,null
+audit_logs,ip_address,inet,YES,null
+audit_logs,user_agent,text,YES,null
+audit_logs,created_at,timestamp with time zone,YES,now()
+auto_accept_rules,id,uuid,NO,gen_random_uuid()
+auto_accept_rules,requester_company_id,uuid,NO,null
+auto_accept_rules,provider_company_id,uuid,YES,null
+auto_accept_rules,service_category,text,YES,null
+auto_accept_rules,max_amount,numeric,YES,null
+auto_accept_rules,auto_accept,boolean,YES,true
+auto_accept_rules,priority,integer,YES,0
+auto_accept_rules,is_active,boolean,YES,true
+auto_accept_rules,created_at,timestamp with time zone,YES,now()
+auto_accept_rules,updated_at,timestamp with time zone,YES,now()
+avg_days_to_invoice,company_id,uuid,YES,null
+avg_days_to_invoice,jobs_invoiced,bigint,YES,null
+avg_days_to_invoice,avg_days_to_invoice,numeric,YES,null
+avg_days_to_invoice,min_days_to_invoice,numeric,YES,null
+avg_days_to_invoice,max_days_to_invoice,numeric,YES,null
+avg_job_duration_by_company,company_id,uuid,YES,null
+avg_job_duration_by_company,completed_jobs,bigint,YES,null
+avg_job_duration_by_company,avg_duration_hours,numeric,YES,null
+avg_job_duration_by_company,min_duration_hours,numeric,YES,null
+avg_job_duration_by_company,max_duration_hours,numeric,YES,null
+beta_feedback,id,uuid,NO,gen_random_uuid()
+beta_feedback,created_at,timestamp with time zone,NO,now()
+beta_feedback,company_id,uuid,YES,null
+beta_feedback,user_id,uuid,YES,null
+beta_feedback,page_path,text,YES,null
+beta_feedback,user_agent,text,YES,null
+beta_feedback,message,text,NO,null
+beta_feedback,rating,integer,YES,null
+beta_feedback,category,text,YES,null
+beta_feedback,screenshot_url,text,YES,null
+beta_feedback,metadata,jsonb,YES,null
+billing_plans,id,uuid,NO,gen_random_uuid()
+billing_plans,name,text,NO,null
+billing_plans,description,text,YES,null
+billing_plans,price_monthly,numeric,NO,null
+billing_plans,price_yearly,numeric,YES,null
+billing_plans,features,jsonb,YES,'{}'::jsonb
+billing_plans,max_users,integer,YES,1
+billing_plans,max_work_orders,integer,YES,null
+billing_plans,is_active,boolean,YES,true
+billing_plans,created_at,timestamp with time zone,YES,now()
+cancelled_jobs_analytics,id,uuid,YES,null
+cancelled_jobs_analytics,work_order_number,text,YES,null
+cancelled_jobs_analytics,title,text,YES,null
+cancelled_jobs_analytics,customer_id,uuid,YES,null
+cancelled_jobs_analytics,customer_name,text,YES,null
+cancelled_jobs_analytics,total_amount,numeric,YES,null
+cancelled_jobs_analytics,status,USER-DEFINED,YES,null
+cancelled_jobs_analytics,cancelled_at,timestamp with time zone,YES,null
+cancelled_jobs_analytics,cancelled_by,uuid,YES,null
+cancelled_jobs_analytics,cancelled_by_name,text,YES,null
+cancelled_jobs_analytics,cancellation_reason,USER-DEFINED,YES,null
+cancelled_jobs_analytics,cancellation_notes,text,YES,null
+cancelled_jobs_analytics,cancellation_initiated_by,text,YES,null
+cancelled_jobs_analytics,created_at,timestamp with time zone,YES,null
+cancelled_jobs_analytics,company_id,uuid,YES,null
+cancelled_jobs_analytics,days_to_cancellation,numeric,YES,null
+change_order_items,id,uuid,NO,gen_random_uuid()
+change_order_items,company_id,uuid,NO,null
+change_order_items,change_order_id,uuid,NO,null

@@ -1,0 +1,113 @@
+schemaname,tablename,policyname,permissive,roles,cmd,qual,with_check
+public,companies,companies_select_own,PERMISSIVE,{public},SELECT,(id = user_company_id()),null
+public,companies,companies_update_own,PERMISSIVE,{public},UPDATE,(id = user_company_id()),(id = user_company_id())
+public,customers,customers_delete_company,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,customers,customers_insert_company,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,customers,customers_select_company,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,customers,customers_update_company,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,employee_permissions,employee_permissions_company_access,PERMISSIVE,{public},ALL,"(user_id IN ( SELECT users.id
+   FROM users
+  WHERE (users.company_id = user_company_id())))","(user_id IN ( SELECT users.id
+   FROM users
+  WHERE (users.company_id = user_company_id())))"
+public,job_completion_checklist,company_job_completion_checklist_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,job_completion_checklist,company_job_completion_checklist_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,job_completion_checklist,company_job_completion_checklist_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,job_completion_checklist,company_job_completion_checklist_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,job_photos,company_job_photos_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,job_photos,company_job_photos_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,job_photos,company_job_photos_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,job_photos,company_job_photos_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,login_attempts,company_login_attempts_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,login_attempts,company_login_attempts_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,login_attempts,company_login_attempts_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,login_attempts,company_login_attempts_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,marketplace_messages,company_marketplace_messages_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,marketplace_messages,company_marketplace_messages_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,marketplace_messages,company_marketplace_messages_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,marketplace_messages,company_marketplace_messages_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,marketplace_requests,company_marketplace_requests_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,marketplace_requests,company_marketplace_requests_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,marketplace_requests,company_marketplace_requests_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,marketplace_requests,company_marketplace_requests_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,marketplace_responses,company_marketplace_responses_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,marketplace_responses,company_marketplace_responses_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,marketplace_responses,company_marketplace_responses_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,marketplace_responses,company_marketplace_responses_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,marketplace_settings,company_marketplace_settings_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,marketplace_settings,company_marketplace_settings_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,marketplace_settings,company_marketplace_settings_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,marketplace_settings,company_marketplace_settings_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,messages,company_messages_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,messages,company_messages_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,messages,company_messages_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,messages,company_messages_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,notifications,company_notifications_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,notifications,company_notifications_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,notifications,company_notifications_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,notifications,company_notifications_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,onboarding_progress,company_onboarding_progress_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,onboarding_progress,company_onboarding_progress_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,onboarding_progress,company_onboarding_progress_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,onboarding_progress,company_onboarding_progress_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,payment_deliveries,company_payment_deliveries_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,payment_deliveries,company_payment_deliveries_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,payment_deliveries,company_payment_deliveries_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,payment_deliveries,company_payment_deliveries_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,payment_settings,company_payment_settings_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,payment_settings,company_payment_settings_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,payment_settings,company_payment_settings_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,payment_settings,company_payment_settings_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,payments,company_payments_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,payments,company_payments_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,payments,company_payments_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,payments,company_payments_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,payroll_line_items,company_payroll_line_items_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,payroll_line_items,company_payroll_line_items_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,payroll_line_items,company_payroll_line_items_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,payroll_line_items,company_payroll_line_items_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,payroll_runs,company_payroll_runs_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,payroll_runs,company_payroll_runs_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,payroll_runs,company_payroll_runs_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,payroll_runs,company_payroll_runs_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,permissions,company_permissions_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,permissions,company_permissions_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,permissions,company_permissions_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,permissions,company_permissions_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,profiles,profiles_insert_own,PERMISSIVE,{public},INSERT,null,"(user_id IN ( SELECT users.id
+   FROM users
+  WHERE (users.auth_user_id = auth.uid())))"
+public,profiles,profiles_select_own,PERMISSIVE,{public},SELECT,"(user_id IN ( SELECT users.id
+   FROM users
+  WHERE (users.auth_user_id = auth.uid())))",null
+public,profiles,profiles_update_own,PERMISSIVE,{public},UPDATE,"(user_id IN ( SELECT users.id
+   FROM users
+  WHERE (users.auth_user_id = auth.uid())))","(user_id IN ( SELECT users.id
+   FROM users
+  WHERE (users.auth_user_id = auth.uid())))"
+public,purchase_order_line_items,company_purchase_order_line_items_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,purchase_order_line_items,company_purchase_order_line_items_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,purchase_order_line_items,company_purchase_order_line_items_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,purchase_order_line_items,company_purchase_order_line_items_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,purchase_orders,company_purchase_orders_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,purchase_orders,company_purchase_orders_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,purchase_orders,company_purchase_orders_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,purchase_orders,company_purchase_orders_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,quote_analytics,company_quote_analytics_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,quote_analytics,company_quote_analytics_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,quote_analytics,company_quote_analytics_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,quote_analytics,company_quote_analytics_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,quote_approval_workflows,company_quote_approval_workflows_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,quote_approval_workflows,company_quote_approval_workflows_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,quote_approval_workflows,company_quote_approval_workflows_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,quote_approval_workflows,company_quote_approval_workflows_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,quote_approvals,company_quote_approvals_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,quote_approvals,company_quote_approvals_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,quote_approvals,company_quote_approvals_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,quote_approvals,company_quote_approvals_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,quote_change_requests,company_quote_change_requests_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,quote_change_requests,company_quote_change_requests_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())
+public,quote_change_requests,company_quote_change_requests_select,PERMISSIVE,{public},SELECT,(company_id = user_company_id()),null
+public,quote_change_requests,company_quote_change_requests_update,PERMISSIVE,{public},UPDATE,(company_id = user_company_id()),(company_id = user_company_id())
+public,quote_defaults,company_quote_defaults_delete,PERMISSIVE,{public},DELETE,(company_id = user_company_id()),null
+public,quote_defaults,company_quote_defaults_insert,PERMISSIVE,{public},INSERT,null,(company_id = user_company_id())

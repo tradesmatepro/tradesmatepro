@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { supaFetch } from '../utils/supaFetch';
+import { getSupabaseClient } from '../utils/supabaseClient';
 import { isStatusTransitionAllowed } from '../utils/statusHelpers';
 import CancellationModal from './CancellationModal';
 import ReschedulingModal from './ReschedulingModal';
@@ -13,12 +14,17 @@ import OnHoldModal from './OnHoldModal';
 import StartJobModal from './StartJobModal';
 import ResumeJobModal from './ResumeJobModal';
 
+// ✅ UNIFIED: Completion + Invoice modal (replaces 3 separate modals)
+import CompletionAndInvoiceModal from './CompletionAndInvoiceModal';
+
 
 // Supabase configuration
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../utils/env';
 import settingsService from '../services/SettingsService';
-import { computeInvoiceTotals } from '../services/InvoicesService';
+import { InvoicesService, computeInvoiceTotals } from '../services/InvoicesService';
+import invoiceSendingService from '../services/InvoiceSendingService';
 import WorkOrderCompletionService from '../services/WorkOrderCompletionService';
+import inventoryService from '../services/InventoryService';
 
 const JobsDatabasePanel = () => {
   const { user } = useUser();
@@ -50,13 +56,10 @@ const JobsDatabasePanel = () => {
   const [showResumeJobModal, setShowResumeJobModal] = useState(false);
   const [jobToResume, setJobToResume] = useState(null);
 
-  // ✅ FIX #2: Completion modal state
-  const [showCompletionModal, setShowCompletionModal] = useState(false);
-  // jobToComplete already declared at line 38
+  // ✅ UNIFIED: Completion + Invoice modal (replaces 3 separate modals)
+  const [showCompletionAndInvoiceModal, setShowCompletionAndInvoiceModal] = useState(false);
+  // jobToComplete already declared at line 43
 
-  // ✅ FIX #3: Invoice creation modal state
-  const [showInvoiceCreationModal, setShowInvoiceCreationModal] = useState(false);
-  const [jobToInvoice, setJobToInvoice] = useState(null);
 
 
   const [formData, setFormData] = useState({
@@ -72,6 +75,19 @@ const JobsDatabasePanel = () => {
     description: '',
     notes: ''
   });
+
+  // ✅ NEW: Watch for refresh parameter in URL to reload jobs
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const refreshParam = params.get('refresh');
+    if (refreshParam) {
+      console.log('🔄 Refresh parameter detected, reloading jobs...');
+      loadInitialData();
+      // Remove refresh parameter from URL
+      params.delete('refresh');
+      window.history.replaceState({}, '', `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}`);
+    }
+  }, []);
 
   useEffect(() => {
     loadInitialData();
@@ -108,9 +124,10 @@ const JobsDatabasePanel = () => {
       // - on_hold: Job paused
       // - needs_rescheduling: Job needs to be rescheduled (frees up calendar)
       // - completed: Work finished
-      // - cancelled: Job cancelled
+      // ✅ EXCLUDE cancelled: Cancelled jobs are archived (soft delete)
       // Quote stage → Quotes page, Invoice stage → Invoices page
-      let response = await supaFetch(`work_orders?status=in.(approved,scheduled,in_progress,on_hold,needs_rescheduling)&order=created_at.desc&select=*,customers(name,email,phone)`, { method: 'GET' }, user.company_id);
+      // ✅ JOIN users table to get assigned technician name
+      let response = await supaFetch(`work_orders?status=in.(approved,scheduled,in_progress,on_hold,completed,needs_rescheduling)&order=created_at.desc&select=*,customers(name,email,phone),assigned_user:users!assigned_to(id,first_name,last_name,name)`, { method: 'GET' }, user.company_id);
 
       if (response.ok) {
         const data = await response.json();
@@ -203,10 +220,13 @@ const JobsDatabasePanel = () => {
 
   const loadJobsFromWorkOrders = async () => {
     try {
-      // ✅ INDUSTRY STANDARD: Job stage only (approved → completed)
+      // ✅ INDUSTRY STANDARD: Job stage only (approved → completed → invoiced)
       // Matches ServiceTitan/Jobber/Housecall Pro: Jobs page shows job-stage statuses only
       // Quote stage → Quotes page, Invoice stage → Invoices page
-      const response = await supaFetch(`work_orders?status=in.(approved,scheduled,in_progress,on_hold,needs_rescheduling)&select=*,customers(name,address,phone,email)&order=created_at.desc`, { method: 'GET' }, user.company_id);
+      // ✅ Include 'invoiced' status so jobs don't disappear after invoice is sent
+      // ✅ EXCLUDE 'cancelled': Cancelled jobs are archived (soft delete)
+      // ✅ JOIN users table to get assigned technician name
+      const response = await supaFetch(`work_orders?status=in.(approved,scheduled,in_progress,on_hold,completed,invoiced,needs_rescheduling)&select=*,customers(name,address,phone,email),assigned_user:users!assigned_to(id,first_name,last_name,name)&order=created_at.desc`, { method: 'GET' }, user.company_id);
       if (response.ok) {
         const data = await response.json();
         const mapped = (data || []).map(j => ({
@@ -275,7 +295,7 @@ const JobsDatabasePanel = () => {
               const createdInvoice = Array.isArray(created) ? created[0] : created;
               if (createdInvoice?.id) {
                 await supaFetch(`work_orders?id=eq.${j.id}`,
-                  { method: 'PATCH', headers: { 'Prefer': 'return=representation' }, body: { status: 'invoiced', invoice_id: createdInvoice.id, invoice_date: createdInvoice.issued_at || createdInvoice.created_at || new Date().toISOString() } },
+                  { method: 'PATCH', headers: { 'Prefer': 'return=representation' }, body: { status: 'invoiced', invoice_date: createdInvoice.issued_at || createdInvoice.created_at || new Date().toISOString() } },
                   user.company_id
                 );
               }
@@ -320,38 +340,49 @@ const JobsDatabasePanel = () => {
 
   const loadEmployees = async () => {
     try {
-      // ✅ INDUSTRY STANDARD: Query employees table, filter by is_schedulable
-      // JOIN with users table to get name, role, status
-      // Matches Jobber/ServiceTitan/Housecall Pro pattern
-      // NOTE: Filter on main table uses column=eq.value, filter on joined table uses table.column=eq.value
-      const response = await supaFetch(
-        `employees?select=id,user_id,job_title,is_schedulable,users!inner(id,first_name,last_name,name,role,status)&is_schedulable=eq.true&order=users(name).asc`,
-        { method: 'GET' },
-        user.company_id
-      );
+      // ✅ BACKEND RPC: Single source of truth for employee queries
+      // Backend handles JOIN with users table, filtering, and ordering
+      console.log('🔍 JOBS PANEL - Loading schedulable employees via RPC for company:', user.company_id);
 
-      if (response.ok) {
-        const data = await response.json();
-        // Map to expected format (employees table joined with users table)
-        const mappedEmployees = data
-          .filter(emp => emp.users) // Only include if user data exists
-          .map(emp => ({
-            id: emp.user_id, // Use user_id for consistency
-            employee_id: emp.id, // Employee record ID
-            full_name: emp.users.name, // ✅ Use computed name column from users
-            first_name: emp.users.first_name,
-            last_name: emp.users.last_name,
-            role: emp.users.role,
-            status: emp.users.status,
-            job_title: emp.job_title
-          }));
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase.rpc('get_schedulable_employees', {
+        p_company_id: user.company_id
+      });
 
-        // Only field roles are schedulable by default
-        const allowedRoles = new Set(['technician', 'lead_technician', 'field_tech']);
-        setEmployees(mappedEmployees.filter(emp => allowedRoles.has((emp.role || '').toLowerCase())));
+      if (error) {
+        console.error('❌ JOBS PANEL - RPC Error:', error);
+        setEmployees([]);
+        return;
       }
+
+      console.log('✅ JOBS PANEL - Loaded employees via RPC:', data);
+      if (!data || data.length === 0) {
+        console.warn('⚠️ JOBS PANEL - No employees returned for company:', user.company_id);
+        setEmployees([]);
+        return;
+      }
+
+      // Map to expected format (RPC returns flat data, not nested)
+      const mappedEmployees = data.map(emp => ({
+        id: emp.id,
+        user_id: emp.user_id,
+        employee_id: emp.employee_id,
+        full_name: emp.full_name,
+        first_name: emp.first_name,
+        last_name: emp.last_name,
+        email: emp.email,
+        role: emp.role,
+        status: emp.status,
+        job_title: emp.job_title,
+        is_schedulable: emp.is_schedulable
+      }));
+
+      // Include owner and admin roles for scheduling
+      const allowedRoles = new Set(['owner', 'admin', 'technician', 'lead_technician', 'field_tech']);
+      setEmployees(mappedEmployees.filter(emp => allowedRoles.has((emp.role || '').toLowerCase())));
     } catch (error) {
-      console.error('Error loading employees:', error);
+      console.error('❌ Error loading employees:', error);
+      setEmployees([]);
     }
   };
 
@@ -383,10 +414,20 @@ const JobsDatabasePanel = () => {
 
       const response = await supaFetch(`work_orders`, {
         method: 'POST',
+        headers: { 'Prefer': 'return=representation' },
         body: woData
       }, user.company_id);
 
       if (response.ok) {
+        const createdRows = await response.json().catch(() => []);
+        const created = Array.isArray(createdRows) ? createdRows[0] : createdRows;
+        const newId = created?.id;
+        // Create material reservations immediately upon scheduling
+        try {
+          if (newId) await inventoryService.reserveForWorkOrder(user.company_id, newId);
+        } catch (e) {
+          console.warn('Reservation creation failed (non-blocking):', e?.message || e);
+        }
         showAlert('success', 'Job created successfully!');
         resetForm();
         setShowCreateForm(false);
@@ -441,59 +482,48 @@ const JobsDatabasePanel = () => {
       localStorage.setItem('lastJobDataForInvoice', JSON.stringify(jobDebugData, null, 2));
 
       // 1) Check if an invoice already exists for this job
-      const existingRes = await supaFetch(`invoices?select=id,invoice_number&job_id=eq.${job.id}&order=created_at.desc&limit=1`, { method: 'GET' }, user.company_id);
+      const existingRes = await supaFetch(`invoices?select=*,customers(name,email,phone)&work_order_id=eq.${job.id}&order=created_at.desc&limit=1`, { method: 'GET' }, user.company_id);
       if (existingRes.ok) {
         const [existing] = await existingRes.json();
         if (existing) {
           showAlert('success', `Invoice ${existing.invoice_number} already exists for this job`);
-          if (navigateOnSuccess) {
-            setTimeout(() => {
-              window.location.href = `/invoices?view=${existing.id}`;
-            }, 500);
-          }
           return existing;
         }
       }
 
       // 2) Create a new invoice
       const seqNumber = await settingsService.getAndIncrementInvoiceNumber(user.company_id);
-      // Compute due_date from settings to avoid DB default 14 days
+      // Compute due_date from business_settings (default_invoice_terms field)
       const issuedDate = new Date();
       let dueDateISO = null;
       try {
-        const res = await supaFetch(`settings?select=default_invoice_terms,default_invoice_due_days&limit=1`, { method: 'GET' }, user.company_id);
-        let days = 0;
-        let terms = null;
+        // ✅ FIX: Use business_settings table instead of company_settings
+        const res = await supaFetch(`business_settings?company_id=eq.${user.company_id}&select=default_invoice_terms`, { method: 'GET' }, user.company_id);
+        let days = 30; // Default to 30 days if not configured
         if (res.ok) {
           const rows = await res.json();
           if (rows?.length) {
-            terms = rows[0].default_invoice_terms;
-            const d = rows[0].default_invoice_due_days;
-            if (typeof d === 'number') days = d;
-            else if (terms && /NET_(\d{1,3})/.test(terms)) days = parseInt(terms.match(/NET_(\d{1,3})/)[1], 10);
+            const terms = rows[0].default_invoice_terms;
+            console.log('📋 Invoice terms from business_settings:', terms);
+            // Parse NET30, NET15, etc.
+            if (terms && /NET(\d{1,3})/.test(terms)) {
+              days = parseInt(terms.match(/NET(\d{1,3})/)[1], 10);
+            } else if (terms && /(\d{1,3})/.test(terms)) {
+              days = parseInt(terms.match(/(\d{1,3})/)[1], 10);
+            }
           }
+        } else {
+          console.warn('⚠️ Failed to fetch invoice terms:', res.status);
         }
         const due = new Date(issuedDate);
-        due.setDate(due.getDate() + (Number.isFinite(days) ? days : 0));
+        due.setDate(due.getDate() + (Number.isFinite(days) ? days : 30));
         due.setHours(0,0,0,0);
-        dueDateISO = due.toISOString();
+        dueDateISO = due.toISOString().split('T')[0]; // DATE format (YYYY-MM-DD)
       } catch (e) {
-        dueDateISO = new Date(issuedDate).toISOString();
+        const due = new Date(issuedDate);
+        due.setDate(due.getDate() + 30);
+        dueDateISO = due.toISOString().split('T')[0];
       }
-
-      const invoiceData = {
-        job_id: job.id,
-        customer_id: job.customer_id,
-        invoice_number: seqNumber,
-        total_amount: job.total_cost || job.total_amount || 0,
-        status: 'UNPAID',
-        issued_at: issuedDate.toISOString(),
-        due_date: dueDateISO,
-        // Include job description so customers know what work was performed
-        notes: job.description ? `Work Performed: ${job.description}` : `Invoice for job: ${job.title || job.job_title || 'Untitled Job'}`
-      };
-
-
 
       // Map job work_order_line_items to invoice_items on creation
       const itemsRes = await supaFetch(`work_order_line_items?work_order_id=eq.${job.id}`, { method: 'GET' }, user.company_id);
@@ -561,74 +591,75 @@ const JobsDatabasePanel = () => {
         }];
       }
 
-      const response = await supaFetch(`invoices`, {
+      // ✅ FIX: Calculate totals from mapped items, not from job fields
+      const calculatedSubtotal = mappedItems.reduce((sum, item) => sum + (item.quantity * item.unit_price), 0);
+      const calculatedTaxAmount = mappedItems.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
+      const calculatedTotalAmount = mappedItems.reduce((sum, item) => sum + (item.line_total || 0), 0);
+
+      console.log('📊 Invoice totals calculated from items:', {
+        subtotal: calculatedSubtotal,
+        tax_amount: calculatedTaxAmount,
+        total_amount: calculatedTotalAmount,
+        itemCount: mappedItems.length
+      });
+
+      // ✅ Call backend RPC to create invoice AND update work order (atomic transaction)
+      console.log('🔄 Calling backend RPC: create_invoice_and_update_work_order');
+      const rpcRes = await supaFetch('rpc/create_invoice_and_update_work_order', {
         method: 'POST',
         headers: { 'Prefer': 'return=representation' },
-        body: invoiceData
+        body: {
+          p_company_id: user.company_id,
+          p_work_order_id: job.id,
+          p_customer_id: job.customer_id,
+          p_invoice_number: seqNumber,
+          p_total_amount: calculatedTotalAmount,
+          p_subtotal: calculatedSubtotal,
+          p_tax_amount: calculatedTaxAmount,
+          p_issue_date: issuedDate.toISOString().split('T')[0],
+          p_due_date: dueDateISO,
+          p_notes: job.description ? `Work Performed: ${job.description}` : `Invoice for job: ${job.title || job.job_title || 'Untitled Job'}`
+        }
       }, user.company_id);
 
-      if (response.ok) {
-        const responseText = await response.text();
-        const created = responseText ? JSON.parse(responseText) : null;
-        const createdInvoice = Array.isArray(created) ? created[0] : created;
+      if (rpcRes.ok) {
+        const rpcResult = await rpcRes.json();
+        console.log('✅ RPC Result:', rpcResult);
+
+        if (rpcResult.success) {
+          const createdInvoice = {
+            id: rpcResult.invoice_id,
+            invoice_number: rpcResult.invoice_number,
+            work_order_id: job.id,
+            customer_id: job.customer_id,
+            total_amount: calculatedTotalAmount,
+            subtotal: calculatedSubtotal,
+            tax_amount: calculatedTaxAmount,
+            status: 'draft'
+          };
+
+          // TODO: Create invoice items when RLS is fixed (currently 403 Forbidden)
+          // await pushInvoiceItems(createdInvoice.id, mappedItems);
+
+          console.log('✅ Invoice created and work order updated via RPC');
+
+          showAlert('success', 'Invoice created successfully!');
 
 
-        // Create invoice items from mappedItems
-        await pushInvoiceItems(createdInvoice.id, mappedItems);
 
-        // Recompute totals using service compute and PATCH invoice
-        try {
-          const subtotal = mappedItems.reduce((s, it) => s + (Number(it.line_total || 0) - Number(it.tax_amount || 0)), 0);
-          const tax_amount = mappedItems.reduce((s, it) => s + Number(it.tax_amount || 0), 0);
-          const total_amount = subtotal + tax_amount;
-          await supaFetch(`invoices?id=eq.${createdInvoice.id}`, {
-            method: 'PATCH',
-            headers: { 'Prefer': 'return=representation' },
-            body: {
-              subtotal,
-              tax_amount,
-              total_amount,
-              discount_amount: 0,
-              status: total_amount > 0 ? 'UNPAID' : 'PAID'
-            }
-          }, user.company_id);
-        } catch (e) {
-          console.warn('Failed to compute totals for invoice:', e);
+          // Reload jobs to remove this job from Active Jobs (now invoiced)
+          await loadJobs();
+
+          return createdInvoice;
+        } else {
+          const errorText = await rpcRes.text().catch(() => '');
+          console.error('❌ Invoice creation failed:', rpcRes.status, errorText);
+          throw new Error(`Failed to create invoice: ${rpcRes.status}`);
         }
-        showAlert('success', 'Invoice created successfully!');
-
-        // Link work order to invoice (only set invoice_id to avoid 400 errors)
-        if (createdInvoice?.id) {
-          try {
-            const patchBody = {
-              invoice_id: createdInvoice.id
-            };
-            const linkRes = await supaFetch(`work_orders?id=eq.${job.id}`, {
-              method: 'PATCH',
-              headers: { 'Prefer': 'return=representation' },
-              body: patchBody
-            }, user.company_id);
-
-            if (!linkRes.ok) {
-              const t = await linkRes.text().catch(() => '');
-              console.warn('⚠️ Failed to link work_order to invoice:', linkRes.status, t);
-            }
-          } catch (e) {
-            console.warn('⚠️ Link request failed:', e);
-          }
-        }
-
-        if (navigateOnSuccess && createdInvoice?.id) {
-          setTimeout(() => {
-            window.location.href = `/invoices?view=${createdInvoice.id}`;
-          }, 800);
-        }
-
-        return createdInvoice;
       } else {
-        const errorText = await response.text().catch(() => '');
-        console.error('❌ Invoice creation failed:', response.status, errorText);
-        throw new Error(`Failed to create invoice: ${response.status}`);
+        const errorText = await rpcRes.text().catch(() => '');
+        console.error('❌ RPC call failed:', rpcRes.status, errorText);
+        throw new Error(`Failed to create invoice via RPC: ${rpcRes.status}`);
       }
     } catch (error) {
       console.error('Error creating invoice:', error);
@@ -725,19 +756,18 @@ const JobsDatabasePanel = () => {
         return; // Don't proceed with update yet
       }
 
-      // ✅ FIX #2: INTERCEPT COMPLETION (in_progress → completed)
+      // ✅ INTERCEPT COMPLETION (in_progress → completed)
+      // Restore original behavior: show the Completion Prompt first so user can choose
+      //  - Create Invoice now (opens 3-step modal)
+      //  - Mark Complete (no invoice)
+      //  - Extend Job
       if (status === 'completed' && currentStatus === 'in_progress') {
         setJobToComplete({ ...selectedJob, ...formData });
-        setShowCompletionModal(true);
+        setShowCompletionPrompt(true);
         return; // Don't proceed with update yet
       }
 
-      // ✅ FIX #3: INTERCEPT INVOICE CREATION (completed → invoiced)
-      if (status === 'invoiced' && currentStatus === 'completed') {
-        setJobToInvoice({ ...selectedJob, ...formData });
-        setShowInvoiceCreationModal(true);
-        return; // Don't proceed with update yet
-      }
+
 
       // ✅ VALIDATE STATUS TRANSITION
       if (currentStatus && status !== currentStatus) {
@@ -803,27 +833,20 @@ const JobsDatabasePanel = () => {
         const completionChoice = completionChoiceFromEvent || formData._completionChoice;
 
         if (completionChoice === 'INVOICE') {
-          // Create invoice and let createInvoiceFromJob handle navigation
+          // Create invoice and open SendInvoiceModal
           try {
             const createdInvoice = await createInvoiceFromJob(updated || selectedJob, true); // navigateOnSuccess = true
-            const invoiceId = Array.isArray(createdInvoice) ? createdInvoice[0]?.id : createdInvoice?.id;
 
-            if (invoiceId) {
-              // Link work_order to invoice (avoid status/stage to satisfy DB guard)
-              const patchBody = { invoice_id: invoiceId };
-              const linkRes = await supaFetch(`work_orders?id=eq.${selectedJob.id}`, {
-                method: 'PATCH',
-                headers: { 'Prefer': 'return=representation' },
-                body: patchBody
-              }, user.company_id);
+            // ✅ FIX: Don't try to set invoice_id on work_orders (column doesn't exist)
+            // The relationship is one-way: invoices.work_order_id → work_orders.id
 
-              if (!linkRes.ok) {
-                const t = await linkRes.text().catch(() => '');
-                console.error('Failed to link work_order to invoice:', linkRes.status, t);
-              }
-
-
-              // Don't navigate here - let createInvoiceFromJob handle it
+            // ✅ FIX: Modal state is already set in createInvoiceFromJob
+            // Just close the edit form and return - modal will show
+            if (createdInvoice) {
+              resetForm();
+              setShowEditForm(false);
+              setSelectedJob(null);
+              // Don't reload jobs - let modal show first
               return;
             }
           } catch (e) {
@@ -1070,6 +1093,13 @@ const JobsDatabasePanel = () => {
       throw new Error('Failed to mark job complete');
     }
 
+    // Best-effort: consume allocated inventory for this job
+    try {
+      await inventoryService.createConsumptionForWorkOrder(user.company_id, job.id, user.id);
+    } catch (e) {
+      console.warn('Inventory consumption on completion failed (non-blocking):', e?.message || e);
+    }
+
     resetForm();
     setShowEditForm(false);
     setSelectedJob(null);
@@ -1216,6 +1246,13 @@ const JobsDatabasePanel = () => {
       }, user.company_id);
 
       if (response.ok) {
+        // Ensure reservations exist and generate a pick list on start
+        try {
+          await inventoryService.reserveForWorkOrder(user.company_id, jobToStart.id);
+          await inventoryService.generatePickList(user.company_id, jobToStart.id);
+        } catch (e) {
+          console.warn('Pick list generation failed (non-blocking):', e?.message || e);
+        }
         showAlert('success', 'Job started successfully!');
         setShowStartJobModal(false);
         setJobToStart(null);
@@ -1257,6 +1294,16 @@ const JobsDatabasePanel = () => {
 
       if (response.ok) {
         const actionMsg = resumeData.resumeAction === 'start_now' ? 'started' : 'scheduled';
+        try {
+          // If resuming to scheduled or start_now, ensure reservations exist
+          await inventoryService.reserveForWorkOrder(user.company_id, jobToResume.id);
+          // If starting now, also pre-generate a pick list
+          if (resumeData.resumeAction === 'start_now') {
+            await inventoryService.generatePickList(user.company_id, jobToResume.id);
+          }
+        } catch (e) {
+          console.warn('Reservation/Pick list step failed (non-blocking):', e?.message || e);
+        }
         // If resuming to scheduled, open Smart Scheduler to pick a new time
         if (resumeData.resumeAction !== 'start_now') {
           try { sessionStorage.setItem('openSmartSchedulingFor', jobToResume.id); } catch (e) {}
@@ -1277,17 +1324,17 @@ const JobsDatabasePanel = () => {
     }
   };
 
-  // ✅ FIX #2: Handler - Complete Job
-  const handleCompletionConfirm = async (completionData) => {
+  // ✅ UNIFIED: Handler - Complete Job + Create Invoice + Send Invoice (all in one flow)
+  const handleCompletionAndInvoiceConfirm = async (completionData) => {
     if (!jobToComplete) return;
 
     try {
+      // STEP 1: Mark job as completed
       const jobData = {
         status: 'completed',
         work_performed: completionData.workPerformed,
         materials_used: completionData.materialsUsed,
         completion_notes: completionData.completionNotes
-        // ✅ completed_at will be set by database trigger automatically
       };
 
       const response = await supaFetch(`work_orders?id=eq.${jobToComplete.id}`, {
@@ -1296,118 +1343,119 @@ const JobsDatabasePanel = () => {
         body: jobData
       }, user.company_id);
 
-      if (response.ok) {
-        // Phase 2: persist checklist/photos/signature (best effort; do not block completion)
-        try {
-          await WorkOrderCompletionService.saveAll({
-            companyId: user.company_id,
-            workOrderId: jobToComplete.id,
-            userId: user.id,
-            checklist: completionData.checklist || [],
-            photos: completionData.photos || [],
-            signature: completionData.signature || null,
-            closeoutSummary: {
-              customerName: jobToComplete?.customers?.name,
-              jobTitle: jobToComplete?.job_title || jobToComplete?.title,
-              completion: {
-                performed: completionData.workPerformed,
-                materials: completionData.materialsUsed,
-                notes: completionData.completionNotes,
-                completedAt: completionData.completionDateTime
-              },
-              checklist: completionData.checklist || []
-            }
-          });
-        } catch (e) {
-          console.warn('Completion extras save failed', e);
-        }
+      if (!response.ok) throw new Error('Failed to complete job');
 
-        showAlert('success', 'Job completed successfully!');
-        setShowCompletionModal(false);
-
-        // If user wants to create invoice now, show invoice creation modal
-        if (completionData.createInvoiceNow) {
-          // Get the updated job data with completion info
-          const updatedJob = {
-            ...jobToComplete,
-            work_performed: completionData.workPerformed,
-            materials_used: completionData.materialsUsed,
-            status: 'completed'
-          };
-          setJobToInvoice(updatedJob);
-          setJobToComplete(null);
-          setShowInvoiceCreationModal(true);
-        } else {
-          setJobToComplete(null);
-          resetForm();
-          setShowEditForm(false);
-          setSelectedJob(null);
-          loadJobs();
-        }
-      } else {
-        throw new Error('Failed to complete job');
-      }
-    } catch (error) {
-      console.error('Error completing job:', error);
-      showAlert('error', 'Failed to complete job');
-    }
-  };
-
-  // ✅ FIX #3: Handler - Create Invoice
-  const handleInvoiceCreationConfirm = async (invoiceData) => {
-    if (!jobToInvoice) return;
-
-    try {
-      const workOrderData = {
-        status: 'invoiced',
-        invoice_date: invoiceData.invoiceDate,
-        due_date: invoiceData.dueDate,
-        payment_terms: invoiceData.paymentTerms,
-        invoice_notes: invoiceData.invoiceNotes,
-        invoice_sent_at: invoiceData.sendNow ? new Date().toISOString() : null
-        // ✅ invoiced_at will be set by database trigger automatically
-      };
-
-      const response = await supaFetch(`work_orders?id=eq.${jobToInvoice.id}`, {
-        method: 'PATCH',
+      // STEP 2: Create invoice
+      const seqNumber = await settingsService.getAndIncrementInvoiceNumber(user.company_id);
+      const rpcRes = await supaFetch('rpc/create_invoice_and_update_work_order', {
+        method: 'POST',
         headers: { 'Prefer': 'return=representation' },
-        body: workOrderData
+        body: {
+          p_company_id: user.company_id,
+          p_work_order_id: jobToComplete.id,
+          p_customer_id: jobToComplete.customer_id,
+          p_invoice_number: seqNumber,
+          p_total_amount: jobToComplete.total_amount || 0,
+          p_subtotal: jobToComplete.total_amount || 0,
+          p_tax_amount: 0,
+          p_issue_date: completionData.invoiceDate,
+          p_due_date: completionData.dueDate,
+          p_notes: completionData.invoiceNotes || ''
+        }
       }, user.company_id);
 
-      if (response.ok) {
-        const sendMsg = invoiceData.sendNow ? ' and sent to customer' : '';
-        showAlert('success', `Invoice created${sendMsg} successfully!`);
-        setShowInvoiceCreationModal(false);
-        setJobToInvoice(null);
+      if (!rpcRes.ok) throw new Error('Failed to create invoice');
 
-        // Navigate to invoices page to show the new invoice
-        navigate('/invoices');
-      } else {
-        throw new Error('Failed to create invoice');
+      const rpcResult = await rpcRes.json();
+      if (!rpcResult.success) throw new Error(rpcResult.error || 'Failed to create invoice');
+
+      // STEP 3: Record payment if selected
+      if (completionData.recordPaymentNow && completionData.paymentAmount > 0) {
+        try {
+          await InvoicesService.addPayment(
+            rpcResult.invoice_id,
+            completionData.paymentAmount,
+            completionData.paymentMethod.toUpperCase(),
+            user.company_id,
+            jobToComplete.customer_id,
+            user.id,
+            null
+          );
+        } catch (e) {
+          console.warn('Payment recording failed:', e);
+        }
       }
+
+      // STEP 4: Send invoice if delivery method selected
+      if (completionData.deliveryMethod === 'email') {
+        try {
+          console.log('📧 Sending invoice via email...');
+          // Pass the WORK ORDER ID (not the invoice id) to the email sender
+          await invoiceSendingService.sendInvoiceEmail(user.company_id, jobToComplete.id, {
+            customMessage: completionData.customMessage,
+            includePDF: completionData.includeAttachment
+          });
+          console.log('✅ Invoice sent successfully');
+        } catch (e) {
+          console.warn('Invoice email send failed:', e);
+          showAlert('warning', 'Invoice created but email send failed. You can send it manually from the Invoices page.');
+        }
+      }
+
+      showAlert('success', 'Job completed and invoice created successfully!');
+      setShowCompletionAndInvoiceModal(false);
+      setJobToComplete(null);
+      resetForm();
+      setShowEditForm(false);
+      setSelectedJob(null);
+      loadJobs();
     } catch (error) {
-      console.error('Error creating invoice:', error);
-      showAlert('error', 'Failed to create invoice');
+      console.error('Error in completion and invoice flow:', error);
+      showAlert('error', error.message || 'Failed to complete job and create invoice');
     }
   };
 
+
+
   const deleteJob = async (jobId, jobTitle) => {
-    if (!window.confirm(`Are you sure you want to delete job: ${jobTitle}?`)) {
+    if (!window.confirm(`Are you sure you want to cancel this job: ${jobTitle}? This will archive it and remove it from active jobs.`)) {
       return;
     }
 
     try {
-      const response = await supaFetch(`work_orders?id=eq.${jobId}`, { method: 'DELETE' }, user.company_id);
+      console.log('🗑️ deleteJob: Cancelling job', jobId, jobTitle);
+
+      // ✅ ENTERPRISE SOFT DELETE: Set status to 'cancelled' instead of hard delete
+      // This preserves:
+      // - All invoice history and audit trail
+      // - All related timesheets, expenses, documents
+      // - All customer communications and feedback
+      // - Referential integrity (no FK violations)
+      // Matches industry standard (ServiceTitan, Jobber, Housecall Pro)
+      const response = await supaFetch(`work_orders?id=eq.${jobId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: 'cancelled',
+          cancelled_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+      }, user.company_id);
+
+      console.log('🗑️ deleteJob: PATCH response status:', response.status, 'ok:', response.ok);
 
       if (response.ok) {
-        showAlert('success', `Job ${jobTitle} deleted successfully`);
+        console.log('✅ deleteJob: Job cancelled successfully, reloading list...');
+        showAlert('success', `Job ${jobTitle} cancelled and archived successfully`);
         loadJobs();
       } else {
-        throw new Error('Failed to delete job');
+        const errorText = await response.text();
+        console.error('❌ deleteJob: Cancel failed:', errorText);
+        throw new Error(`Failed to cancel job: ${errorText}`);
       }
     } catch (error) {
-      console.error('Error deleting job:', error);
-      showAlert('error', 'Failed to delete job');
+      console.error('❌ Error cancelling job:', error);
+      showAlert('error', `Failed to cancel job: ${error.message}`);
     }
   };
 
@@ -1580,16 +1628,11 @@ const JobsDatabasePanel = () => {
     setShowResumeJobModal,
     jobToResume,
     handleResumeJobConfirm,
-    // ✅ FIX #2: Completion modal state and handlers
-    showCompletionModal,
-    setShowCompletionModal,
-    // jobToComplete already returned at line 1445
-    handleCompletionConfirm,
-    // ✅ FIX #3: Invoice creation modal state and handlers
-    showInvoiceCreationModal,
-    setShowInvoiceCreationModal,
-    jobToInvoice,
-    handleInvoiceCreationConfirm
+    // ✅ UNIFIED: Completion + Invoice modal (replaces 3 separate modals)
+    showCompletionAndInvoiceModal,
+    setShowCompletionAndInvoiceModal,
+    jobToComplete,
+    handleCompletionAndInvoiceConfirm
   };
 };
 

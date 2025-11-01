@@ -18,8 +18,7 @@ const AwaitingPayment = () => {
   const loadAwaitingPaymentJobs = async () => {
     setLoading(true);
     try {
-      // Query work_orders with completed status and unpaid invoices - use status field
-      const res = await supaFetch('work_orders?status=eq.completed&select=*,customers(name,email,phone),invoices!inner(id,invoice_number,status)&invoices.status=in.(unpaid,overdue,partially_paid)&order=updated_at.desc', { method: 'GET' }, user.company_id);
+      const res = await supaFetch('jobs_with_payment_status?unified_status=eq.awaiting_payment&order=updated_at.desc', { method: 'GET' }, user.company_id);
       if (res.ok) {
         const data = await res.json();
         setJobs(data || []);

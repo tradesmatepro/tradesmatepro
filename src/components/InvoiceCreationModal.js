@@ -35,6 +35,12 @@ const InvoiceCreationModal = ({
   const [sendNow, setSendNow] = useState(true);
   const [errors, setErrors] = useState({});
 
+  // Payment recording
+  const [recordPaymentNow, setRecordPaymentNow] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [paymentReference, setPaymentReference] = useState('');
+
   // Auto-calculate due date when invoice date or payment terms change
   useEffect(() => {
     if (!invoiceDate) return;
@@ -86,7 +92,7 @@ const InvoiceCreationModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
 
     onConfirm({
@@ -94,7 +100,12 @@ const InvoiceCreationModal = ({
       dueDate,
       paymentTerms,
       invoiceNotes: invoiceNotes.trim(),
-      sendNow
+      sendNow,
+      // Payment recording
+      recordPaymentNow,
+      paymentMethod,
+      paymentAmount: recordPaymentNow ? parseFloat(paymentAmount) : 0,
+      paymentReference
     });
   };
 
@@ -257,6 +268,81 @@ const InvoiceCreationModal = ({
             </p>
           </div>
 
+          {/* Payment Recording Option */}
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-4">
+            <label className="flex items-start space-x-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={recordPaymentNow}
+                onChange={(e) => setRecordPaymentNow(e.target.checked)}
+                className="mt-1 h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+              />
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <CurrencyDollarIcon className="h-5 w-5 text-green-600" />
+                  <span className="font-medium text-gray-900">Record Payment Now</span>
+                </div>
+                <p className="text-sm text-gray-900 mt-1">
+                  {recordPaymentNow
+                    ? "✅ Record a payment received (cash, check, card, etc.)"
+                    : "⏸️ Skip payment recording - customer will pay later"}
+                </p>
+              </div>
+            </label>
+
+            {/* Payment Details (shown when checkbox is checked) */}
+            {recordPaymentNow && (
+              <div className="mt-4 space-y-3 pt-4 border-t border-green-200">
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Payment Method <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  >
+                    <option value="cash">💵 Cash</option>
+                    <option value="check">🏦 Check</option>
+                    <option value="card">💳 Credit/Debit Card</option>
+                    <option value="ach">🏛️ ACH/Bank Transfer</option>
+                    <option value="other">📝 Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Amount Paid <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max={jobTotal}
+                    value={paymentAmount}
+                    onChange={(e) => setPaymentAmount(e.target.value)}
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                  <p className="text-xs text-gray-600 mt-1">Max: ${typeof jobTotal === 'number' ? jobTotal.toFixed(2) : '0.00'}</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    Reference (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={paymentReference}
+                    onChange={(e) => setPaymentReference(e.target.value)}
+                    placeholder="e.g., Check #12345, Transaction ID, etc."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Send Now Option */}
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
             <label className="flex items-start space-x-3 cursor-pointer">
@@ -272,8 +358,8 @@ const InvoiceCreationModal = ({
                   <span className="font-medium text-gray-900">Send Invoice to Customer Now</span>
                   <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Recommended</span>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">
-                  {sendNow 
+                <p className="text-sm text-gray-900 mt-1">
+                  {sendNow
                     ? "✅ Invoice will be emailed to customer immediately after creation"
                     : "⏸️ Invoice will be saved as draft - you can send it later from the Invoices page"}
                 </p>

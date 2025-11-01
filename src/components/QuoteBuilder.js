@@ -9,11 +9,15 @@ import {
   CalculatorIcon,
   SparklesIcon,
   PaperAirplaneIcon,
-  ArchiveBoxIcon
+  ArchiveBoxIcon,
+  CheckCircleIcon,
+  PhotoIcon,
+  PaperClipIcon
 } from '@heroicons/react/24/outline';
 import settingsService from '../services/SettingsService';
 import { useUser } from '../contexts/UserContext';
 import { supaFetch } from '../utils/supaFetch';
+import TaxService from '../services/TaxService';
 import LaborTable from './LaborTable';
 import laborService from '../services/LaborService';
 import AddressCard from './AddressCard';
@@ -28,6 +32,7 @@ import ChangesRequestedModal from './ChangesRequestedModal';
 import FollowUpModal from './FollowUpModal';
 import ApprovalModal from './ApprovalModal';
 import QuoteStatusCard from './QuoteStatusCard';
+import DocumentsService from '../services/DocumentsService';
 // Use actual Tools page components
 import {
   ToolsContext,
@@ -98,6 +103,7 @@ export const QuoteBuilder = ({
   formData,
   setFormData,
   customers,
+  setCustomers, // ✅ FIX: Accept setCustomers prop to add new customers to array
   customersLoading = false,
   onSubmit,
   onCancel,
@@ -115,6 +121,11 @@ export const QuoteBuilder = ({
   const [employees, setEmployees] = useState([]);
   const [showAddCustomer, setShowAddCustomer] = useState(false);
   const [actionAfterSave, setActionAfterSave] = useState(null); // 'pdf', 'send', or null
+  const [taxDetectionInfo, setTaxDetectionInfo] = useState(null); // Track auto-detected tax info
+
+  // File attachments state
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [uploadingFiles, setUploadingFiles] = useState(false);
 
   // Helper function to prepare quote data with labor conversion
   const prepareQuoteDataWithLabor = () => {
@@ -127,13 +138,24 @@ export const QuoteBuilder = ({
     console.log('🔧 laborQuoteItems after conversion:', laborQuoteItems);
     console.log('🔧 laborQuoteItems.length:', laborQuoteItems.length);
 
-    // Get non-labor items
-    const nonLaborItems = formData.quote_items.filter(item => item.item_type !== 'labor');
+    // Get non-labor items and add calculated total with markup
+    const nonLaborItems = formData.quote_items
+      .filter(item => item.item_type !== 'labor')
+      .map(item => ({
+        ...item,
+        total: calculateItemTotal(item) // Add total field with markup applied
+      }));
     console.log('🔧 nonLaborItems:', nonLaborItems);
     console.log('🔧 nonLaborItems.length:', nonLaborItems.length);
 
+    // Add total field to labor items
+    const laborItemsWithTotal = laborQuoteItems.map(item => ({
+      ...item,
+      total: (item.quantity || 0) * (item.rate || 0) // Labor doesn't get markup
+    }));
+
     // Combine labor and non-labor items
-    const combinedQuoteItems = [...laborQuoteItems, ...nonLaborItems];
+    const combinedQuoteItems = [...laborItemsWithTotal, ...nonLaborItems];
     console.log('🔧 combinedQuoteItems:', combinedQuoteItems);
     console.log('🔧 combinedQuoteItems.length:', combinedQuoteItems.length);
 
@@ -181,41 +203,46 @@ export const QuoteBuilder = ({
     e.preventDefault();
     setActionAfterSave(action);
 
-    // ✅ FIX: Prepare quote data with labor conversion BEFORE calling onSubmit
-    console.log('🔄 Preparing quote data with labor conversion...');
-    const updatedFormData = prepareQuoteDataWithLabor();
-    console.log('🔄 Updated formData with labor:', updatedFormData);
+    try {
+      // ✅ FIX: Prepare quote data with labor conversion BEFORE calling onSubmit
+      console.log('🔄 Preparing quote data with labor conversion...');
+      const updatedFormData = prepareQuoteDataWithLabor();
+      console.log('🔄 Updated formData with labor:', updatedFormData);
 
-    // Call onSubmit with the updated data that includes labor items
-    console.log('🔄 Calling onSubmit with labor items...');
-    const newQuote = await onSubmit(e, updatedFormData);
-    console.log('✅ onSubmit returned:', newQuote);
+      // Call onSubmit with the updated data that includes labor items
+      console.log('🔄 Calling onSubmit with labor items...');
+      const newQuote = await onSubmit(e, updatedFormData);
+      console.log('✅ onSubmit returned:', newQuote);
 
-    // After successful save, perform the action
-    // For NEW quotes, use the returned quote with ID
-    // For EDIT, use existing formData.id
-    const quoteToUse = newQuote || formData;
-    console.log('📋 Quote to use for action:', {
-      quoteToUse,
-      hasId: !!quoteToUse?.id,
-      action
-    });
-
-    if (action === 'pdf' && handleExportPDF && quoteToUse.id) {
-      console.log('📄 Calling handleExportPDF...');
-      setTimeout(() => handleExportPDF(quoteToUse), 500);
-    } else if (action === 'send' && handleSendToCustomer && quoteToUse.id) {
-      console.log('📧 Calling handleSendToCustomer...');
-      setTimeout(() => handleSendToCustomer(quoteToUse), 500);
-    } else {
-      console.log('⚠️ Action not executed:', {
-        action,
-        hasHandler: action === 'pdf' ? !!handleExportPDF : !!handleSendToCustomer,
-        hasQuoteId: !!quoteToUse?.id
+      // After successful save, perform the action
+      // For NEW quotes, use the returned quote with ID
+      // For EDIT, use existing formData.id
+      const quoteToUse = newQuote || formData;
+      console.log('📋 Quote to use for action:', {
+        quoteToUse,
+        hasId: !!quoteToUse?.id,
+        action
       });
-    }
 
-    setActionAfterSave(null);
+      if (action === 'pdf' && handleExportPDF && quoteToUse.id) {
+        console.log('📄 Calling handleExportPDF...');
+        setTimeout(() => handleExportPDF(quoteToUse), 500);
+      } else if (action === 'send' && handleSendToCustomer && quoteToUse.id) {
+        console.log('📧 Calling handleSendToCustomer...');
+        setTimeout(() => handleSendToCustomer(quoteToUse), 500);
+      } else {
+        console.log('⚠️ Action not executed:', {
+          action,
+          hasHandler: action === 'pdf' ? !!handleExportPDF : !!handleSendToCustomer,
+          hasQuoteId: !!quoteToUse?.id
+        });
+      }
+    } catch (error) {
+      console.error('❌ Error in handleSaveAndAction:', error);
+      // Error already shown by showAlert in onSubmit
+    } finally {
+      setActionAfterSave(null);
+    }
   };
 
 
@@ -225,6 +252,7 @@ export const QuoteBuilder = ({
   const [showTools, setShowTools] = useState(false);
   const [toolPreferences, setToolPreferences] = useState({});
   const [keepToolsOpen, setKeepToolsOpen] = useState(false);
+  const [showComingSoonModal, setShowComingSoonModal] = useState(null); // 'library' | 'cpq' | null
 
   // ✅ Single source of truth for status modals
   const [activeModal, setActiveModal] = useState(null); // 'presented' | 'changes' | 'followup' | 'rejected' | 'approved' | 'expired' | null
@@ -283,6 +311,35 @@ export const QuoteBuilder = ({
     loadEmployees();
     loadToolPreferences();
   }, [user?.company_id]);
+
+  // Load existing attachments when editing a quote
+  useEffect(() => {
+    const loadAttachments = async () => {
+      if (isEdit && formData?.id && user?.company_id) {
+        try {
+          console.log('📎 Loading attachments for work_order_id:', formData.id);
+
+          const response = await supaFetch(
+            `attachments?work_order_id=eq.${formData.id}&select=*&order=uploaded_at.desc`,
+            { method: 'GET' },
+            user.company_id
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log('✅ Loaded attachments:', data);
+            setAttachedFiles(data || []);
+          } else {
+            console.error('❌ Failed to load attachments:', response.status);
+          }
+        } catch (error) {
+          console.error('❌ Error loading attachments:', error);
+        }
+      }
+    };
+
+    loadAttachments();
+  }, [isEdit, formData?.id, user?.company_id]);
 
   // Load labor data for existing quotes/work orders (ONLY ONCE on mount)
   const [laborDataLoaded, setLaborDataLoaded] = useState(false);
@@ -354,13 +411,18 @@ export const QuoteBuilder = ({
         console.warn('⚠️ No custom rates configured, using system defaults');
       }
 
+      // DEBUG: Log the raw settings to see what we're getting
+      console.log('🔍 DEBUG - Raw settings object:', JSON.stringify(settings, null, 2));
+      console.log('🔍 DEBUG - settings.markupPercentages:', settings.markupPercentages);
+      console.log('🔍 DEBUG - settings.markupPercentages?.materials:', settings.markupPercentages?.materials);
+
       // Use new standardized pricing structure with backward compatibility
       const newRates = {
         hourly: settings.laborRates?.standard || 75,
         overtime: settings.laborRates?.overtime || 112.5,
         emergency: settings.laborRates?.emergency || 150,
-        markup: settings.markupPercentages?.materials || 25,
-        tax: settings.taxRate || 8.25,
+        markup: settings.markupPercentages?.materials ?? 0,  // Use ?? to allow 0 value
+        tax: settings.taxRate ?? 0,  // DEFAULT TO 0 (no tax) - auto-detect by zip code
         // Include new pricing data for advanced features
         serviceRates: settings.serviceRates || [],
         pricingRules: settings.pricingRules || [],
@@ -381,8 +443,8 @@ export const QuoteBuilder = ({
         hourly: 75,
         overtime: 112.5,
         emergency: 150,
-        markup: 25,
-        tax: 8.25,
+        markup: 0,  // Default to 0% markup (user can configure in settings)
+        tax: 0,  // DEFAULT TO 0 (no tax) - auto-detect by zip code
         serviceRates: [],
         pricingRules: []
       };
@@ -488,6 +550,40 @@ export const QuoteBuilder = ({
 
 	  const [customerSearchResults, setCustomerSearchResults] = useState([]);
   const [customerSearchFeedback, setCustomerSearchFeedback] = useState('');
+
+  /**
+   * Auto-detect and apply tax rate based on customer address
+   */
+  const applyAutoDetectedTax = (customer, serviceAddress = null) => {
+    try {
+      const detection = TaxService.autoDetectTaxRate(customer, serviceAddress);
+
+      if (detection.detected && detection.taxRate !== undefined) {
+        console.log('🧮 Tax auto-detected:', detection);
+
+        // Update form data with detected tax rate
+        setFormData(prev => ({
+          ...prev,
+          tax_rate: detection.taxRate,
+          tax_rate_source: detection.source,
+          tax_rate_state: detection.state
+        }));
+
+        // Show detection info to user
+        setTaxDetectionInfo({
+          message: detection.message,
+          state: detection.state,
+          rate: detection.taxRate,
+          source: detection.source
+        });
+
+        // Auto-hide message after 5 seconds
+        setTimeout(() => setTaxDetectionInfo(null), 5000);
+      }
+    } catch (error) {
+      console.error('❌ Error applying auto-detected tax:', error);
+    }
+  };
 
   const runCustomerSearch = (query = null) => {
     const qRaw = query !== null ? query : (formData.customer_query || '');
@@ -610,11 +706,10 @@ export const QuoteBuilder = ({
     console.log(`✅ Added ${toolResult.description} to quote`);
   };
 
-  const removeQuoteItem = (index) => {
-    if (formData.quote_items.length > 1) {
-      const newItems = formData.quote_items.filter((_, i) => i !== index);
-      setFormData({ ...formData, quote_items: newItems });
-    }
+  const removeQuoteItem = (actualIndex) => {
+    // Remove item by actual index in the full quote_items array
+    const newItems = formData.quote_items.filter((_, i) => i !== actualIndex);
+    setFormData({ ...formData, quote_items: newItems });
   };
 
   const updateQuoteItem = (index, field, value) => {
@@ -784,6 +879,16 @@ export const QuoteBuilder = ({
     const taxAmount = (subtotal - discountAmount) * (taxRate / 100);
     const grandTotal = subtotal - discountAmount + taxAmount;
 
+    console.log('💰 QuoteBuilder Financial Breakdown:', {
+      subtotal,
+      discountAmount,
+      taxRate,
+      taxAmount,
+      grandTotal,
+      calculation: `(${subtotal} - ${discountAmount}) * (${taxRate} / 100) = ${taxAmount}`,
+      total_calc: `${subtotal} - ${discountAmount} + ${taxAmount} = ${grandTotal}`
+    });
+
     return {
       subtotal: subtotal,
       discount_total: discountAmount,
@@ -794,6 +899,74 @@ export const QuoteBuilder = ({
 
   const financials = calculateFinancialBreakdown();
   const { subtotal, tax_total: tax, grand_total: total } = financials;
+
+  // File upload handlers
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    setUploadingFiles(true);
+    try {
+      const workOrderId = formData.id; // Only upload if quote already exists
+
+      for (const file of files) {
+        // Upload file using DocumentsService
+        const result = await DocumentsService.uploadAttachment(
+          user.company_id,
+          workOrderId, // Can be null for new quotes
+          file,
+          user.id,
+          ['quote'], // Auto-tag as quote attachment
+          '' // No OCR text
+        );
+
+        if (result.success) {
+          setAttachedFiles(prev => [...prev, {
+            id: result.attachment?.id,
+            file_name: file.name,
+            file_url: result.attachment?.file_url,
+            file_size: file.size,
+            uploaded_at: new Date().toISOString()
+          }]);
+        }
+      }
+
+      // Reset file input
+      e.target.value = '';
+
+      if (showAlert) {
+        showAlert('Files uploaded successfully!', 'success');
+      }
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      if (showAlert) {
+        showAlert('Failed to upload files: ' + error.message, 'error');
+      }
+    } finally {
+      setUploadingFiles(false);
+    }
+  };
+
+  const handleRemoveFile = async (fileId) => {
+    try {
+      // Delete from database
+      await supaFetch(`attachments?id=eq.${fileId}`, {
+        method: 'DELETE'
+      }, user.company_id);
+
+      // Remove from state
+      setAttachedFiles(prev => prev.filter(f => f.id !== fileId));
+
+      if (showAlert) {
+        showAlert('File removed successfully!', 'success');
+      }
+    } catch (error) {
+      console.error('Error removing file:', error);
+      if (showAlert) {
+        showAlert('Failed to remove file: ' + error.message, 'error');
+      }
+    }
+  };
 
   // Handle form submission with labor data conversion
   const handleSubmit = (e) => {
@@ -903,6 +1076,8 @@ export const QuoteBuilder = ({
                             setFormData({ ...formData, customer_id: c.id, customer_query: c.name || c.full_name });
                             setCustomerSearchResults([]);
                             setCustomerSearchFeedback('');
+                            // 🧮 Auto-detect tax rate when customer is selected
+                            applyAutoDetectedTax(c, formData.service_address);
                           }}>
                             <div className="text-sm font-medium text-gray-900 truncate">{c.name || c.full_name}</div>
                             <div className="text-xs text-gray-500 truncate">{[c.phone, c.email].filter(Boolean).join(' · ')}</div>
@@ -932,7 +1107,14 @@ export const QuoteBuilder = ({
                     <ServiceAddressSelector
                       customer={customers.find(c => c.id === formData.customer_id)}
                       selectedAddress={formData.service_address}
-                      onAddressChange={(address) => setFormData({ ...formData, service_address: address })}
+                      onAddressChange={(address) => {
+                        setFormData({ ...formData, service_address: address });
+                        // 🧮 Re-detect tax when service address changes
+                        const customer = customers.find(c => c.id === formData.customer_id);
+                        if (customer) {
+                          applyAutoDetectedTax(customer, address);
+                        }
+                      }}
                     />
                   </div>
                 )}
@@ -1293,6 +1475,87 @@ export const QuoteBuilder = ({
                   placeholder="Notes visible to customer on quote/invoice PDF..."
                 />
               </div>
+
+              {/* File Attachments - Photos, Documents, etc. */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <PaperClipIcon className="w-5 h-5" />
+                  Attachments
+                  <span className="text-xs text-gray-500 font-normal">(Photos, diagrams, reference docs)</span>
+                </label>
+
+                {/* Upload Button */}
+                <div className="mb-3">
+                  <label className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 rounded-md hover:bg-blue-100 transition-colors">
+                    <PhotoIcon className="w-5 h-5" />
+                    <span>{uploadingFiles ? 'Uploading...' : 'Upload Files'}</span>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*,application/pdf,.doc,.docx"
+                      onChange={handleFileUpload}
+                      disabled={uploadingFiles}
+                      className="hidden"
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Attach photos of the problem area, diagrams, or reference documents
+                  </p>
+                </div>
+
+                {/* Attached Files List */}
+                {attachedFiles.length > 0 && (
+                  <div className="space-y-2">
+                    {attachedFiles.map((file) => (
+                      <div
+                        key={file.id}
+                        className="flex items-center justify-between p-2 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 transition-colors"
+                      >
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              // Generate signed URL for private file
+                              const signedUrl = await DocumentsService.getSignedUrl(file.file_url, 3600);
+                              if (signedUrl) {
+                                window.open(signedUrl, '_blank');
+                              } else {
+                                if (showAlert) {
+                                  showAlert('Unable to open file', 'error');
+                                }
+                              }
+                            } catch (error) {
+                              console.error('Error opening file:', error);
+                              if (showAlert) {
+                                showAlert('Failed to open file: ' + error.message, 'error');
+                              }
+                            }
+                          }}
+                          className="flex items-center gap-2 flex-1 min-w-0 text-left"
+                        >
+                          <PaperClipIcon className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-blue-600 hover:text-blue-800 underline truncate">
+                              {file.file_name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {(file.file_size / 1024).toFixed(1)} KB • Click to view
+                            </p>
+                          </div>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveFile(file.id)}
+                          className="ml-2 p-1 text-red-600 hover:bg-red-50 rounded"
+                          title="Remove file"
+                        >
+                          <TrashIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Quote Summary */}
@@ -1309,6 +1572,21 @@ export const QuoteBuilder = ({
                     <span className="text-sm font-medium">${financials.subtotal.toFixed(2)}</span>
                   </div>
 
+                  {/* Tax Detection Message */}
+                  {taxDetectionInfo && (
+                    <div className="bg-green-50 border border-green-200 rounded-md p-3 mb-3">
+                      <div className="flex items-start gap-2">
+                        <span className="text-green-600 text-lg">✓</span>
+                        <div>
+                          <p className="text-sm font-medium text-green-900">{taxDetectionInfo.message}</p>
+                          <p className="text-xs text-green-700 mt-1">
+                            Tax rate auto-detected from {taxDetectionInfo.source === 'service_address' ? 'service address' : 'customer location'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Discount Field */}
                   <div className="flex justify-between items-center">
                     <label className="text-sm text-gray-600">Discount:</label>
@@ -1323,6 +1601,27 @@ export const QuoteBuilder = ({
                         className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="0.00"
                       />
+                    </div>
+                  </div>
+
+                  {/* Tax Rate Override Field */}
+                  <div className="flex justify-between items-center">
+                    <label className="text-sm text-gray-600">Tax Rate (%):</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        max="100"
+                        value={formData.tax_rate !== undefined ? (formData.tax_rate * 100).toFixed(2) : (rates?.tax || 0)}
+                        onChange={(e) => {
+                          const percentValue = parseFloat(e.target.value) || 0;
+                          setFormData({...formData, tax_rate: percentValue / 100});
+                        }}
+                        className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="0.00"
+                      />
+                      <span className="text-sm text-gray-500">%</span>
                     </div>
                   </div>
 
@@ -1378,47 +1677,14 @@ export const QuoteBuilder = ({
           {/* Materials, Parts & Services - for Time & Materials and Unit-Based */}
           {(formData.pricing_model === 'TIME_MATERIALS' || formData.pricing_model === 'UNIT') && (formData.quote_items.filter(item => item.item_type !== 'labor').length > 0 ? (
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-4">
                 <h4 className="text-md font-medium text-gray-900">Materials, Parts & Services</h4>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={addQuoteItem}
-                    className="btn-secondary flex items-center gap-2"
-                  >
-                    <PlusIcon className="w-4 h-4" />
-                    Add Item
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowLibrary(true)}
-                    className="btn-secondary flex items-center gap-2"
-                  >
-                    <PlusIcon className="w-4 h-4" />
-                    Add from Library
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowInventory(true)}
-                    className="btn-secondary flex items-center gap-2"
-                  >
-                    <PlusIcon className="w-4 h-4" />
-                    Add from Inventory
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowCPQ(true)}
-                    className="btn-primary flex items-center gap-2"
-                  >
-                    <SparklesIcon className="w-4 h-4" />
-                    Configure Package
-                  </button>
-                </div>
               </div>
 
+              {/* ✅ UX FIX: Show items list FIRST, then add buttons at bottom (no scrolling!) */}
               <div className="space-y-4">
-                {formData.quote_items.filter(item => item.item_type !== 'labor').map((item, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4">
+                {formData.quote_items.map((item, actualIndex) => item.item_type !== 'labor' && (
+                <div key={actualIndex} className="border border-gray-200 rounded-lg p-4">
                   <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -1426,7 +1692,7 @@ export const QuoteBuilder = ({
                       </label>
                       <select
                         value={item.item_type || 'material'}
-                        onChange={(e) => updateQuoteItem(index, 'item_type', e.target.value)}
+                        onChange={(e) => updateQuoteItem(actualIndex, 'item_type', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       >
                         <option value="material">Materials/Parts</option>
@@ -1443,7 +1709,7 @@ export const QuoteBuilder = ({
                       <input
                         type="text"
                         value={item.item_name}
-                        onChange={(e) => updateQuoteItem(index, 'item_name', e.target.value)}
+                        onChange={(e) => updateQuoteItem(actualIndex, 'item_name', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                         placeholder="Service or product name"
                       />
@@ -1462,12 +1728,12 @@ export const QuoteBuilder = ({
                           const value = e.target.value;
                           // Allow empty field while typing, otherwise parse as float
                           const numValue = value === '' ? 0 : parseFloat(value);
-                          updateQuoteItem(index, 'quantity', numValue);
+                          updateQuoteItem(actualIndex, 'quantity', numValue);
                         }}
                         onBlur={(e) => {
                           // Ensure minimum value of 0.1 when field loses focus
                           if (parseFloat(e.target.value) < 0.1) {
-                            updateQuoteItem(index, 'quantity', 0.1);
+                            updateQuoteItem(actualIndex, 'quantity', 0.1);
                           }
                         }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -1485,7 +1751,18 @@ export const QuoteBuilder = ({
                         step="0.01"
                         min="0"
                         value={item.rate}
-                        onChange={(e) => updateQuoteItem(index, 'rate', parseFloat(e.target.value) || 0)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // ✅ FIX: Allow empty field while typing, don't force to 0
+                          const numValue = value === '' ? 0 : parseFloat(value);
+                          updateQuoteItem(actualIndex, 'rate', numValue);
+                        }}
+                        onBlur={(e) => {
+                          // Ensure minimum value of 0 when field loses focus
+                          if (e.target.value === '' || parseFloat(e.target.value) < 0) {
+                            updateQuoteItem(actualIndex, 'rate', 0);
+                          }
+                        }}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
@@ -1509,16 +1786,14 @@ export const QuoteBuilder = ({
                     )}
 
                     <div className="flex items-end">
-                      {formData.quote_items.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeQuoteItem(index)}
-                          className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
-                          title="Remove item"
-                        >
-                          <TrashIcon className="w-4 h-4" />
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeQuoteItem(actualIndex)}
+                        className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
+                        title="Remove item"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
 
@@ -1529,7 +1804,7 @@ export const QuoteBuilder = ({
                       </label>
                       <textarea
                         value={item.description}
-                        onChange={(e) => updateQuoteItem(index, 'description', e.target.value)}
+                        onChange={(e) => updateQuoteItem(actualIndex, 'description', e.target.value)}
                         rows={2}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                         placeholder="Additional details about this item..."
@@ -1543,7 +1818,7 @@ export const QuoteBuilder = ({
                       <input
                         type="url"
                         value={item.photo_url}
-                        onChange={(e) => updateQuoteItem(index, 'photo_url', e.target.value)}
+                        onChange={(e) => updateQuoteItem(actualIndex, 'photo_url', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                         placeholder="https://example.com/photo.jpg"
                       />
@@ -1558,11 +1833,53 @@ export const QuoteBuilder = ({
                 </div>
               ))}
               </div>
+
+              {/* ✅ UX FIX: Add buttons at BOTTOM so you don't have to scroll up after adding items */}
+              <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={addQuoteItem}
+                  className="btn-secondary flex items-center gap-2"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add Item
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowInventory(true)}
+                  className="btn-secondary flex items-center gap-2"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add from Inventory
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowComingSoonModal('library')}
+                  className="btn-secondary flex items-center gap-2 relative"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add from Library
+                  <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+                    Coming Soon
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowComingSoonModal('cpq')}
+                  className="btn-primary flex items-center gap-2 relative"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  Configure Package
+                  <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 rounded-full">
+                    Coming Soon
+                  </span>
+                </button>
+              </div>
             </div>
           ) : (
             <div className="mb-6 text-center py-6">
               <p className="text-gray-500 mb-3">No materials or parts needed?</p>
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center justify-center gap-2 flex-wrap">
                 <button
                   type="button"
                   onClick={addQuoteItem}
@@ -1576,8 +1893,30 @@ export const QuoteBuilder = ({
                   onClick={() => setShowInventory(true)}
                   className="btn-secondary flex items-center gap-2"
                 >
-                  <ArchiveBoxIcon className="w-4 h-4" />
+                  <PlusIcon className="w-4 h-4" />
                   Add from Inventory
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowComingSoonModal('library')}
+                  className="btn-secondary flex items-center gap-2 relative"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add from Library
+                  <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+                    Coming Soon
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowComingSoonModal('cpq')}
+                  className="btn-primary flex items-center gap-2 relative"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  Configure Package
+                  <span className="ml-1 px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 rounded-full">
+                    Coming Soon
+                  </span>
                 </button>
               </div>
             </div>
@@ -1702,6 +2041,10 @@ export const QuoteBuilder = ({
         open={showAddCustomer}
         onClose={() => setShowAddCustomer(false)}
         onCreated={(cust) => {
+          // ✅ FIX: Add new customer to customers array so ServiceAddressSelector can find it
+          if (setCustomers) {
+            setCustomers([...customers, cust]);
+          }
           setFormData({ ...formData, customer_id: cust.id, customer_query: cust.name || cust.full_name || '' });
           setShowAddCustomer(false);
         }}
@@ -1856,6 +2199,122 @@ export const QuoteBuilder = ({
         quoteTitle={formData?.title || ''}
         customerName={(customers?.find(c => c.id === formData?.customer_id)?.name) || (customers?.find(c => c.id === formData?.customer_id)?.full_name) || ''}
       />
+
+      {/* Coming Soon Modal */}
+      {showComingSoonModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-3">
+                {showComingSoonModal === 'library' ? (
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <PlusIcon className="w-6 h-6 text-blue-600" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <SparklesIcon className="w-6 h-6 text-purple-600" />
+                  </div>
+                )}
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">
+                    {showComingSoonModal === 'library' ? 'Item Library' : 'Configure Package (CPQ)'}
+                  </h3>
+                  <span className="inline-block mt-1 px-3 py-1 text-sm font-medium bg-blue-100 text-blue-700 rounded-full">
+                    Coming Soon
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowComingSoonModal(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <XMarkIcon className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {showComingSoonModal === 'library' ? (
+                <>
+                  <p className="text-gray-700">
+                    <strong>Item Library</strong> will let you quickly add pre-configured items and services to your quotes.
+                  </p>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-blue-900 mb-2">What it will do:</h4>
+                    <ul className="space-y-2 text-sm text-blue-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Pre-configured catalog</strong> of your most common items, parts, and services</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Default pricing</strong> automatically applied when you add items</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Searchable by name, SKU, or category</strong> for quick access</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Descriptions and photos</strong> included for professional quotes</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircleIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Manage your catalog</strong> in Settings → Item Library</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    <strong>Database tables needed:</strong> <code className="bg-gray-100 px-2 py-1 rounded">items_catalog</code>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-700">
+                    <strong>Configure Package (CPQ)</strong> will let you create professional service packages with tiered pricing and optional add-ons.
+                  </p>
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h4 className="font-semibold text-purple-900 mb-2">What it will do:</h4>
+                    <ul className="space-y-2 text-sm text-purple-800">
+                      <li className="flex items-start gap-2">
+                        <SparklesIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Service bundles</strong> with Basic/Standard/Premium tiers</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <SparklesIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Optional add-ons</strong> customers can select (extended warranty, priority service, etc.)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <SparklesIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Dynamic pricing</strong> that updates as customer selects options</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <SparklesIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Visual package builder</strong> with side-by-side comparison</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <SparklesIcon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                        <span><strong>Manage packages</strong> in Settings → Service Packages</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    <strong>Database tables needed:</strong> <code className="bg-gray-100 px-2 py-1 rounded">service_bundles</code>, <code className="bg-gray-100 px-2 py-1 rounded">bundle_items</code>, <code className="bg-gray-100 px-2 py-1 rounded">bundle_options</code>
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setShowComingSoonModal(null)}
+                className="btn-primary"
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
     </>

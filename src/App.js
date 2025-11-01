@@ -1,9 +1,12 @@
 import React, { Suspense, lazy, useEffect } from 'react';
+import './styles/theme-system.css';
 import './styles/modern-enhancements.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './styles/animations.css';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { IntegrationsProvider } from './contexts/IntegrationsContext';
 import { UserProvider } from './contexts/UserContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { FeatureFlagProvider } from './contexts/FeatureFlagContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import SimplePermissionRoute from './components/SimplePermissionRoute';
 import { MODULES } from './utils/simplePermissions';
@@ -12,9 +15,10 @@ import DashboardRouter from './pages/DashboardRouter';
 import DevToolsErrorBoundary from './components/DevToolsErrorBoundary';
 import devToolsService from './services/DevToolsService';
 import remoteDebugService from './services/RemoteDebugService';
+import SecurityService from './services/SecurityService';
 import './utils/realTimeErrorFixer';
 import { supabase } from './utils/supabaseClient';
-
+import { getCurrentDeploymentType } from './config/deploymentConfig';
 
 // Small/auth pages (direct)
 import Login from './pages/Login';
@@ -34,6 +38,8 @@ import MyTimeOff from './pages/MyTimeOff';
 import AdminApprovals from './pages/AdminApprovals';
 import AdminTimeOff from './pages/AdminTimeOff';
 import Payroll from './pages/Payroll';
+import ModernPageHeader from './components/Common/ModernPageHeader';
+
 
 // Lazy-loaded heavy pages
 const AgingReport = lazy(() => import('./pages/AgingReport'));
@@ -138,8 +144,21 @@ function App() {
         console.log('✅ Session updated for user:', session.user.email);
       } else {
         console.log('❌ Session ended - user logged out');
+        // End security session tracking
+        const sessionToken = localStorage.getItem('session_token');
+        if (sessionToken) {
+          SecurityService.endSession(sessionToken, 'logout');
+        }
       }
     });
+
+    // Listen for session expiry events
+    const handleSessionExpired = () => {
+      console.warn('⏰ Session expired - logging out');
+      supabase.auth.signOut();
+      window.location.href = '/login';
+    };
+    window.addEventListener('session-expired', handleSessionExpired);
 
     // Initialize developer tools on app start
     initializeDevTools();
@@ -154,15 +173,20 @@ function App() {
     // Cleanup auth listener on unmount
     return () => {
       subscription.unsubscribe();
+      window.removeEventListener('session-expired', handleSessionExpired);
+      SecurityService.stopSessionMonitoring();
     };
   }, []);
+
+  const deploymentType = getCurrentDeploymentType();
 
   return (
     <DevToolsErrorBoundary componentName="App">
       <UserProvider>
         <IntegrationsProvider>
           <ThemeProvider>
-            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <FeatureFlagProvider deploymentType={deploymentType}>
+              <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
 
 
               <Suspense fallback={<div className="p-6 text-gray-600">Loading…</div>}>
@@ -371,6 +395,7 @@ function App() {
           </Routes>
         </Suspense>
       </Router>
+            </FeatureFlagProvider>
     </ThemeProvider>
   </IntegrationsProvider>
 </UserProvider>

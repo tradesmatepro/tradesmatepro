@@ -18,8 +18,7 @@ const AwaitingInvoice = () => {
   const loadAwaitingInvoiceJobs = async () => {
     setLoading(true);
     try {
-      // Query work_orders with completed status but no invoice yet
-      const res = await supaFetch('work_orders?status=eq.completed&invoice_id=is.null&select=*,customers(name,email,phone)&order=updated_at.desc', { method: 'GET' }, user.company_id);
+      const res = await supaFetch('jobs_with_payment_status?unified_status=eq.awaiting_invoice&order=updated_at.desc', { method: 'GET' }, user.company_id);
       if (res.ok) {
         const data = await res.json();
         setJobs(data || []);
