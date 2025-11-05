@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 🔍 SEO -->
+  <title>TradesMatePro — All-in-One Field Service Software for Contractors & Trades</title>
+  <meta name="description" content="TradesMatePro helps trades and field service professionals manage quotes, jobs, scheduling, invoicing, payroll, and customers — all in one connected platform built for contractors and small businesses." />
+  <meta name="keywords" content="trade software, field service app, contractor CRM, job scheduling software, invoicing, payroll, tradesmate pro" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.tradesmatepro.com/" />
+
+  <!-- 🧭 Social Preview -->
+  <meta property="og:title" content="TradesMatePro — Software for Trades & Contractors" />
+  <meta property="og:description" content="Manage your entire field service workflow — from quote to payment — in one simple platform. Join the beta today!" />
+  <meta property="og:image" content="/assets/og-preview-tradesmatepro.png" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+  <!-- 💅 Fonts & Styling -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary:#1e88e5;
+      --secondary:#1565c0;
+      --accent:#42a5f5;
+      --text-dark:#1a1a1a;
+      --text-light:#ffffff;
+      --bg-light:#f7f9fc;
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      font-family:"Segoe UI",Roboto,sans-serif;
+      color:var(--text-dark);
+      background:var(--bg-light);
+      line-height:1.6;
+      text-align:center;
+    }
+
+    .banner{background:#ffcc00;color:#000;padding:0.6rem;font-weight:600;}
+
+    nav{
+      text-align:center;
+      padding:1rem;
+      background:#fff;
+      position:sticky;
+      top:0;
+      z-index:10;
+      box-shadow:0 1px 4px rgba(0,0,0,0.1);
+    }
+    nav a{margin:0 1rem;color:var(--secondary);font-weight:600;text-decoration:none;}
+    nav a:hover{text-decoration:underline;}
+
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:var(--text-light);
+      padding:3.5rem 1rem 3rem;
+    }
+    header img{max-width:220px;margin-bottom:0.5rem;}
+    header h1{font-size:2.2rem;margin-bottom:0.6rem;}
+    header p{font-size:1.1rem;max-width:700px;margin:0 auto 1.3rem;}
+    .cta{
+      display:inline-block;background:var(--accent);color:#fff;
+      padding:.8rem 1.6rem;border-radius:6px;text-decoration:none;font-weight:600;
+    }
+    .cta:hover{opacity:0.9;}
+
+    .hero-icons{
+      margin-top:1.4rem;
+      display:flex;
+      justify-content:center;
+      gap:1.2rem;
+      flex-wrap:wrap;
+      font-size:1rem;
+    }
+    .hero-icons div{background:rgba(255,255,255,0.15);padding:0.5rem 1rem;border-radius:8px;}
+
+    .hero-price{
+      margin-top:1.3rem;
+      font-size:1rem;
+      color:#fff;
+    }
+    .hero-price s{opacity:0.7;margin-right:0.4rem;}
+
+    .trust-strip{
+      margin-top:0.6rem;
+      font-size:0.85rem;
+      color:#e0e0e0;
+      opacity:0.9;
+    }
+
+    section{
+      max-width:var(--max-width);
+      margin:0 auto;
+      padding:3rem 1rem;
+      text-align:center;
+    }
+    h2{color:var(--secondary);margin-bottom:1rem;}
+    p{max-width:750px;margin:0 auto 1rem;}
+
+    .features{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      justify-items:center;
+      gap:1.5rem;
+      margin-top:2rem;
+    }
+    .card{
+      background:#fff;
+      padding:1.5rem;
+      border-radius:10px;
+      width:90%;
+      max-width:300px;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
+      text-align:center;
+    }
+    .card h3{margin-top:0;color:var(--primary);margin-bottom:0.6rem;}
+    .card p{text-align:center;}
+
+    table{
+      margin:2rem auto;
+      border-collapse:collapse;
+      width:auto;
+      min-width:60%;
+      overflow-x:auto;
+      display:inline-block;
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      border-radius:10px;
+    }
+    th,td{
+      border:1px solid #ddd;
+      padding:.6rem 1rem;
+      text-align:center;
+      font-size:.95rem;
+    }
+    th{background:var(--accent);color:#fff;}
+
+    footer{text-align:center;padding:2rem 1rem;background:var(--secondary);color:#fff;}
+    footer a{color:#fff;text-decoration:underline;margin:0 0.3rem;}
+
+    .sticky-cta{
+      position:fixed;bottom:20px;right:20px;background:var(--accent);
+      color:#fff;padding:.9rem 1.4rem;border-radius:8px;font-weight:700;
+      box-shadow:0 2px 10px rgba(0,0,0,0.2);text-decoration:none;z-index:20;
+    }
+    .sticky-cta:hover{background:var(--secondary);}
+
+    iframe{
+      height:500px;
+      width:99%;
+      max-width:700px;
+      border:none;
+      border-radius:8px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+      margin:auto;
+      display:block;
+    }
+
+    .sms-notice{
+      margin-top:1.5rem;
+      padding:1.2rem;
+      background:#f0f7ff;
+      border-left:4px solid var(--primary);
+      border-radius:6px;
+      font-size:.95rem;
+      color:#444;
+      max-width:700px;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:left;
+      line-height:1.7;
+    }
+    .sms-notice a{color:#1e88e5;text-decoration:none;font-weight:600;}
+    .sms-notice a:hover{text-decoration:underline;}
+
+    @media(max-width:600px){
+      header h1{font-size:1.9rem;}
+      header p{font-size:1rem;}
+      .sticky-cta{font-size:.9rem;padding:.7rem 1rem;}
+      .card{text-align:center;}
+      .sms-notice{font-size:.9rem;padding:1rem;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="banner">🚀 Beta Launch Coming Soon — Sign up below to secure early access!</div>
+
+  <nav>
+    <a href="#overview">Features</a>
+    <a href="#comparison">Compare</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#coming">Join Beta</a>
+  </nav>
+
+  <!-- ✅ NEW COMPRESSED HERO SECTION -->
+  <header>
+    <img src="/assets/logo-tradesmatepro.svg" alt="TradesMatePro logo">
+    <h1>Manage Your Entire Trade Business in One App</h1>
+    <p>All-in-one field service software built for <strong>Contractors and Trades</strong>.  
+    Quote, schedule, invoice, and get paid — without juggling multiple tools.</p>
+    <a class="cta" href="#coming">🚀 Join the Beta</a>
+
+    <div class="hero-icons">
+      <div>🧾 Quotes</div>
+      <div>🗓️ Scheduling</div>
+      <div>💸 Invoices</div>
+      <div>📈 Reports</div>
+    </div>
+
+    <div class="hero-price">
+      Competitors: <s>$149–$299/mo</s> → <b>$20 flat / user / month</b>
+    </div>
+
+    <div class="trust-strip">
+      ✅ Beta Verified • 🔒 Secure by Supabase • 💬 Built with Real Trades Feedback
+    </div>
+  </header>
+
+  <section id="overview">
+    <h2>Everything You Need — One Connected Platform</h2>
+    <div class="features">
+      <div class="card"><h3>Jobs & Scheduling</h3><p>Plan, assign, and track every job from start to finish with drag-and-drop ease.</p></div>
+      <div class="card"><h3>Quotes & Invoicing</h3><p>Create and send branded quotes and invoices instantly.</p></div>
+      <div class="card"><h3>Customer Portal</h3><p>Give clients real-time access to approvals, timelines, and payments.</p></div>
+      <div class="card"><h3>Payroll & Timesheets</h3><p>Track time and automate pay calculations across your team.</p></div>
+      <div class="card"><h3>Inventory & Tools</h3><p>Stay organized with live material and asset tracking.</p></div>
+      <div class="card"><h3>Messaging</h3><p>Communicate with your team directly inside the app.</p></div>
+      <div class="card"><h3>Reports & Analytics</h3><p>See profit margins, job costs, and performance metrics at a glance.</p></div>
+      <div class="card"><h3>Marketplace Access</h3><p>Find work opportunities and connect with new customers.</p></div>
+    </div>
+  </section>
+
+  <section id="comparison">
+    <h2>How We Compare</h2>
+    <p>Most trade and service apps limit key features to high-tier plans.  
+      TradesMatePro gives every contractor the full toolkit from day one — at a fraction of the price.</p>
+    <table>
+      <tr><th>Feature</th><th>Competitor Basic</th><th>Competitor Plus</th><th>TradesMatePro</th></tr>
+      <tr><td>Quotes & Invoicing</td><td>✅</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Scheduling & Calendar</td><td>❌</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Customer Portal</td><td>❌</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Payroll & Timesheets</td><td>❌</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Inventory & Tools</td><td>❌</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Team Chat</td><td>❌</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Reports & Analytics</td><td>❌</td><td>✅</td><td>✅</td></tr>
+      <tr><td>Lead Marketplace</td><td>❌</td><td>❌</td><td>✅</td></tr>
+      <tr><td>API / Integrations</td><td>❌</td><td>✅</td><td>Optional Add-On</td></tr>
+      <tr><td>Monthly Price</td><td>$49–$99</td><td>$149–$299</td><td><strong>$20 flat</strong></td></tr>
+    </table>
+  </section>
+
+  <section id="pricing">
+    <h2>Simple, Fair Pricing</h2>
+    <table>
+      <tr><th>Plan</th><th>Description</th><th>Price</th></tr>
+      <tr><td><strong>Base Plan</strong></td>
+        <td>Includes quotes, jobs, scheduling, invoices, payroll, reporting, vendor management, and marketplace tools.</td>
+        <td><strong>$20 / user / month</strong></td></tr>
+      <tr><td><strong>Field Tech Lite</strong></td>
+        <td>Ideal for field staff who only use the app for job schedules and timesheets.</td>
+        <td><strong>$5 / user / month</strong></td></tr>
+    </table>
+
+    <h3 style="margin-top:2.5rem;color:var(--secondary);">Add-Ons (Pay When We Pay)</h3>
+    <table>
+      <tr><th>Add-On</th><th>Description</th><th>Billing Model</th></tr>
+      <tr><td>SMS & Notifications</td><td>Real-time customer and job alerts (Twilio)</td><td>Per message</td></tr>
+      <tr><td>GPS Tracking</td><td>Track field teams and optimize routes</td><td>Per user / per request</td></tr>
+      <tr><td>E-Signatures</td><td>Digital approvals for quotes & invoices</td><td>Per signature</td></tr>
+      <tr><td>QuickBooks Sync</td><td>Accounting integration</td><td>Flat monthly API fee</td></tr>
+      <tr><td>Cloud Storage Upgrade</td><td>Expanded image & file storage</td><td>Per GB tier</td></tr>
+      <tr><td>API Access</td><td>Custom integrations & automations</td><td>Per org key</td></tr>
+    </table>
+  </section>
+
+  <section id="coming" style="background:#fff;">
+    <h2 style="color:#1565c0;">Join Our Beta</h2>
+    <p>Be among the first trades and field service professionals to simplify your operations — from scheduling to payments — with one intuitive system.</p>
+    <iframe aria-label="Contact Us" src="https://forms.zohopublic.com/jerrytrades1/form/TradesmateContact/formperma/3_LWnNa1_dV_0do8T5opf-lXXRp8RSM2032XcT68dCY"></iframe>
+    
+    <div class="sms-notice">
+      📱 <strong>SMS Notifications:</strong> By signing up for TradesMatePro, you consent to receive text messages regarding account updates, job notifications, payment alerts, appointment reminders, and important service announcements. Message and data rates may apply. Message frequency varies based on your activity and settings. You can opt out at any time by replying <strong>STOP</strong> to any message, or reply <strong>HELP</strong> for assistance. For more information, review our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a>.
+    </div>
+    
+    <p style="margin-top:1rem;font-size:.9rem;color:#666;">We'll never share your information. Ever.</p>
+  </section>
+
+  <footer>
+    <p><strong>TradesMatePro</strong> © 2025 | Built for Trades & Contractors</p>
+    <p>
+      <a href="/privacy.html">Privacy Policy</a> | 
+      <a href="/terms.html">Terms of Service</a> | 
+      <a href="mailto:jerry@tradesmatepro.com">Contact</a>
+    </p>
+  </footer>
+
+  <a href="#coming" class="sticky-cta">🚀 Join the Beta</a>
+</body>
+</html>
