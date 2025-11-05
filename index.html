@@ -163,11 +163,29 @@
       display:block;
     }
 
+    .sms-notice{
+      margin-top:1.5rem;
+      padding:1.2rem;
+      background:#f0f7ff;
+      border-left:4px solid var(--primary);
+      border-radius:6px;
+      font-size:.95rem;
+      color:#444;
+      max-width:700px;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:left;
+      line-height:1.7;
+    }
+    .sms-notice a{color:#1e88e5;text-decoration:none;font-weight:600;}
+    .sms-notice a:hover{text-decoration:underline;}
+
     @media(max-width:600px){
       header h1{font-size:1.9rem;}
       header p{font-size:1rem;}
       .sticky-cta{font-size:.9rem;padding:.7rem 1rem;}
       .card{text-align:center;}
+      .sms-notice{font-size:.9rem;padding:1rem;}
     }
   </style>
 </head>
@@ -267,7 +285,12 @@
     <h2 style="color:#1565c0;">Join Our Beta</h2>
     <p>Be among the first trades and field service professionals to simplify your operations — from scheduling to payments — with one intuitive system.</p>
     <iframe aria-label="Contact Us" src="https://forms.zohopublic.com/jerrytrades1/form/TradesmateContact/formperma/3_LWnNa1_dV_0do8T5opf-lXXRp8RSM2032XcT68dCY"></iframe>
-    <p style="margin-top:1rem;font-size:.9rem;color:#666;">We’ll never share your information. Ever.</p>
+    
+    <div class="sms-notice">
+      📱 <strong>SMS Notifications:</strong> By signing up for TradesMatePro, you consent to receive text messages regarding account updates, job notifications, payment alerts, appointment reminders, and important service announcements. Message and data rates may apply. Message frequency varies based on your activity and settings. You can opt out at any time by replying <strong>STOP</strong> to any message, or reply <strong>HELP</strong> for assistance. For more information, review our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a>.
+    </div>
+    
+    <p style="margin-top:1rem;font-size:.9rem;color:#666;">We'll never share your information. Ever.</p>
   </section>
 
   <footer>
